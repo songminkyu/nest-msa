@@ -1,7 +1,7 @@
 import { Path } from 'common'
 import fs from 'fs/promises'
 import path from 'path'
-import { createDummyFile, EnvVars } from '..'
+import { createDummyFile, EnvVars } from 'testlib'
 
 describe('createDummyFile', () => {
     let tempDir: string

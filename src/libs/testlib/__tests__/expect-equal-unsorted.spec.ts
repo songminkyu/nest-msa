@@ -1,4 +1,4 @@
-import { expectEqualUnsorted } from '..'
+import { expectEqualUnsorted } from 'testlib'
 
 describe('expectEqualUnsorted', () => {
     it('should compare arrays of objects correctly', () => {

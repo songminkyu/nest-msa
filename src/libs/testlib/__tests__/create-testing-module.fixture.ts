@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { createTestingModule } from '../create-testing-module'
+import { createTestingModule } from 'testlib'
 
 @Injectable()
 export class SampleService {
