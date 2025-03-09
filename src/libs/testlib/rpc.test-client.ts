@@ -1,11 +1,11 @@
 import { ClientProxy, ClientProxyFactory, NatsOptions } from '@nestjs/microservices'
 import { ClientProxyService } from 'common'
 
-export class MicroserviceTestClient extends ClientProxyService {
+export class RpcTestClient extends ClientProxyService {
     static create(option: NatsOptions) {
         const proxy = ClientProxyFactory.create(option)
 
-        return new MicroserviceTestClient(proxy)
+        return new RpcTestClient(proxy)
     }
 
     constructor(proxy: ClientProxy) {

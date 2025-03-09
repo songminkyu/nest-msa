@@ -1,8 +1,8 @@
-import { HttpTestClient, MicroserviceTestClient, withTestId } from 'testlib'
+import { HttpTestClient, RpcTestClient, withTestId } from 'testlib'
 
 describe('createTestContext', () => {
     let closeFixture: () => void
-    let microClient: MicroserviceTestClient
+    let microClient: RpcTestClient
     let httpClient: HttpTestClient
 
     beforeEach(async () => {
@@ -10,7 +10,7 @@ describe('createTestContext', () => {
         const fixture = await createFixture()
 
         closeFixture = fixture.closeFixture
-        microClient = fixture.microClient
+        microClient = fixture.rpcClient
         httpClient = fixture.httpClient
     })
 

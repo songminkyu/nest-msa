@@ -1,9 +1,9 @@
-import { CloseFixture, MicroserviceTestClient, withTestId } from 'testlib'
+import { CloseFixture, RpcTestClient, withTestId } from 'testlib'
 import { sleep } from '../../utils'
 
 describe('ClientProxyService', () => {
     let closeFixture: CloseFixture
-    let client: MicroserviceTestClient
+    let client: RpcTestClient
     let queueSpy: jest.SpyInstance
     let broadcastSpy: jest.SpyInstance
     let numberOfInstance: number

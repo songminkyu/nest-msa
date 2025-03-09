@@ -3,7 +3,7 @@ import { MessagePattern, NatsOptions, Transport } from '@nestjs/microservices'
 import {
     createTestContext,
     getNatsTestConnection,
-    MicroserviceTestClient,
+    RpcTestClient,
     TestContextOptions,
     withTestId
 } from 'testlib'
@@ -50,7 +50,7 @@ export async function createFixture() {
         Array.from({ length: numberOfInstance }, async () => createTestContext(options))
     )
 
-    const client = MicroserviceTestClient.create(brokerOptions)
+    const client = RpcTestClient.create(brokerOptions)
 
     const closeFixture = async () => {
         await client?.close()

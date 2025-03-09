@@ -6,10 +6,7 @@ import {
     Payload,
     Transport
 } from '@nestjs/microservices'
-import { createHttpTestContext } from '../create-test-context'
-import { MicroserviceTestClient } from '../microservice.test-client'
-import { getNatsTestConnection } from '../test-containers'
-import { withTestId } from '../utils'
+import { createHttpTestContext, getNatsTestConnection, RpcTestClient, withTestId } from 'testlib'
 
 @Controller()
 class SampleController {
@@ -37,12 +34,12 @@ export async function createFixture() {
         }
     })
 
-    const microClient = MicroserviceTestClient.create(brokerOpts)
+    const rpcClient = RpcTestClient.create(brokerOpts)
 
     const closeFixture = async () => {
-        await microClient?.close()
+        await rpcClient?.close()
         await testContext?.close()
     }
 
-    return { closeFixture, microClient, httpClient: testContext.httpClient }
+    return { closeFixture, rpcClient, httpClient: testContext.httpClient }
 }

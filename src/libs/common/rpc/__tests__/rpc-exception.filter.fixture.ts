@@ -5,7 +5,7 @@ import { IsNotEmpty, IsString } from 'class-validator'
 import {
     createHttpTestContext,
     getNatsTestConnection,
-    MicroserviceTestClient,
+    RpcTestClient,
     withTestId
 } from 'testlib'
 import { RpcExceptionFilter } from '../rpc-exception.filter'
@@ -58,7 +58,7 @@ export async function createFixture() {
         }
     })
 
-    const client = MicroserviceTestClient.create(brokerOptions)
+    const client = RpcTestClient.create(brokerOptions)
 
     const closeFixture = async () => {
         await client?.close()
