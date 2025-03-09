@@ -48,9 +48,9 @@ export class ClientProxyService implements OnModuleDestroy {
         return this.proxy.send(cmd, payload ?? '')
     }
 
-    emit<T>(event: string, payload: any): Promise<T> {
+    emit(event: string, payload: any): Promise<void> {
         // payload는 null일 수 없음
-        return waitProxyValue(this.proxy.emit<T>(event, payload ?? ''))
+        return waitProxyValue(this.proxy.emit<void>(event, payload ?? ''))
     }
 }
 

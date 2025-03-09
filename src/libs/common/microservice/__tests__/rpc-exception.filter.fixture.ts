@@ -2,8 +2,12 @@ import { Controller, Get, NotFoundException, ValidationPipe } from '@nestjs/comm
 import { APP_PIPE } from '@nestjs/core'
 import { MessagePattern, MicroserviceOptions, NatsOptions, Transport } from '@nestjs/microservices'
 import { IsNotEmpty, IsString } from 'class-validator'
-import { createHttpTestContext, getNatsTestConnection, withTestId } from 'testlib'
-import { ClientProxyModule, ClientProxyService, InjectClientProxy } from '../client-proxy.service'
+import {
+    createHttpTestContext,
+    getNatsTestConnection,
+    MicroserviceTestClient,
+    withTestId
+} from 'testlib'
 import { RpcExceptionFilter } from '../rpc-exception.filter'
 
 class CreateSampleDto {
@@ -14,7 +18,7 @@ class CreateSampleDto {
 
 @Controller()
 class SampleController {
-    constructor(@InjectClientProxy('name') private client: ClientProxyService) {}
+    constructor() {}
 
     @MessagePattern(withTestId('subject.throwHttpException'))
     throwHttpException() {
@@ -43,9 +47,6 @@ export async function createFixture() {
 
     const testContext = await createHttpTestContext({
         metadata: {
-            imports: [
-                ClientProxyModule.registerAsync({ name: 'name', useFactory: () => brokerOptions })
-            ],
             controllers: [SampleController],
             providers: [{ provide: APP_PIPE, useFactory: () => new ValidationPipe() }]
         },
@@ -57,11 +58,12 @@ export async function createFixture() {
         }
     })
 
-    const proxyService = testContext.module.get(ClientProxyService.getToken('name'))
+    const client = MicroserviceTestClient.create(brokerOptions)
 
     const closeFixture = async () => {
+        await client?.close()
         await testContext?.close()
     }
 
-    return { testContext, closeFixture, httpClient: testContext.httpClient, proxyService }
+    return { testContext, closeFixture, httpClient: testContext.httpClient, client }
 }

@@ -1,4 +1,4 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common'
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, Logger } from '@nestjs/common'
 import { Response } from 'express'
 import { throwError } from 'rxjs'
 
@@ -8,6 +8,8 @@ export class RpcExceptionFilter implements ExceptionFilter {
         const contextType = host.getType()
 
         if (contextType === 'rpc') {
+            const ctx = host.switchToRpc()
+
             let error = { statusCode: -1, message: 'undefined', error: 'undefined' }
 
             if (exception instanceof HttpException) {
@@ -21,6 +23,13 @@ export class RpcExceptionFilter implements ExceptionFilter {
                     statusCode: 500
                 }
             }
+
+            Logger.warn(error.message, 'RPC', {
+                statusCode: error.statusCode,
+                context: ctx.getContext(),
+                data: ctx.getData(),
+                stack: exception.stack
+            })
 
             return throwError(() => error)
         } else if (contextType === 'http') {

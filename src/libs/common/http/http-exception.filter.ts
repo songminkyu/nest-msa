@@ -37,10 +37,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
                 }
             } else if (exception instanceof Error) {
                 statusCode = 500
-                responseBody = {
-                    message: exception.message,
-                    error: 'Internal server error'
-                }
+                responseBody = { message: exception.message, error: 'Internal server error' }
             }
 
             response.status(statusCode).json(responseBody)

@@ -19,16 +19,14 @@ describe('createTestContext', () => {
     })
 
     it('Microservice 메시지를 전송하면 응답해야 한다', async () => {
-        const message = await microClient.send(withTestId('subject.getMicroserviceMessage'), {
-            arg: 'value'
-        })
-
-        expect(message).toEqual({ id: 'value' })
+        await microClient.expect(
+            withTestId('subject.getMicroserviceMessage'),
+            { arg: 'value' },
+            { id: 'value' }
+        )
     })
 
     it('Http 메시지를 전송하면 응답해야 한다', async () => {
-        const res = await httpClient.get('/message/value').ok()
-
-        expect(res.body).toEqual({ received: 'value' })
+        await httpClient.get('/message/value').ok({ received: 'value' })
     })
 })

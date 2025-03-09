@@ -1,35 +1,34 @@
 import { ClientProxy, ClientProxyFactory, NatsOptions } from '@nestjs/microservices'
-import { jsonToObject } from 'common'
-import { lastValueFrom } from 'rxjs'
+import { ClientProxyService } from 'common'
 
-// TODO 제거해라. error 말고는 필요도 없다
-export class MicroserviceTestClient {
+export class MicroserviceTestClient extends ClientProxyService {
     static create(option: NatsOptions) {
         const proxy = ClientProxyFactory.create(option)
 
         return new MicroserviceTestClient(proxy)
     }
 
-    constructor(public proxy: ClientProxy) {}
+    constructor(proxy: ClientProxy) {
+        super(proxy)
+    }
 
     async close() {
-        await this.proxy.close()
+        await this.onModuleDestroy()
     }
 
-    async send(cmd: string, payload: any) {
-        const ob = this.proxy.send(cmd, payload)
-        const value = await lastValueFrom(ob)
-        return jsonToObject(value)
-    }
+    async expect<T>(cmd: string, payload: any, expected: any): Promise<T> {
+        const value = await super.getJson<T>(cmd, payload)
 
-    async emit(event: string, payload: any) {
-        const ob = this.proxy.emit(event, payload)
-        const value = await lastValueFrom(ob)
+        if (expected) {
+            expect(value).toEqual(expected)
+        }
+
         return value
     }
 
     async error(cmd: string, payload: any, expected: any) {
-        const promise = lastValueFrom(this.proxy.send(cmd, payload))
+        const promise = super.getJson(cmd, payload)
+
         await expect(promise).rejects.toEqual(expected)
     }
 }

@@ -29,13 +29,13 @@ describe('ClientProxyService', () => {
     })
 
     it('queue 그룹을 설정하면 한 인스턴스에만 전달되어야 한다', async () => {
-        const result = await client.send(withTestId('subject.queue'), {})
+        const result = await client.getJson(withTestId('subject.queue'), {})
         expect(result).toEqual({ result: 'success' })
         expect(queueSpy).toHaveBeenCalledTimes(1)
     })
 
     it('queue 그룹을 설정하지 않으면 전체 인스턴스에 전달되어야 한다', async () => {
-        const result = await client.send(withTestId('subject.broadcast'), {})
+        const result = await client.getJson(withTestId('subject.broadcast'), {})
         await sleep(500)
         expect(result).toEqual({ result: 'success' })
         expect(broadcastSpy).toHaveBeenCalledTimes(numberOfInstance)
