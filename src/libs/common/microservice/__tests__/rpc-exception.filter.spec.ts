@@ -1,4 +1,4 @@
-import { InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { HttpException, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { CloseFixture, HttpTestClient, MicroserviceTestClient, withTestId } from 'testlib'
 
 describe('HttpToRpcExceptionFilter', () => {
@@ -19,6 +19,7 @@ describe('HttpToRpcExceptionFilter', () => {
         await closeFixture?.()
     })
 
+    // TODO new NotFoundException 이렇게 인스턴스를 비교하면 안 된다
     it('RpcController에서 던지는 HttpException이 복원되어야 한다', async () => {
         await rpcClient.error(
             withTestId('subject.throwHttpException'),
@@ -42,14 +43,16 @@ describe('HttpToRpcExceptionFilter', () => {
     })
 
     it('잘못된 데이터 형식에 대해 입력을 검증하고 오류를 반환해야 한다', async () => {
-        rpcClient.error(
+        await rpcClient.error(
             withTestId('subject.verifyDto'),
             { wrong: 'wrong field' },
-            {
-                error: 'Bad Request',
-                message: ['name should not be empty', 'name must be a string'],
-                statusCode: 400
-            }
+            new HttpException(
+                {
+                    error: 'Bad Request',
+                    message: ['name should not be empty', 'name must be a string']
+                },
+                400
+            )
         )
     })
 })

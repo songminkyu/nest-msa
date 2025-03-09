@@ -49,6 +49,6 @@ describe('HttpExceptionFilter', () => {
     it('RpcController에서 던지는 예외에는 영향이 없어야 한다', async () => {
         const promise = proxyService.getJson(withTestId('subject.throwException'), {})
 
-        await expect(promise).rejects.toEqual(new BadRequestException('throwRpcException'))
+        await expect(promise).rejects.toThrow(new BadRequestException('throwRpcException'))
     })
 })

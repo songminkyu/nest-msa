@@ -22,7 +22,7 @@ async function waitProxyValue<T>(observer: Observable<T>): Promise<T> {
     )
 }
 
-export async function getProxyValue<T>(observer: Observable<T>): Promise<T> {
+async function getProxyValue<T>(observer: Observable<T>): Promise<T> {
     return jsonToObject(await waitProxyValue(observer))
 }
 
