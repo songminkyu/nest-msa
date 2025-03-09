@@ -7,7 +7,7 @@ describe('Pagination', () => {
     let client: HttpTestClient
 
     beforeEach(async () => {
-        const { createFixture } = await import('./pagination.pipe.fixture')
+        const { createFixture } = await import('./pagination.fixture')
 
         const fixture = await createFixture()
         closeFixture = fixture.closeFixture
