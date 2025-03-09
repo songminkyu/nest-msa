@@ -1,7 +1,6 @@
 import { plainToInstance } from 'class-transformer'
+import { CommonErrors, PaginationOptionDto } from 'common'
 import { CloseFixture, HttpTestClient } from 'testlib'
-import { PaginationOptionDto } from '../pagination.pipe'
-import { CommonErrors } from '../../common-errors'
 
 describe('Pagination', () => {
     let closeFixture: CloseFixture

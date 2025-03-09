@@ -2,7 +2,7 @@ import { BadRequestException, NotFoundException, OnModuleInit } from '@nestjs/co
 import { differenceWith, uniq } from 'lodash'
 import { ClientSession, HydratedDocument, Model, QueryWithHelpers } from 'mongoose'
 import { CommonErrors } from '../common-errors'
-import { PaginationOptionDto, PaginationResult } from '../pipes'
+import { PaginationOptionDto, PaginationResult } from '../types'
 import { Assert, Expect } from '../validator'
 import { objectId, objectIds } from './mongoose.util'
 
