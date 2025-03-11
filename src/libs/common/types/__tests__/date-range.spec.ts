@@ -11,11 +11,9 @@ describe('DateRange', () => {
 
         const instance = plainToInstance(DateRange, plainData)
 
-        // 변환 테스트
         expect(instance.start).toBeInstanceOf(Date)
         expect(instance.end).toBeInstanceOf(Date)
 
-        // 유효성 검사 테스트
         const errors = validateSync(instance)
         expect(errors).toHaveLength(0)
     })
@@ -28,11 +26,9 @@ describe('DateRange', () => {
 
         const instance = plainToInstance(DateRange, plainData)
 
-        // 변환 테스트 (Invalid Date 생성 확인)
         expect(instance.start).toBeInstanceOf(Date)
         expect(isNaN(instance.start!.getTime())).toBe(true)
 
-        // 유효성 검사 테스트
         const errors = validateSync(instance)
         expect(errors.length).toBeGreaterThan(0)
         expect(errors[0].property).toBe('start')
