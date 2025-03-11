@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common'
 import { LatLong, LatLongQuery } from 'common'
-import { createHttpTestContext } from 'testlib'
+import { createHttpTestContext, HttpTestClient } from 'testlib'
 
 @Controller()
 class TestController {
@@ -8,6 +8,11 @@ class TestController {
     async testLatLong(@LatLongQuery('location') latlong: LatLong) {
         return latlong
     }
+}
+
+export interface Fixture {
+    teardown: () => Promise<void>
+    httpClient: HttpTestClient
 }
 
 export async function createFixture() {
@@ -21,5 +26,5 @@ export async function createFixture() {
         await testContext?.close()
     }
 
-    return { testContext, teardown, client: testContext.httpClient }
+    return { teardown, httpClient: testContext.httpClient }
 }
