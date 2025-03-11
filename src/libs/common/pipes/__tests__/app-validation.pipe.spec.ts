@@ -1,4 +1,4 @@
-import {  HttpTestClient } from 'testlib'
+import { HttpTestClient } from 'testlib'
 
 describe('AppValidationPipe', () => {
     let teardown = () => {}

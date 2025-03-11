@@ -1,4 +1,4 @@
-import {  RpcTestClient, withTestId } from 'testlib'
+import { RpcTestClient, withTestId } from 'testlib'
 import { sleep } from '../../utils'
 
 describe('ClientProxyService', () => {

@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
 import { OrderDirection, pickIds, pickItems } from 'common'
-import {  expectEqualUnsorted, nullObjectId } from 'testlib'
+import { expectEqualUnsorted, nullObjectId } from 'testlib'
 import {
     createSample,
     createSamples,

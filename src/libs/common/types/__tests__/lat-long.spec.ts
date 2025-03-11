@@ -1,5 +1,5 @@
 import { LatLong } from 'common'
-import {  HttpTestClient } from 'testlib'
+import { HttpTestClient } from 'testlib'
 
 describe('LatLong', () => {
     let teardown = () => {}

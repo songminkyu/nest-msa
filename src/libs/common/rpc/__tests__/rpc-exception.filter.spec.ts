@@ -1,5 +1,5 @@
 import { HttpException, InternalServerErrorException, NotFoundException } from '@nestjs/common'
-import {  HttpTestClient, RpcTestClient, withTestId } from 'testlib'
+import { HttpTestClient, RpcTestClient, withTestId } from 'testlib'
 
 describe('HttpToRpcExceptionFilter', () => {
     let teardown = () => {}
