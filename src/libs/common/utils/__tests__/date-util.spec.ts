@@ -2,7 +2,7 @@ import { DateUtil } from 'common'
 
 describe('DateUtil', () => {
     describe('toMs', () => {
-        it('시간 형식 문자열을 Date 객체로 변환', () => {
+        it('시간 형식 문자열을 밀리초(ms)로 변환해야 한다', () => {
             expect(DateUtil.toMs('30m')).toEqual(30 * 60 * 1000)
             expect(DateUtil.toMs('45s')).toEqual(45 * 1000)
             expect(DateUtil.toMs('1d')).toEqual(24 * 60 * 60 * 1000)
@@ -20,7 +20,7 @@ describe('DateUtil', () => {
     })
 
     describe('fromMs', () => {
-        it('Date 객체를 시간 형식 문자열로 변환', () => {
+        it('밀리초(ms)를 시간 형식 문자열로 변환해야 한다', () => {
             expect(DateUtil.fromMs(30 * 60 * 1000)).toEqual('30m')
             expect(DateUtil.fromMs(45 * 1000)).toEqual('45s')
             expect(DateUtil.fromMs(24 * 60 * 60 * 1000)).toEqual('1d')

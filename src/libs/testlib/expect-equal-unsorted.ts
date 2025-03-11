@@ -1,6 +1,7 @@
 import { memoize } from 'lodash'
+import { omit } from 'lodash'
 
-function stringifyWithSortedKeys(obj: any): string {
+function stringifyWithSortedKeys(obj: Record<string, any>): string {
     return JSON.stringify(obj, (key, value) => {
         if (value && typeof value === 'object' && !Array.isArray(value)) {
             return Object.keys(value)
@@ -21,20 +22,8 @@ const memoizedStringify = memoize(stringifyWithSortedKeys)
 
 function sortDtos<T extends Record<string, any>>(dtos: T[], excludeKeys: (keyof T)[] = []): T[] {
     return [...dtos].sort((a, b) => {
-        const aFiltered = Object.entries(a).reduce((acc, [key, value]) => {
-            if (!excludeKeys.includes(key as keyof T)) {
-                acc[key as keyof T] = value
-            }
-            return acc
-        }, {} as Partial<T>)
-
-        const bFiltered = Object.entries(b).reduce((acc, [key, value]) => {
-            if (!excludeKeys.includes(key as keyof T)) {
-                acc[key as keyof T] = value
-            }
-            return acc
-        }, {} as Partial<T>)
-
+        const aFiltered = omit(a, excludeKeys)
+        const bFiltered = omit(b, excludeKeys)
         return memoizedStringify(aFiltered).localeCompare(memoizedStringify(bFiltered))
     })
 }
@@ -43,7 +32,7 @@ function isAnything(value: any): boolean {
     return (
         value &&
         typeof value === 'object' &&
-        value.asymmetricMatch &&
+        'asymmetricMatch' in value &&
         value.asymmetricMatch(expect.anything())
     )
 }
@@ -55,12 +44,17 @@ function getAnythingKeys(obj: Record<string, any>): string[] {
 }
 
 /**
- * Sort and compare all values except the expect.anything() value
+ * 객체 배열을 정렬하여 비교합니다.
+ * @param actual 실제 객체 배열
+ * @param expected 기대 객체 배열
+ * @example
+ * expectEqualUnsorted([{ id: 1, name: 'test' }], [{ id: expect.any(Number), name: 'test' }]);
  */
 export function expectEqualUnsorted(actual: any[] | undefined, expected: any[] | undefined) {
-    if (!actual || !expected) throw new Error('actual or expected undefined')
+    if (!actual || !expected) {
+        throw new Error('actual or expected undefined')
+    }
 
-    // Find all expect.anything() keys
     const anythingKeys = new Set([
         ...actual.flatMap(getAnythingKeys),
         ...expected.flatMap(getAnythingKeys)

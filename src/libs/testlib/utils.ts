@@ -1,7 +1,6 @@
 import fs from 'fs/promises'
 import net from 'net'
 
-export const nullUUID = '00000000000000000000000000000000'
 export const nullObjectId = '000000000000000000000000'
 export const testObjectId = (hex: string) => hex.padStart(24, '0')
 
@@ -44,6 +43,19 @@ export function getAvailablePort(): Promise<number> {
     })
 }
 
+/**
+ * objectToFields 함수는 객체를 필드 배열로 변환합니다.
+ * 각 객체의 키-값 쌍을 { name: key, value: processedValue } 형태로 매핑합니다.
+ *
+ * - 문자열인 경우: 그대로 사용합니다.
+ * - Date 객체인 경우: ISO 형식의 문자열로 변환합니다.
+ * - 배열인 경우: JSON 문자열로 변환합니다.
+ * - null 또는 undefined 인 경우: 빈 문자열로 변환합니다.
+ * - 그 외의 경우: JSON 문자열로 변환합니다.
+ *
+ * @param createDto 변환할 객체
+ * @returns {Array<{name: string, value: string}>} 변환된 필드 배열
+ */
 export const objectToFields = (createDto: any) => {
     const fields = Object.entries(createDto).map(([key, value]) => {
         let processedValue
@@ -64,36 +76,6 @@ export const objectToFields = (createDto: any) => {
     })
 
     return fields
-}
-
-export interface EventMessage {
-    event: string
-    id: number
-    data: string
-}
-
-export function parseEventMessage(input: string): EventMessage {
-    const lines = input.split('\n')
-    const result: Partial<EventMessage> = {}
-
-    lines.forEach((line) => {
-        const [key, value] = line.split(': ')
-        if (key && value) {
-            switch (key) {
-                case 'event':
-                    result.event = value
-                    break
-                case 'id':
-                    result.id = parseInt(value, 10)
-                    break
-                case 'data':
-                    result.data = value
-                    break
-            }
-        }
-    })
-
-    return result as EventMessage
 }
 
 export function withTestId(prefix: string) {
@@ -124,5 +106,3 @@ export class EnvVars {
         return parsed
     }
 }
-
-export type CloseFixture = () => Promise<void>

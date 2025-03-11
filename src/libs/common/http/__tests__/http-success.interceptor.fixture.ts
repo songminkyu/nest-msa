@@ -20,9 +20,9 @@ export async function createFixture() {
     const { Logger } = await import('@nestjs/common')
     const spy = jest.spyOn(Logger, 'verbose').mockImplementation(() => {})
 
-    const closeFixture = async () => {
+    const teardown = async () => {
         await testContext?.close()
     }
 
-    return { testContext, closeFixture, spy, client: testContext.httpClient }
+    return { testContext, teardown, spy, client: testContext.httpClient }
 }

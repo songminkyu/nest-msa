@@ -1,8 +1,8 @@
-import { CloseFixture, RpcTestClient, withTestId } from 'testlib'
+import {  RpcTestClient, withTestId } from 'testlib'
 import { sleep } from '../../utils'
 
 describe('ClientProxyService', () => {
-    let closeFixture: CloseFixture
+    let teardown = () => {}
     let client: RpcTestClient
     let queueSpy: jest.SpyInstance
     let broadcastSpy: jest.SpyInstance
@@ -20,12 +20,12 @@ describe('ClientProxyService', () => {
         numberOfInstance = instanseCount
 
         const fixture = await createFixture()
-        closeFixture = fixture.closeFixture
+        teardown = fixture.teardown
         client = fixture.client
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await teardown()
     })
 
     it('queue 그룹을 설정하면 한 인스턴스에만 전달되어야 한다', async () => {

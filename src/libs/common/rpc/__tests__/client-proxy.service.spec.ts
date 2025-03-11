@@ -1,19 +1,19 @@
-import { CloseFixture, HttpTestClient } from 'testlib'
+import { HttpTestClient } from 'testlib'
 
 describe('ClientProxyService', () => {
-    let closeFixture: CloseFixture
+    let teardown = () => {}
     let client: HttpTestClient
 
     beforeEach(async () => {
         const { createFixture } = await import('./client-proxy.service.fixture')
 
         const fixture = await createFixture()
-        closeFixture = fixture.closeFixture
+        teardown = fixture.teardown
         client = fixture.client
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await teardown()
     })
 
     describe('send', () => {

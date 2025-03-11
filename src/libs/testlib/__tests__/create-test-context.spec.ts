@@ -1,32 +1,27 @@
-import { HttpTestClient, RpcTestClient, withTestId } from 'testlib'
+import { withTestId } from 'testlib'
+import { Fixture } from './create-test-context.fixture'
 
 describe('createTestContext', () => {
-    let closeFixture: () => void
-    let microClient: RpcTestClient
-    let httpClient: HttpTestClient
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./create-test-context.fixture')
-        const fixture = await createFixture()
-
-        closeFixture = fixture.closeFixture
-        microClient = fixture.rpcClient
-        httpClient = fixture.httpClient
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await fix?.teardown()
     })
 
-    it('Microservice 메시지를 전송하면 응답해야 한다', async () => {
-        await microClient.expect(
-            withTestId('subject.getMicroserviceMessage'),
+    it('RPC 메시지를 전송하면 응답해야 한다', async () => {
+        await fix.rpcClient.expect(
+            withTestId('subject.getRpcMessage'),
             { arg: 'value' },
             { id: 'value' }
         )
     })
 
     it('Http 메시지를 전송하면 응답해야 한다', async () => {
-        await httpClient.get('/message/value').ok({ received: 'value' })
+        await fix.httpClient.get('/message/value').ok({ received: 'value' })
     })
 })

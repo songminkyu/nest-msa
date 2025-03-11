@@ -1,21 +1,21 @@
 import { expect } from '@jest/globals'
-import { CloseFixture } from 'testlib'
+
 import { SamplesRepository } from './mongoose.transaction.fixture'
 
 describe('MongooseRepository - withTransaction', () => {
-    let closeFixture: CloseFixture
+    let teardown = () => {}
     let repository: SamplesRepository
 
     beforeEach(async () => {
         const { createFixture } = await import('./mongoose.transaction.fixture')
 
         const fixture = await createFixture()
-        closeFixture = fixture.closeFixture
+        teardown = fixture.teardown
         repository = fixture.repository
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await teardown()
     })
 
     it('commit a transaction', async () => {

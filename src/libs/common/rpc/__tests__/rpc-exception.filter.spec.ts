@@ -1,8 +1,8 @@
 import { HttpException, InternalServerErrorException, NotFoundException } from '@nestjs/common'
-import { CloseFixture, HttpTestClient, RpcTestClient, withTestId } from 'testlib'
+import {  HttpTestClient, RpcTestClient, withTestId } from 'testlib'
 
 describe('HttpToRpcExceptionFilter', () => {
-    let closeFixture: CloseFixture
+    let teardown = () => {}
     let httpClient: HttpTestClient
     let rpcClient: RpcTestClient
 
@@ -10,13 +10,13 @@ describe('HttpToRpcExceptionFilter', () => {
         const { createFixture } = await import('./rpc-exception.filter.fixture')
 
         const fixture = await createFixture()
-        closeFixture = fixture.closeFixture
+        teardown = fixture.teardown
         httpClient = fixture.httpClient
         rpcClient = fixture.client
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await teardown()
     })
 
     // TODO new NotFoundException 이렇게 인스턴스를 비교하면 안 된다

@@ -1,11 +1,11 @@
 import { expect } from '@jest/globals'
 import { HydratedDocument, Model } from 'mongoose'
-import { CloseFixture } from 'testlib'
+
 import { HardDeleteSample, SoftDeleteSample } from './mongoose.delete.fixture'
 
 describe('Mongoose Delete', () => {
     describe('Soft Delete', () => {
-        let closeFixture: CloseFixture
+        let teardown = () => {}
         let model: Model<any>
         let doc: HydratedDocument<SoftDeleteSample>
 
@@ -13,13 +13,13 @@ describe('Mongoose Delete', () => {
             const { createFixture } = await import('./mongoose.delete.fixture')
 
             const fixture = await createFixture(SoftDeleteSample)
-            closeFixture = fixture.closeFixture
+            teardown = fixture.teardown
             model = fixture.model
             doc = fixture.doc
         })
 
         afterEach(async () => {
-            await closeFixture?.()
+            await teardown()
         })
 
         it('deletedAt의 초기값은 null이다', async () => {
@@ -59,19 +59,19 @@ describe('Mongoose Delete', () => {
     })
 
     describe('Hard Delete', () => {
-        let closeFixture: CloseFixture
+        let teardown = () => {}
         let doc: HydratedDocument<HardDeleteSample>
 
         beforeEach(async () => {
             const { createFixture } = await import('./mongoose.delete.fixture')
 
             const fixture = await createFixture(HardDeleteSample)
-            closeFixture = fixture.closeFixture
+            teardown = fixture.teardown
             doc = fixture.doc
         })
 
         afterEach(async () => {
-            await closeFixture?.()
+            await teardown()
         })
 
         it('데이터를 완전히 삭제해야 한다', async () => {

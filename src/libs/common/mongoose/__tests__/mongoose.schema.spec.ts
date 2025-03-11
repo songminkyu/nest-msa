@@ -1,22 +1,22 @@
 import { expect } from '@jest/globals'
 import { Model, Types } from 'mongoose'
-import { CloseFixture } from 'testlib'
+
 import { SchemaTypeSample } from './mongoose.schema.fixture'
 
 describe('Mongoose Schema examples', () => {
-    let closeFixture: CloseFixture
+    let teardown = () => {}
     let model: Model<SchemaTypeSample>
 
     beforeEach(async () => {
         const { createFixture } = await import('./mongoose.schema.fixture')
 
         const fixture = await createFixture()
-        closeFixture = fixture.closeFixture
+        teardown = fixture.teardown
         model = fixture.model
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await teardown()
     })
 
     it('Mongoose의 모든 기본 데이터 타입 저장 및 조회 검증', async () => {

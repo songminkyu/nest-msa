@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
 import { OrderDirection, pickIds, pickItems } from 'common'
-import { CloseFixture, expectEqualUnsorted, nullObjectId } from 'testlib'
+import {  expectEqualUnsorted, nullObjectId } from 'testlib'
 import {
     createSample,
     createSamples,
@@ -16,21 +16,21 @@ describe('MongooseRepository', () => {
     let BadRequestException: any
     let NotFoundException: any
 
-    let closeFixture: CloseFixture
+    let teardown = () => {}
     let repository: SamplesRepository
 
     beforeEach(async () => {
         const { createFixture } = await import('./mongoose.repository.fixture')
 
         const fixture = await createFixture()
-        closeFixture = fixture.closeFixture
+        teardown = fixture.teardown
         repository = fixture.repository
         BadRequestException = fixture.BadRequestException
         NotFoundException = fixture.NotFoundException
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await teardown()
     })
 
     describe('save', () => {

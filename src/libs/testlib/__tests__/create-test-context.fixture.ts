@@ -6,12 +6,18 @@ import {
     Payload,
     Transport
 } from '@nestjs/microservices'
-import { createHttpTestContext, getNatsTestConnection, RpcTestClient, withTestId } from 'testlib'
+import {
+    createHttpTestContext,
+    getNatsTestConnection,
+    HttpTestClient,
+    RpcTestClient,
+    withTestId
+} from 'testlib'
 
 @Controller()
 class SampleController {
-    @MessagePattern(withTestId('subject.getMicroserviceMessage'))
-    getMicroserviceMessage(@Payload() request: { arg: string }) {
+    @MessagePattern(withTestId('subject.getRpcMessage'))
+    getRpcMessage(@Payload() request: { arg: string }) {
         return { id: request.arg }
     }
 
@@ -21,7 +27,13 @@ class SampleController {
     }
 }
 
-export async function createFixture() {
+export interface Fixture {
+    teardown: () => Promise<void>
+    rpcClient: RpcTestClient
+    httpClient: HttpTestClient
+}
+
+export async function createFixture(): Promise<Fixture> {
     const { servers } = await getNatsTestConnection()
 
     const brokerOpts = { transport: Transport.NATS, options: { servers } } as NatsOptions
@@ -36,10 +48,10 @@ export async function createFixture() {
 
     const rpcClient = RpcTestClient.create(brokerOpts)
 
-    const closeFixture = async () => {
-        await rpcClient?.close()
-        await testContext?.close()
+    const teardown = async () => {
+        await rpcClient.close()
+        await testContext.close()
     }
 
-    return { closeFixture, rpcClient, httpClient: testContext.httpClient }
+    return { teardown, rpcClient, httpClient: testContext.httpClient }
 }

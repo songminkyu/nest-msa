@@ -3,31 +3,32 @@ import { createTestingModule } from 'testlib'
 
 @Injectable()
 export class SampleService {
-    constructor() {}
-
-    async getMessage() {
+    getMessage() {
         return 'This method should not be called'
     }
 }
 
-export async function createFixture() {
+export interface Fixture {
+    teardown: () => Promise<void>
+    sampleService: SampleService
+}
+
+export async function createFixture(): Promise<Fixture> {
     const module = await createTestingModule({
         providers: [SampleService],
         overrideProviders: [
             {
                 original: SampleService,
-                replacement: {
-                    getMessage: jest.fn().mockReturnValue({ message: 'This is Mock' })
-                }
+                replacement: { getMessage: jest.fn().mockReturnValue({ message: 'This is Mock' }) }
             }
         ]
     })
 
     const sampleService = module.get(SampleService)
 
-    const closeFixture = async () => {
+    const teardown = async () => {
         await module?.close()
     }
 
-    return { closeFixture, module, sampleService }
+    return { teardown, sampleService }
 }

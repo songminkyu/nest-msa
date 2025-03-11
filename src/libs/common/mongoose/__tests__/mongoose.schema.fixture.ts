@@ -83,9 +83,9 @@ export async function createFixture() {
 
     const model = testContext.module.get<Model<SchemaTypeSample>>(getModelToken('schema'))
 
-    const closeFixture = async () => {
+    const teardown = async () => {
         await testContext?.close()
     }
 
-    return { testContext, closeFixture, model }
+    return { testContext, teardown, model }
 }

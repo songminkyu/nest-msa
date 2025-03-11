@@ -8,6 +8,14 @@ describe('Password', () => {
         expect(hashedPassword).not.toEqual(password)
     })
 
+    it('같은 비밀번호에 대해서 서로 다른 해시 값을 생성해야 한다', async () => {
+        const password = 'password'
+        const firstHash = await Password.hash(password)
+        const secondHash = await Password.hash(password)
+
+        expect(firstHash).not.toEqual(secondHash)
+    })
+
     it('비밀번호가 일치하면 true를 반환해야 한다', async () => {
         const password = 'password'
         const hashedPassword = await Password.hash(password)

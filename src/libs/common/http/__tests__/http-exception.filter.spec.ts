@@ -3,7 +3,7 @@ import { ClientProxyService, CommonErrors } from 'common'
 import { HttpTestClient, withTestId } from 'testlib'
 
 describe('HttpExceptionFilter', () => {
-    let closeFixture: () => void
+    let teardown: () => void
     let client: HttpTestClient
     let proxyService: ClientProxyService
 
@@ -11,13 +11,13 @@ describe('HttpExceptionFilter', () => {
         const { createFixture } = await import('./http-exception.filter.fixture')
 
         const fixture = await createFixture()
-        closeFixture = fixture.closeFixture
+        teardown = fixture.teardown
         client = fixture.client
         proxyService = fixture.proxyService
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await teardown()
     })
 
     it('HttpException을 던지면 해당하는 StatusCode를 반환해야 한다', async () => {

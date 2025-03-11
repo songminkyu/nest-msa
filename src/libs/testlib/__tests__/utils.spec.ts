@@ -1,4 +1,4 @@
-import { Path } from 'common'
+import { Byte, Path } from 'common'
 import fs from 'fs/promises'
 import path from 'path'
 import { createDummyFile, EnvVars } from 'testlib'
@@ -17,7 +17,7 @@ describe('createDummyFile', () => {
     })
 
     it('지정된 크기의 파일을 생성해야 한다', async () => {
-        const sizeInBytes = 5 * 1024 * 1024 // 5 MB
+        const sizeInBytes = Byte.fromString('500KB')
         await createDummyFile(testFilePath, sizeInBytes)
         const stats = await fs.stat(testFilePath)
         expect(stats.size).toBe(sizeInBytes)

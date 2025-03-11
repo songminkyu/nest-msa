@@ -190,12 +190,12 @@ describe('common/utils/etc', () => {
             await Path.delete(tempDir)
         })
 
-        it('정확한 MD5 체크섬을 반환해야 한다', async () => {
+        it('MD5 체크섬을 반환해야 한다', async () => {
             const checksum = await getChecksum(helloWorld, 'md5')
             expect(checksum).toBe('65a8e27d8879283831b664bd8b7f0ad4')
         })
 
-        it('정확한 SHA256 체크섬을 반환해야 한다', async () => {
+        it('SHA256 체크섬을 반환해야 한다', async () => {
             const checksum = await getChecksum(helloWorld)
             expect(checksum).toBe(
                 'dffd6021bb2bd5b0af676290809ec3a53191dd81c7f70a4b28688a362182986f'

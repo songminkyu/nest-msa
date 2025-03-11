@@ -1,20 +1,20 @@
 import { LatLong } from 'common'
-import { CloseFixture, HttpTestClient } from 'testlib'
+import {  HttpTestClient } from 'testlib'
 
 describe('LatLong', () => {
-    let closeFixture: CloseFixture
+    let teardown = () => {}
     let client: HttpTestClient
 
     beforeEach(async () => {
         const { createFixture } = await import('./lat-long.fixture')
 
         const fixture = await createFixture()
-        closeFixture = fixture.closeFixture
+        teardown = fixture.teardown
         client = fixture.client
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await teardown()
     })
 
     it('두 위경도 간의 거리를 미터 단위로 계산해야 한다', () => {

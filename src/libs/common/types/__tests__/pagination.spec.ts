@@ -1,21 +1,21 @@
 import { plainToInstance } from 'class-transformer'
 import { CommonErrors, PaginationOptionDto } from 'common'
-import { CloseFixture, HttpTestClient } from 'testlib'
+import {  HttpTestClient } from 'testlib'
 
 describe('Pagination', () => {
-    let closeFixture: CloseFixture
+    let teardown = () => {}
     let client: HttpTestClient
 
     beforeEach(async () => {
         const { createFixture } = await import('./pagination.fixture')
 
         const fixture = await createFixture()
-        closeFixture = fixture.closeFixture
+        teardown = fixture.teardown
         client = fixture.client
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await teardown()
     })
 
     it('페이지네이션 옵션을 올바르게 적용해야 한다', async () => {

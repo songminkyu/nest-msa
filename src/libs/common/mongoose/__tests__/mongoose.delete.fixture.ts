@@ -38,9 +38,9 @@ export async function createFixture<T>(cls: Type<T>) {
     doc.name = 'name'
     await doc.save()
 
-    const closeFixture = async () => {
+    const teardown = async () => {
         await testContext?.close()
     }
 
-    return { testContext, closeFixture, model, doc }
+    return { testContext, teardown, model, doc }
 }

@@ -17,9 +17,9 @@ export async function createFixture() {
         }
     })
 
-    const closeFixture = async () => {
+    const teardown = async () => {
         await testContext?.close()
     }
 
-    return { testContext, closeFixture, client: testContext.httpClient }
+    return { testContext, teardown, client: testContext.httpClient }
 }

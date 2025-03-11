@@ -3,7 +3,12 @@ import { jsonToObject, Byte } from 'common'
 import { createWriteStream } from 'fs'
 import { reject } from 'lodash'
 import superagent from 'superagent'
-import { parseEventMessage } from './utils'
+
+interface EventMessage {
+    event: string
+    id: number
+    data: string
+}
 
 export class HttpTestClient {
     private agent: superagent.Request
@@ -117,7 +122,7 @@ export class HttpTestClient {
                          * id: 1
                          * data: {"batchId":"6712d234a78adbff65ae552d","status":"processing"}
                          */
-                        const message = parseEventMessage(data)
+                        const message = this.parseEventMessage(data)
 
                         if (message.event !== 'error' && message.data) {
                             messageHandler(message.data)
@@ -140,6 +145,30 @@ export class HttpTestClient {
             })
 
         return this
+    }
+
+    private parseEventMessage(input: string): EventMessage {
+        const lines = input.split('\n')
+        const result: Partial<EventMessage> = {}
+
+        lines.forEach((line) => {
+            const [key, value] = line.split(': ')
+            if (key && value) {
+                switch (key) {
+                    case 'event':
+                        result.event = value
+                        break
+                    case 'id':
+                        result.id = parseInt(value, 10)
+                        break
+                    case 'data':
+                        result.data = value
+                        break
+                }
+            }
+        })
+
+        return result as EventMessage
     }
 
     async send(status: number, expected?: any): Promise<superagent.Response> {
