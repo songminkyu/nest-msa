@@ -4,5 +4,3 @@ export class CustomerDto {
     email: string
     birthdate: Date
 }
-
-export const nullCustomer = { id: '', name: '', email: '', birthdate: new Date(0) }

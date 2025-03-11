@@ -63,8 +63,6 @@ export class Seatmap {
     }
 }
 
-export const nullSeatmap = { blocks: [] }
-
 function* seatsIterator(seatmap: Seatmap): IterableIterator<Seat> {
     for (const block of seatmap.blocks) {
         for (const row of block.rows) {

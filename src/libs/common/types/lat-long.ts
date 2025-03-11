@@ -42,7 +42,6 @@ export class LatLong {
         return distanceInMeters
     }
 }
-export const nullLatLong = { latitude: 0, longitude: 0 }
 
 @Injectable()
 class LatLongPipe implements PipeTransform<string, Promise<LatLong>> {

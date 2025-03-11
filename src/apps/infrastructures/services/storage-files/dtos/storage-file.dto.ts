@@ -6,12 +6,3 @@ export class StorageFileDto {
     checksum: string
     storedPath: string
 }
-
-export const nullStorageFileDto = {
-    id: '',
-    originalname: '',
-    mimetype: '',
-    size: 0,
-    checksum: '',
-    storedPath: ''
-}

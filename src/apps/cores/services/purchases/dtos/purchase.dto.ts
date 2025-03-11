@@ -20,13 +20,3 @@ export class PurchaseDto {
     createdAt: Date
     updatedAt: Date
 }
-
-export const nullPurchase = {
-    id: '',
-    customerId: '',
-    paymentId: '',
-    totalPrice: 0,
-    items: [],
-    createdAt: new Date(0),
-    updatedAt: new Date(0)
-}
