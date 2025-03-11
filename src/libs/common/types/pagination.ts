@@ -1,6 +1,6 @@
 import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from '@nestjs/common'
 import { Transform } from 'class-transformer'
-import { IsInt, IsOptional, IsString, Min } from 'class-validator'
+import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator'
 import { CommonErrors } from '../common-errors'
 
 export enum OrderDirection {
@@ -13,6 +13,7 @@ export class OrderOption {
     name: string
 
     @IsString()
+    @IsEnum(OrderDirection)
     direction: OrderDirection
 }
 
