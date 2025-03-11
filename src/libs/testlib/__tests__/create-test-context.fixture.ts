@@ -35,7 +35,6 @@ export interface Fixture {
 
 export async function createFixture(): Promise<Fixture> {
     const { servers } = await getNatsTestConnection()
-
     const brokerOpts = { transport: Transport.NATS, options: { servers } } as NatsOptions
 
     const testContext = await createHttpTestContext({

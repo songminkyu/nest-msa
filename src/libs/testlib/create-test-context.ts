@@ -54,7 +54,9 @@ export async function createTestContext({
 
     await app.init()
 
-    const close = async () => await app.close()
+    const close = async () => {
+        await app.close()
+    }
 
     return { module, app, close }
 }
