@@ -28,6 +28,10 @@ export class PaginationOptionDto {
     @Min(0)
     skip?: number
 
+    /**
+     * HttpController에서는 'orderby'가 문자열(예: "name:asc")로 전달되고,
+     * RpcController에서는 객체({ name, direction })로 전달됩니다.
+     */
     @IsOptional()
     @Transform(({ value }) => {
         if (value.direction && value.name) {

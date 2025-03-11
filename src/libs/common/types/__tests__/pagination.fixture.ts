@@ -1,7 +1,20 @@
 import { Controller, Get, Injectable, Query, UsePipes, ValidationPipe } from '@nestjs/common'
 import { APP_PIPE } from '@nestjs/core'
+import {
+    MessagePattern,
+    MicroserviceOptions,
+    NatsOptions,
+    Payload,
+    Transport
+} from '@nestjs/microservices'
 import { PaginationOptionDto, PaginationPipe } from 'common'
-import { createHttpTestContext } from 'testlib'
+import {
+    createHttpTestContext,
+    getNatsTestConnection,
+    HttpTestClient,
+    RpcTestClient,
+    withTestId
+} from 'testlib'
 
 @Injectable()
 class DefaultPaginationPipe extends PaginationPipe {
@@ -10,21 +23,35 @@ class DefaultPaginationPipe extends PaginationPipe {
     }
 }
 
-@Controller('samples')
+@Controller()
 class SamplesController {
-    @Get()
-    async handleQuery(@Query() query: PaginationOptionDto) {
-        return query
+    @Get('pagination')
+    async getPagination(@Query() query: PaginationOptionDto) {
+        return { response: query }
     }
 
-    @Get('takeLimit')
+    @Get('pagination/limited')
     @UsePipes(DefaultPaginationPipe)
-    async handleMaxsize(@Query() pagination: PaginationOptionDto) {
-        return pagination
+    async getLimitedPagination(@Query() query: PaginationOptionDto) {
+        return { response: query }
+    }
+
+    @MessagePattern(withTestId('subject.getRpcPagination'))
+    handleRpcPagination(@Payload() query: PaginationOptionDto) {
+        return { response: query }
     }
 }
 
+export interface Fixture {
+    teardown: () => Promise<void>
+    httpClient: HttpTestClient
+    rpcClient: RpcTestClient
+}
+
 export async function createFixture() {
+    const { servers } = await getNatsTestConnection()
+    const brokerOpts = { transport: Transport.NATS, options: { servers } } as NatsOptions
+
     const testContext = await createHttpTestContext({
         metadata: {
             controllers: [SamplesController],
@@ -38,12 +65,19 @@ export async function createFixture() {
                         })
                 }
             ]
+        },
+        configureApp: async (app) => {
+            app.connectMicroservice<MicroserviceOptions>(brokerOpts, { inheritAppConfig: true })
+            await app.startAllMicroservices()
         }
     })
 
+    const rpcClient = RpcTestClient.create(brokerOpts)
+
     const teardown = async () => {
-        await testContext?.close()
+        await rpcClient.close()
+        await testContext.close()
     }
 
-    return { testContext, teardown, client: testContext.httpClient }
+    return { testContext, teardown, httpClient: testContext.httpClient, rpcClient }
 }
