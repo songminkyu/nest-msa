@@ -1,58 +1,37 @@
-import { ConfigService } from '@nestjs/config'
-import { BaseConfigService } from 'common'
-import Joi from 'joi'
-
-class TestConfigService extends BaseConfigService {
-    public exposeGetString(key: string) {
-        return this.getString(key)
-    }
-
-    public exposeGetNumber(key: string) {
-        return this.getNumber(key)
-    }
-}
+import { Fixture } from './base-config.service.fixture'
 
 describe('BaseConfigService', () => {
-    let mockConfigService: jest.Mocked<ConfigService>
-    const testSchema = Joi.object({
-        VALID_KEY: Joi.string().required(),
-        NUMBER_KEY: Joi.string().required()
+    let fix: Fixture
+
+    beforeEach(async () => {
+        process.env['TEST_STRING_KEY'] = 'test-value'
+        process.env['TEST_NUMBER_KEY'] = '123'
+
+        const { createFixture } = await import('./base-config.service.fixture')
+        fix = await createFixture()
     })
 
-    beforeEach(() => {
-        mockConfigService = {
-            get: jest.fn()
-        } as unknown as jest.Mocked<ConfigService>
+    afterEach(async () => {
+        await fix?.teardown()
     })
 
-    it('올바른 키로 문자열 값 조회', () => {
-        mockConfigService.get.mockReturnValue('test-value')
-        const service = new TestConfigService(mockConfigService, testSchema)
-
-        const result = service.exposeGetString('VALID_KEY')
+    it('key에 해당하는 문자열을 반환해야 한다', () => {
+        const result = fix.appConfigService.getTestString()
         expect(result).toBe('test-value')
-        expect(mockConfigService.get).toHaveBeenCalledWith('VALID_KEY')
     })
 
-    it('잘못된 키 접근 시 프로세스 종료', () => {
+    it('key에 해당하는 숫자를 반환해야 한다', () => {
+        const result = fix.appConfigService.getTestNumber()
+        expect(result).toBe(123)
+    })
+
+    it('존재하지 않는 key를 요청하면 프로세스를 종료해야 한다', () => {
         const mockExit = jest.spyOn(process, 'exit').mockImplementation()
         const consoleError = jest.spyOn(console, 'error').mockImplementation()
 
-        const service = new TestConfigService(mockConfigService, testSchema)
+        fix.appConfigService.throwError()
 
-        service.exposeGetString('INVALID_KEY')
-
-        expect(consoleError).toHaveBeenCalledWith(
-            'Configuration validation error: Key "INVALID_KEY" is not defined in the configSchema'
-        )
+        expect(consoleError).toHaveBeenCalledWith("Key 'TEST_NOT_EXIST_KEY' is not defined")
         expect(mockExit).toHaveBeenCalledWith(1)
-    })
-
-    it('문자열을 숫자로 변환', () => {
-        mockConfigService.get.mockReturnValue('123')
-        const service = new TestConfigService(mockConfigService, testSchema)
-
-        const result = service.exposeGetNumber('NUMBER_KEY')
-        expect(result).toBe(123)
     })
 })
