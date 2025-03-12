@@ -4,9 +4,6 @@ describe('BaseConfigService', () => {
     let fix: Fixture
 
     beforeEach(async () => {
-        process.env['TEST_STRING_KEY'] = 'test-value'
-        process.env['TEST_NUMBER_KEY'] = '123'
-
         const { createFixture } = await import('./base-config.service.fixture')
         fix = await createFixture()
     })
@@ -17,7 +14,7 @@ describe('BaseConfigService', () => {
 
     it('key에 해당하는 문자열을 반환해야 한다', () => {
         const result = fix.appConfigService.getTestString()
-        expect(result).toBe('test-value')
+        expect(result).toBe('value')
     })
 
     it('key에 해당하는 숫자를 반환해야 한다', () => {

@@ -34,6 +34,9 @@ export interface Fixture {
 }
 
 export async function createFixture() {
+    process.env['TEST_STRING_KEY'] = 'value'
+    process.env['TEST_NUMBER_KEY'] = '123'
+
     const module = await createTestingModule({
         imports: [ConfigModule.forRoot({ validationSchema: configSchema })],
         providers: [AppConfigService]
