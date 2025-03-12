@@ -1,94 +1,80 @@
-import { getRedisConnectionToken, RedisModule } from '@nestjs-modules/ioredis'
-import { Injectable } from '@nestjs/common'
-import { TestingModule } from '@nestjs/testing'
-import { CacheModule, CacheService, InjectCache, sleep } from 'common'
-import Redis from 'ioredis'
-import { createTestingModule, getRedisTestConnection, withTestId } from 'testlib'
-
-@Injectable()
-export class TestCacheService {
-    constructor(@InjectCache('name') _service: CacheService) {}
-}
+import { sleep } from 'common'
+import { Fixture } from './cache.service.fixture'
 
 describe('CacheService', () => {
-    let module: TestingModule
-    let cacheService: CacheService
-    let redis: Redis
+    let fix: Fixture
 
     beforeEach(async () => {
-        const { nodes, password } = getRedisTestConnection()
-
-        module = await createTestingModule({
-            imports: [
-                RedisModule.forRoot(
-                    { type: 'cluster', nodes, options: { redisOptions: { password } } },
-                    'redis'
-                ),
-                CacheModule.register({
-                    name: 'name',
-                    redisName: 'redis',
-                    prefix: withTestId('cache')
-                })
-            ],
-            providers: [TestCacheService]
-        })
-
-        cacheService = module.get(CacheService.getToken('name'))
-        redis = module.get(getRedisConnectionToken('redis'))
+        const { createFixture } = await import('./cache.service.fixture')
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await module?.close()
-        await redis.quit()
+        await fix?.teardown()
     })
 
-    const key = 'key'
-    const value = 'value'
-
     it('캐시에 값을 설정해야 한다', async () => {
-        await cacheService.set(key, value)
-        const cachedValue = await cacheService.get(key)
+        await fix.cacheService.set('key', 'value')
+        const cachedValue = await fix.cacheService.get('key')
 
-        expect(cachedValue).toEqual(value)
+        expect(cachedValue).toEqual('value')
+    })
+
+    it('캐시에 값을 설정할 때 TTL을 지정할 수 있어야 한다', async () => {
+        const ttl = 1000
+        await fix.cacheService.set('key', 'value', ttl)
+
+        const beforeExpiration = await fix.cacheService.get('key')
+        expect(beforeExpiration).toEqual('value')
+
+        await sleep(ttl * 1.1)
+
+        const afterExpiration = await fix.cacheService.get('key')
+        expect(afterExpiration).toBeNull()
+    })
+
+    it('TTL이 0이면 만료되지 않아야 한다', async () => {
+        const ttl = 0
+        await fix.cacheService.set('key', 'value', ttl)
+
+        const beforeExpiration = await fix.cacheService.get('key')
+        expect(beforeExpiration).toEqual('value')
+
+        await sleep(1000)
+
+        const afterExpiration = await fix.cacheService.get('key')
+        expect(afterExpiration).toEqual('value')
+    })
+
+    it('TTL이 0 미만이면 예외를 발생시켜야 한다', async () => {
+        const wrongTTL = -100
+
+        await expect(fix.cacheService.set('key', 'value', wrongTTL)).rejects.toThrow(
+            'TTL must be a non-negative integer (0 for no expiration)'
+        )
     })
 
     it('캐시에서 값을 삭제해야 한다', async () => {
-        await cacheService.set(key, value)
-        const initialValue = await cacheService.get(key)
-        expect(initialValue).toEqual(value)
+        await fix.cacheService.set('key', 'value')
 
-        await cacheService.delete(key)
-        const deletedValue = await cacheService.get(key)
-        expect(deletedValue).toBeNull()
+        const beforeDelete = await fix.cacheService.get('key')
+        expect(beforeDelete).toEqual('value')
+
+        await fix.cacheService.delete('key')
+
+        const afterDelete = await fix.cacheService.get('key')
+        expect(afterDelete).toBeNull()
     })
 
-    it('만료 시간을 설정해야 한다', async () => {
-        const ttl = 1000
-
-        await cacheService.set(key, value, ttl)
-        const initialValue = await cacheService.get(key)
-        expect(initialValue).toEqual(value)
-
-        await sleep(1000 + 100)
-        const deletedValue = await cacheService.get(key)
-        expect(deletedValue).toBeNull()
-    })
-
-    it('만료 시간이 음수이면 예외를 발생시켜야 한다', async () => {
-        const wrongTTL = -100
-
-        await expect(cacheService.set(key, value, wrongTTL)).rejects.toThrow(Error)
-    })
-
-    it('Lua 스크립트를 실행하여 키를 올바르게 설정해야 한다', async () => {
+    it('Lua 스크립트를 실행해야 한다', async () => {
         const script = `return redis.call('SET', KEYS[1], ARGV[2])`
-        const keys = ['key1']
-        const args = ['value1']
+        const keys = ['key']
+        const args = ['value']
 
-        const result = await cacheService.executeScript(script, keys, args)
+        const result = await fix.cacheService.executeScript(script, keys, args)
         expect(result).toBe('OK')
 
-        const storedValue = await cacheService.get('key1')
-        expect(storedValue).toBe('value1')
+        const storedValue = await fix.cacheService.get('key')
+        expect(storedValue).toBe('value')
     })
 })

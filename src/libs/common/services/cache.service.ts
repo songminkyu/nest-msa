@@ -9,7 +9,7 @@ export class CacheService {
         private readonly prefix: string
     ) {}
 
-    static getToken(name: string) {
+    static getToken(name?: string) {
         return `CacheService_${name}`
     }
 
@@ -19,7 +19,7 @@ export class CacheService {
 
     async set(key: string, value: string, ttlMs = 0) {
         if (ttlMs < 0) {
-            throw new Error('TTL must not be negative')
+            throw new Error('TTL must be a non-negative integer (0 for no expiration)')
         }
 
         if (0 < ttlMs) {
@@ -50,13 +50,19 @@ export class CacheService {
     }
 }
 
-export function InjectCache(name: string): ParameterDecorator {
+export function InjectCache(name?: string): ParameterDecorator {
     return Inject(CacheService.getToken(name))
+}
+
+export interface CacheModuleOptions {
+    name?: string
+    redisName?: string
+    prefix: string
 }
 
 @Module({})
 export class CacheModule {
-    static register(options: { name: string; redisName: string; prefix: string }): DynamicModule {
+    static register(options: CacheModuleOptions): DynamicModule {
         const { name, redisName, prefix } = options
 
         const provider = {

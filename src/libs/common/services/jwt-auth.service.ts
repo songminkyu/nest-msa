@@ -31,7 +31,7 @@ export class JwtAuthService {
         public readonly prefix: string
     ) {}
 
-    static getToken(name: string) {
+    static getToken(name?: string) {
         return `JwtAuthService_${name}`
     }
 
@@ -103,21 +103,23 @@ export class JwtAuthService {
     }
 }
 
-export function InjectJwtAuth(name: string): ParameterDecorator {
+export function InjectJwtAuth(name?: string): ParameterDecorator {
     return Inject(JwtAuthService.getToken(name))
 }
 
 type JwtAuthFactory = { auth: AuthConfig }
 
+export interface JwtAuthModuleOptions {
+    name?: string
+    redisName?: string
+    prefix: string
+    useFactory: (...args: any[]) => Promise<JwtAuthFactory> | JwtAuthFactory
+    inject?: any[]
+}
+
 @Module({})
 export class JwtAuthModule {
-    static register(options: {
-        name: string
-        redisName: string
-        prefix: string
-        useFactory: (...args: any[]) => Promise<JwtAuthFactory> | JwtAuthFactory
-        inject?: any[]
-    }): DynamicModule {
+    static register(options: JwtAuthModuleOptions): DynamicModule {
         const { name, redisName, prefix, useFactory, inject } = options
 
         const cacheProvider = {

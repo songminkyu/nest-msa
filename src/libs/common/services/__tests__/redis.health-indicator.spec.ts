@@ -1,65 +1,47 @@
-import { getRedisConnectionToken, RedisModule } from '@nestjs-modules/ioredis'
-import { HealthIndicatorService } from '@nestjs/terminus'
-import { TestingModule } from '@nestjs/testing'
-import { CacheModule, RedisHealthIndicator } from 'common'
-import Redis from 'ioredis'
-import { createTestingModule, getRedisTestConnection, withTestId } from 'testlib'
+import { Fixture } from './redis.health-indicator.fixture'
 
 describe('RedisHealthIndicator', () => {
-    let module: TestingModule
-    let redisIndicator: RedisHealthIndicator
-    let redis: Redis
+    let fix: Fixture
 
     beforeEach(async () => {
-        const { nodes, password } = getRedisTestConnection()
-
-        module = await createTestingModule({
-            imports: [
-                RedisModule.forRoot(
-                    { type: 'cluster', nodes, options: { redisOptions: { password } } },
-                    'redis'
-                ),
-                CacheModule.register({
-                    name: 'name',
-                    redisName: 'redis',
-                    prefix: withTestId('redis-health')
-                })
-            ],
-            providers: [RedisHealthIndicator, HealthIndicatorService]
-        })
-
-        redisIndicator = module.get(RedisHealthIndicator)
-        redis = module.get(getRedisConnectionToken('redis'))
+        const { createFixture } = await import('./redis.health-indicator.fixture')
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await module?.close()
-        await redis.quit()
+        await fix?.teardown()
     })
 
-    it('Redis가 정상일 때 상태가 "up"이어야 한다', async () => {
-        const res = await redisIndicator.isHealthy('key', redis)
-        expect(res).toEqual({ key: { status: 'up' } })
-    })
+    describe('ping 호출 시', () => {
+        it("반환값이 'PONG'이면 up 상태이다", async () => {
+            const res = await fix.redisIndicator.isHealthy('key', fix.redis)
+            expect(res).toEqual({ key: { status: 'up' } })
+        })
 
-    it('Redis ping 응답이 "PONG"이 아니면 상태가 "down"이어야 한다', async () => {
-        jest.spyOn(redis, 'ping').mockResolvedValueOnce('INVALID_RESPONSE')
+        it("반환값이 'PONG'이 아니면 down 상태이다", async () => {
+            jest.spyOn(fix.redis, 'ping').mockResolvedValueOnce('INVALID_RESPONSE')
 
-        const res = await redisIndicator.isHealthy('key', redis)
-        expect(res).toEqual({ key: { status: 'down', reason: 'Redis ping failed' } })
-    })
+            const res = await fix.redisIndicator.isHealthy('key', fix.redis)
+            expect(res).toEqual({
+                key: {
+                    status: 'down',
+                    reason: 'Redis ping returned unexpected response: INVALID_RESPONSE'
+                }
+            })
+        })
 
-    it('Redis 연결에 실패하면 상태가 "down"이어야 한다', async () => {
-        jest.spyOn(redis, 'ping').mockRejectedValueOnce(new Error('Connection timeout'))
+        it('예외가 발생하면 down 상태이다', async () => {
+            jest.spyOn(fix.redis, 'ping').mockRejectedValueOnce(new Error('error'))
 
-        const res = await redisIndicator.isHealthy('key', redis)
-        expect(res).toEqual({ key: { status: 'down', reason: 'Connection timeout' } })
-    })
+            const res = await fix.redisIndicator.isHealthy('key', fix.redis)
+            expect(res).toEqual({ key: { status: 'down', reason: 'error' } })
+        })
 
-    it('예외 발생 시 message가 없으면 지정된 메시지를 반환해야 한다', async () => {
-        jest.spyOn(redis, 'ping').mockRejectedValueOnce('unknown error')
+        it('예외 발생 시 message가 없으면 error를 그대로 반환해야 한다', async () => {
+            jest.spyOn(fix.redis, 'ping').mockRejectedValueOnce('unknown error')
 
-        const res = await redisIndicator.isHealthy('key', redis)
-        expect(res).toEqual({ key: { status: 'down', reason: 'RedisHealthIndicator failed' } })
+            const res = await fix.redisIndicator.isHealthy('key', fix.redis)
+            expect(res).toEqual({ key: { status: 'down', reason: 'unknown error' } })
+        })
     })
 })

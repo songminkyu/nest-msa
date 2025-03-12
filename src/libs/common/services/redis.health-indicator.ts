@@ -11,13 +11,15 @@ export class RedisHealthIndicator {
 
         try {
             const pong = await redis.ping()
+
             if (pong === 'PONG') {
                 return indicator.up()
             }
 
-            return indicator.down({ reason: 'Redis ping failed' })
+            return indicator.down({ reason: `Redis ping returned unexpected response: ${pong}` })
         } catch (error) {
-            return indicator.down({ reason: error.message ?? 'RedisHealthIndicator failed' })
+            const reason = error.message ?? error
+            return indicator.down({ reason })
         }
     }
 }
