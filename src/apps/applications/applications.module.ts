@@ -3,7 +3,14 @@ import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { APP_PIPE } from '@nestjs/core'
 import Redis from 'ioredis'
-import { AppValidationPipe, CommonModule, ProjectName, RedisConfig, RedisConfigModule, uniqueWhenTesting } from 'shared'
+import {
+    AppValidationPipe,
+    CommonModule,
+    ProjectName,
+    RedisConfig,
+    RedisConfigModule,
+    uniqueWhenTesting
+} from 'shared'
 import { HealthModule } from './modules'
 import {
     BookingModule,

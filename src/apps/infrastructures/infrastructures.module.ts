@@ -5,13 +5,7 @@ import { HealthModule } from './modules'
 import { PaymentsModule, StorageFilesModule } from './services'
 
 @Module({
-    imports: [
-        CommonModule,
-        MongooseConfigModule,
-        HealthModule,
-        PaymentsModule,
-        StorageFilesModule
-    ],
+    imports: [CommonModule, MongooseConfigModule, HealthModule, PaymentsModule, StorageFilesModule],
     providers: [{ provide: APP_PIPE, useClass: AppValidationPipe }]
 })
 export class InfrastructuresModule {}
