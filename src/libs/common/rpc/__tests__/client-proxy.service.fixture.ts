@@ -2,7 +2,13 @@ import { Controller, Get, MessageEvent, Sse } from '@nestjs/common'
 import { EventPattern, MessagePattern, NatsOptions, Transport } from '@nestjs/microservices'
 import { ClientProxyModule, ClientProxyService, InjectClientProxy } from 'common'
 import { Observable, Subject } from 'rxjs'
-import { createHttpTestContext, getNatsTestConnection, withTestId } from 'testlib'
+import {
+    createHttpTestContext,
+    getNatsTestConnection,
+    HttpTestClient,
+    RpcTestClient,
+    withTestId
+} from 'testlib'
 
 @Controller()
 class SendTestController {
@@ -22,11 +28,6 @@ class SendTestController {
     getValue() {
         return this.client.getJson(withTestId('subject.method'), {})
     }
-
-    @Get('send-null')
-    sendNull() {
-        return this.client.send(withTestId('subject.method'), null)
-    }
 }
 
 @Controller()
@@ -41,20 +42,16 @@ class EmitTestController {
         this.eventSubject.complete()
     }
 
-    @Get('emit-event')
-    emitEvent() {
-        return this.client.emit(withTestId('subject.emitEvent'), { arg: 'value' })
-    }
-
-    @Get('emit-null')
-    sendNull() {
-        return this.client.emit(withTestId('subject.emitEvent'), null)
-    }
-
     @Sse('handle-event')
     observeEvent(): Observable<MessageEvent> {
         return this.eventSubject.asObservable()
     }
+}
+
+export interface Fixture {
+    teardown: () => Promise<void>
+    rpcClient: RpcTestClient
+    httpClient: HttpTestClient
 }
 
 export async function createFixture() {
@@ -74,9 +71,12 @@ export async function createFixture() {
         }
     })
 
+    const rpcClient = RpcTestClient.create(brokerOptions)
+
     const teardown = async () => {
-        await testContext?.close()
+        await rpcClient.close()
+        await testContext.close()
     }
 
-    return { testContext, teardown, client: testContext.httpClient }
+    return { testContext, teardown, httpClient: testContext.httpClient, rpcClient }
 }
