@@ -29,7 +29,11 @@ export class MessageController {
     processBroadcastLogic() {}
 }
 
-export const numberOfInstance = 10
+export interface Fixture {
+    teardown: () => Promise<void>
+    rpcClient: RpcTestClient
+    numberOfInstance: number
+}
 
 export async function createFixture() {
     const { servers } = getNatsTestConnection()
@@ -46,16 +50,18 @@ export async function createFixture() {
         }
     }
 
+    const numberOfInstance = 10
+
     const testContexts = await Promise.all(
         Array.from({ length: numberOfInstance }, async () => createTestContext(options))
     )
 
-    const client = RpcTestClient.create(brokerOptions)
+    const rpcClient = RpcTestClient.create(brokerOptions)
 
     const teardown = async () => {
-        await client?.close()
+        await rpcClient.close()
         await Promise.all(testContexts.map(async (context) => context.close()))
     }
 
-    return { teardown, client, MessageController }
+    return { teardown, rpcClient, numberOfInstance }
 }

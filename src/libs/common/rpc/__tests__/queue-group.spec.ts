@@ -1,43 +1,37 @@
-import { RpcTestClient, withTestId } from 'testlib'
-import { sleep } from '../../utils'
+import { withTestId } from 'testlib'
+import { Fixture } from './queue-group.fixture'
+import { sleep } from 'common'
 
 describe('ClientProxyService', () => {
-    let teardown = () => {}
-    let client: RpcTestClient
+    let fix: Fixture
     let queueSpy: jest.SpyInstance
     let broadcastSpy: jest.SpyInstance
-    let numberOfInstance: number
 
     beforeEach(async () => {
-        const {
-            createFixture,
-            MessageController,
-            numberOfInstance: instanseCount
-        } = await import('./queue-group.fixture')
+        const { createFixture, MessageController } = await import('./queue-group.fixture')
 
         queueSpy = jest.spyOn(MessageController.prototype, 'processQueueLogic')
         broadcastSpy = jest.spyOn(MessageController.prototype, 'processBroadcastLogic')
-        numberOfInstance = instanseCount
 
-        const fixture = await createFixture()
-        teardown = fixture.teardown
-        client = fixture.client
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await teardown()
+        await fix?.teardown()
     })
 
-    it('queue 그룹을 설정하면 한 인스턴스에만 전달되어야 한다', async () => {
-        const result = await client.getJson(withTestId('subject.queue'), {})
+    it('queue 그룹을 설정하면 메시지가 한 인스턴스에만 전달된다', async () => {
+        const result = await fix.rpcClient.getJson(withTestId('subject.queue'), {})
+
         expect(result).toEqual({ result: 'success' })
         expect(queueSpy).toHaveBeenCalledTimes(1)
     })
 
-    it('queue 그룹을 설정하지 않으면 전체 인스턴스에 전달되어야 한다', async () => {
-        const result = await client.getJson(withTestId('subject.broadcast'), {})
-        await sleep(500)
+    it('queue 그룹을 설정하지 않으면 메시지가 전체 인스턴스에 전달된다', async () => {
+        const result = await fix.rpcClient.getJson(withTestId('subject.broadcast'), {})
+        await sleep(1000)
+
         expect(result).toEqual({ result: 'success' })
-        expect(broadcastSpy).toHaveBeenCalledTimes(numberOfInstance)
+        expect(broadcastSpy).toHaveBeenCalledTimes(fix.numberOfInstance)
     })
 })
