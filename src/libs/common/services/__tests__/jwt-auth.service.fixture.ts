@@ -44,8 +44,8 @@ export async function createFixture() {
     const redis = module.get(getRedisConnectionToken())
 
     const teardown = async () => {
-        await module?.close()
-        await redis?.quit()
+        await module.close()
+        await redis.quit()
     }
 
     return { teardown, jwtService, redis }

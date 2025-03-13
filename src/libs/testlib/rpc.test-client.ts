@@ -1,3 +1,4 @@
+import { HttpException } from '@nestjs/common'
 import { ClientProxy, ClientProxyFactory, NatsOptions } from '@nestjs/microservices'
 import { ClientProxyService } from 'common'
 
@@ -28,7 +29,9 @@ export class RpcTestClient extends ClientProxyService {
 
     async error(cmd: string, payload: any, expected: any) {
         const promise = super.getJson(cmd, payload)
+        const error = await promise.catch((e) => e)
 
-        await expect(promise).rejects.toEqual(expected)
+        expect(error).toBeInstanceOf(HttpException)
+        expect(error).toMatchObject(expected)
     }
 }

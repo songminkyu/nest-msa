@@ -27,7 +27,7 @@ export async function createFixture(): Promise<Fixture> {
     const sampleService = module.get(SampleService)
 
     const teardown = async () => {
-        await module?.close()
+        await module.close()
     }
 
     return { teardown, sampleService }

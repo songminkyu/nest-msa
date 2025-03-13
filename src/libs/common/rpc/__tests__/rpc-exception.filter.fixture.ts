@@ -2,7 +2,13 @@ import { Controller, Get, NotFoundException, ValidationPipe } from '@nestjs/comm
 import { APP_PIPE } from '@nestjs/core'
 import { MessagePattern, MicroserviceOptions, NatsOptions, Transport } from '@nestjs/microservices'
 import { IsNotEmpty, IsString } from 'class-validator'
-import { createHttpTestContext, getNatsTestConnection, RpcTestClient, withTestId } from 'testlib'
+import {
+    createHttpTestContext,
+    getNatsTestConnection,
+    HttpTestClient,
+    RpcTestClient,
+    withTestId
+} from 'testlib'
 import { RpcExceptionFilter } from '../rpc-exception.filter'
 
 class CreateSampleDto {
@@ -36,6 +42,12 @@ class SampleController {
     }
 }
 
+export interface Fixture {
+    teardown: () => Promise<void>
+    rpcClient: RpcTestClient
+    httpClient: HttpTestClient
+}
+
 export async function createFixture() {
     const { servers } = await getNatsTestConnection()
     const brokerOptions = { transport: Transport.NATS, options: { servers } } as NatsOptions
@@ -53,12 +65,12 @@ export async function createFixture() {
         }
     })
 
-    const client = RpcTestClient.create(brokerOptions)
+    const rpcClient = RpcTestClient.create(brokerOptions)
 
     const teardown = async () => {
-        await client?.close()
-        await testContext?.close()
+        await rpcClient.close()
+        await testContext.close()
     }
 
-    return { testContext, teardown, httpClient: testContext.httpClient, client }
+    return { testContext, teardown, httpClient: testContext.httpClient, rpcClient }
 }
