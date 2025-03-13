@@ -38,4 +38,4 @@ import { AppConfigService, ClientProxyConfig, configSchema, ProjectName } from '
     ],
     exports: [AppConfigService, ClientProxyModule]
 })
-export class CommonConfigModule {}
+export class CommonModule {}

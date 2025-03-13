@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { addInQuery, addRangeQuery, MongooseRepository, objectId, validateFilters } from 'common'
 import { FilterQuery, Model } from 'mongoose'
-import { MongooseConfig } from 'shared/config'
+import { MongooseConfig } from 'shared'
 import { ShowtimeCreateDto, ShowtimeFilterDto } from './dtos'
 import { Showtime } from './models'
 

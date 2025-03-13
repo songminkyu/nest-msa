@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { MongooseConfig } from 'shared/config'
+import { MongooseConfig } from 'shared'
 import { Showtime, ShowtimeSchema } from './models'
 import { ShowtimesController } from './showtimes.controller'
 import { ShowtimesRepository } from './showtimes.repository'

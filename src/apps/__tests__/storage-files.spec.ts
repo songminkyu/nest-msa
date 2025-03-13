@@ -1,6 +1,6 @@
 import { generateShortId, getChecksum, Path } from 'common'
 import { StorageFileDto } from 'infrastructures'
-import { AppConfigService } from 'shared/config'
+import { AppConfigService } from 'shared'
 import { HttpTestClient, nullObjectId } from 'testlib'
 import {
     closeFixture,

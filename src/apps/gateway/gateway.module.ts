@@ -7,7 +7,7 @@ import {
 } from 'applications'
 import { CustomersProxy, MoviesProxy, PurchasesProxy, TheatersProxy } from 'cores'
 import { StorageFilesProxy } from 'infrastructures'
-import { CommonConfigModule } from 'shared/modules'
+import { CommonModule } from 'shared'
 import {
     BookingController,
     CustomerJwtStrategy,
@@ -22,7 +22,7 @@ import {
 import { HealthModule, MulterConfigModule, PipesModule } from './modules'
 
 @Module({
-    imports: [CommonConfigModule, HealthModule, PipesModule, MulterConfigModule],
+    imports: [CommonModule, HealthModule, PipesModule, MulterConfigModule],
     providers: [
         CustomerLocalStrategy,
         CustomerJwtStrategy,

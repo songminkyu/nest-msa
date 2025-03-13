@@ -1,12 +1,12 @@
 import { BadRequestException, ValidationPipe } from '@nestjs/common'
-import { CommonErrors } from '../common-errors'
+import { SharedErrors } from '../shared-errors'
 
 export class AppValidationPipe extends ValidationPipe {
     constructor() {
         super({
             exceptionFactory: (errors) =>
                 new BadRequestException({
-                    ...CommonErrors.ValidationFailed,
+                    ...SharedErrors.ValidationFailed,
                     details: errors.map((error) => ({
                         field: error.property,
                         constraints: error.constraints
@@ -19,9 +19,7 @@ export class AppValidationPipe extends ValidationPipe {
             skipMissingProperties: false,
             forbidUnknownValues: true,
             transform: true,
-            transformOptions: {
-                enableImplicitConversion: true
-            }
+            transformOptions: { enableImplicitConversion: true }
         })
     }
 }

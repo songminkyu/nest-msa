@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy } from 'common'
-import { ClientProxyConfig, Messages } from 'shared/config'
+import { ClientProxyConfig, Messages } from 'shared'
 import { TheaterCreateDto, TheaterDto, TheaterQueryDto, TheaterUpdateDto } from './dtos'
 
 @Injectable()

@@ -5,7 +5,7 @@ import { AppLoggerService, Path } from 'common'
 import compression from 'compression'
 import express from 'express'
 import { exit } from 'process'
-import { AppConfigService } from 'shared/config'
+import { AppConfigService } from 'shared'
 import { GatewayModule } from './gateway.module'
 
 export async function configureGateway(app: INestApplication<any>, servers: string[]) {

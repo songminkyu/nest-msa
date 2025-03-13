@@ -1,6 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose'
 import { Customer, CustomerDto } from 'cores'
-import { MongooseConfig } from 'shared/config'
+import { MongooseConfig } from 'shared'
 import { HttpTestClient } from 'testlib'
 import { closeFixture, Fixture } from './customers-auth.fixture'
 import { Errors } from './utils'

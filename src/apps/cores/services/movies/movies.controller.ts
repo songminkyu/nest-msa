@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { Messages } from 'shared/config'
+import { Messages } from 'shared'
 import { MovieCreateWithFilesDto, MovieQueryDto, MovieUpdateDto } from './dtos'
 import { MoviesService } from './movies.service'
 

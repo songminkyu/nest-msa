@@ -3,7 +3,7 @@ import { Controller, Get, Inject, Injectable, Module } from '@nestjs/common'
 import { HealthCheckService, TerminusModule } from '@nestjs/terminus'
 import { RedisHealthIndicator } from 'common'
 import Redis from 'ioredis'
-import { RedisConfig } from 'shared/config'
+import { RedisConfig } from 'shared'
 
 @Injectable()
 class HealthService {

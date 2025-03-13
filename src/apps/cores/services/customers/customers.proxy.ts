@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy, JwtAuthTokens } from 'common'
-import { ClientProxyConfig, Messages } from 'shared/config'
+import { ClientProxyConfig, Messages } from 'shared'
 import { CustomerCreateDto, CustomerDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
 
 @Injectable()

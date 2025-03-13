@@ -15,7 +15,7 @@ import { EventPattern } from '@nestjs/microservices'
 import { ShowtimeBatchCreateDto, ShowtimeCreationProxy } from 'applications'
 import { PaginationOptionDto } from 'common'
 import { Observable, Subject } from 'rxjs'
-import { Events } from 'shared/config'
+import { Events } from 'shared'
 import { DefaultPaginationPipe } from './pipes'
 
 @Controller('showtime-creation')

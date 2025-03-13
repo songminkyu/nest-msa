@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { LatLong } from 'common'
-import { Messages } from 'shared/config'
+import { Messages } from 'shared'
 import { BookingService } from './booking.service'
 
 @Controller()

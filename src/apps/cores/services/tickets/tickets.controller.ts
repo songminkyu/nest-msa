@@ -1,6 +1,6 @@
 import { Controller, ParseArrayPipe } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { Messages } from 'shared/config'
+import { Messages } from 'shared'
 import { TicketCreateDto, TicketFilterDto } from './dtos'
 import { TicketStatus } from './models'
 import { TicketsService } from './tickets.service'

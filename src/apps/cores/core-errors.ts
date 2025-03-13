@@ -1,7 +1,4 @@
-import { CommonErrors } from 'common'
-
 export const CoreErrors = {
-    ...CommonErrors,
     Customer: {
         NotFound: {
             code: 'ERR_CUSTOMER_NOT_FOUND',

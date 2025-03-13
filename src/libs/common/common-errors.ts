@@ -13,10 +13,6 @@ export const CommonErrors = {
             message: 'One or more documents not found'
         }
     },
-    ValidationFailed: {
-        code: 'ERR_VALIDATION_FAILED',
-        message: 'Validation failed'
-    },
     Pagination: {
         TakeMissing: {
             code: 'ERR_PAGINATION_TAKE_MISSING',

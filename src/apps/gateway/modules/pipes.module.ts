@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
-import { AppValidationPipe, HttpExceptionFilter, HttpSuccessInterceptor } from 'common'
+import { HttpExceptionFilter, HttpSuccessInterceptor } from 'common'
+import { AppValidationPipe } from 'shared'
 
 @Module({
     providers: [

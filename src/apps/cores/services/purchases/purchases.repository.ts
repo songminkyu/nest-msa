@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId } from 'common'
 import { Model } from 'mongoose'
-import { MongooseConfig } from 'shared/config'
+import { MongooseConfig } from 'shared'
 import { PurchaseCreateDto } from './dtos'
 import { Purchase } from './models'
 

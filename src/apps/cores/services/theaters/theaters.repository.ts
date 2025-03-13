@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { addRegexQuery, MongooseRepository } from 'common'
 import { FilterQuery, Model } from 'mongoose'
-import { MongooseConfig } from 'shared/config'
+import { MongooseConfig } from 'shared'
 import { TheaterCreateDto, TheaterQueryDto, TheaterUpdateDto } from './dtos'
 import { Theater } from './models'
 

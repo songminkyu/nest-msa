@@ -4,7 +4,7 @@ import { Ticket, TicketSchema } from './models'
 import { TicketsController } from './tickets.controller'
 import { TicketsRepository } from './tickets.repository'
 import { TicketsService } from './tickets.service'
-import { MongooseConfig } from 'shared/config'
+import { MongooseConfig } from 'shared'
 
 @Module({
     imports: [

@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { PaginationOptionDto } from 'common'
-import { Messages } from 'shared/config'
+import { Messages } from 'shared'
 import { ShowtimeBatchCreateDto } from './dtos'
 import { ShowtimeCreationService } from './showtime-creation.service'
 

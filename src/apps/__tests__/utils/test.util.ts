@@ -5,7 +5,7 @@ import { ApplicationsModule, configureApplications } from 'applications'
 import { configureCores, CoresModule } from 'cores'
 import { configureGateway, GatewayModule } from 'gateway'
 import { configureInfrastructures, InfrastructuresModule } from 'infrastructures'
-import { RedisConfig } from 'shared/config'
+import { RedisConfig } from 'shared'
 import {
     createHttpTestContext,
     createTestContext,

@@ -1,6 +1,6 @@
 import { createTestingModule } from 'testlib'
 import { ConfigModule } from '@nestjs/config'
-import { AppConfigService } from 'shared/config'
+import { AppConfigService } from 'shared'
 import { TestingModule } from '@nestjs/testing'
 
 describe('AppConfigService', () => {

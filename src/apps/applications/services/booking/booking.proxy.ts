@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy, LatLong } from 'common'
 import { TheaterDto, TicketDto } from 'cores'
-import { ClientProxyConfig, Messages } from 'shared/config'
+import { ClientProxyConfig, Messages } from 'shared'
 import { ShowtimeSalesStatusDto } from './dtos'
 
 @Injectable()

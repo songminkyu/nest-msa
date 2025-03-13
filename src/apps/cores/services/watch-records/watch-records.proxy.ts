@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy, PaginationResult } from 'common'
-import { ClientProxyConfig, Messages } from 'shared/config'
+import { ClientProxyConfig, Messages } from 'shared'
 import { WatchRecordDto, WatchRecordQueryDto } from './dtos'
 
 @Injectable()

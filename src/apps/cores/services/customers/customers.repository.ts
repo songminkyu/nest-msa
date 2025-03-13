@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { addRegexQuery, MongooseRepository, objectId } from 'common'
 import { CoreErrors } from 'cores/core-errors'
 import { FilterQuery, Model } from 'mongoose'
-import { MongooseConfig } from 'shared/config'
+import { MongooseConfig } from 'shared'
 import { CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
 import { Customer } from './models'
 

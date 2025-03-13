@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common'
 import { APP_PIPE } from '@nestjs/core'
-import { AppValidationPipe } from 'common'
-import { CommonConfigModule, MongooseConfigModule } from 'shared/modules'
+import { AppValidationPipe, CommonModule, MongooseConfigModule } from 'shared'
 import { HealthModule } from './modules'
 import { PaymentsModule, StorageFilesModule } from './services'
 
 @Module({
     imports: [
-        CommonConfigModule,
+        CommonModule,
         MongooseConfigModule,
         HealthModule,
         PaymentsModule,

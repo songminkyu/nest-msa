@@ -1,7 +1,7 @@
 import { Prop, Schema } from '@nestjs/mongoose'
 import { LatLong, MongooseSchema, createMongooseSchema } from 'common'
 import { HydratedDocument } from 'mongoose'
-import { MongooseConfig } from 'shared/config'
+import { MongooseConfig } from 'shared'
 import { Seatmap } from './seatmap'
 
 @Schema(MongooseConfig.schemaOptions)

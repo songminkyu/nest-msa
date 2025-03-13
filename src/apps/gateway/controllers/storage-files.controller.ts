@@ -15,7 +15,7 @@ import { IsString } from 'class-validator'
 import { createReadStream } from 'fs'
 import { StorageFilesProxy } from 'infrastructures'
 import { pick } from 'lodash'
-import { Routes } from 'shared/config'
+import { Routes } from 'shared'
 
 class UploadFileDto {
     @IsString()

@@ -2,10 +2,8 @@ import { getRedisConnectionToken } from '@nestjs-modules/ioredis'
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { APP_PIPE } from '@nestjs/core'
-import { AppValidationPipe } from 'common'
 import Redis from 'ioredis'
-import { ProjectName, RedisConfig, uniqueWhenTesting } from 'shared/config'
-import { CommonConfigModule, RedisConfigModule } from 'shared/modules'
+import { AppValidationPipe, CommonModule, ProjectName, RedisConfig, RedisConfigModule, uniqueWhenTesting } from 'shared'
 import { HealthModule } from './modules'
 import {
     BookingModule,
@@ -16,7 +14,7 @@ import {
 
 @Module({
     imports: [
-        CommonConfigModule,
+        CommonModule,
         RedisConfigModule,
         HealthModule,
         BullModule.forRootAsync('queue', {

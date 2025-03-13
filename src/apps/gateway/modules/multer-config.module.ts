@@ -3,7 +3,7 @@ import { MulterModule, MulterModuleOptions, MulterOptionsFactory } from '@nestjs
 import { generateShortId } from 'common'
 import { GatewayErrors } from 'gateway/gateway-errors'
 import { diskStorage } from 'multer'
-import { AppConfigService } from 'shared/config'
+import { AppConfigService } from 'shared'
 
 @Injectable()
 class MulterConfigService implements MulterOptionsFactory {

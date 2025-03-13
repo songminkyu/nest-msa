@@ -9,7 +9,6 @@ import {
     createTheaters,
     Fixture
 } from './theaters.fixture'
-import { CoreErrors } from 'cores/core-errors'
 import { Errors } from './utils'
 
 describe('/theaters', () => {
@@ -105,7 +104,7 @@ describe('/theaters', () => {
 
         it('극장이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
             await client.delete(`/theaters/${nullObjectId}`).notFound({
-                ...CoreErrors.Mongoose.DocumentNotFound,
+                ...Errors.Mongoose.DocumentNotFound,
                 notFoundId: nullObjectId
             })
         })
@@ -124,7 +123,7 @@ describe('/theaters', () => {
 
         it('극장이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
             await client.get(`/theaters/${nullObjectId}`).notFound({
-                ...CoreErrors.Mongoose.DocumentNotFound,
+                ...Errors.Mongoose.DocumentNotFound,
                 message: 'Document not found',
                 notFoundId: nullObjectId
             })
@@ -155,7 +154,7 @@ describe('/theaters', () => {
                 .get('/theaters')
                 .query({ wrong: 'value' })
                 .badRequest({
-                    ...CoreErrors.ValidationFailed,
+                    ...Errors.ValidationFailed,
                     details: [
                         {
                             constraints: { whitelistValidation: 'property wrong should not exist' },

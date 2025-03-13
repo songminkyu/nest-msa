@@ -11,7 +11,7 @@ import {
     TicketsProxy,
     TicketStatus
 } from 'cores'
-import { ClientProxyConfig, Events } from 'shared/config'
+import { ClientProxyConfig, Events } from 'shared'
 import { ShowtimeBatchCreateStatus } from '../dtos'
 import { ShowtimeCreationValidatorService } from './showtime-creation-validator.service'
 import { ShowtimeBatchCreateJobData } from './types'

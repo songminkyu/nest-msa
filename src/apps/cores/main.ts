@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 import { AppLoggerService, RpcExceptionFilter, Path } from 'common'
 import { exit } from 'process'
-import { AppConfigService } from 'shared/config'
+import { AppConfigService } from 'shared'
 import { CoresModule } from './cores.module'
 
 export async function configureCores(app: INestApplication<any>, servers: string[]) {

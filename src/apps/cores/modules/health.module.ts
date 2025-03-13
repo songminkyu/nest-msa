@@ -5,7 +5,7 @@ import { HealthCheckService, MongooseHealthIndicator, TerminusModule } from '@ne
 import { RedisHealthIndicator } from 'common'
 import Redis from 'ioredis'
 import mongoose from 'mongoose'
-import { MongooseConfig, RedisConfig } from 'shared/config'
+import { MongooseConfig, RedisConfig } from 'shared'
 
 @Injectable()
 class HealthService {

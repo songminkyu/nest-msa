@@ -8,7 +8,7 @@ import {
     ProjectName,
     RedisConfig,
     uniqueWhenTesting
-} from 'shared/config'
+} from 'shared'
 import { CustomersController } from './customers.controller'
 import { CustomersRepository } from './customers.repository'
 import { CustomersService } from './customers.service'
