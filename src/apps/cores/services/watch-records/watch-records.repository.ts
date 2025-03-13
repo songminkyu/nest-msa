@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { addIdQuery, MongooseRepository, objectId } from 'common'
-import { FilterQuery, Model } from 'mongoose'
+import { MongooseRepository, objectId, QueryBuilder } from 'common'
+import { Model } from 'mongoose'
 import { MongooseConfig } from 'shared'
 import { WatchRecordCreateDto, WatchRecordQueryDto } from './dtos'
 import { WatchRecord } from './models'
@@ -27,8 +27,10 @@ export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query: FilterQuery<WatchRecord> = {}
-                addIdQuery(query, 'customerId', customerId)
+                const builder = new QueryBuilder<WatchRecord>()
+                builder.addId('customerId', customerId)
+
+                const query = builder.build({})
 
                 helpers.setQuery(query)
             },

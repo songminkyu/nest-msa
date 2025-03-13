@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { addInQuery, addRangeQuery, MongooseRepository, objectId, validateFilters } from 'common'
-import { FilterQuery, Model } from 'mongoose'
+import { MongooseRepository, objectId, QueryBuilder } from 'common'
+import { Model } from 'mongoose'
 import { MongooseConfig } from 'shared'
 import { ShowtimeCreateDto, ShowtimeFilterDto } from './dtos'
 import { Showtime } from './models'
@@ -30,14 +30,14 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
     async findAllShowtimes(filterDto: ShowtimeFilterDto) {
         const { batchIds, movieIds, theaterIds, startTimeRange, endTimeRange } = filterDto
 
-        const query: FilterQuery<Showtime> = {}
-        addInQuery(query, 'batchId', batchIds)
-        addInQuery(query, 'movieId', movieIds)
-        addInQuery(query, 'theaterId', theaterIds)
-        addRangeQuery(query, 'startTime', startTimeRange)
-        addRangeQuery(query, 'endTime', endTimeRange)
+        const builder = new QueryBuilder<Showtime>()
+        builder.addIn('batchId', batchIds)
+        builder.addIn('movieId', movieIds)
+        builder.addIn('theaterId', theaterIds)
+        builder.addRange('startTime', startTimeRange)
+        builder.addRange('endTime', endTimeRange)
 
-        validateFilters(query)
+        const query = builder.build({})
 
         const showtimes = await this.model.find(query).sort({ startTime: 1 }).exec()
         return showtimes

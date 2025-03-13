@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { addRegexQuery, MongooseRepository } from 'common'
-import { FilterQuery, Model } from 'mongoose'
+import { MongooseRepository, QueryBuilder } from 'common'
+import { Model } from 'mongoose'
 import { MongooseConfig } from 'shared'
 import { TheaterCreateDto, TheaterQueryDto, TheaterUpdateDto } from './dtos'
 import { Theater } from './models'
@@ -36,8 +36,10 @@ export class TheatersRepository extends MongooseRepository<Theater> {
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query: FilterQuery<Theater> = {}
-                addRegexQuery(query, 'name', name)
+                const builder = new QueryBuilder<Theater>()
+                builder.addRegex('name', name)
+
+                const query = builder.build({ allowEmpty: true })
 
                 helpers.setQuery(query)
             },

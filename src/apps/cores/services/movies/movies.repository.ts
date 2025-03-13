@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { addEqualQuery, addRegexQuery, MongooseRepository, objectIds } from 'common'
-import { FilterQuery, Model } from 'mongoose'
+import { MongooseRepository, objectIds, QueryBuilder } from 'common'
+import { Model } from 'mongoose'
 import { MongooseConfig } from 'shared'
 import { MovieCreateDto, MovieQueryDto, MovieUpdateDto } from './dtos'
 import { Movie } from './models'
@@ -45,13 +45,15 @@ export class MoviesRepository extends MongooseRepository<Movie> {
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query: FilterQuery<Movie> = {}
-                addRegexQuery(query, 'title', title)
-                addEqualQuery(query, 'genre', genre)
-                addEqualQuery(query, 'releaseDate', releaseDate)
-                addRegexQuery(query, 'plot', plot)
-                addRegexQuery(query, 'director', director)
-                addEqualQuery(query, 'rating', rating)
+                const builder = new QueryBuilder<Movie>()
+                builder.addRegex('title', title)
+                builder.addEqual('genre', genre)
+                builder.addEqual('releaseDate', releaseDate)
+                builder.addRegex('plot', plot)
+                builder.addRegex('director', director)
+                builder.addEqual('rating', rating)
+
+                const query = builder.build({ allowEmpty: true })
 
                 helpers.setQuery(query)
             },

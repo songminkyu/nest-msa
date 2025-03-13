@@ -1,27 +1,16 @@
 import { expect } from '@jest/globals'
 import { BadRequestException } from '@nestjs/common'
-import {
-    addEqualQuery,
-    addIdQuery,
-    addInQuery,
-    addRangeQuery,
-    addRegexQuery,
-    newObjectId,
-    objectId,
-    objectIds,
-    validateFilters
-} from 'common'
-import { escapeRegExp } from 'lodash'
+import { QueryBuilder, newObjectId, objectId, objectIds } from 'common'
 import { Types } from 'mongoose'
 
-describe('MongooseRepository Utils', () => {
+describe('Mongoose Utils', () => {
     it('newObjectId', async () => {
         const objectId = newObjectId()
         expect(Types.ObjectId.isValid(objectId)).toBeTruthy()
     })
 
     describe('objectId', () => {
-        it('should convert a string to an ObjectId', () => {
+        it('문자열을 ObjectId로 변환해야 한다', () => {
             const idString = '507f1f77bcf86cd799439011'
             const result = objectId(idString)
 
@@ -29,15 +18,17 @@ describe('MongooseRepository Utils', () => {
             expect(result.toString()).toBe(idString)
         })
 
-        it('should throw an error for invalid ObjectId strings', () => {
+        it('유효하지 않은 ObjectId 문자열에 대해 에러를 발생시켜야 한다', () => {
             const invalidId = 'invalid-id'
 
-            expect(() => objectId(invalidId)).toThrow()
+            expect(() => objectId(invalidId)).toThrow(
+                'input must be a 24 character hex string, 12 byte Uint8Array, or an integer'
+            )
         })
     })
 
     describe('objectIds', () => {
-        it('should convert an array of strings to an array of ObjectIds', () => {
+        it('문자열 배열을 ObjectId 배열로 변환해야 한다', () => {
             const idStrings = ['507f1f77bcf86cd799439011', '507f1f77bcf86cd799439012']
             const result = objectIds(idStrings)
 
@@ -48,208 +39,136 @@ describe('MongooseRepository Utils', () => {
             })
         })
 
-        it('should return an empty array when given an empty array', () => {
+        it('빈 배열이 주어지면 빈 배열을 반환해야 한다', () => {
             const result = objectIds([])
 
             expect(result).toEqual([])
         })
 
-        it('should throw an error if any string in the array is invalid', () => {
+        it('배열에 유효하지 않은 문자열이 있으면 에러를 발생시켜야 한다', () => {
             const idStrings = ['507f1f77bcf86cd799439011', 'invalid-id']
 
-            expect(() => objectIds(idStrings)).toThrow()
-        })
-    })
-
-    describe('addEqualQuery', () => {
-        it('should add equal query when value is provided', () => {
-            const query: any = {}
-            const field = 'movieId'
-            const value = '60d5ec49f8d2e30d8c8b4567'
-
-            addEqualQuery(query, field, value)
-
-            expect(query).toHaveProperty(field)
-            expect(query[field]).toEqual(value)
-        })
-
-        it('should not add query when value is not provided', () => {
-            const query: any = {}
-            const field = 'movieId'
-            const value = undefined
-
-            addEqualQuery(query, field, value)
-
-            expect(query).not.toHaveProperty(field)
-        })
-    })
-
-    describe('addIdQuery', () => {
-        it('should add equal query when id is provided', () => {
-            const query: any = {}
-            const field = 'movieId'
-            const id = '60d5ec49f8d2e30d8c8b4567'
-
-            addIdQuery(query, field, id)
-
-            expect(query).toHaveProperty(field)
-            expect(query[field]).toEqual(objectId(id))
-        })
-
-        it('should not add query when id is not provided', () => {
-            const query: any = {}
-            const field = 'movieId'
-            const id = undefined
-
-            addIdQuery(query, field, id)
-
-            expect(query).not.toHaveProperty(field)
-        })
-    })
-
-    describe('addInQuery', () => {
-        it('should add $in query when ids are provided', () => {
-            const query: any = {}
-            const field = 'movieId'
-            const ids = ['60d5ec49f8d2e30d8c8b4567', '60d5ec49f8d2e30d8c8b4568']
-
-            addInQuery(query, field, ids)
-
-            expect(query).toHaveProperty(field)
-            expect(query[field].$in).toEqual(objectIds(ids))
-        })
-
-        it('should not add query when ids are not provided', () => {
-            const query: any = {}
-            const field = 'movieId'
-            const ids = undefined
-
-            addInQuery(query, field, ids)
-
-            expect(query).not.toHaveProperty(field)
-        })
-
-        it('should not add query when ids array is empty', () => {
-            const query: any = {}
-            const field = 'movieId'
-            const ids: string[] = []
-
-            addInQuery(query, field, ids)
-
-            expect(query).not.toHaveProperty(field)
-        })
-    })
-
-    describe('addRegexQuery', () => {
-        it('should add RegExp query when value is provided', () => {
-            const query: any = {}
-            const field = 'name'
-            const value = 'Inception'
-
-            addRegexQuery(query, field, value)
-
-            expect(query).toHaveProperty(field)
-            expect(query[field]).toEqual(new RegExp('Inception', 'i'))
-        })
-
-        it('should escape special characters in the value', () => {
-            const query: any = {}
-            const field = 'name'
-            const value = 'Star Wars (Episode IV)'
-
-            addRegexQuery(query, field, value)
-
-            const escapedValue = escapeRegExp(value)
-            expect(query[field]).toEqual(new RegExp(escapedValue, 'i'))
-        })
-
-        it('should not add query when value is not provided', () => {
-            const query: any = {}
-            const field = 'name'
-            const value = undefined
-
-            addRegexQuery(query, field, value)
-
-            expect(query).not.toHaveProperty(field)
-        })
-
-        it('should not add query when value is an empty string', () => {
-            const query: any = {}
-            const field = 'name'
-            const value = ''
-
-            addRegexQuery(query, field, value)
-
-            expect(query).not.toHaveProperty(field)
-        })
-    })
-
-    describe('addRangeQuery', () => {
-        it('should add $gte and $lte when both start and end are provided', () => {
-            const query: any = {}
-            const field = 'startTime'
-            const range = { start: new Date('2024-01-01'), end: new Date('2024-12-31') }
-
-            addRangeQuery(query, field, range)
-
-            expect(query).toHaveProperty(field)
-            expect(query[field]).toEqual({
-                $gte: range.start,
-                $lte: range.end
-            })
-        })
-
-        it('should add only $gte when only start is provided', () => {
-            const query: any = {}
-            const field = 'startTime'
-            const range = { start: new Date('2024-01-01'), end: undefined }
-
-            addRangeQuery(query, field, range)
-
-            expect(query).toHaveProperty(field)
-            expect(query[field]).toEqual({
-                $gte: range.start
-            })
-        })
-
-        it('should add only $lte when only end is provided', () => {
-            const query: any = {}
-            const field = 'startTime'
-            const range = { start: undefined, end: new Date('2024-12-31') }
-
-            addRangeQuery(query, field, range)
-
-            expect(query).toHaveProperty(field)
-            expect(query[field]).toEqual({
-                $lte: range.end
-            })
-        })
-
-        it('should not add query when range is not provided', () => {
-            const query: any = {}
-            const field = 'startTime'
-            const range = undefined
-
-            addRangeQuery(query, field, range)
-
-            expect(query).not.toHaveProperty(field)
-        })
-    })
-
-    describe('validateFilters', () => {
-        it('should throw BadRequestException when query is empty', () => {
-            const query: any = {}
-
-            expect(() => validateFilters(query)).toThrow(BadRequestException)
-            expect(() => validateFilters(query)).toThrow(
-                'At least one filter condition must be provided'
+            expect(() => objectIds(idStrings)).toThrow(
+                'input must be a 24 character hex string, 12 byte Uint8Array, or an integer'
             )
         })
+    })
 
-        it('should not throw when query has at least one condition', () => {
-            const query: any = { movieId: { $in: objectIds(['60d5ec49f8d2e30d8c8b4567']) } }
+    describe('QueryBuilder', () => {
+        interface TestModel {
+            _id: Types.ObjectId
+            name: string
+            createdAt: Date
+        }
 
-            expect(() => validateFilters(query)).not.toThrow()
+        let builder: QueryBuilder<TestModel>
+
+        beforeEach(() => {
+            builder = new QueryBuilder<TestModel>()
+        })
+
+        describe('addEqual', () => {
+            it('유효한 값이 주어지면 쿼리에 추가해야 한다', () => {
+                builder.addEqual('name', 'test')
+                expect(builder.build({})).toEqual({ name: 'test' })
+            })
+
+            it('undefined나 null이면 쿼리에 추가하지 않아야 한다', () => {
+                builder.addEqual('name', undefined)
+                builder.addEqual('name', null)
+                expect(builder.build({ allowEmpty: true })).toEqual({})
+            })
+        })
+
+        describe('addId', () => {
+            it('유효한 ID가 주어지면 ObjectId로 변환되어 쿼리에 추가해야 한다', () => {
+                const id = new Types.ObjectId().toString()
+                builder.addId('_id', id)
+                expect(builder.build({})).toEqual({ _id: objectId(id) })
+            })
+
+            it('undefined이면 쿼리에 추가하지 않아야 한다', () => {
+                builder.addId('_id', undefined)
+                expect(builder.build({ allowEmpty: true })).toEqual({})
+            })
+        })
+
+        describe('addIn', () => {
+            it('유효한 ID 배열이 주어지면 $in 조건을 쿼리에 추가해야 한다', () => {
+                const ids = [new Types.ObjectId().toString(), new Types.ObjectId().toString()]
+                builder.addIn('_id', ids)
+                expect(builder.build({})).toEqual({ _id: { $in: objectIds(ids) } })
+            })
+
+            it('중복된 ID가 있으면 중복을 제거해야 한다', () => {
+                const id = new Types.ObjectId().toString()
+                const ids = [id, new Types.ObjectId().toString(), id]
+
+                builder.addIn('_id', ids)
+                expect(builder.build({})).toEqual({ _id: { $in: objectIds([id, ids[1]]) } })
+            })
+
+            it('빈 배열이나 undefined이면 쿼리에 추가하지 않아야 한다', () => {
+                builder.addIn('_id', [])
+                builder.addIn('_id', undefined)
+                expect(builder.build({ allowEmpty: true })).toEqual({})
+            })
+        })
+
+        describe('addRegex', () => {
+            it('유효한 문자열이 주어지면 정규 표현식을 쿼리에 추가해야 한다', () => {
+                builder.addRegex('name', 'test')
+                expect(builder.build({})).toEqual({ name: new RegExp('test', 'i') })
+            })
+
+            it('undefined이면 쿼리에 추가하지 않아야 한다', () => {
+                builder.addRegex('name', undefined)
+                expect(builder.build({ allowEmpty: true })).toEqual({})
+            })
+        })
+
+        describe('addRange', () => {
+            it('start와 end가 주어지면 $gte와 $lte를 쿼리에 추가해야 한다', () => {
+                const range = { start: new Date('2023-01-01'), end: new Date('2023-12-31') }
+                builder.addRange('createdAt', range)
+                expect(builder.build({})).toEqual({
+                    createdAt: { $gte: range.start, $lte: range.end }
+                })
+            })
+
+            it('start만 주어지면 $gte를 쿼리에 추가해야 한다', () => {
+                const range = { start: new Date('2023-01-01') }
+                builder.addRange('createdAt', range)
+                expect(builder.build({})).toEqual({ createdAt: { $gte: range.start } })
+            })
+
+            it('end만 주어지면 $lte를 쿼리에 추가해야 한다', () => {
+                const range = { end: new Date('2023-12-31') }
+                builder.addRange('createdAt', range)
+                expect(builder.build({})).toEqual({ createdAt: { $lte: range.end } })
+            })
+
+            it('undefined이면 쿼리에 추가하지 않아야 한다', () => {
+                builder.addRange('createdAt', undefined)
+                expect(builder.build({ allowEmpty: true })).toEqual({})
+            })
+        })
+
+        describe('build', () => {
+            it('추가된 조건이 있으면 쿼리 객체를 반환해야 한다', () => {
+                builder.addEqual('name', 'test')
+                expect(builder.build({})).toEqual({ name: 'test' })
+            })
+
+            it('조건이 없으면 BadRequestException을 던져야 한다', () => {
+                expect(() => builder.build({})).toThrow(BadRequestException)
+            })
+
+            it('allowEmpty가 true면 빈 쿼리를 허용한다', () => {
+                expect(builder.build({ allowEmpty: true })).toEqual({})
+            })
         })
     })
 })
+
+// TODO 던지다 vs 발생시키다

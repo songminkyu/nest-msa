@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common'
 import { escapeRegExp, uniq } from 'lodash'
-import { Types } from 'mongoose'
+import { FilterQuery, Types } from 'mongoose'
 import { CommonErrors } from '../common-errors'
 import { Expect } from '../validator'
 
@@ -8,48 +8,78 @@ export const newObjectId = () => new Types.ObjectId().toString()
 export const objectId = (id: string) => new Types.ObjectId(id)
 export const objectIds = (ids: string[]) => ids.map((id) => objectId(id))
 
-export const addEqualQuery = (query: any, field: string, value?: any) => {
-    if (value !== undefined && value !== null) {
-        query[field] = value
-    }
+export interface QueryBuilderOptions {
+    allowEmpty?: boolean
 }
 
-export const addIdQuery = (query: any, field: string, id?: string) => {
-    if (id) {
-        query[field] = objectId(id)
-    }
-}
+export class QueryBuilder<T> {
+    private query: FilterQuery<T> = {}
 
-export const addInQuery = (query: any, field: string, ids?: string[]) => {
-    if (ids && ids.length > 0) {
-        const uniqueIds = uniq(ids)
-        Expect.equalLength(uniqueIds, ids, `Duplicate ${field} IDs detected and removed:${ids}`)
-
-        query[field] = { $in: objectIds(uniqueIds) }
-    }
-}
-
-export const addRegexQuery = (query: any, field: string, value?: string) => {
-    if (value) {
-        query[field] = new RegExp(escapeRegExp(value), 'i')
-    }
-}
-
-export const addRangeQuery = (query: any, field: string, range?: { start?: Date; end?: Date }) => {
-    if (range) {
-        const { start, end } = range
-        if (start && end) {
-            query[field] = { $gte: start, $lte: end }
-        } else if (start) {
-            query[field] = { $gte: start }
-        } else if (end) {
-            query[field] = { $lte: end }
+    addEqual(field: keyof T, value?: any): this {
+        if (value !== undefined && value !== null) {
+            this.query[field] = value
         }
+        return this
     }
-}
 
-export const validateFilters = (query: any): void => {
-    if (Object.keys(query).length === 0) {
-        throw new BadRequestException(CommonErrors.Mongoose.FiltersRequired)
+    addId<K extends keyof T>(
+        field: K & (T[K] extends Types.ObjectId ? K : never),
+        id?: string
+    ): this {
+        if (id) {
+            this.query[field] = objectId(id)
+        }
+        return this
+    }
+
+    addIn<K extends keyof T>(
+        field: K & (T[K] extends Types.ObjectId ? K : never),
+        ids?: string[] | undefined
+    ): this {
+        if (ids && ids.length > 0) {
+            const uniqueIds = uniq(ids)
+            Expect.equalLength(
+                uniqueIds,
+                ids,
+                `Duplicate ${String(field)} IDs detected and removed: ${ids}`
+            )
+            this.query[field] = { $in: objectIds(uniqueIds) }
+        }
+        return this
+    }
+
+    addRegex<K extends keyof T>(
+        field: K & (T[K] extends string ? K : never),
+        value?: string
+    ): this {
+        if (value) {
+            this.query[field] = new RegExp(escapeRegExp(value), 'i')
+        }
+        return this
+    }
+
+    addRange<K extends keyof T>(
+        field: K & (T[K] extends Date ? K : never),
+        range?: { start?: Date; end?: Date }
+    ): this {
+        if (range) {
+            const { start, end } = range
+            if (start && end) {
+                this.query[field] = { $gte: start, $lte: end }
+            } else if (start) {
+                this.query[field] = { $gte: start }
+            } else if (end) {
+                this.query[field] = { $lte: end }
+            }
+        }
+        return this
+    }
+
+    build({ allowEmpty }: QueryBuilderOptions): FilterQuery<T> {
+        if (!allowEmpty && Object.keys(this.query).length === 0) {
+            throw new BadRequestException(CommonErrors.Mongoose.FiltersRequired)
+        }
+
+        return this.query
     }
 }

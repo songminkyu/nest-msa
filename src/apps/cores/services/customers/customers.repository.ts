@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { addRegexQuery, MongooseRepository, objectId } from 'common'
+import { MongooseRepository, objectId, QueryBuilder } from 'common'
 import { CoreErrors } from 'cores/core-errors'
-import { FilterQuery, Model } from 'mongoose'
+import { Model } from 'mongoose'
 import { MongooseConfig } from 'shared'
 import { CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
 import { Customer } from './models'
@@ -37,9 +37,11 @@ export class CustomersRepository extends MongooseRepository<Customer> {
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query: FilterQuery<Customer> = {}
-                addRegexQuery(query, 'name', name)
-                addRegexQuery(query, 'email', email)
+                const builder = new QueryBuilder<Customer>()
+                builder.addRegex('name', name)
+                builder.addRegex('email', email)
+
+                const query = builder.build({ allowEmpty: true })
 
                 helpers.setQuery(query)
             },

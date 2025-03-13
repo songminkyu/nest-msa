@@ -1,14 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import {
-    addInQuery,
-    MongooseRepository,
-    MongooseUpdateResult,
-    objectId,
-    objectIds,
-    validateFilters
-} from 'common'
-import { FilterQuery, Model } from 'mongoose'
+import { MongooseRepository, MongooseUpdateResult, objectId, objectIds, QueryBuilder } from 'common'
+import { Model } from 'mongoose'
 import { MongooseConfig } from 'shared'
 import { SalesStatusByShowtimeDto, TicketCreateDto, TicketFilterDto } from './dtos'
 import { Ticket, TicketStatus } from './models'
@@ -47,13 +40,13 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
     async findAllTickets(filterDto: TicketFilterDto) {
         const { batchIds, movieIds, theaterIds, showtimeIds } = filterDto
 
-        const query: FilterQuery<Ticket> = {}
-        addInQuery(query, 'batchId', batchIds)
-        addInQuery(query, 'movieId', movieIds)
-        addInQuery(query, 'theaterId', theaterIds)
-        addInQuery(query, 'showtimeId', showtimeIds)
+        const builder = new QueryBuilder<Ticket>()
+        builder.addIn('batchId', batchIds)
+        builder.addIn('movieId', movieIds)
+        builder.addIn('theaterId', theaterIds)
+        builder.addIn('showtimeId', showtimeIds)
 
-        validateFilters(query)
+        const query = builder.build({})
 
         const tickets = await this.model.find(query).sort({ batchId: 1 }).exec()
         return tickets
