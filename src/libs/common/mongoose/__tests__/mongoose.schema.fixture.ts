@@ -14,7 +14,13 @@ import { createTestContext, getMongoTestConnection, withTestId } from 'testlib'
     }
 })
 export class SchemaTypeSample extends MongooseSchema {
-    @Prop({ index: true })
+    @Prop({ index: true, required: true })
+    sn: number
+
+    @Prop({
+        // https://mongoosejs.com/docs/guide.html#collation
+        collation: { locale: 'en_US', strength: 1 }
+    })
     name: string
 
     @Prop({ min: 18, max: 65 })

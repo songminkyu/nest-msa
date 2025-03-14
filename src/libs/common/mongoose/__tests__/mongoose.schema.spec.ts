@@ -16,6 +16,7 @@ describe('Mongoose Schema Examples', () => {
 
     it('Mongoose의 모든 기본 데이터 타입 저장 및 조회 검증', async () => {
         const doc = new fix.model()
+        doc.sn = 1234567
         doc.name = 'Statue of Liberty'
         doc.binary = Buffer.alloc(0)
         doc.living = false
