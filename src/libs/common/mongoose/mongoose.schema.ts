@@ -55,6 +55,8 @@ export function createMongooseSchema<T>(cls: Type<T>) {
      */
     if (isHardDelete === false) {
         schema.add({ deletedAt: { type: Date, default: null } } as any)
+        schema.index({ deletedAt: 1 }) // soft delete 상황에서 deletedAt이 자주 조회되므로 인덱스를 설정함
+
         schema.pre('find', excludeDeletedMiddleware)
         schema.pre('findOne', excludeDeletedMiddleware)
         schema.pre('findOneAndUpdate', excludeDeletedMiddleware)
@@ -87,6 +89,17 @@ export function createMongooseSchema<T>(cls: Type<T>) {
 }
 
 export type SchemaJson<T> = { [K in keyof T]: T[K] extends Types.ObjectId ? string : T[K] }
+
+/**
+ * `doc.toJSON()`의 결과를 새로운 DTO 인스턴스에 매핑한다.
+ * - ObjectId는 문자열로 변환된다(`SchemaJson`을 통해).
+ * - `keys` 배열에 명시된 필드만 `DTO`에 할당한다.
+ *
+ * @param doc       변환할 Mongoose Document
+ * @param DtoClass  생성할 DTO 클래스 (new () => DTO)
+ * @param keys      변환 대상 key 목록
+ * @returns DTO 인스턴스
+ */
 export function mapDocToDto<
     DOC extends object,
     DTO extends object,
