@@ -29,7 +29,7 @@ describe('MongooseRepository - withTransaction', () => {
         expect(found?.toJSON()).toEqual(newDoc.toJSON())
     })
 
-    it('트랜잭션 중 예외가 발생하면 변경 사항을 롤백해야 한다', async () => {
+    it('트랜잭션 중 오류가 발생하면 변경 사항을 롤백해야 한다', async () => {
         const promise = repository.withTransaction(async (session) => {
             const doc = repository.newDocument()
             doc.name = 'name'

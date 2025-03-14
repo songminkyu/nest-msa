@@ -43,7 +43,7 @@ describe('MongooseRepository', () => {
             expect(toDto(findDoc!)).toEqual(toDto(newDoc))
         })
 
-        it('필수 필드가 누락된 경우 예외를 발생시켜야 한다', async () => {
+        it('필수 필드가 누락된 경우 예외를 던져야 한다', async () => {
             const doc = repository.newDocument()
             const promise = doc.save()
             await expect(promise).rejects.toThrow()
@@ -81,7 +81,7 @@ describe('MongooseRepository', () => {
             expect(res).toBeTruthy()
         })
 
-        it('필수 필드가 누락된 경우 예외를 발생시켜야 한다', async () => {
+        it('필수 필드가 누락된 경우 예외를 던져야 한다', async () => {
             const docs = [repository.newDocument(), repository.newDocument()]
 
             const promise = repository.saveMany(docs)
@@ -136,13 +136,13 @@ describe('MongooseRepository', () => {
             expect(toDtos(items)).toEqual(samples)
         })
 
-        it('take 값이 양수가 아니면 예외를 발생시켜야 한다', async () => {
+        it('take 값이 양수가 아니면 예외를 던져야 한다', async () => {
             const promise = repository.findWithPagination({ pagination: { take: -1 } })
 
             await expect(promise).rejects.toThrow(BadRequestException)
         })
 
-        it('take 값이 지정되지 않은 경우 예외를 발생시켜야 한다', async () => {
+        it('take 값이 지정되지 않은 경우 예외를 던져야 한다', async () => {
             const promise = repository.findWithPagination({ pagination: {} })
 
             await expect(promise).rejects.toThrow(BadRequestException)
@@ -248,7 +248,7 @@ describe('MongooseRepository', () => {
             expect(toDto(doc)).toEqual(sample)
         })
 
-        it('존재하지 않는 ID의 경우 예외를 발생시켜야 한다', async () => {
+        it('존재하지 않는 ID의 경우 예외를 던져야 한다', async () => {
             const promise = repository.getById(nullObjectId)
 
             await expect(promise).rejects.toThrow(NotFoundException)
@@ -270,7 +270,7 @@ describe('MongooseRepository', () => {
             expectEqualUnsorted(toDtos(docs), samples)
         })
 
-        it('하나라도 존재하지 않는 ID가 있으면 예외를 발생시켜야 한다', async () => {
+        it('하나라도 존재하지 않는 ID가 있으면 예외를 던져야 한다', async () => {
             const promise = repository.getByIds([nullObjectId])
 
             await expect(promise).rejects.toThrow(NotFoundException)
@@ -292,7 +292,7 @@ describe('MongooseRepository', () => {
             expect(doc).toBeNull()
         })
 
-        it('존재하지 않는 ID의 경우 예외를 발생시켜야 한다', async () => {
+        it('존재하지 않는 ID의 경우 예외를 던져야 한다', async () => {
             const promise = repository.deleteById(nullObjectId)
 
             await expect(promise).rejects.toThrow(NotFoundException)

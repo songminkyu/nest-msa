@@ -7,7 +7,7 @@ export class DateUtil {
      *
      * @param {string} str - 변환할 시간 형식 문자열 (예: "1d 2h", "30m", "500ms").
      * @returns {number} 해당 시간의 밀리초 값.
-     * @throws {Exception} 문자열 형식이 유효하지 않은 경우 예외를 발생시킵니다.
+     * @throws {Exception} 문자열 형식이 유효하지 않은 경우 예외를 던진다.
      */
     static toMs(str: string): number {
         const timeUnits: { [key: string]: number } = {
@@ -140,7 +140,7 @@ export class DateUtil {
      *
      * @param {string} dateString - 변환할 날짜 문자열.
      * @returns {Date} 해당 문자열에 대응하는 Date 객체.
-     * @throws {Error} 문자열 형식이 올바르지 않을 경우 예외를 발생시킵니다.
+     * @throws {Error} 문자열 형식이 올바르지 않을 경우 예외를 던진다.
      */
     static fromYMD(dateString: string): Date {
         if (!(dateString.length === 8 || dateString.length === 12)) {

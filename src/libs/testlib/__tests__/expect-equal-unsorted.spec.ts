@@ -40,7 +40,7 @@ describe('expectEqualUnsorted', () => {
         expect(() => expectEqualUnsorted(actual, expected)).not.toThrow()
     })
 
-    it('배열이 다르면 예외를 발생시켜야 한다', () => {
+    it('배열이 다르면 예외를 던져야 한다', () => {
         const actual = [
             { id: 1, name: 'John', age: 30 },
             { id: 2, name: 'Jane', age: 25 }
@@ -53,7 +53,7 @@ describe('expectEqualUnsorted', () => {
         expect(() => expectEqualUnsorted(actual, expected)).toThrow()
     })
 
-    it('actual 또는 expected가 undefined이면 예외를 발생시켜야 한다', () => {
+    it('actual 또는 expected가 undefined이면 예외를 던져야 한다', () => {
         expect(() => expectEqualUnsorted(undefined, [])).toThrow('actual or expected undefined')
         expect(() => expectEqualUnsorted([], undefined)).toThrow('actual or expected undefined')
     })

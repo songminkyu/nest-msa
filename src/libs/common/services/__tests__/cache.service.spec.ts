@@ -46,7 +46,7 @@ describe('CacheService', () => {
         expect(afterExpiration).toEqual('value')
     })
 
-    it('TTL이 0 미만이면 예외를 발생시켜야 한다', async () => {
+    it('TTL이 0 미만이면 예외를 던져야 한다', async () => {
         const wrongTTL = -100
 
         await expect(fix.cacheService.set('key', 'value', wrongTTL)).rejects.toThrow(

@@ -39,19 +39,19 @@ describe('JwtAuthService', () => {
             expect(tokens!.refreshToken).not.toEqual(refreshToken)
         })
 
-        it('잘못된 refreshToken을 제공하면 예외를 발생시켜야 한다', async () => {
+        it('잘못된 refreshToken을 제공하면 예외를 던져야 한다', async () => {
             const promise = fix.jwtService.refreshAuthTokens('invalid-token')
             await expect(promise).rejects.toThrow('jwt malformed')
         })
 
-        it('만료된 refreshToken을 제공하면 예외를 발생시켜야 한다', async () => {
+        it('만료된 refreshToken을 제공하면 예외를 던져야 한다', async () => {
             await sleep(3500)
 
             const promise = fix.jwtService.refreshAuthTokens(refreshToken)
             await expect(promise).rejects.toThrow('jwt expired')
         })
 
-        it('저장된 refreshToken과 다르면 예외를 발생시켜야 한다', async () => {
+        it('저장된 refreshToken과 다르면 예외를 던져야 한다', async () => {
             jest.spyOn(fix.redis, 'get').mockResolvedValueOnce('unknown token')
 
             const promise = fix.jwtService.refreshAuthTokens(refreshToken)

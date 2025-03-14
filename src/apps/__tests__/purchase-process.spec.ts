@@ -135,7 +135,7 @@ describe('/purchase-process', () => {
     })
 
     describe('errors', () => {
-        it('구매 완료 단계에서 예외가 발생하면 InternalServerError(500)를 반환해야 한다', async () => {
+        it('구매 완료 단계에서 오류가 발생하면 InternalServerError(500)를 반환해야 한다', async () => {
             const showtime = await createShowtime(fixture, DateUtil.addMinutes(new Date(), 120))
             const tickets = await createAllTickets(fixture, showtime)
             const items = [{ type: PurchaseItemType.ticket, ticketId: tickets[0].id }]

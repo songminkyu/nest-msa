@@ -15,7 +15,7 @@
 findSeed(seedId: string)
 
 /**
- * 만약 해당 Seed가 없다면 예외를 발생시킵니다.
+ * 만약 해당 Seed가 없다면 예외를 던진다.
 */
 getSeed(seedId: string)
 ```
@@ -117,7 +117,7 @@ Assert.defined(seed, `Seed(${seedId}) not found`)
 
 ## 4. Scope.REQUEST
 
-아래와 같이 Scope.REQUEST로 설정된 TransactionService를 사용하면 scope bubble up 이 발생해서 unit 테스트가 어려워진다.
+아래와 같이 Scope.REQUEST로 설정된 TransactionService를 사용하면 scope bubble up 문제가 발생해서 unit 테스트가 어려워진다.
 
 ```ts
 @Injectable({ scope: Scope.REQUEST })

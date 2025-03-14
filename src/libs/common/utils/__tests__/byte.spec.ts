@@ -24,7 +24,7 @@ describe('Byte', () => {
             expect(Byte.fromString('1tb')).toEqual(1024 * 1024 * 1024 * 1024)
         })
 
-        it('잘못된 형식인 경우 에러를 발생시켜야 한다', () => {
+        it('잘못된 형식인 경우 예외를 던져야 한다', () => {
             expect(() => Byte.fromString('invalid')).toThrow()
             expect(() => Byte.fromString('123')).toThrow()
             expect(() => Byte.fromString('123XB')).toThrow()

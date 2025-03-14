@@ -7,7 +7,7 @@ export class Byte {
      *
      * @param {string} str - 변환할 크기 형식 문자열 (예: "10MB", "2GB", "-500KB").
      * @returns {number} 해당 문자열에 해당하는 총 바이트 값.
-     * @throws {Exception} 문자열 형식이 올바르지 않을 경우 예외를 발생시킵니다.
+     * @throws {Exception} 문자열 형식이 올바르지 않을 경우 예외를 던진다.
      */
     static fromString(str: string): number {
         const sizeUnits: { [key: string]: number } = {

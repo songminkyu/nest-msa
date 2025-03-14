@@ -18,7 +18,7 @@ describe('Mongoose Utils', () => {
             expect(result.toString()).toBe(idString)
         })
 
-        it('유효하지 않은 ObjectId 문자열에 대해 에러를 발생시켜야 한다', () => {
+        it('유효하지 않은 ObjectId 문자열에 대해 예외를 던져야 한다', () => {
             const invalidId = 'invalid-id'
 
             expect(() => objectId(invalidId)).toThrow(
@@ -45,7 +45,7 @@ describe('Mongoose Utils', () => {
             expect(result).toEqual([])
         })
 
-        it('배열에 유효하지 않은 문자열이 있으면 에러를 발생시켜야 한다', () => {
+        it('배열에 유효하지 않은 문자열이 있으면 예외를 던져야 한다', () => {
             const idStrings = ['507f1f77bcf86cd799439011', 'invalid-id']
 
             expect(() => objectIds(idStrings)).toThrow(
@@ -170,5 +170,3 @@ describe('Mongoose Utils', () => {
         })
     })
 })
-
-// TODO 던지다 vs 발생시키다

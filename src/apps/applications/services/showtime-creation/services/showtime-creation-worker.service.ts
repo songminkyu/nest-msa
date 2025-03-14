@@ -34,7 +34,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         /**
          * onModuleInit에서 Redis가 오프라인이면 BullMQ 초기화 작업이 offlineQueue에 대기한다.
          * 이 상태에서 Redis가 온라인 되기 전에 onModuleDestroy가 호출되면,
-         * offlineQueue의 작업들이 'Error: Connection is closed' 오류를 발생시킨다.
+         * offlineQueue의 작업들이 'Error: Connection is closed' 오류를 던진다.
          * 이를 해결하기 위해 waitUntilReady로 Redis가 온라인 될 때까지 대기한다.
          */
         await this.worker.waitUntilReady()

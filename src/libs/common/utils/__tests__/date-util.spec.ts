@@ -14,7 +14,7 @@ describe('DateUtil', () => {
             expect(DateUtil.toMs('500ms')).toEqual(500)
         })
 
-        it('잘못된 형식 입력 시 예외 발생', () => {
+        it('잘못된 형식 입력 시 예외를 던져야 한다', () => {
             expect(() => DateUtil.toMs('2z')).toThrow(Error)
         })
     })
@@ -42,7 +42,7 @@ describe('DateUtil', () => {
             expect(date.getMinutes()).toEqual(30)
         })
 
-        it('잘못된 형식 입력 시 예외 발생', () => {
+        it('잘못된 형식 입력 시 예외를 던져야 한다', () => {
             expect(() => DateUtil.fromYMD('')).toThrow()
         })
     })

@@ -33,21 +33,21 @@ describe('LatLong', () => {
             .ok({ latitude: 37.123, longitude: 128.678 })
     })
 
-    it('latlong 값이 없으면 BadRequestException을 발생시켜야 한다', async () => {
+    it('latlong 값이 없으면 BadRequestException을 던져야 한다', async () => {
         await fix.httpClient.get('/latlong').badRequest({
             code: 'ERR_LATLONG_REQUIRED',
             message: 'The latlong query parameter is required'
         })
     })
 
-    it('잘못된 형식인 경우 BadRequestException을 발생시켜야 한다', async () => {
+    it('잘못된 형식인 경우 BadRequestException을 던져야 한다', async () => {
         await fix.httpClient.get('/latlong').query({ location: '37.123' }).badRequest({
             code: 'ERR_LATLONG_FORMAT_INVALID',
             message: 'LatLong should be in the format "latitude,longitude"'
         })
     })
 
-    it('범위를 벗어난 값인 경우 BadRequestException을 발생시켜야 한다', async () => {
+    it('범위를 벗어난 값인 경우 BadRequestException을 던져야 한다', async () => {
         await fix.httpClient
             .get('/latlong')
             .query({ location: '91,181' })
