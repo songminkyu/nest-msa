@@ -1,5 +1,5 @@
 import { sleep } from 'common'
-import { Fixture } from './jwt-auth.service.fixture'
+import type { Fixture } from './jwt-auth.service.fixture'
 
 describe('JwtAuthService', () => {
     let fix: Fixture

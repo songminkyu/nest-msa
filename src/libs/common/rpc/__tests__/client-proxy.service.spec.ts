@@ -1,5 +1,5 @@
 import { withTestId } from 'testlib'
-import { Fixture } from './client-proxy.service.fixture'
+import type { Fixture } from './client-proxy.service.fixture'
 
 describe('ClientProxyService', () => {
     let fix: Fixture

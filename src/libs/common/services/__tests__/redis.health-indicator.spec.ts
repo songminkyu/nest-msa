@@ -1,4 +1,4 @@
-import { Fixture } from './redis.health-indicator.fixture'
+import type { Fixture } from './redis.health-indicator.fixture'
 
 describe('RedisHealthIndicator', () => {
     let fix: Fixture

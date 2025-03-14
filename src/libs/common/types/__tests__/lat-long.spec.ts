@@ -1,5 +1,5 @@
 import { LatLong } from 'common'
-import { Fixture } from './lat-long.fixture'
+import type { Fixture } from './lat-long.fixture'
 
 describe('LatLong', () => {
     let fix: Fixture

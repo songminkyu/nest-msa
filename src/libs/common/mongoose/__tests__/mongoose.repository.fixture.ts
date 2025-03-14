@@ -24,7 +24,7 @@ export class SampleDto {
 }
 
 @Injectable()
-export class SamplesRepository extends MongooseRepository<Sample> {
+class SamplesRepository extends MongooseRepository<Sample> {
     constructor(@InjectModel(Sample.name) model: Model<Sample>) {
         super(model)
     }
@@ -54,6 +54,13 @@ export const createSamples = async (repository: SamplesRepository) =>
 export const toDto = (item: SampleDocument) => mapDocToDto(item, SampleDto, ['id', 'name'])
 export const toDtos = (items: SampleDocument[]) => items.map((item) => toDto(item))
 
+export interface Fixture {
+    teardown: () => Promise<void>
+    repository: SamplesRepository
+    BadRequestException: typeof BadRequestException
+    NotFoundException: typeof NotFoundException
+}
+
 export async function createFixture() {
     const { uri } = getMongoTestConnection()
 
@@ -75,5 +82,5 @@ export async function createFixture() {
         await testContext?.close()
     }
 
-    return { testContext, teardown, repository, BadRequestException, NotFoundException }
+    return { teardown, repository, BadRequestException, NotFoundException }
 }

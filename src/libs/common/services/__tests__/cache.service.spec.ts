@@ -1,5 +1,5 @@
 import { sleep } from 'common'
-import { Fixture } from './cache.service.fixture'
+import type { Fixture } from './cache.service.fixture'
 
 describe('CacheService', () => {
     let fix: Fixture

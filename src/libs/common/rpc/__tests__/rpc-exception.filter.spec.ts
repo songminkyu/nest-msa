@@ -1,5 +1,5 @@
 import { withTestId } from 'testlib'
-import { Fixture } from './rpc-exception.filter.fixture'
+import type { Fixture } from './rpc-exception.filter.fixture'
 
 describe('RpcExceptionFilter', () => {
     let fix: Fixture

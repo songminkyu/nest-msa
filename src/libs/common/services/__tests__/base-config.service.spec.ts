@@ -1,4 +1,4 @@
-import { Fixture } from './base-config.service.fixture'
+import type { Fixture } from './base-config.service.fixture'
 
 describe('BaseConfigService', () => {
     let fix: Fixture

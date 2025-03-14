@@ -1,7 +1,7 @@
 import { expect } from '@jest/globals'
-import { Fixture } from './mongoose.transaction.fixture'
+import type { Fixture } from './mongoose.transaction.fixture'
 
-describe('MongooseRepository - withTransaction', () => {
+describe('MongooseRepository.withTransaction', () => {
     let fix: Fixture
 
     beforeEach(async () => {

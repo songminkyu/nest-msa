@@ -1,8 +1,8 @@
 import { expect } from '@jest/globals'
 import { Types } from 'mongoose'
-import { Fixture } from './mongoose.schema.fixture'
+import type { Fixture } from './mongoose.schema.fixture'
 
-describe('Mongoose Schema examples', () => {
+describe('Mongoose Schema Examples', () => {
     let fix: Fixture
 
     beforeEach(async () => {

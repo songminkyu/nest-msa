@@ -3,7 +3,7 @@ import { HydratedDocument, Model } from 'mongoose'
 
 import { HardDeleteSample, SoftDeleteSample } from './mongoose.delete.fixture'
 
-describe('Mongoose Delete', () => {
+describe('Mongoose Delete Examples', () => {
     describe('Soft Delete', () => {
         let teardown = () => {}
         let model: Model<any>

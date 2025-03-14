@@ -1,4 +1,4 @@
-import { Fixture } from './create-testing-module.fixture'
+import type { Fixture } from './create-testing-module.fixture'
 
 describe('createTestingModule', () => {
     let fix: Fixture

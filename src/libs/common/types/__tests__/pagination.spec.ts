@@ -1,6 +1,6 @@
 import { CommonErrors } from 'common'
 import { withTestId } from 'testlib'
-import { Fixture } from './pagination.fixture'
+import type { Fixture } from './pagination.fixture'
 
 describe('Pagination', () => {
     let fix: Fixture

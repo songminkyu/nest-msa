@@ -1,5 +1,5 @@
 import { withTestId } from 'testlib'
-import { Fixture } from './queue-group.fixture'
+import type { Fixture } from './queue-group.fixture'
 import { sleep } from 'common'
 
 describe('ClientProxyService', () => {
