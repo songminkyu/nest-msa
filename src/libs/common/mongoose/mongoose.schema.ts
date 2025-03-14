@@ -91,9 +91,7 @@ export function createMongooseSchema<T>(cls: Type<T>) {
 export type SchemaJson<T> = { [K in keyof T]: T[K] extends Types.ObjectId ? string : T[K] }
 
 /**
- * `doc.toJSON()`의 결과를 새로운 DTO 인스턴스에 매핑한다.
- * - ObjectId는 문자열로 변환된다(`SchemaJson`을 통해).
- * - `keys` 배열에 명시된 필드만 `DTO`에 할당한다.
+ * Mongoose 문서를 Dto로 변환한다
  *
  * @param doc       변환할 Mongoose Document
  * @param DtoClass  생성할 DTO 클래스 (new () => DTO)
