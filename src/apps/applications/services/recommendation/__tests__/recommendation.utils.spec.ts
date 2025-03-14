@@ -1,4 +1,4 @@
-import { MovieDto, MovieGenre, MovieRating } from 'cores'
+import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
 import { generateRecommendedMovies } from '../recommendation.utils'
 
 describe('RecommendationService', () => {

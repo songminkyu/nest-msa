@@ -19,7 +19,7 @@ export async function configureInfrastructures(app: INestApplication<any>, serve
     app.useGlobalFilters(new RpcExceptionFilter())
 
     app.connectMicroservice<MicroserviceOptions>(
-        { transport: Transport.NATS, options: { servers, queue: 'infrastructures' } },
+        { transport: Transport.NATS, options: { servers, queue: 'apps/infrastructures' } },
         { inheritAppConfig: true }
     )
 

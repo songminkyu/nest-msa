@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Req, UseGuards } from '@nestjs/common'
-import { BookingProxy } from 'applications'
+import { BookingProxy } from 'apps/applications'
 import { AuthTokenPayload, DateUtil, LatLong, LatLongQuery } from 'common'
 import { CustomerJwtAuthGuard } from './guards'
 

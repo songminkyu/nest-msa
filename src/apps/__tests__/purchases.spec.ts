@@ -1,5 +1,5 @@
-import { PurchaseDto, PurchaseItemType, PurchasesService } from 'cores'
-import { PaymentsService } from 'infrastructures'
+import { PurchaseDto, PurchaseItemType, PurchasesService } from 'apps/cores'
+import { PaymentsService } from 'apps/infrastructures'
 import { nullObjectId } from 'testlib'
 import { closeFixture, Fixture } from './purchases.fixture'
 

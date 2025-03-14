@@ -1,5 +1,5 @@
 import { DateUtil, pickIds } from 'common'
-import { Seatmap, TicketDto } from 'cores'
+import { Seatmap, TicketDto } from 'apps/cores'
 import { HttpTestClient } from 'testlib'
 import { closeFixture, Fixture } from './booking.fixture'
 

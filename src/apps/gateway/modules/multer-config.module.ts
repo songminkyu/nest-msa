@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Module } from '@nestjs/common'
 import { MulterModule, MulterModuleOptions, MulterOptionsFactory } from '@nestjs/platform-express'
 import { generateShortId } from 'common'
-import { GatewayErrors } from 'gateway/gateway-errors'
+import { GatewayErrors } from 'apps/gateway/gateway-errors'
 import { diskStorage } from 'multer'
 import { AppConfigService } from 'shared'
 

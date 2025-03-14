@@ -1,4 +1,4 @@
-import { ShowtimeCreateDto, ShowtimeDto, ShowtimesService } from 'cores'
+import { ShowtimeCreateDto, ShowtimeDto, ShowtimesService } from 'apps/cores'
 import { omit, uniq } from 'lodash'
 import { nullObjectId } from 'testlib'
 import { createAllTestContexts, AllTestContexts } from './utils'

@@ -1,4 +1,4 @@
-import { TicketCreateDto, TicketDto, TicketsService, TicketStatus } from 'cores'
+import { TicketCreateDto, TicketDto, TicketsService, TicketStatus } from 'apps/cores'
 import { omit, uniq } from 'lodash'
 import { nullObjectId } from 'testlib'
 import { createAllTestContexts, AllTestContexts } from './utils'

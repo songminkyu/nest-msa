@@ -13,7 +13,7 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express'
 import { IsString } from 'class-validator'
 import { createReadStream } from 'fs'
-import { StorageFilesProxy } from 'infrastructures'
+import { StorageFilesProxy } from 'apps/infrastructures'
 import { pick } from 'lodash'
 import { Routes } from 'shared'
 

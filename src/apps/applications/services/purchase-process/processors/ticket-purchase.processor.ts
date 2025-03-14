@@ -9,7 +9,7 @@ import {
     TicketHoldingProxy,
     TicketsProxy,
     TicketStatus
-} from 'cores'
+} from 'apps/cores'
 import { uniq } from 'lodash'
 import { checkHeldTickets, checkMaxTicketsForPurchase, checkPurchaseDeadline } from '../domain'
 import { PurchaseProcessProxy } from '../purchase-process.proxy'

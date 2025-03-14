@@ -1,4 +1,4 @@
-import { CustomerDto, CustomersService } from 'cores'
+import { CustomerDto, CustomersService } from 'apps/cores'
 import { createCustomer } from './customers.fixture'
 import { createAllTestContexts, AllTestContexts } from './utils'
 

@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
 import { OrderDirection } from 'common'
-import { WatchRecordDto, WatchRecordsService } from 'cores'
+import { WatchRecordDto, WatchRecordsService } from 'apps/cores'
 import { expectEqualUnsorted, testObjectId } from 'testlib'
 import {
     closeFixture,

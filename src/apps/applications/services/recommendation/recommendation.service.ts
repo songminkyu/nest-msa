@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { OrderDirection } from 'common'
-import { MovieDto, MoviesProxy, ShowtimesProxy, WatchRecordsProxy } from 'cores'
+import { MovieDto, MoviesProxy, ShowtimesProxy, WatchRecordsProxy } from 'apps/cores'
 import { generateRecommendedMovies } from './recommendation.utils'
 
 @Injectable()

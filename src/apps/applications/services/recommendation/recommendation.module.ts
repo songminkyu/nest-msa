@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { MoviesProxy, ShowtimesProxy, WatchRecordsProxy } from 'cores'
+import { MoviesProxy, ShowtimesProxy, WatchRecordsProxy } from 'apps/cores'
 import { RecommendationController } from './recommendation.controller'
 import { RecommendationService } from './recommendation.service'
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { LatLong, pickIds } from 'common'
-import { ShowtimesProxy, TheatersProxy, TicketHoldingProxy, TicketsProxy } from 'cores'
+import { ShowtimesProxy, TheatersProxy, TicketHoldingProxy, TicketsProxy } from 'apps/cores'
 import { generateShowtimesWithSalesStatus, sortTheatersByDistance } from './booking.utils'
 import { ShowtimeSalesStatusDto } from './dtos'
 

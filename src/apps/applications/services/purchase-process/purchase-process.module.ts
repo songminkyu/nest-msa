@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { PurchasesProxy, ShowtimesProxy, TicketHoldingProxy, TicketsProxy } from 'cores'
+import { PurchasesProxy, ShowtimesProxy, TicketHoldingProxy, TicketsProxy } from 'apps/cores'
 import { TicketPurchaseProcessor } from './processors'
 import { PurchaseProcessController } from './purchase-process.controller'
 import { PurchaseProcessProxy } from './purchase-process.proxy'

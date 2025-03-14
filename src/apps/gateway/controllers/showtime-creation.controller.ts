@@ -12,7 +12,7 @@ import {
     UsePipes
 } from '@nestjs/common'
 import { EventPattern } from '@nestjs/microservices'
-import { ShowtimeBatchCreateDto, ShowtimeCreationProxy } from 'applications'
+import { ShowtimeBatchCreateDto, ShowtimeCreationProxy } from 'apps/applications'
 import { PaginationOptionDto } from 'common'
 import { Observable, Subject } from 'rxjs'
 import { Events } from 'shared'

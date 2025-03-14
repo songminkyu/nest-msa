@@ -6,7 +6,7 @@ import {
     ShowtimeDto,
     TicketDto,
     TicketStatus
-} from 'cores'
+} from 'apps/cores'
 import { HttpTestClient } from 'testlib'
 import {
     closeFixture,

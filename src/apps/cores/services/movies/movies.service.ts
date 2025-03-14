@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { mapDocToDto, pickIds } from 'common'
-import { StorageFileCreateDto, StorageFilesProxy } from 'infrastructures'
+import { StorageFileCreateDto, StorageFilesProxy } from 'apps/infrastructures'
 import { Routes } from 'shared'
 import { MovieCreateDto, MovieDto, MovieQueryDto, MovieUpdateDto } from './dtos'
 import { MovieDocument } from './models'

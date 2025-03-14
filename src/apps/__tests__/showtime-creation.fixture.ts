@@ -6,7 +6,7 @@ import {
     ShowtimesService,
     TheaterDto,
     TheatersService
-} from 'cores'
+} from 'apps/cores'
 import { HttpTestClient, nullObjectId } from 'testlib'
 import { createMovie } from './movies.fixture'
 import { createTheater } from './theaters.fixture'

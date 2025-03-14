@@ -14,7 +14,7 @@ import {
     UsePipes
 } from '@nestjs/common'
 import { Assert, AuthTokenPayload } from 'common'
-import { CustomerCreateDto, CustomerQueryDto, CustomersProxy, CustomerUpdateDto } from 'cores'
+import { CustomerCreateDto, CustomerQueryDto, CustomersProxy, CustomerUpdateDto } from 'apps/cores'
 import { CustomerJwtAuthGuard, CustomerLocalAuthGuard, Public } from './guards'
 import { DefaultPaginationPipe } from './pipes'
 

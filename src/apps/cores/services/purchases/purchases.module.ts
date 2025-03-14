@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { PaymentsProxy } from 'infrastructures'
+import { PaymentsProxy } from 'apps/infrastructures'
 import { MongooseConfig } from 'shared'
 import { Purchase, PurchaseSchema } from './models'
 import { PurchasesController } from './purchases.controller'

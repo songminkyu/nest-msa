@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { ApplicationsErrors } from 'applications/application-errors'
+import { ApplicationsErrors } from 'apps/applications/application-errors'
 import { Assert, DateUtil } from 'common'
-import { MoviesProxy, ShowtimeDto, ShowtimesProxy, TheatersProxy } from 'cores'
+import { MoviesProxy, ShowtimeDto, ShowtimesProxy, TheatersProxy } from 'apps/cores'
 import { ShowtimeBatchCreateJobData } from './types'
 
 type TimeslotMap = Map<number, ShowtimeDto>

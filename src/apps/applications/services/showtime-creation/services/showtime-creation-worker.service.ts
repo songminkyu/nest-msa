@@ -10,7 +10,7 @@ import {
     TheatersProxy,
     TicketsProxy,
     TicketStatus
-} from 'cores'
+} from 'apps/cores'
 import { ClientProxyConfig, Events } from 'shared'
 import { ShowtimeBatchCreateStatus } from '../dtos'
 import { ShowtimeCreationValidatorService } from './showtime-creation-validator.service'

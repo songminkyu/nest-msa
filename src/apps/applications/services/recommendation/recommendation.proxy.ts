@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy } from 'common'
-import { MovieDto } from 'cores'
+import { MovieDto } from 'apps/cores'
 import { ClientProxyConfig, Messages } from 'shared'
 
 @Injectable()

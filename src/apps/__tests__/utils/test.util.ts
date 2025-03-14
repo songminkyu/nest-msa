@@ -1,10 +1,10 @@
 import { getRedisConnectionToken } from '@nestjs-modules/ioredis'
 import { Type } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { ApplicationsModule, configureApplications } from 'applications'
-import { configureCores, CoresModule } from 'cores'
-import { configureGateway, GatewayModule } from 'gateway'
-import { configureInfrastructures, InfrastructuresModule } from 'infrastructures'
+import { ApplicationsModule, configureApplications } from 'apps/applications'
+import { configureCores, CoresModule } from 'apps/cores'
+import { configureGateway, GatewayModule } from 'apps/gateway'
+import { configureInfrastructures, InfrastructuresModule } from 'apps/infrastructures'
 import { RedisConfig } from 'shared'
 import {
     createHttpTestContext,

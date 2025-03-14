@@ -1,5 +1,5 @@
 import { generateShortId, getChecksum, Path } from 'common'
-import { StorageFileDto } from 'infrastructures'
+import { StorageFileDto } from 'apps/infrastructures'
 import { AppConfigService } from 'shared'
 import { HttpTestClient, nullObjectId } from 'testlib'
 import {

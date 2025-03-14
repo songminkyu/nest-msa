@@ -16,8 +16,8 @@ import {
     TicketHoldingService,
     TicketsService,
     TicketStatus
-} from 'cores'
-import { PaymentsService } from 'infrastructures'
+} from 'apps/cores'
+import { PaymentsService } from 'apps/infrastructures'
 import { nullObjectId } from 'testlib'
 import { createCustomer } from './customers.fixture'
 import { createMovie } from './movies.fixture'

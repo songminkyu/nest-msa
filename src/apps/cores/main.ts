@@ -19,7 +19,7 @@ export async function configureCores(app: INestApplication<any>, servers: string
     app.useGlobalFilters(new RpcExceptionFilter())
 
     app.connectMicroservice<MicroserviceOptions>(
-        { transport: Transport.NATS, options: { servers, queue: 'cores' } },
+        { transport: Transport.NATS, options: { servers, queue: 'apps/cores' } },
         { inheritAppConfig: true }
     )
 

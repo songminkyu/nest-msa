@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common'
 import { InjectJwtAuth, JwtAuthService, mapDocToDto, Password } from 'common'
-import { CoreErrors } from 'cores/core-errors'
+import { CoreErrors } from 'apps/cores/core-errors'
 import { CustomersRepository } from './customers.repository'
 import { CustomerCreateDto, CustomerDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
 import { CustomerDocument } from './models'

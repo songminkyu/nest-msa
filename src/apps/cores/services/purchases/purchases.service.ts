@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { mapDocToDto } from 'common'
-import { PaymentsProxy } from 'infrastructures'
+import { PaymentsProxy } from 'apps/infrastructures'
 import { PurchaseCreateDto, PurchaseDto } from './dtos'
 import { PurchaseDocument } from './models'
 import { PurchasesRepository } from './purchases.repository'

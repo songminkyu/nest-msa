@@ -1,5 +1,5 @@
 import { DateUtil } from 'common'
-import { WatchRecordsService } from 'cores'
+import { WatchRecordsService } from 'apps/cores'
 import { nullObjectId, testObjectId } from 'testlib'
 import { AllTestContexts, createAllTestContexts } from './utils'
 

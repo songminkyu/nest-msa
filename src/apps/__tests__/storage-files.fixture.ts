@@ -1,6 +1,6 @@
 import { Byte, Path } from 'common'
 import { writeFile } from 'fs/promises'
-import { StorageFilesService } from 'infrastructures'
+import { StorageFilesService } from 'apps/infrastructures'
 import { AppConfigService } from 'shared'
 import { createDummyFile } from 'testlib'
 import { createAllTestContexts, AllTestContexts } from './utils'

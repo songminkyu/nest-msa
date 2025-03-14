@@ -17,14 +17,7 @@ const config: Config = {
         '^common$': '<rootDir>/src/libs/common/index',
         '^testlib$': '<rootDir>/src/libs/testlib/index',
         '^shared$': '<rootDir>/src/apps/shared/index',
-        '^gateway/(.*)$': '<rootDir>/src/apps/gateway/$1',
-        '^gateway$': '<rootDir>/src/apps/gateway/index',
-        '^applications/(.*)$': '<rootDir>/src/apps/applications/$1',
-        '^applications$': '<rootDir>/src/apps/applications/index',
-        '^cores/(.*)$': '<rootDir>/src/apps/cores/$1',
-        '^cores$': '<rootDir>/src/apps/cores/index',
-        '^infrastructures/(.*)$': '<rootDir>/src/apps/infrastructures/$1',
-        '^infrastructures$': '<rootDir>/src/apps/infrastructures/index'
+        '^apps/(.*)$': '<rootDir>/src/apps/$1'
     },
     collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
     coverageThreshold: { global: { branches: 100, functions: 100, lines: 100, statements: 100 } },

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy, PaginationOptionDto } from 'common'
-import { MovieDto, ShowtimeDto, TheaterDto } from 'cores'
+import { MovieDto, ShowtimeDto, TheaterDto } from 'apps/cores'
 import { ClientProxyConfig, Messages } from 'shared'
 import { ShowtimeBatchCreateDto, ShowtimeBatchCreateResponse } from './dtos'
 

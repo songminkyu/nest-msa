@@ -1,5 +1,5 @@
-import { PurchasesService } from 'cores'
-import { PaymentsService } from 'infrastructures'
+import { PurchasesService } from 'apps/cores'
+import { PaymentsService } from 'apps/infrastructures'
 import { createAllTestContexts, AllTestContexts } from './utils'
 
 export interface Fixture {

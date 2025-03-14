@@ -4,9 +4,9 @@ import {
     PurchaseProcessProxy,
     RecommendationProxy,
     ShowtimeCreationProxy
-} from 'applications'
-import { CustomersProxy, MoviesProxy, PurchasesProxy, TheatersProxy } from 'cores'
-import { StorageFilesProxy } from 'infrastructures'
+} from 'apps/applications'
+import { CustomersProxy, MoviesProxy, PurchasesProxy, TheatersProxy } from 'apps/cores'
+import { StorageFilesProxy } from 'apps/infrastructures'
 import { CommonModule } from 'shared'
 import {
     BookingController,

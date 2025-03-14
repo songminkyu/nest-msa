@@ -1,5 +1,5 @@
 import { DateUtil, pickIds } from 'common'
-import { ShowtimeDto, ShowtimesService } from 'cores'
+import { ShowtimeDto, ShowtimesService } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId, testObjectId } from 'testlib'
 import {
     closeFixture,

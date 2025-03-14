@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { PurchaseCreateDto, PurchasesProxy } from 'cores'
+import { PurchaseCreateDto, PurchasesProxy } from 'apps/cores'
 import { TicketPurchaseProcessor } from './processors'
 
 @Injectable()

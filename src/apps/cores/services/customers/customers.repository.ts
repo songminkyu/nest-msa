@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, QueryBuilder } from 'common'
-import { CoreErrors } from 'cores/core-errors'
+import { CoreErrors } from 'apps/cores/core-errors'
 import { Model } from 'mongoose'
 import { MongooseConfig } from 'shared'
 import { CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'

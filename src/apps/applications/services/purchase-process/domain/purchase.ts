@@ -1,6 +1,6 @@
 import { BadRequestException, Logger } from '@nestjs/common'
 import { DateUtil } from 'common'
-import { ApplicationsErrors } from 'applications/application-errors'
+import { ApplicationsErrors } from 'apps/applications/application-errors'
 
 const PURCHASE_MAX_TICKETS = 10
 const PURCHASE_DEADLINE_MINUTES = 30

@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals'
-import { CustomerDto } from 'cores'
+import { CustomerDto } from 'apps/cores'
 import { expectEqualUnsorted, HttpTestClient, nullObjectId } from 'testlib'
 import {
     closeFixture,

@@ -10,7 +10,7 @@ import {
     TheatersService,
     TicketsService,
     TicketStatus
-} from 'cores'
+} from 'apps/cores'
 import { nullObjectId } from 'testlib'
 import { createCustomerAndLogin } from './customers-auth.fixture'
 import { createMovie } from './movies.fixture'

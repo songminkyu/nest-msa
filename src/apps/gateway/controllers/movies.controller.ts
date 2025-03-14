@@ -14,9 +14,9 @@ import {
     UsePipes
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
-import { RecommendationProxy } from 'applications'
+import { RecommendationProxy } from 'apps/applications'
 import { AuthTokenPayload } from 'common'
-import { MovieCreateDto, MovieQueryDto, MoviesProxy, MovieUpdateDto } from 'cores'
+import { MovieCreateDto, MovieQueryDto, MoviesProxy, MovieUpdateDto } from 'apps/cores'
 import { pick } from 'lodash'
 import { CustomerOptionalJwtAuthGuard } from './guards'
 import { DefaultPaginationPipe } from './pipes'
