@@ -1,28 +1,22 @@
-import { HttpTestClient } from 'testlib'
+import type { Fixture } from './http-success.interceptor.fixture'
 
 describe('HttpSuccessInterceptor', () => {
-    let teardown = () => {}
-    let client: HttpTestClient
-    let spy: jest.SpyInstance
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./http-success.interceptor.fixture')
-
-        const fixture = await createFixture()
-        teardown = fixture.teardown
-        spy = fixture.spy
-        client = fixture.client
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await teardown()
+        await fix?.teardown()
     })
 
     it('Http 요청이 성공하면 Logger.verbose()로 기록해야 한다', async () => {
-        await client.get('/').ok()
+        await fix.httpClient.get('/').ok()
 
-        expect(spy).toHaveBeenCalledTimes(1)
-        expect(spy).toHaveBeenCalledWith(
+        expect(fix.spyVerbose).toHaveBeenCalledTimes(1)
+        expect(fix.spyVerbose).toHaveBeenCalledWith(
             'Success',
             'HTTP',
             expect.objectContaining({

@@ -66,3 +66,11 @@ NestJS 기반 프로젝트 시작을 위한 통합 템플릿으로, 다음과 �
 2. "PlantUML Preview"에서 md 파일 내 UML 다이어그램을 보려면 커서가 `@startuml`과 `@enduml` 사이에 있어야 합니다.
 3. UML 다이어그램이 "Preview markdown"에서 나타나지 않으면 보안 설정이 필요할 수 있습니다.
     - 미리보기 화면 오른쪽 상단의 "..." 버튼을 클릭하여 "미리보기 보안 설정 변경"을 선택하세요.
+
+## 8
+
+1. Fixture 타입 정보를 사용하고 싶다면 타입 전용 import를 활용하면 됩니다. 타입 전용 import는 런타임 코드에 영향을 주지 않고, 컴파일 타임에만 타입 체크를 위한 용도로 사용됩니다.
+
+```ts
+import type { Fixture } from './create-test-context.fixture'
+```
