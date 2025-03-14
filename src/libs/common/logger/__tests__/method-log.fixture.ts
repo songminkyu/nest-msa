@@ -2,7 +2,7 @@ import { Observable, of, throwError } from 'rxjs'
 import { MethodLog } from '../method-log'
 
 function CustomMetadataDecorator(value: string): MethodDecorator {
-    return (target, propertyKey, descriptor) => {
+    return (_target, _propertyKey, descriptor) => {
         Reflect.defineMetadata('CUSTOM_KEY', value, descriptor.value!)
     }
 }
