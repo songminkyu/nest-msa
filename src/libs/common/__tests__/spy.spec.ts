@@ -26,4 +26,29 @@ describe('spy examples', () => {
         expect(localObj.getHello()).toEqual('Mocked Value')
         expect(mockFunc).toHaveBeenCalled()
     })
+
+    it('Dynamic import instance method', async () => {
+        const { Logger } = await import('@nestjs/common')
+
+        const spy = jest.spyOn(Logger.prototype, 'log').mockImplementation(() => {})
+        const logger = new Logger()
+
+        logger.log('message', { args: ['value'] })
+
+        expect(spy).toHaveBeenNthCalledWith(1, expect.stringContaining('message'), {
+            args: ['value']
+        })
+    })
+
+    it('Dynamic import static method', async () => {
+        const { Logger } = await import('@nestjs/common')
+
+        const spy = jest.spyOn(Logger, 'log').mockImplementation(() => {})
+
+        Logger.log('message', { args: ['value'] })
+
+        expect(spy).toHaveBeenNthCalledWith(1, expect.stringContaining('message'), {
+            args: ['value']
+        })
+    })
 })
