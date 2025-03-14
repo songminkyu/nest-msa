@@ -52,7 +52,7 @@ export async function createFixture() {
     const { servers } = await getNatsTestConnection()
     const brokerOptions = { transport: Transport.NATS, options: { servers } } as NatsOptions
 
-    const testContext = await createHttpTestContext({
+    const { httpClient, ...testContext } = await createHttpTestContext({
         metadata: {
             controllers: [SampleController],
             providers: [{ provide: APP_PIPE, useFactory: () => new ValidationPipe() }]
@@ -72,5 +72,5 @@ export async function createFixture() {
         await testContext.close()
     }
 
-    return { testContext, teardown, httpClient: testContext.httpClient, rpcClient }
+    return { teardown, httpClient, rpcClient }
 }

@@ -16,7 +16,7 @@ export interface Fixture {
 }
 
 export async function createFixture() {
-    const testContext = await createHttpTestContext({
+    const { httpClient, ...testContext } = await createHttpTestContext({
         metadata: { controllers: [TestController] }
     })
 
@@ -24,5 +24,5 @@ export async function createFixture() {
         await testContext?.close()
     }
 
-    return { teardown, httpClient: testContext.httpClient }
+    return { teardown, httpClient }
 }

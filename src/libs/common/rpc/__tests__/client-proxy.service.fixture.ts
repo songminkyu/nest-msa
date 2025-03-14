@@ -58,7 +58,7 @@ export async function createFixture() {
     const { servers } = getNatsTestConnection()
     const brokerOptions = { transport: Transport.NATS, options: { servers } } as NatsOptions
 
-    const testContext = await createHttpTestContext({
+    const { httpClient, ...testContext } = await createHttpTestContext({
         metadata: {
             imports: [
                 ClientProxyModule.registerAsync({ name: 'name', useFactory: () => brokerOptions })
@@ -78,5 +78,5 @@ export async function createFixture() {
         await testContext.close()
     }
 
-    return { testContext, teardown, httpClient: testContext.httpClient, rpcClient }
+    return { teardown, httpClient, rpcClient }
 }

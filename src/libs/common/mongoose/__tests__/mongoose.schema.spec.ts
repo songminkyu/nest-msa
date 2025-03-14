@@ -1,26 +1,21 @@
 import { expect } from '@jest/globals'
-import { Model, Types } from 'mongoose'
-
-import { SchemaTypeSample } from './mongoose.schema.fixture'
+import { Types } from 'mongoose'
+import { Fixture } from './mongoose.schema.fixture'
 
 describe('Mongoose Schema examples', () => {
-    let teardown = () => {}
-    let model: Model<SchemaTypeSample>
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./mongoose.schema.fixture')
-
-        const fixture = await createFixture()
-        teardown = fixture.teardown
-        model = fixture.model
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await teardown()
+        await fix?.teardown()
     })
 
     it('Mongoose의 모든 기본 데이터 타입 저장 및 조회 검증', async () => {
-        const doc = new model()
+        const doc = new fix.model()
         doc.name = 'Statue of Liberty'
         doc.binary = Buffer.alloc(0)
         doc.living = false
@@ -42,7 +37,7 @@ describe('Mongoose Schema examples', () => {
         ])
         await doc.save()
 
-        const found = await model.findOne({ _id: doc._id }).exec()
+        const found = await fix.model.findOne({ _id: doc._id }).exec()
         expect(found?.toJSON()).toEqual(doc.toJSON())
     })
 })

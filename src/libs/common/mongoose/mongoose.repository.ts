@@ -11,19 +11,17 @@ export class MongooseUpdateResult {
     matchedCount: number
 }
 
-type SeesionArg = ClientSession | undefined
+type SessionArg = ClientSession | undefined
 
 export abstract class MongooseRepository<Doc> implements OnModuleInit {
     constructor(protected model: Model<Doc>) {}
 
     async onModuleInit() {
         /**
-         * Issue   : document.save() internally calls createCollection
-         * Symptom : Concurrent save() calls can cause "Collection namespace is already in use" errors.
-         *         (more frequent in transactions)
-         * Solution: "await this.model.createCollection()"
-         * Note    : This problem mainly occurs in unit test environments with frequent initializations
-         * Ref     : https://mongoosejs.com/docs/api/model.html#Model.createCollection()
+         * document.save()가 내부적으로 createCollection을 호출한다.
+         * 동시에 save()를 호출하면 "Collection namespace is already in use" 오류가 발생할 수 있다.
+         * 이 문제는 주로 단위 테스트 환경에서 빈번한 초기화로 인해 발생한다.
+         * https://mongoosejs.com/docs/api/model.html#Model.createCollection()
          */
         await this.model.createCollection()
     }
@@ -32,7 +30,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         return new this.model()
     }
 
-    async saveMany(docs: HydratedDocument<Doc>[], session: SeesionArg = undefined) {
+    async saveMany(docs: HydratedDocument<Doc>[], session: SessionArg = undefined) {
         const { insertedCount, matchedCount, deletedCount } = await this.model.bulkSave(docs, {
             session
         })
@@ -46,15 +44,15 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         return true
     }
 
-    async findById(id: string, session: SeesionArg = undefined) {
+    async findById(id: string, session: SessionArg = undefined) {
         return this.model.findById(objectId(id), null, { session })
     }
 
-    async findByIds(ids: string[], session: SeesionArg = undefined) {
+    async findByIds(ids: string[], session: SessionArg = undefined) {
         return this.model.find({ _id: { $in: objectIds(ids) } as any }, null, { session })
     }
 
-    async getById(id: string, session: SeesionArg = undefined) {
+    async getById(id: string, session: SessionArg = undefined) {
         const doc = await this.findById(id, session)
 
         if (!doc)
@@ -66,7 +64,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         return doc
     }
 
-    async getByIds(ids: string[], session: SeesionArg = undefined) {
+    async getByIds(ids: string[], session: SessionArg = undefined) {
         const uniqueIds = uniq(ids)
 
         Expect.equalLength(uniqueIds, ids, `Duplicate IDs detected and removed:${ids}`)
@@ -85,12 +83,12 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         return docs
     }
 
-    async deleteById(id: string, session: SeesionArg = undefined) {
+    async deleteById(id: string, session: SessionArg = undefined) {
         const doc = await this.getById(id, session)
         await doc.deleteOne({ session })
     }
 
-    async deleteByIds(ids: string[], session: SeesionArg = undefined) {
+    async deleteByIds(ids: string[], session: SessionArg = undefined) {
         const result = await this.model.deleteMany(
             { _id: { $in: objectIds(ids) } as any },
             { session }
@@ -98,7 +96,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         return result.deletedCount
     }
 
-    async existByIds(ids: string[], session: SeesionArg = undefined) {
+    async existByIds(ids: string[], session: SessionArg = undefined) {
         const count = await this.model.countDocuments({ _id: { $in: objectIds(ids) } } as any, {
             session
         })
@@ -108,7 +106,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
     async findWithPagination(args: {
         callback?: (helpers: QueryWithHelpers<Array<Doc>, Doc>) => void
         pagination: PaginationOptionDto
-        session?: SeesionArg
+        session?: SessionArg
     }) {
         const { callback, pagination, session } = args
 

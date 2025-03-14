@@ -37,7 +37,7 @@ export async function createFixture(): Promise<Fixture> {
     const { servers } = await getNatsTestConnection()
     const brokerOpts = { transport: Transport.NATS, options: { servers } } as NatsOptions
 
-    const testContext = await createHttpTestContext({
+    const { httpClient, ...testContext } = await createHttpTestContext({
         metadata: { controllers: [SampleController] },
         configureApp: async (app) => {
             app.connectMicroservice<MicroserviceOptions>(brokerOpts, { inheritAppConfig: true })
@@ -52,5 +52,5 @@ export async function createFixture(): Promise<Fixture> {
         await testContext.close()
     }
 
-    return { teardown, rpcClient, httpClient: testContext.httpClient }
+    return { teardown, rpcClient, httpClient }
 }

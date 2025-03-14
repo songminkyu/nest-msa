@@ -63,6 +63,11 @@ export class SchemaTypeSample extends MongooseSchema {
     decimal: Types.Decimal128
 }
 
+export interface Fixture {
+    teardown: () => Promise<void>
+    model: Model<SchemaTypeSample>
+}
+
 export async function createFixture() {
     const schema = createMongooseSchema(SchemaTypeSample)
 
@@ -85,5 +90,5 @@ export async function createFixture() {
         await testContext?.close()
     }
 
-    return { testContext, teardown, model }
+    return { teardown, model }
 }
