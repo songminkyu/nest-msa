@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
-import { AppLoggerService, RpcExceptionFilter, Path } from 'common'
+import { AppLoggerService, Path } from 'common'
 import { exit } from 'process'
 import { AppConfigService } from 'shared'
 import { CoresModule } from './cores.module'
@@ -15,8 +15,6 @@ export async function configureCores(app: INestApplication<any>, servers: string
             exit(1)
         }
     }
-
-    app.useGlobalFilters(new RpcExceptionFilter())
 
     app.connectMicroservice<MicroserviceOptions>(
         { transport: Transport.NATS, options: { servers, queue: 'apps/cores' } },

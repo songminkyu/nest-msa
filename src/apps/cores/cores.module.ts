@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common'
-import { APP_PIPE } from '@nestjs/core'
-import { AppValidationPipe, CommonModule, MongooseConfigModule, RedisConfigModule } from 'shared'
-import { HealthModule } from './modules'
+import { CommonModule, MongooseConfigModule, RedisConfigModule } from 'shared'
+import { HealthModule, PipesModule } from './modules'
 import {
     CustomersModule,
     MoviesModule,
@@ -26,8 +25,8 @@ import {
         TicketsModule,
         TicketHoldingModule,
         WatchRecordsModule,
-        PurchasesModule
-    ],
-    providers: [{ provide: APP_PIPE, useClass: AppValidationPipe }]
+        PurchasesModule,
+        PipesModule
+    ]
 })
 export class CoresModule {}

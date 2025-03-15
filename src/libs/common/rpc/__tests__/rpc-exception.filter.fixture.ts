@@ -1,5 +1,5 @@
 import { Controller, Get, NotFoundException, ValidationPipe } from '@nestjs/common'
-import { APP_PIPE } from '@nestjs/core'
+import { APP_FILTER, APP_PIPE } from '@nestjs/core'
 import { MessagePattern, MicroserviceOptions, NatsOptions, Transport } from '@nestjs/microservices'
 import { IsNotEmpty, IsString } from 'class-validator'
 import {
@@ -55,11 +55,12 @@ export async function createFixture() {
     const { httpClient, ...testContext } = await createHttpTestContext({
         metadata: {
             controllers: [SampleController],
-            providers: [{ provide: APP_PIPE, useFactory: () => new ValidationPipe() }]
+            providers: [
+                { provide: APP_PIPE, useFactory: () => new ValidationPipe() },
+                { provide: APP_FILTER, useClass: RpcExceptionFilter }
+            ]
         },
         configureApp: async (app) => {
-            app.useGlobalFilters(new RpcExceptionFilter())
-
             app.connectMicroservice<MicroserviceOptions>(brokerOptions, { inheritAppConfig: true })
             await app.startAllMicroservices()
         }

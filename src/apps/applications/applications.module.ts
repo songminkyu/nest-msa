@@ -1,17 +1,15 @@
 import { getRedisConnectionToken } from '@nestjs-modules/ioredis'
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
-import { APP_PIPE } from '@nestjs/core'
 import Redis from 'ioredis'
 import {
-    AppValidationPipe,
     CommonModule,
     ProjectName,
     RedisConfig,
     RedisConfigModule,
     uniqueWhenTesting
 } from 'shared'
-import { HealthModule } from './modules'
+import { HealthModule, PipesModule } from './modules'
 import {
     BookingModule,
     PurchaseProcessModule,
@@ -34,8 +32,8 @@ import {
         ShowtimeCreationModule,
         RecommendationModule,
         BookingModule,
-        PurchaseProcessModule
-    ],
-    providers: [{ provide: APP_PIPE, useClass: AppValidationPipe }]
+        PurchaseProcessModule,
+        PipesModule
+    ]
 })
 export class ApplicationsModule {}
