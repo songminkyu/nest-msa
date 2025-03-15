@@ -34,8 +34,6 @@ class SendTestController {
 class EmitTestController {
     private eventSubject = new Subject<MessageEvent>()
 
-    constructor(@InjectClientProxy('name') private client: ClientProxyService) {}
-
     @EventPattern(withTestId('subject.emitEvent'))
     async handleEvent(data: any) {
         this.eventSubject.next({ data })

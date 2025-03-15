@@ -1,5 +1,5 @@
+import { MethodLog } from 'common'
 import { Observable, of, throwError } from 'rxjs'
-import { MethodLog } from '../method-log'
 
 function CustomMetadataDecorator(value: string): MethodDecorator {
     return (_target, _propertyKey, descriptor) => {
