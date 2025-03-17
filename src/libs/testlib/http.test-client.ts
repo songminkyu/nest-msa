@@ -198,5 +198,6 @@ export class HttpTestClient {
     conflict = (expected?: any) => this.send(HttpStatus.CONFLICT, expected)
     notFound = (expected?: any) => this.send(HttpStatus.NOT_FOUND, expected)
     payloadTooLarge = (expected?: any) => this.send(HttpStatus.PAYLOAD_TOO_LARGE, expected)
+    unsupportedMediaTypeException = (expected?: any) => this.send(HttpStatus.UNSUPPORTED_MEDIA_TYPE, expected)
     internalServerError = (expected?: any) => this.send(HttpStatus.INTERNAL_SERVER_ERROR, expected)
 }
