@@ -62,5 +62,5 @@ export const Assert = new Validator((message) => {
 })
 
 export const Expect = new Validator((message) => {
-    Logger.warn(message)
+    Logger.error(message)
 })
