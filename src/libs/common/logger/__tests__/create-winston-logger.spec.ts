@@ -41,16 +41,21 @@ describe('logger', () => {
 
     it('http', async () => {
         const message = 'test message'
-        const logDetails = { statusCode: 500, method: 'GET', url: '/url', body: { body: 'body' } }
+        const logDetails = {
+            contextType: 'http',
+            statusCode: 500,
+            method: 'GET',
+            url: '/url',
+            body: { body: 'body' }
+        }
 
-        winston.info(message, ['HTTP', logDetails])
+        winston.info(message, [logDetails])
         await sleep(200)
 
         const entry = await getLogEntry()
 
         expect(entry).toEqual({
-            '0': 'HTTP',
-            '1': logDetails,
+            '0': logDetails,
             level: 'info',
             message,
             timestamp: expect.any(String)

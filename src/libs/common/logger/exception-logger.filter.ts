@@ -26,14 +26,16 @@ export class ExceptionLoggerFilter extends BaseExceptionFilter {
             const { method, url, body } = http.getRequest<Request>()
 
             if (exception instanceof HttpException) {
-                Logger.warn('fail', 'HTTP', {
+                Logger.warn('fail', {
+                    contextType,
                     statusCode: exception.getStatus(),
                     request: { method, url, body },
                     response: exception.getResponse(),
                     stack: exception.stack
                 })
             } else if (exception instanceof Error) {
-                Logger.error('error', 'HTTP', {
+                Logger.error('error', {
+                    contextType,
                     statusCode: 500,
                     request: { method, url, body },
                     response: { message: exception.message },
@@ -46,7 +48,8 @@ export class ExceptionLoggerFilter extends BaseExceptionFilter {
             const ctx = host.switchToRpc()
 
             if (exception instanceof HttpException) {
-                Logger.warn('fail', 'RPC', {
+                Logger.warn('fail', {
+                    contextType,
                     context: ctx.getContext(),
                     data: ctx.getData(),
                     response: exception.getResponse(),
@@ -55,7 +58,8 @@ export class ExceptionLoggerFilter extends BaseExceptionFilter {
 
                 return throwError(() => exception)
             } else if (exception instanceof Error) {
-                Logger.error('error', 'RPC', {
+                Logger.error('error', {
+                    contextType,
                     context: ctx.getContext(),
                     data: ctx.getData(),
                     message: exception.message,
@@ -65,7 +69,7 @@ export class ExceptionLoggerFilter extends BaseExceptionFilter {
                 return throwError(() => new RpcException(exception))
             }
         } else {
-            Logger.error('unknown context type', contextType, exception)
+            Logger.error('unknown context type', { contextType, ...exception })
             super.catch(exception, host)
         }
     }

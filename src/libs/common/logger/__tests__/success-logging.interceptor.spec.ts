@@ -1,6 +1,6 @@
+import { Provider } from '@nestjs/common'
 import { withTestId } from 'testlib'
 import type { Fixture } from './success-logging.interceptor.fixture'
-import { Provider } from '@nestjs/common'
 
 describe('SuccessLoggingInterceptor', () => {
     let fix: Fixture
@@ -27,8 +27,9 @@ describe('SuccessLoggingInterceptor', () => {
             await fix.httpClient.post('/success').body(body).created({ result: 'success' })
 
             expect(fix.spyVerbose).toHaveBeenCalledTimes(1)
-            expect(fix.spyVerbose).toHaveBeenCalledWith('success', 'HTTP', {
+            expect(fix.spyVerbose).toHaveBeenCalledWith('success', {
                 statusCode: 201,
+                contextType: 'http',
                 request: { method: 'POST', url: '/success', body },
                 duration: expect.any(String)
             })
@@ -40,7 +41,8 @@ describe('SuccessLoggingInterceptor', () => {
             await fix.rpcClient.expect(subject, data, { result: 'success' })
 
             expect(fix.spyVerbose).toHaveBeenCalledTimes(1)
-            expect(fix.spyVerbose).toHaveBeenCalledWith('success', 'RPC', {
+            expect(fix.spyVerbose).toHaveBeenCalledWith('success', {
+                contextType: 'rpc',
                 context: { args: [subject] },
                 data,
                 duration: expect.any(String)
@@ -56,9 +58,10 @@ describe('SuccessLoggingInterceptor', () => {
             await fix.httpClient.get('/exclude-path').ok()
 
             expect(fix.spyError).toHaveBeenCalledTimes(1)
-            expect(fix.spyError).toHaveBeenCalledWith('unknown context type', 'unknown', {
-                duration: expect.any(String)
-            })
+            expect(fix.spyError).toHaveBeenCalledWith(
+                'unknown context type',
+                expect.objectContaining({ contextType: 'unknown', duration: expect.any(String) })
+            )
         })
     })
 

@@ -81,14 +81,11 @@ const consoleLogFormat = winston.format.combine(
         const formattedMessage = chalk.white(message)
         const formattedLevel = colorLevels(level)
         const formattedTimestamp = chalk.gray(timestamp)
+        const logDetails = rest[0] as any
 
-        if (rest[0] === 'HTTP') {
-            return formatHttpLog(
-                formattedMessage,
-                formattedLevel,
-                formattedTimestamp,
-                rest[1] as any
-            )
+        // TODO RPC도 해라. console 출력 엉망이다. 맞춰라.
+        if (logDetails.contextType === 'http') {
+            return formatHttpLog(formattedMessage, formattedLevel, formattedTimestamp, logDetails)
         } else {
             return formatGenericLog(formattedMessage, formattedLevel, formattedTimestamp, rest)
         }

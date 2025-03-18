@@ -48,7 +48,8 @@ export class SuccessLoggingInterceptor implements NestInterceptor {
                         const { method, url, body } = http.getRequest<Request>()
 
                         if (this.shouldHttpLog(url)) {
-                            Logger.verbose('success', 'HTTP', {
+                            Logger.verbose('success', {
+                                contextType,
                                 statusCode: response.statusCode,
                                 request: { method, url, body },
                                 duration: `${Date.now() - now}ms`
@@ -60,14 +61,16 @@ export class SuccessLoggingInterceptor implements NestInterceptor {
                         const rpcData = rpc.getData()
 
                         if (this.shouldRpcLog(rpcContext.args)) {
-                            Logger.verbose('success', 'RPC', {
+                            Logger.verbose('success', {
+                                contextType,
                                 context: rpcContext,
                                 data: rpcData,
                                 duration: `${Date.now() - now}ms`
                             })
                         }
                     } else {
-                        Logger.error('unknown context type', contextType, {
+                        Logger.error('unknown context type', {
+                            contextType,
                             duration: `${Date.now() - now}ms`
                         })
                     }

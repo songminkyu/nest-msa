@@ -17,8 +17,9 @@ describe('ExceptionLoggerFilter', () => {
         await fix.httpClient.get('/exception').notFound({ code: 'ERR_CODE', message: 'message' })
 
         expect(fix.spyWarn).toHaveBeenCalledTimes(1)
-        expect(fix.spyWarn).toHaveBeenCalledWith('fail', 'HTTP', {
+        expect(fix.spyWarn).toHaveBeenCalledWith('fail', {
             statusCode: 404,
+            contextType: 'http',
             request: { method: 'GET', url: '/exception' },
             response: { code: 'ERR_CODE', message: 'message' },
             stack: expect.any(String)
@@ -29,8 +30,9 @@ describe('ExceptionLoggerFilter', () => {
         await fix.httpClient.get('/error').internalServerError()
 
         expect(fix.spyError).toHaveBeenCalledTimes(1)
-        expect(fix.spyError).toHaveBeenCalledWith('error', 'HTTP', {
+        expect(fix.spyError).toHaveBeenCalledWith('error', {
             statusCode: 500,
+            contextType: 'http',
             request: { method: 'GET', url: '/error' },
             response: { message: 'error message' },
             stack: expect.any(String)
@@ -49,7 +51,8 @@ describe('ExceptionLoggerFilter', () => {
         )
 
         expect(fix.spyWarn).toHaveBeenCalledTimes(1)
-        expect(fix.spyWarn).toHaveBeenCalledWith('fail', 'RPC', {
+        expect(fix.spyWarn).toHaveBeenCalledWith('fail', {
+            contextType: 'rpc',
             context: { args: [subject] },
             data: {},
             response: { code: 'ERR_CODE', message: 'message' },
@@ -62,7 +65,8 @@ describe('ExceptionLoggerFilter', () => {
         await fix.rpcClient.error(subject, {}, Error('error message'))
 
         expect(fix.spyError).toHaveBeenCalledTimes(1)
-        expect(fix.spyError).toHaveBeenCalledWith('error', 'RPC', {
+        expect(fix.spyError).toHaveBeenCalledWith('error', {
+            contextType: 'rpc',
             context: { args: [subject] },
             data: {},
             message: 'error message',
@@ -79,8 +83,7 @@ describe('ExceptionLoggerFilter', () => {
         expect(fix.spyError).toHaveBeenCalledTimes(1)
         expect(fix.spyError).toHaveBeenCalledWith(
             'unknown context type',
-            'unknown',
-            expect.objectContaining({})
+            expect.objectContaining({ contextType: 'unknown' })
         )
     })
 })
