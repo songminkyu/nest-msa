@@ -1,4 +1,3 @@
-import { DateUtil } from 'common'
 import {
     PurchaseDto,
     PurchaseItemDto,
@@ -7,6 +6,7 @@ import {
     TicketDto,
     TicketStatus
 } from 'apps/cores'
+import { DateUtil } from 'common'
 import { HttpTestClient } from 'testlib'
 import {
     closeFixture,
@@ -118,7 +118,9 @@ describe('/purchase-process', () => {
                 .body({ customerId, totalPrice, items })
                 .badRequest({
                     ...Errors.Purchase.DeadlineExceeded,
-                    deadlineMinutes: expect.any(Number)
+                    deadlineMinutes: expect.any(Number),
+                    cutoffTime: expect.any(String),
+                    startTime: expect.any(String)
                 })
         })
 
