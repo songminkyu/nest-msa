@@ -69,6 +69,15 @@ NestJS 기반 프로젝트 시작을 위한 통합 템플릿으로, 다음과 �
 
 ## 8. 테스트에서 dynamic import
 
+- 배경
+  테스트에서 Nats 서버를 공유하기 떄문에 유니크한 subject를 생성하기 위해서 process.env.TEST_ID를 사용함.
+- 문제
+  Jest의 module cache 기능 때문에 @MessagePattern 데코레이터는 모듈 로딩 시에 한 번만 평가된다.
+  따라서 최상위에서 이미 import된 모듈의 경우 각 테스트마다 다른 process.env.TEST_ID 값을 반영하지 못합니다.
+- 해결 방법
+  resetModules: true로 설정해서 각 테스트 마다 module cache를 초기화합니다.
+  아래 테스트는 문제 검증과 해결 방법을 보여줍니다.
+
 1. Fixture 타입 정보를 사용하고 싶다면 타입 전용 import를 활용하면 됩니다. 타입 전용 import는 런타임 코드에 영향을 주지 않고, 컴파일 타임에만 타입 체크를 위한 용도로 사용됩니다.
 
 ```ts
