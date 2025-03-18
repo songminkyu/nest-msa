@@ -14,19 +14,19 @@ import {
 class SendTestController {
     constructor(@InjectClientProxy('name') private client: ClientProxyService) {}
 
-    @MessagePattern(withTestId('subject.method'))
+    @MessagePattern(withTestId('method'))
     method() {
         return { result: 'success' }
     }
 
     @Get('observable')
     getObservable() {
-        return this.client.send(withTestId('subject.method'), {})
+        return this.client.send(withTestId('method'), {})
     }
 
     @Get('value')
     getValue() {
-        return this.client.getJson(withTestId('subject.method'), {})
+        return this.client.getJson(withTestId('method'), {})
     }
 }
 
@@ -34,7 +34,7 @@ class SendTestController {
 class EmitTestController {
     private eventSubject = new Subject<MessageEvent>()
 
-    @EventPattern(withTestId('subject.emitEvent'))
+    @EventPattern(withTestId('emitEvent'))
     async handleEvent(data: any) {
         this.eventSubject.next({ data })
         this.eventSubject.complete()

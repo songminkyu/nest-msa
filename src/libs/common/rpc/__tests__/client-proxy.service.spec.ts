@@ -23,7 +23,7 @@ describe('ClientProxyService', () => {
         })
 
         it('null payload를 보내야 한다', async () => {
-            const response = await fix.rpcClient.getJson(withTestId('subject.method'), null)
+            const response = await fix.rpcClient.getJson(withTestId('method'), null)
             expect(response).toEqual({ result: 'success' })
         })
     })
@@ -34,13 +34,13 @@ describe('ClientProxyService', () => {
                 fix.httpClient.get('/handle-event').sse((value) => resolve(value), reject)
             })
 
-            await fix.rpcClient.emit(withTestId('subject.emitEvent'), { arg: 'value' })
+            await fix.rpcClient.emit(withTestId('emitEvent'), { arg: 'value' })
 
             await expect(promise).resolves.toEqual('{"arg":"value"}')
         })
 
         it('null payload를 보내야 한다', async () => {
-            await fix.rpcClient.emit(withTestId('subject.emitEvent'), null)
+            await fix.rpcClient.emit(withTestId('emitEvent'), null)
         })
     })
 })

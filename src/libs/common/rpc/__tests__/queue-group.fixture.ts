@@ -10,7 +10,7 @@ import {
 
 @Controller()
 export class MessageController {
-    @MessagePattern(withTestId('subject.queue'))
+    @MessagePattern(withTestId('queue'))
     handleQueueMessage() {
         this.processQueueLogic()
 
@@ -19,7 +19,7 @@ export class MessageController {
 
     processQueueLogic() {}
 
-    @MessagePattern(withTestId('subject.broadcast'), { queue: false })
+    @MessagePattern(withTestId('broadcast'), { queue: false })
     handleBroadcastMessage() {
         this.processBroadcastLogic()
 

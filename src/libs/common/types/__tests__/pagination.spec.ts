@@ -28,7 +28,7 @@ describe('Pagination', () => {
         const take = 3
         const input = { orderby: { direction: 'asc', name: 'name' }, skip, take }
 
-        await fix.rpcClient.expect(withTestId('subject.getRpcPagination'), input, {
+        await fix.rpcClient.expect(withTestId('getRpcPagination'), input, {
             response: input
         })
     })

@@ -16,7 +16,7 @@ import {
 
 @Controller()
 class SampleController {
-    @MessagePattern(withTestId('subject.getRpcMessage'))
+    @MessagePattern(withTestId('getRpcMessage'))
     getRpcMessage(@Payload() request: { arg: string }) {
         return { id: request.arg }
     }

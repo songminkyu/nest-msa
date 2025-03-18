@@ -17,8 +17,7 @@ class TestController {
         return { result: 'success' }
     }
 
-    // TODO subject. 모두 지우자?
-    @MessagePattern(withTestId('subject.success'))
+    @MessagePattern(withTestId('success'))
     rpcSuccess() {
         return { result: 'success' }
     }

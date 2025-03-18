@@ -35,7 +35,7 @@ describe('SuccessLoggingInterceptor', () => {
         })
 
         it('RPC 요청이 성공하면 Logger.verbose()로 기록해야 한다', async () => {
-            const subject = withTestId('subject.success')
+            const subject = withTestId('success')
             const data = { key: 'value' }
             await fix.rpcClient.expect(subject, data, { result: 'success' })
 

@@ -21,14 +21,14 @@ describe('ClientProxyService', () => {
     })
 
     it('queue 그룹을 설정하면 메시지가 한 인스턴스에만 전달된다', async () => {
-        const result = await fix.rpcClient.getJson(withTestId('subject.queue'), {})
+        const result = await fix.rpcClient.getJson(withTestId('queue'), {})
 
         expect(result).toEqual({ result: 'success' })
         expect(queueSpy).toHaveBeenCalledTimes(1)
     })
 
     it('queue 그룹을 설정하지 않으면 메시지가 전체 인스턴스에 전달된다', async () => {
-        const result = await fix.rpcClient.getJson(withTestId('subject.broadcast'), {})
+        const result = await fix.rpcClient.getJson(withTestId('broadcast'), {})
         await sleep(1000)
 
         expect(result).toEqual({ result: 'success' })

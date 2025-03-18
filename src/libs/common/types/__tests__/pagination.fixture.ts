@@ -36,7 +36,7 @@ class SamplesController {
         return { response: query }
     }
 
-    @MessagePattern(withTestId('subject.getRpcPagination'))
+    @MessagePattern(withTestId('getRpcPagination'))
     handleRpcPagination(@Payload() query: PaginationOptionDto) {
         return { response: query }
     }
