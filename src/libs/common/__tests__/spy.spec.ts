@@ -1,8 +1,10 @@
 import * as Module from './spy.fixture'
 
-// jest.spyOn
-// 객체의 특정 메서드를 감시(Spy)하고, 원래의 구현을 유지하거나 필요시 목(mock)으로 대체할 수 있어,
-// 함수 호출과 동작을 세밀하게 제어할 수 있습니다.
+/**
+ * jest.spyOn
+ * 객체의 특정 메서드를 감시(Spy)하고, 원래의 구현을 유지하거나 필요시 목(mock)으로 대체할 수 있어,
+ * 함수 호출과 동작을 세밀하게 제어할 수 있습니다.
+ */
 describe('spy examples', () => {
     it('Function spy', () => {
         const mockFunc = jest.spyOn(Module, 'getGreeting')

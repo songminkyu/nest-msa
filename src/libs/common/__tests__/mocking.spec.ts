@@ -21,8 +21,10 @@ jest.mock('./mocking.fixture', () => {
 
 const resetedMock = jest.fn().mockReturnValue('value')
 
-// jest.mock
-// 모듈 전체를 대상으로 자동 목(mock) 처리하여 의존성 제거 및 테스트 대상 코드에 집중할 수 있게 해줍니다.
+/**
+ * jest.mock
+ * 모듈 전체를 대상으로 자동 목(mock) 처리하여 의존성 제거 및 테스트 대상 코드에 집중할 수 있게 해줍니다.
+ */
 describe('jest.mock examples', () => {
     it('Module mocking', () => {
         ;(Logger.verbose as jest.Mock).mockReturnValue('Mocked verbose')
