@@ -26,9 +26,7 @@ describe('ExceptionLoggerFilter', () => {
     })
 
     it('HttpController에서 Error을 던지면 Logger.error()으로 기록해야 한다', async () => {
-        await fix.httpClient
-            .get('/error')
-            .internalServerError()
+        await fix.httpClient.get('/error').internalServerError()
 
         expect(fix.spyError).toHaveBeenCalledTimes(1)
         expect(fix.spyError).toHaveBeenCalledWith('error', 'HTTP', {
