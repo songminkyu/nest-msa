@@ -13,7 +13,7 @@ import { AppConfigService, RedisConfig } from '../config'
                         nodes,
                         options: {
                             redisOptions: { password },
-                            enableOfflineQueue: false
+                            enableOfflineQueue: true
                         }
                     }
                     return redisOptions

@@ -1,5 +1,5 @@
 export * from './common-errors'
-export * from './http'
+export * from './filters'
 export * from './logger'
 export * from './mongoose'
 export * from './rpc'

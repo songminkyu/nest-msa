@@ -1,7 +1,7 @@
-import { BadRequestException, Injectable, Module } from '@nestjs/common'
+import { Injectable, Module, UnsupportedMediaTypeException } from '@nestjs/common'
 import { MulterModule, MulterModuleOptions, MulterOptionsFactory } from '@nestjs/platform-express'
-import { generateShortId } from 'common'
 import { GatewayErrors } from 'apps/gateway/gateway-errors'
+import { generateShortId } from 'common'
 import { diskStorage } from 'multer'
 import { AppConfigService } from 'shared'
 
@@ -21,7 +21,7 @@ class MulterConfigService implements MulterOptionsFactory {
                 let error: Error | null = null
 
                 if (!this.config.fileUpload.allowedMimeTypes.includes(file.mimetype)) {
-                    error = new BadRequestException({
+                    error = new UnsupportedMediaTypeException({
                         ...GatewayErrors.InvalidFileType,
                         allowedTypes: this.config.fileUpload.allowedMimeTypes
                     })

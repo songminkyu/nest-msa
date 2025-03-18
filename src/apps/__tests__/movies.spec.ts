@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
-import { pickIds } from 'common'
 import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
+import { pickIds } from 'common'
 import { expectEqualUnsorted, HttpTestClient, nullObjectId, objectToFields } from 'testlib'
 import { closeFixture, createMovie, createMovieDto, createMovies, Fixture } from './movies.fixture'
 import { Errors } from './utils'
@@ -40,7 +40,7 @@ describe('/movies', () => {
                 .post('/movies')
                 .attachs([{ name: 'files', file: notAllowFile }])
                 .fields(objectToFields(createDto))
-                .badRequest()
+                .unsupportedMediaTypeException()
         })
 
         it('필수 필드가 누락되면 BAD_REQUEST(400)를 반환해야 한다', async () => {

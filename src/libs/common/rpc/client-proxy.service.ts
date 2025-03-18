@@ -15,8 +15,13 @@ async function waitProxyValue<T>(observer: Observable<T>): Promise<T> {
     return lastValueFrom(
         observer.pipe(
             catchError((error) => {
-                const { statusCode, ...rest } = error
-                throw new HttpException(rest, statusCode)
+                const { status, response, options, message } = error
+
+                if (status && response) {
+                    throw new HttpException(response, status, options)
+                } else {
+                    throw new Error(message)
+                }
             })
         )
     )

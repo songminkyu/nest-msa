@@ -1,4 +1,8 @@
 export const CommonErrors = {
+    InternalServerError: {
+        code: 'ERR_INTERNAL_SERVER',
+        message: 'Internal Server Error'
+    },
     Mongoose: {
         FiltersRequired: {
             code: 'ERR_MONGOOSE_FILTERS_REQUIRED',

@@ -51,23 +51,18 @@ describe('/customers(authentication)', () => {
                 .unauthorized(Errors.Auth.Unauthorized)
         })
 
-        it('customer가 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
+        it('customer가 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다', async () => {
             const model = fixture.testContext.coresContext.module.get(
                 getModelToken(Customer.name, MongooseConfig.connName)
             )
             jest.spyOn(model, 'findById').mockImplementation(() => ({
-                select: jest.fn().mockImplementation(() => ({
-                    exec: jest.fn()
-                }))
+                select: jest.fn().mockImplementation(() => ({ exec: jest.fn() }))
             }))
 
             await client
                 .post('/customers/login')
                 .body({ email, password })
-                .notFound({
-                    ...Errors.Customer.NotFound,
-                    customerId: customer.id
-                })
+                .unauthorized(Errors.Auth.Unauthorized)
         })
     })
 

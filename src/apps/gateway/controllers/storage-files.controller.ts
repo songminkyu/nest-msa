@@ -3,19 +3,20 @@ import {
     Controller,
     Delete,
     Get,
-    Logger,
     Param,
     Post,
     StreamableFile,
     UploadedFiles,
+    UseFilters,
     UseInterceptors
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
+import { StorageFilesProxy } from 'apps/infrastructures'
 import { IsString } from 'class-validator'
 import { createReadStream } from 'fs'
-import { StorageFilesProxy } from 'apps/infrastructures'
 import { pick } from 'lodash'
 import { Routes } from 'shared'
+import { MulterExceptionFilter } from './filters'
 
 class UploadFileDto {
     @IsString()
@@ -24,12 +25,9 @@ class UploadFileDto {
 
 @Controller(Routes.Http.StorageFiles)
 export class StorageFilesController {
-    private logger: Logger
+    constructor(private service: StorageFilesProxy) {}
 
-    constructor(private service: StorageFilesProxy) {
-        this.logger = new Logger(StorageFilesController.name)
-    }
-
+    @UseFilters(new MulterExceptionFilter())
     @UseInterceptors(FilesInterceptor('files'))
     @Post()
     async saveFiles(@UploadedFiles() files: Express.Multer.File[], @Body() _body: UploadFileDto) {
