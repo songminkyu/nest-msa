@@ -14,11 +14,7 @@ describe('createTestContext', () => {
     })
 
     it('RPC 메시지를 전송하면 응답해야 한다', async () => {
-        await fix.rpcClient.expect(
-            withTestId('getRpcMessage'),
-            { arg: 'value' },
-            { id: 'value' }
-        )
+        await fix.rpcClient.expect(withTestId('getRpcMessage'), { arg: 'value' }, { id: 'value' })
     })
 
     it('Http 메시지를 전송하면 응답해야 한다', async () => {
