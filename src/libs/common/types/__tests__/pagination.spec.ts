@@ -1,4 +1,4 @@
-import { CommonErrors } from 'common'
+import { CommonErrors } from 'common/common-errors'
 import { withTestId } from 'testlib'
 import type { Fixture } from './pagination.fixture'
 

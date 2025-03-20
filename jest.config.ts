@@ -14,6 +14,7 @@ const config: Config = {
     rootDir: '.',
     roots: ['<rootDir>/src'],
     moduleNameMapper: {
+        '^common/(.*)$': '<rootDir>/src/libs/common/$1',
         '^common$': '<rootDir>/src/libs/common/index',
         '^testlib$': '<rootDir>/src/libs/testlib/index',
         '^shared$': '<rootDir>/src/apps/shared/index',

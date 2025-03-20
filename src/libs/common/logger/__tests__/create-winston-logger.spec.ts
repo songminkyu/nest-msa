@@ -44,9 +44,32 @@ describe('logger', () => {
         const logDetails = {
             contextType: 'http',
             statusCode: 500,
-            method: 'GET',
-            url: '/url',
-            body: { body: 'body' }
+            request: { method: 'GET', url: '/exception', body: 'body' },
+            response: { code: 'ERR_CODE', message: 'message' },
+            stack: 'stack...'
+        }
+
+        winston.info(message, [logDetails])
+        await sleep(200)
+
+        const entry = await getLogEntry()
+
+        expect(entry).toEqual({
+            '0': logDetails,
+            level: 'info',
+            message,
+            timestamp: expect.any(String)
+        })
+    })
+
+    it('rpc', async () => {
+        const message = 'test message'
+        const logDetails = {
+            contextType: 'rpc',
+            context: { args: ['subject'] },
+            data: {},
+            response: { code: 'ERR_CODE', message: 'message' },
+            stack: 'stack...'
         }
 
         winston.info(message, [logDetails])

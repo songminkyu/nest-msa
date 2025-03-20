@@ -69,7 +69,7 @@ describe('ExceptionLoggerFilter', () => {
             contextType: 'rpc',
             context: { args: [subject] },
             data: {},
-            message: 'error message',
+            response: { message: 'error message' },
             stack: expect.any(String)
         })
     })

@@ -10,6 +10,7 @@ import {
 import { Request, Response } from 'express'
 import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
+import { HttpSuccessLog, RpcSuccessLog } from './types'
 
 @Injectable()
 export class SuccessLoggingInterceptor implements NestInterceptor {
@@ -42,37 +43,39 @@ export class SuccessLoggingInterceptor implements NestInterceptor {
         return next.handle().pipe(
             tap({
                 complete: () => {
+                    const duration = `${Date.now() - now}ms`
+
                     if (contextType === 'http') {
                         const http = context.switchToHttp()
                         const response = http.getResponse<Response>()
                         const { method, url, body } = http.getRequest<Request>()
 
                         if (this.shouldHttpLog(url)) {
-                            Logger.verbose('success', {
+                            const log = {
                                 contextType,
                                 statusCode: response.statusCode,
                                 request: { method, url, body },
-                                duration: `${Date.now() - now}ms`
-                            })
+                                duration
+                            } as HttpSuccessLog
+
+                            Logger.verbose('success', log)
                         }
                     } else if (contextType === 'rpc') {
                         const rpc = context.switchToRpc()
                         const rpcContext = rpc.getContext()
-                        const rpcData = rpc.getData()
 
                         if (this.shouldRpcLog(rpcContext.args)) {
-                            Logger.verbose('success', {
+                            const log = {
                                 contextType,
                                 context: rpcContext,
-                                data: rpcData,
-                                duration: `${Date.now() - now}ms`
-                            })
+                                data: rpc.getData(),
+                                duration
+                            } as RpcSuccessLog
+
+                            Logger.verbose('success', log)
                         }
                     } else {
-                        Logger.error('unknown context type', {
-                            contextType,
-                            duration: `${Date.now() - now}ms`
-                        })
+                        Logger.error('unknown context type', { contextType, duration })
                     }
                 }
             })

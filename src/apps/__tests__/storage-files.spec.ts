@@ -82,7 +82,7 @@ describe('/storage-files', () => {
             await uploadFile([
                 { name: 'files', file: shared.notAllowFile }
             ]).unsupportedMediaTypeException({
-                ...Errors.InvalidFileType,
+                ...Errors.FileUpload.InvalidFileType,
                 allowedTypes: ['text/plain']
             })
         })

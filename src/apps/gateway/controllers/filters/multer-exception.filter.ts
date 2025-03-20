@@ -1,5 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common'
-import { CommonErrors } from 'common'
+import { GatewayErrors } from 'apps/gateway/gateway-errors'
 import { Response } from 'express'
 
 @Catch(HttpException)
@@ -13,9 +13,9 @@ export class MulterExceptionFilter implements ExceptionFilter {
 
         if (typeof responseBody === 'object' && 'message' in responseBody) {
             if (statusCode === 400 && responseBody.message === 'Too many files') {
-                responseBody = CommonErrors.FileUpload.MaxCountExceeded
+                responseBody = GatewayErrors.FileUpload.MaxCountExceeded
             } else if (statusCode === 413 && responseBody.message === 'File too large') {
-                responseBody = CommonErrors.FileUpload.MaxSizeExceeded
+                responseBody = GatewayErrors.FileUpload.MaxSizeExceeded
             }
         }
 

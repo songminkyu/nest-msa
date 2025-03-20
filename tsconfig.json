@@ -20,6 +20,9 @@
         "baseUrl": ".",
         "outDir": "./_output/build",
         "paths": {
+            "common/*": [
+                "src/libs/common/*"
+            ],
             "common": [
                 "src/libs/common/index"
             ],

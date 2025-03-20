@@ -1,9 +1,10 @@
 import chalk from 'chalk'
 import winston from 'winston'
 import DailyRotateFile from 'winston-daily-rotate-file'
+import { HttpErrorLog, HttpSuccessLog, RpcErrorLog, RpcSuccessLog } from './types'
 
 /* istanbul ignore next */
-const colorHttpMethod = (method: string) => {
+const colorizeHttpMethod = (method: string) => {
     const METHOD = (method ?? 'METHOD').toUpperCase()
 
     switch (METHOD) {
@@ -23,7 +24,7 @@ const colorHttpMethod = (method: string) => {
 }
 
 /* istanbul ignore next */
-const colorLevels = (level: string) => {
+const colorizeLogLevel = (level: string) => {
     const LEVEL = (level ?? 'LEVEL').toUpperCase()
 
     switch (LEVEL) {
@@ -38,39 +39,44 @@ const colorLevels = (level: string) => {
     }
 }
 
-interface HttpLogInfo {
-    method: string
-    statusCode: string
-    url: string
-    body: unknown
-    duration: string
+/* istanbul ignore next */
+const formatHttpLogMessage = (
+    message: string,
+    level: string,
+    timestamp: string,
+    logDetails: HttpErrorLog | HttpSuccessLog
+) => {
+    const statusCode = chalk.magenta(logDetails.statusCode)
+    const { request } = logDetails
+    const method = colorizeHttpMethod(request.method)
+    const url = chalk.green(request.url)
+    const body = chalk.blueBright(JSON.stringify(request.body ?? {}))
+
+    return `${timestamp} ${level} HTTP ${message} ${statusCode} ${method} ${url} ${body} `
 }
 
 /* istanbul ignore next */
-const formatHttpLog = (
-    formattedMessage: string,
-    formattedLevel: string,
-    formattedTimestamp: string,
-    etc: HttpLogInfo
+const formatRpcLogMessage = (
+    message: string,
+    level: string,
+    timestamp: string,
+    logDetails: RpcErrorLog | RpcSuccessLog
 ) => {
-    const httpMethod = colorHttpMethod(etc.method)
-    const httpStatus = chalk.magenta(etc.statusCode)
-    const url = chalk.green(etc.url)
-    const requestBody = chalk.blueBright(JSON.stringify(etc.body ?? {}))
-    const duration = chalk.magenta(etc.duration ?? '')
+    const coloredContext = chalk.magenta(JSON.stringify(logDetails.context))
+    const coloredData = chalk.blueBright(JSON.stringify(logDetails.data))
 
-    return `${formattedTimestamp} ${formattedLevel} HTTP ${httpStatus} ${httpMethod} ${url} ${requestBody} ${formattedMessage}  ${duration}`
+    return `${timestamp} ${level} RPC ${message} ${coloredContext} ${coloredData}`
 }
 
-const formatGenericLog = (
-    formattedMessage: string,
-    formattedLevel: string,
-    formattedTimestamp: string,
-    etc: unknown
+const formatGenericLogMessage = (
+    message: string,
+    level: string,
+    timestamp: string,
+    logDetails: unknown
 ) => {
-    const formattedEtc = chalk.green(JSON.stringify(etc))
+    const coloredEtc = chalk.blueBright(JSON.stringify(logDetails))
 
-    return `${formattedTimestamp} ${formattedLevel} ${formattedMessage} ${formattedEtc}`
+    return `${timestamp} ${level} ${message} ${coloredEtc}`
 }
 
 const consoleLogFormat = winston.format.combine(
@@ -78,16 +84,17 @@ const consoleLogFormat = winston.format.combine(
     winston.format.printf((info) => {
         const { message, level, timestamp, ...rest } = info
 
-        const formattedMessage = chalk.white(message)
-        const formattedLevel = colorLevels(level)
-        const formattedTimestamp = chalk.gray(timestamp)
+        const coloredMessage = chalk.white(message)
+        const coloredLevel = colorizeLogLevel(level)
+        const coloredTimestamp = chalk.gray(timestamp)
         const logDetails = rest[0] as any
 
-        // TODO RPC도 해라. console 출력 엉망이다. 맞춰라.
-        if (logDetails.contextType === 'http') {
-            return formatHttpLog(formattedMessage, formattedLevel, formattedTimestamp, logDetails)
+        if (logDetails?.contextType === 'http') {
+            return formatHttpLogMessage(coloredMessage, coloredLevel, coloredTimestamp, logDetails)
+        } else if (logDetails?.contextType === 'rpc') {
+            return formatRpcLogMessage(coloredMessage, coloredLevel, coloredTimestamp, logDetails)
         } else {
-            return formatGenericLog(formattedMessage, formattedLevel, formattedTimestamp, rest)
+            return formatGenericLogMessage(coloredMessage, coloredLevel, coloredTimestamp, rest)
         }
     })
 )
@@ -134,6 +141,5 @@ export function createWinstonLogger(config: LoggerConfiguration) {
     )
 
     const logger = winston.createLogger({ format: winston.format.json(), transports })
-
     return logger
 }

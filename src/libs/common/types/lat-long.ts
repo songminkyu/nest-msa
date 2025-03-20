@@ -1,7 +1,7 @@
 import { BadRequestException, createParamDecorator, ExecutionContext } from '@nestjs/common'
 import { plainToClass } from 'class-transformer'
 import { IsNumber, Max, Min, validate } from 'class-validator'
-import { CommonErrors } from '../common-errors'
+import { CommonErrors } from 'common/common-errors'
 
 export class LatLong {
     @IsNumber()

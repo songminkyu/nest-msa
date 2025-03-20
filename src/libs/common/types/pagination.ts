@@ -1,7 +1,7 @@
 import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from '@nestjs/common'
 import { Transform } from 'class-transformer'
 import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator'
-import { CommonErrors } from '../common-errors'
+import { CommonErrors } from 'common/common-errors'
 
 export enum OrderDirection {
     asc = 'asc',

@@ -1,4 +1,3 @@
-export * from './common-errors'
 export * from './logger'
 export * from './mongoose'
 export * from './rpc'

@@ -3,6 +3,7 @@ import { BaseExceptionFilter } from '@nestjs/core'
 import { RpcException } from '@nestjs/microservices'
 import { Request } from 'express'
 import { throwError } from 'rxjs'
+import { HttpErrorLog, RpcErrorLog } from './types'
 
 /**
  * 전역 필터는 1개만 등록 가능하다.
@@ -26,21 +27,25 @@ export class ExceptionLoggerFilter extends BaseExceptionFilter {
             const { method, url, body } = http.getRequest<Request>()
 
             if (exception instanceof HttpException) {
-                Logger.warn('fail', {
+                const log = {
                     contextType,
                     statusCode: exception.getStatus(),
                     request: { method, url, body },
                     response: exception.getResponse(),
                     stack: exception.stack
-                })
+                } as HttpErrorLog
+
+                Logger.warn('fail', log)
             } else if (exception instanceof Error) {
-                Logger.error('error', {
+                const log = {
                     contextType,
                     statusCode: 500,
                     request: { method, url, body },
                     response: { message: exception.message },
                     stack: exception.stack
-                })
+                } as HttpErrorLog
+
+                Logger.error('error', log)
             }
 
             super.catch(exception, host)
@@ -48,28 +53,33 @@ export class ExceptionLoggerFilter extends BaseExceptionFilter {
             const ctx = host.switchToRpc()
 
             if (exception instanceof HttpException) {
-                Logger.warn('fail', {
+                const log = {
                     contextType,
                     context: ctx.getContext(),
                     data: ctx.getData(),
                     response: exception.getResponse(),
                     stack: exception.stack
-                })
+                } as RpcErrorLog
+
+                Logger.warn('fail', log)
 
                 return throwError(() => exception)
             } else if (exception instanceof Error) {
-                Logger.error('error', {
+                const log = {
                     contextType,
                     context: ctx.getContext(),
                     data: ctx.getData(),
-                    message: exception.message,
+                    response: { message: exception.message },
                     stack: exception.stack
-                })
+                } as RpcErrorLog
+
+                Logger.error('error', log)
 
                 return throwError(() => new RpcException(exception))
             }
         } else {
             Logger.error('unknown context type', { contextType, ...exception })
+
             super.catch(exception, host)
         }
     }

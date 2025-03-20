@@ -1,8 +1,8 @@
 import { getRedisConnectionToken } from '@nestjs-modules/ioredis'
 import { DynamicModule, Inject, Injectable, Module, UnauthorizedException } from '@nestjs/common'
 import { JwtModule, JwtService } from '@nestjs/jwt'
+import { CommonErrors } from 'common/common-errors'
 import Redis from 'ioredis'
-import { CommonErrors } from '../common-errors'
 import { DateUtil, generateShortId, notUsed } from '../utils'
 
 export interface AuthTokenPayload {
@@ -61,7 +61,7 @@ export class JwtAuthService {
         const storedRefreshToken = await this.getStoredRefreshToken(payload.userId)
 
         if (storedRefreshToken !== refreshToken) {
-            throw new UnauthorizedException(CommonErrors.Auth.RefreshTokenInvalid)
+            throw new UnauthorizedException(CommonErrors.JwtAuth.RefreshTokenInvalid)
         }
 
         return this.generateAuthTokens(payload.userId, payload.email)
@@ -77,7 +77,7 @@ export class JwtAuthService {
             return payload
         } catch (error) {
             throw new UnauthorizedException({
-                ...CommonErrors.Auth.RefreshTokenVerificationFailed,
+                ...CommonErrors.JwtAuth.RefreshTokenVerificationFailed,
                 message: error.message
             })
         }

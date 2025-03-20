@@ -1,7 +1,13 @@
 export const CommonErrors = {
-    InternalServerError: {
-        code: 'ERR_INTERNAL_SERVER',
-        message: 'Internal Server Error'
+    JwtAuth: {
+        RefreshTokenInvalid: {
+            code: 'ERR_AUTH_REFRESH_TOKEN_INVALID',
+            message: 'The provided refresh token is invalid'
+        },
+        RefreshTokenVerificationFailed: {
+            code: 'ERR_AUTH_REFRESH_TOKEN_VERIFICATION_FAILED',
+            message: 'Refresh token verification failed'
+        }
     },
     Mongoose: {
         FiltersRequired: {
@@ -51,30 +57,6 @@ export const CommonErrors = {
         ValidationFailed: {
             code: 'ERR_LATLONG_VALIDATION_FAILED',
             message: 'LatLong validation failed'
-        }
-    },
-    FileUpload: {
-        MaxCountExceeded: {
-            code: 'ERR_FILE_UPLOAD_MAX_COUNT_EXCEEDED',
-            message: 'Too many files'
-        },
-        MaxSizeExceeded: {
-            code: 'ERR_FILE_UPLOAD_MAX_SIZE_EXCEEDED',
-            message: 'File too large'
-        }
-    },
-    Auth: {
-        RefreshTokenInvalid: {
-            code: 'ERR_AUTH_REFRESH_TOKEN_INVALID',
-            message: 'The provided refresh token is invalid'
-        },
-        RefreshTokenVerificationFailed: {
-            code: 'ERR_AUTH_REFRESH_TOKEN_VERIFICATION_FAILED',
-            message: 'Refresh token verification failed'
-        },
-        Unauthorized: {
-            code: 'ERR_AUTH_UNAUTHORIZED',
-            message: 'Unauthorized'
         }
     }
 }

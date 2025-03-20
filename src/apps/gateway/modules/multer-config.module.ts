@@ -22,7 +22,7 @@ class MulterConfigService implements MulterOptionsFactory {
 
                 if (!this.config.fileUpload.allowedMimeTypes.includes(file.mimetype)) {
                     error = new UnsupportedMediaTypeException({
-                        ...GatewayErrors.InvalidFileType,
+                        ...GatewayErrors.FileUpload.InvalidFileType,
                         allowedTypes: this.config.fileUpload.allowedMimeTypes
                     })
                 }
