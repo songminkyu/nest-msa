@@ -1,7 +1,7 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'
-import { GatewayErrors } from 'apps/gateway/gateway-errors'
+import { Errors } from 'apps/gateway/errors'
 import { Observable } from 'rxjs'
 import { CustomerLocalAuthGuard } from './customer-local-auth.guard'
 import { IS_PUBLIC_KEY } from './public.decorator'
@@ -38,7 +38,7 @@ export class CustomerJwtAuthGuard extends AuthGuard('customer-jwt') {
 
     handleRequest(err: any, user: any, _info: any, _context: any) {
         if (err || !user) {
-            throw new UnauthorizedException(GatewayErrors.Auth.Unauthorized)
+            throw new UnauthorizedException(Errors.Auth.Unauthorized)
         }
         return user
     }

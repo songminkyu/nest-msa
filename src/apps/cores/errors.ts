@@ -1,4 +1,4 @@
-export const CoreErrors = {
+export const Errors = {
     Customer: {
         NotFound: {
             code: 'ERR_CUSTOMER_NOT_FOUND',

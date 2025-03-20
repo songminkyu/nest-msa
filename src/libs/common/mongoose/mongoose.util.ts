@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common'
-import { CommonErrors } from 'common/common-errors'
+import { Errors } from 'common/errors'
 import { escapeRegExp, uniq } from 'lodash'
 import { FilterQuery, Types } from 'mongoose'
 import { Expect } from '../validator'
@@ -77,7 +77,7 @@ export class QueryBuilder<T> {
 
     build({ allowEmpty }: QueryBuilderOptions): FilterQuery<T> {
         if (!allowEmpty && Object.keys(this.query).length === 0) {
-            throw new BadRequestException(CommonErrors.Mongoose.FiltersRequired)
+            throw new BadRequestException(Errors.Mongoose.FiltersRequired)
         }
 
         return this.query

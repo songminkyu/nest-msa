@@ -1,7 +1,7 @@
 import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from '@nestjs/common'
 import { Transform } from 'class-transformer'
 import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator'
-import { CommonErrors } from 'common/common-errors'
+import { Errors } from 'common/errors'
 
 export enum OrderDirection {
     asc = 'asc',
@@ -41,13 +41,13 @@ export class PaginationOptionDto {
         const parts = value.split(':')
 
         if (parts.length !== 2) {
-            throw new BadRequestException(CommonErrors.Pagination.FormatInvalid)
+            throw new BadRequestException(Errors.Pagination.FormatInvalid)
         }
 
         const [name, direction] = parts
 
         if (!(direction in OrderDirection)) {
-            throw new BadRequestException(CommonErrors.Pagination.DirectionInvalid)
+            throw new BadRequestException(Errors.Pagination.DirectionInvalid)
         }
 
         return { name, direction }
@@ -82,7 +82,7 @@ export abstract class PaginationPipe implements PipeTransform {
                 if (value.take) {
                     if (this.takeLimit < value.take) {
                         throw new BadRequestException({
-                            ...CommonErrors.Pagination.TakeLimitExceeded,
+                            ...Errors.Pagination.TakeLimitExceeded,
                             take: value.take,
                             takeLimit: this.takeLimit
                         })

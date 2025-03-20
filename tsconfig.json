@@ -29,6 +29,9 @@
             "testlib": [
                 "src/libs/testlib/index"
             ],
+            "shared/*": [
+                "src/apps/shared/*"
+            ],
             "shared": [
                 "src/apps/shared/index"
             ],

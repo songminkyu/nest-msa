@@ -1,7 +1,7 @@
 import { BadRequestException, createParamDecorator, ExecutionContext } from '@nestjs/common'
 import { plainToClass } from 'class-transformer'
 import { IsNumber, Max, Min, validate } from 'class-validator'
-import { CommonErrors } from 'common/common-errors'
+import { Errors } from 'common/errors'
 
 export class LatLong {
     @IsNumber()
@@ -42,13 +42,13 @@ export const LatLongQuery = createParamDecorator(async (name: string, ctx: Execu
     const value = request.query[name]
 
     if (!value) {
-        throw new BadRequestException(CommonErrors.LatLong.Required)
+        throw new BadRequestException(Errors.LatLong.Required)
     }
 
     const [latStr, longStr] = value.split(',')
 
     if (!latStr || !longStr) {
-        throw new BadRequestException(CommonErrors.LatLong.FormatInvalid)
+        throw new BadRequestException(Errors.LatLong.FormatInvalid)
     }
 
     const latLong = plainToClass(LatLong, {
@@ -59,7 +59,7 @@ export const LatLongQuery = createParamDecorator(async (name: string, ctx: Execu
     const errors = await validate(latLong)
     if (errors.length > 0) {
         throw new BadRequestException({
-            ...CommonErrors.LatLong.ValidationFailed,
+            ...Errors.LatLong.ValidationFailed,
             details: errors.map((error) => ({
                 field: error.property,
                 constraints: error.constraints

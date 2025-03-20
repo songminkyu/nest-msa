@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common'
+import { Errors } from 'apps/cores/errors'
 import { InjectJwtAuth, JwtAuthService, mapDocToDto, Password } from 'common'
-import { CoreErrors } from 'apps/cores/core-errors'
 import { CustomersRepository } from './customers.repository'
 import { CustomerCreateDto, CustomerDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
 import { CustomerDocument } from './models'
@@ -17,7 +17,7 @@ export class CustomersService {
 
         if (foundEmail) {
             throw new ConflictException({
-                ...CoreErrors.Customer.emailAlreadyExists,
+                ...Errors.Customer.emailAlreadyExists,
                 email: createDto.email
             })
         }

@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException, OnModuleInit } from '@nestjs/common'
-import { CommonErrors } from 'common/common-errors'
+import { Errors } from 'common/errors'
 import { differenceWith, uniq } from 'lodash'
 import { ClientSession, HydratedDocument, Model, QueryWithHelpers } from 'mongoose'
 import { PaginationOptionDto, PaginationResult } from '../types'
@@ -57,7 +57,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
 
         if (!doc)
             throw new NotFoundException({
-                ...CommonErrors.Mongoose.DocumentNotFound,
+                ...Errors.Mongoose.DocumentNotFound,
                 notFoundId: id
             })
 
@@ -75,7 +75,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
 
         if (notFoundIds.length > 0) {
             throw new NotFoundException({
-                ...CommonErrors.Mongoose.MultipleDocumentsNotFound,
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
                 notFoundIds: notFoundIds
             })
         }
@@ -111,7 +111,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         const { callback, pagination, session } = args
 
         if (!pagination.take) {
-            throw new BadRequestException(CommonErrors.Pagination.TakeMissing)
+            throw new BadRequestException(Errors.Pagination.TakeMissing)
         }
 
         const helpers = this.model.find({}, null, { session })
@@ -122,7 +122,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         if (pagination.take) {
             take = pagination.take
             if (take <= 0) {
-                throw new BadRequestException({ ...CommonErrors.Pagination.TakeInvalid, take })
+                throw new BadRequestException({ ...Errors.Pagination.TakeInvalid, take })
             }
             helpers.limit(take)
         }

@@ -1,4 +1,4 @@
-export const ApplicationsErrors = {
+export const Errors = {
     Purchase: {
         MaxTicketsExceeded: {
             code: 'ERR_PURCHASE_MAX_TICKETS_EXCEEDED',

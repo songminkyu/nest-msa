@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
+import { Errors } from 'apps/cores/errors'
 import { MongooseRepository, objectId, QueryBuilder } from 'common'
-import { CoreErrors } from 'apps/cores/core-errors'
 import { Model } from 'mongoose'
 import { MongooseConfig } from 'shared'
 import { CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
@@ -60,7 +60,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
 
         if (!customer) {
             throw new NotFoundException({
-                ...CoreErrors.Customer.NotFound,
+                ...Errors.Customer.NotFound,
                 customerId
             })
         }

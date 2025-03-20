@@ -1,4 +1,4 @@
-export const GatewayErrors = {
+export const Errors = {
     FileUpload: {
         MaxCountExceeded: {
             code: 'ERR_FILE_UPLOAD_MAX_COUNT_EXCEEDED',

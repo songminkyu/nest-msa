@@ -1,4 +1,4 @@
-export const CommonErrors = {
+export const Errors = {
     JwtAuth: {
         RefreshTokenInvalid: {
             code: 'ERR_AUTH_REFRESH_TOKEN_INVALID',
