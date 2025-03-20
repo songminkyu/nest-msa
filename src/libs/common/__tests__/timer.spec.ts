@@ -1,7 +1,6 @@
 /**
- * 가능한 경우 사용하지 마세요.
- * useFakeTimers()는 예기치 않은 문제가 많습니다.
- * 특히 Mongoose(MongoDB) 관련 코드가 제대로 동작하지 않을 수 있습니다.
+ * useFakeTimers()를 사용하면 Mongoose(MongoDB) 관련 코드가 제대로 동작하지 않는다.
+ * 다른 모듈에도 영향을 줄 가능성이 있기 때문에 사용하지 않는 것을 권장한다.
  */
 
 describe('Timer functions', () => {
