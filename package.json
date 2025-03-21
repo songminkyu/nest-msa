@@ -6,9 +6,9 @@
         "start": "node _output/dist/${TARGET_APP}/index.js",
         "build": "nest build ${TARGET_APP} -b webpack",
         "debug": "nest start ${TARGET_APP} --watch",
-        "lint": "prettier --write 'src/**/*.ts' && eslint src",
         "test": "bash scripts/run-test.sh",
-        "test:e2e": "bash test/e2e/run.sh"
+        "test:e2e": "bash test/e2e/run.sh",
+        "lint": "prettier --write 'src/**/*.ts' && eslint src"
     },
     "comments": [
         "chalk,nanoid 등 esm은 node에서 사용 가능하나 jest는 아직이다. node 24에서 jest 다시 점검해라"

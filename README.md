@@ -1,6 +1,6 @@
 # NEST-SEED
 
-NestJS 기반 프로젝트 시작을 위한 통합 템플릿으로, 다음과 같은 핵심 기능을 제공합니다:
+NestJS 기반 프로젝트 시작을 위한 통합 템플릿으로, 다음과 같은 특징을 가집니다:
 
 - **Docker 기반 개발 환경**: 컨테이너화된 완전한 개발 환경을 지원합니다.
 - **데이터베이스 통합**: MongoDB 및 Redis에 대한 사전 구성된 설정을 포함합니다.
@@ -11,7 +11,7 @@ NestJS 기반 프로젝트 시작을 위한 통합 템플릿으로, 다음과 �
 - **E2E 테스트 자동화**: Bash 스크립트 기반의 종단 간 테스트 시스템을 구축했습니다.
 - **설계 문서화**: PlantUML로 작성된 상세 아키텍처 다이어그램을 포함합니다.
 
-## 1. 요구사항
+## 1. 실행 환경
 
 이 프로젝트를 실행하기 위해서는 호스트 환경에 다음과 같은 필수 구성 요소가 필요합니다:
 
@@ -25,56 +25,53 @@ NestJS 기반 프로젝트 시작을 위한 통합 템플릿으로, 다음과 �
 
 > Windows 환경에서는 호환성 문제가 생길 수 있으므로, VMware로 Ubuntu를 구동한 뒤 그 안에서 VSCode를 사용하는 방식을 권장합니다.
 
-## 2. 프로젝트의 구성
+## 2. 프로젝트의 구조
 
-이 프로젝트는 영화 예매 시스템을 설계 및 구현해서 회원 가입과 같은 기본적인 기능을 템플릿으로 제공하기 위해서 만들어졌습니다.
-이 프로젝트는 3~4인으로 이루어진 소규모 팀을 가정하였습니다. 프로젝트와 팀의 규모가 커지면 그에 맞게 프로젝트가 재구성 되어야 합니다.
-예를 들어, 지금은 applications 프로젝트에 booking과 같은 여러 개의 서비스가 포함되어 있지만 규모가 커지면 한 개의 서비스가 한 개의 프로젝트로 구성되어야 할 수 있습니다.
+이 프로젝트는 NestJS, Docker, 마이크로서비스 패턴 등을 종합적으로 활용할 수 있도록 설계된 **범용 백엔드 템플릿**입니다. 예시 도메인으로 영화 예매 시스템을 채택한 이유는 회원 가입, 예약, 결제 등 **다양하고 일반적인 기능을 포괄**하기 때문입니다.
+
+현재는 3~4인의 소규모 팀을 가정했으나, 프로젝트의 규모가 커지면 `booking`, `purchase-process` 등 각 서비스를 **별도의 독립 프로젝트**로 분리하는 식으로 구성을 확장할 수 있습니다.
+
+이 프로젝트는 여러 마이크로서비스로 구성되며, 크게 **`applications`**, **`cores`**, **`infrastructures`** 세 영역으로 분류됩니다.
+
+- `applications`: 주요 비즈니스 로직을 담당
+- `cores`: 고객/영화/티켓 관리 등 핵심 도메인 로직을 담당
+- `infrastructures`: 결제나 파일 저장소 등 외부 서비스 연동을 담당
+
+자세한 설계 방식과 구조는 [Design Guide](./docs/guides/design.guide.md)를 참고하세요.
 
 ```
-.
-├── scripts
-│   ├── common.cfg
-│   ├── reset-infra.sh
-│   ├── run-apps.sh
-│   ├── run-cli.sh
-│   ├── run-test.sh
-│   └── workspace-cleanup.sh
-├── src
-│   ├── apps
-│   │   ├── __tests__
-│   │   ├── applications
-│   │   │   └── services
-│   │   │       ├── booking
-│   │   │       ├── purchase-process
-│   │   │       ├── recommendation
-│   │   │       └── showtime-creation
-│   │   ├── cores
-│   │   │   └── services
-│   │   │       ├── customers
-│   │   │       ├── movies
-│   │   │       ├── purchases
-│   │   │       ├── showtimes
-│   │   │       ├── theaters
-│   │   │       ├── ticket-holding
-│   │   │       ├── tickets
-│   │   │       └── watch-records
-│   │   ├── gateway
-│   │   │   └── controllers
-│   │   ├── infrastructures
-│   │   │   └── services
-│   │   │       ├── payments
-│   │   │       └── storage-files
-│   │   └── shared
-│   │       ├── config
-│   │       ├── modules
-│   │       └── pipes
-│   └── libs
-│       ├── common
-│       └── testlib
-└── test
-    ├── e2e
-    └── fixtures
+src
+├── apps
+│   ├── __tests__                   # apps의 통합 테스트
+│   ├── applications                # application 서비스를 모은 프로젝트
+│   │   └── services
+│   │       ├── booking             # 영화 티켓 예매 프로세스
+│   │       ├── purchase-process    # 티켓 구매 프로세스
+│   │       ├── recommendation      # 영화 추천
+│   │       └── showtime-creation   # 상영 시간 등록
+│   ├── cores                       # 핵심 기능 서비스를 모은 프로젝트
+│   │   └── services
+│   │       ├── customers           # 고객 관리(인증)
+│   │       ├── movies              # 영화 관리(파일 업로드)
+│   │       ├── purchases           # 구매 관리
+│   │       ├── showtimes           # 상영 시간 관리
+│   │       ├── theaters            # 극장 관리
+│   │       ├── ticket-holding      # 티켓 선점 관리
+│   │       ├── tickets             # 티켓 관리
+│   │       └── watch-records       # 영화 관람 기록 관리
+│   ├── gateway
+│   │       └── controllers         # 클라이언트가 서비스를 사용할 수 있도록 REST API를 제공
+│   ├── infrastructures             # 외부 서비스를 모은 프로젝트
+│   │   └── services
+│   │       ├── payments            # 외부 결제 시스템
+│   │       └── storage-files       # 파일 저장소
+│   └── shared                      # 서비스들이 공통으로 사용하는 코드
+│       ├── config                  # 설정 관련
+│       ├── modules                 # 공통으로 사용하는 모듈들
+│       └── pipes                   # 공통으로 사용하는 nestjs 파이프 등
+└── libs                            # 특정 프로젝트에 종속되지 않는 공통 기능들
+    ├── common                      # 공통 기능 모음
+    └── testlib                     # 테스트 관련 기능 모음
 ```
 
 ## 3. 프로젝트 이름 변경
@@ -87,9 +84,9 @@ NestJS 기반 프로젝트 시작을 위한 통합 템플릿으로, 다음과 �
 - src/apps/shared/config/etc.ts
     - ProjectName
 
-## 4. 실행 환경
+## 4. 개발 인프라 구성
 
-이 프로젝트에서 사용하는 인프라의 버전을 변경하려면 다음 설정을 검토하고 수정합니다:
+이 프로젝트에서 사용하는 인프라를 변경하려면 다음 설정을 검토하고 수정합니다:
 
 - .env.infra
     ```
@@ -110,41 +107,80 @@ NestJS 기반 프로젝트 시작을 위한 통합 템플릿으로, 다음과 �
         container: node:22-bookworm
     ```
 
-## 5. 테스트의 실행
+## 5. 개발 환경 구성
 
-이 프로젝트는 MSA와 TDD를 지향하며 개발 과정에서 프로젝트를 직접 실행할 일이 많지 않습니다. 그래서 프로젝트 설정도 이에 맞춰서 구성되어 있습니다. 이유는 다음과 같습니다.
+프로젝트 실행 및 디버깅을 위한 환경 설정 방법은 다음과 같습니다:
 
-- MSA와 monorepo로 구성되어 있기 때문에 한 개의 프로젝트를 실행하려면 관련된 여러 개의 다른 프로젝트를 모두 실행해야 합니다. 프로젝트가 커질수록 이것은 힘든 작업입니다.
-- 모의 사용을 최소화 해서 작성한 jest 테스트는 버튼 한 번만 누르면 모든 프로젝트를 실행하고 자동으로 실제와 가까운 테스트를 합니다. 프로젝트를 직접 실행할 필요가 없습니다.
+1. **개발 환경 설정**
 
-테스트를 실행하는 방법은 다음과 같습니다.
+    1. 호스트에서 [Git credentials](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)를 설정합니다.
+    2. VSCode에서 "Reopen in Container"를 실행하면 환경이 자동 구성됩니다.
 
-- 유닛 테스트는 VSCode에 "Jest Runner" extension 설치 및 code lens 옵션이 활성화 되어있다면, Jest 테스트에 대해 "Run | Debug" 메뉴가 나타납니다.
-    ![jest 실행 버튼](./docs/images/jest-run-debug-button@2x.png)
-    - "Run"을 클릭하면 자동으로 테스트를 실행합니다. "Run" 모드로 테스트를 실행하면 콘솔창에 로그를 출력하지 않습니다.
-    - "Debug"를 클릭하면 디버거를 자동으로 연결하고 테스트를 실행합니다. "Debug" 모드로 테스트를 실행하면 콘솔창에 로그를 출력합니다.
-- End-to-End 테스트는 bash 스크립트로 작성했습니다. End-to-End는 프로젝트의 빌드부터 실행까지 모두 테스트 합니다.
-    - Run `npm run test:e2e`
+2. **환경 초기화**
 
-## 6. 실행과 디버깅
+    1. VSCode 메뉴: "View" → "Command Palette" → "Dev Containers: Rebuild Container"
 
-- 호스트에서 [git credentials](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials) 설정 후, vscode에서 Reopen container를 실행하면 실행 환경이 자동으로 구성됩니다.
-- 개발 환경을 초기화 하려면 vscode의 View -> Command Palette -> Dev Containers: Rebuild Container를 실행합니다.
-- 개발 환경 실행 구성은 /.vscode/tasks.json에 정의되어 있습니다.
-- 디버깅 구성은 /.vscode/launch.json에 정의되어 있습니다.
+## 6. 통합 테스트 및 디버깅
 
-## 7. 빌드
+이 프로젝트는 MSA와 TDD를 지향하기 때문에 테스트를 실행해서 기능을 검증할 것을 권장합니다. 이유는 다음과 같습니다:
 
-제품을 빌드하고 실행하려면 docker에 대한 지식이 필요하다. 상세 정보는 다음을 참고한다:
+- MSA와 monorepo 구조로, 한 프로젝트를 실행하려면 관련된 여러 프로젝트를 모두 실행해야 하며, 이는 프로젝트가 커질수록 비효율적입니다.
+- 통합 테스트는 모의(mock)를 최소화해서 작성했기 때문에 버튼 한 번으로 모든 서비스를 실제와 가깝게 테스트할 수 있습니다.
 
-- Dockerfile
-- docker-compose.yml
+### 통합 테스트 실행 방법
 
-## 8. 그 외
+1. VSCode에 `Jest Runner` 확장을 설치하면 Jest 테스트 코드 위에 `Run | Debug` 버튼이 나타납니다.
 
-1. 본 문서에서 다루지 않는 중요 정보는 아래 문서에 정리했다.
-    - [Design Guide](./docs/guides/design.guide.md)
-    - [Implementation Guide](./docs/guides/implementation.guide.md)
-2. "PlantUML Preview"에서 md 파일 내 UML 다이어그램을 보려면 커서가 `@startuml`과 `@enduml` 사이에 있어야 합니다.
-3. UML 다이어그램이 "Preview markdown"에서 나타나지 않으면 보안 설정이 필요할 수 있습니다.
+    <img src="./docs/images/jest-run-debug-button.png" alt="Jest 실행 버튼" width="344"/>
+
+    - **Run**: 테스트를 실행하며, 콘솔에 로그를 출력하지 않습니다.
+    - **Debug**: 디버거를 연결해 테스트를 실행하며, 콘솔에 로그를 출력합니다.
+    - 만약 `Run | Debug` 버튼이 보이지 않는다면 Code Lens 옵션을 활성화 하세요.
+
+2. `npm test`를 실행하면 통합 테스트 영역과 실행 횟수를 설정할 수 있습니다.
+
+    ```sh
+    /workspaces/nest-seed npm test
+
+    > nest-seed@0.0.1 test
+    > bash scripts/run-test.sh
+
+    Select Test Suites
+    > all
+    apps
+    common
+    Enter number of runs (default 1):
+    ```
+
+## 7. 서비스 실행 및 디버깅
+
+이 프로젝트는 서비스를 직접 실행하고 디버깅하는 방법을 권장하지 않습니다. 그럼에도 불구하고 서비스를 실행하고 디버깅을 해야 한다면 다음을 참고하세요.
+
+- `/.vscode/launch.json`
+
+## 8. 빌드 및 E2E 테스트
+
+`npm run test:e2e`을 실행하면 프로젝트 빌드부터 실행까지 전체 과정을 테스트합니다. 빌드 및 실행에 필요한 자세항 사항은 이 명령에 사용된 스크립트를 참고합니다.
+
+- ./Dockerfile
+- ./docker-compose.yml
+- ./scripts/run-apps.sh
+
+## 9. 설계 문서
+
+이 프로젝트는 PlantUML을 사용해서 설계했습니다. 설계 문서는 `./docs/designs`에 있으며 이것을 보려면 PlantUML(jebbs.plantuml) 확장을 설치해야 합니다.
+
+<img src="./docs/images/design-sample.png" alt="PlantUML로 작성한 문서" width="588"/>
+
+만약 PlantUML 문서가 보이지 않으면 다음을 참고하세요.
+
+1. "PlantUML Preview"에서 md 파일 내 UML 다이어그램을 보려면 커서가 `@startuml`과 `@enduml` 사이에 있어야 합니다.
+1. UML 다이어그램이 "Preview markdown"에서 나타나지 않으면 보안 설정이 필요할 수 있습니다.
     - 미리보기 화면 오른쪽 상단의 "..." 버튼을 클릭하여 "미리보기 보안 설정 변경"을 선택하세요.
+
+## 10. 그 외
+
+본 문서에서 다루지 않은 중요 정보는 아래 문서에 정리했습니다.
+
+- [Design Guide](./docs/guides/design.guide.md)
+- [Implementation Guide](./docs/guides/implementation.guide.md)
