@@ -26,11 +26,11 @@ getSeed(seedId: string)
 
 PaginationOption을 상속한 경우 이름에 QueryDto를 사용하세요.
 
--   페이징이 포함된 조회 요청은 단순 필터링보다 더 일반적인 데이터 조회와 관련되므로 “Query”가 적합합니다.
+- 페이징이 포함된 조회 요청은 단순 필터링보다 더 일반적인 데이터 조회와 관련되므로 “Query”가 적합합니다.
 
 PaginationOption을 상속하지 않은 경우 이름에 FilterDto를 사용하세요.
 
--   페이징 없이 특정 조건만을 사용한 필터링 요청이라는 점을 명확히 전달합니다.
+- 페이징 없이 특정 조건만을 사용한 필터링 요청이라는 점을 명확히 전달합니다.
 
 ### 1.2. 함수명에 전달인자 언급 피하기
 
@@ -171,7 +171,7 @@ src
 
 위와 같은 폴더/파일 구조가 있을 때 순환 참조를 피하기 위해서 다음의 규칙을 지켜야 한다.
 
--   직계 조상 폴더는 절대 경로를 사용하면 안 된다.
+- 직계 조상 폴더는 절대 경로를 사용하면 안 된다.
     ```ts
     /* users.service.ts에서 */
     // 순환참조 발생
@@ -179,7 +179,7 @@ src
     // 정상
     import { AuthService } from '../auth'
     ```
--   직계 조상이 아니면 절대 경로를 사용해야 한다.
+- 직계 조상이 아니면 절대 경로를 사용해야 한다.
     ```ts
     /* users.controller.ts에서 */
     // 정상
@@ -214,3 +214,36 @@ TestLibClass --> CommonClass : import
 CommonTest --> TestLibClass : import
 @enduml
 ```
+
+## 8. 테스트에서 dynamic import
+
+- 배경
+  테스트에서 Nats 서버를 공유하기 떄문에 유니크한 subject를 생성하기 위해서 process.env.TEST_ID를 사용함.
+- 문제
+  Jest의 module cache 기능 때문에 @MessagePattern 데코레이터는 모듈 로딩 시에 한 번만 평가된다.
+  따라서 최상위에서 이미 import된 모듈의 경우 각 테스트마다 다른 process.env.TEST_ID 값을 반영하지 못합니다.
+- 해결 방법
+  resetModules: true로 설정해서 각 테스트 마다 module cache를 초기화합니다.
+  아래 테스트는 문제 검증과 해결 방법을 보여줍니다.
+
+1. Fixture 타입 정보를 사용하고 싶다면 타입 전용 import를 활용하면 됩니다. 타입 전용 import는 런타임 코드에 영향을 주지 않고, 컴파일 타임에만 타입 체크를 위한 용도로 사용됩니다.
+
+```ts
+import type { Fixture } from './create-test-context.fixture'
+```
+
+## 9. Guard,Interceptor,Filter
+
+NestJS에서 요청이 처리되는 순서는 다음과 같습니다:
+
+미들웨어 (Middleware)
+가드 (Guards)
+인터셉터 (Interceptors) - 핸들러 실행 전
+파이프 (Pipes)
+라우트 핸들러 (Route Handler)
+인터셉터 (Interceptors) - 핸들러 실행 후
+예외 필터 (Exception Filters)
+가드는 요청이 라우트 핸들러에 도달하기 전에 실행되며, canActivate 메서드가 true를 반환해야만 이후 단계(인터셉터, 파이프, 핸들러 등)가 진행됩니다.
+
+인터셉터는 컨트롤러 메서드 실행 전후에 로직을 추가하는 데 사용됩니다. 가드에서 요청이 거부되면 컨트롤러에 도달하기 전에 요청이 차단되므로 인터셉터가 작동할 기회가 없습니다.
+단, **예외 필터(Exception Filter)**는 가드에서 던진 예외를 캐치할 수 있습니다. 인터셉터와 달리 예외 필터는 별도의 생명 주기를 갖습니다.

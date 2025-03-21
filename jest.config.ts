@@ -36,7 +36,10 @@ const config: Config = {
         '/libs/testlib/'
     ],
     coverageDirectory: '<rootDir>/_output/coverage',
-    testTimeout: 10000
+    testTimeout: 10000,
+    // CPU 코어 수가 메모리에 비해 많다면 maxWorkers 값을 (RAM / 4)로 조정하는 것을 권장합니다.
+    // (예: 8GB RAM 환경이면 2 workers 설정)
+    // maxWorkers: 2
 }
 
 export default config
