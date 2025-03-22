@@ -28,7 +28,6 @@ package "Core Services" {
 }
 
 package "Infrastructure" {
-  [DatabaseRepository]
   [PaymentGateway]
   [EmailService]
 }
@@ -41,8 +40,8 @@ package "Infrastructure" {
 [OrderProcessingService] --> [PaymentGateway]
 [OrderProcessingService] --> [EmailService]
 
-[UserService] --> [DatabaseRepository]
-[ProductService] --> [DatabaseRepository]
+[UserService] --> [PaymentGateway]
+[ProductService] --> [PaymentGateway]
 
 note top of [Controller Module]
 **Nest의 일반적 구조와 차이점**
@@ -57,7 +56,7 @@ Controller → Application → Core → Infrastructure
 단방향 흐름 유지
 end note
 
-note bottom of [DatabaseRepository]
+note bottom of [PaymentGateway]
 **순환 참조 방지 규칙**
 1. 상위 계층만 하위 계층 참조 가능
 2. 동일 계층 간 참조 금지
