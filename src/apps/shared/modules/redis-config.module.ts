@@ -11,10 +11,7 @@ import { AppConfigService, RedisConfig } from '../config'
                     const redisOptions: RedisModuleOptions = {
                         type: 'cluster',
                         nodes,
-                        options: {
-                            redisOptions: { password },
-                            enableOfflineQueue: true
-                        }
+                        options: { redisOptions: { password } }
                     }
                     return redisOptions
                 },
