@@ -12,27 +12,27 @@ class MulterConfigService implements MulterOptionsFactory {
     createMulterOptions(): MulterModuleOptions {
         const tempFileLength = 20
 
+        const { directory, maxFileSizeBytes, maxFilesPerUpload, allowedMimeTypes } =
+            this.config.fileUpload
+
         return {
             storage: diskStorage({
-                destination: (_req, _file, cb) => cb(null, this.config.fileUpload.directory),
+                destination: (_req, _file, cb) => cb(null, directory),
                 filename: (_req, _file, cb) => cb(null, `${generateShortId(tempFileLength)}.tmp`)
             }),
             fileFilter: (_req, file, cb) => {
                 let error: Error | null = null
 
-                if (!this.config.fileUpload.allowedMimeTypes.includes(file.mimetype)) {
+                if (!allowedMimeTypes.includes(file.mimetype)) {
                     error = new UnsupportedMediaTypeException({
                         ...Errors.FileUpload.InvalidFileType,
-                        allowedTypes: this.config.fileUpload.allowedMimeTypes
+                        allowedTypes: allowedMimeTypes
                     })
                 }
 
                 cb(error, error === null)
             },
-            limits: {
-                fileSize: this.config.fileUpload.maxFileSizeBytes,
-                files: this.config.fileUpload.maxFilesPerUpload
-            }
+            limits: { fileSize: maxFileSizeBytes, files: maxFilesPerUpload }
         }
     }
 }

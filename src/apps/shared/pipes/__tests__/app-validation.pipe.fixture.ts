@@ -2,7 +2,7 @@ import { Body, Controller, ParseArrayPipe, Post } from '@nestjs/common'
 import { APP_PIPE } from '@nestjs/core'
 import { Type } from 'class-transformer'
 import { IsDate, IsNotEmpty, IsString } from 'class-validator'
-import { AppValidationPipe } from 'shared'
+import { AppValidationPipe } from '..'
 import { createHttpTestContext } from 'testlib'
 
 class SampleDto {

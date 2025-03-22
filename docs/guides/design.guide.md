@@ -179,3 +179,16 @@ HATEOAS(Hypermedia as the engine of application state)의 완전한 자체 설�
 1. Idempotent Consumer: 중복 요청 방지를 위한 고유 ID 사용.
 1. Dead Letter Queue (DLQ): 실패 메시지 재처리 시스템.
 1. Saga 패턴: 분산 트랜잭션 관리 (Compensating Transaction 예시 추가).
+
+## 4. Error Message
+
+클라이언트에 오류를 반환할 때는 'code'를 포함해야 한다. 다국어 지원은 클라이언트에서 처리해야 하기 때문에 언어 중립적인 'code'를 전달해야 한다. 'message'는 단순 참고용이다.
+
+다만, HttpStatus 기준 4xx번대에 대해서만 code를 포함하고 500이상은 code를 포함하지 않는다. 500 이상의 code는 서버 측 오류이며 사용자에게 노출하지 않기 때문이다.
+
+```json
+MaxCountExceeded: {
+    code: 'ERR_FILE_UPLOAD_MAX_COUNT_EXCEEDED',
+    message: 'Too many files'
+}
+```

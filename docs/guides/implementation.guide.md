@@ -247,3 +247,43 @@ NestJS에서 요청이 처리되는 순서는 다음과 같습니다:
 
 인터셉터는 컨트롤러 메서드 실행 전후에 로직을 추가하는 데 사용됩니다. 가드에서 요청이 거부되면 컨트롤러에 도달하기 전에 요청이 차단되므로 인터셉터가 작동할 기회가 없습니다.
 단, **예외 필터(Exception Filter)**는 가드에서 던진 예외를 캐치할 수 있습니다. 인터셉터와 달리 예외 필터는 별도의 생명 주기를 갖습니다.
+
+## 10. entry file
+
+각 프로젝트의 루트에는 아래의 파일들을 포함한다.
+
+- development.ts
+- main.ts
+- production.ts
+
+일반적으로 `main.ts`가 entry file이 되지만 여기서는 `development.ts`나 `production.ts`가 entry file이 된다.
+이렇게 한 이유는 main.ts에서 process.env.NODE_ENV의 상태에 따라서 분기하는 코드를 피하기 위해서다. if는 복잡성을 증가시키기 때문에 이 프로젝트에서는 사용을 최소화 했다.
+
+이와 관련된 사항은 아래 세 개의 파일에 정의되어 있다.
+
+```json
+// package.json
+"scripts": {
+    "build": "nest build ${TARGET_APP} -b webpack",
+    "debug": "nest start ${TARGET_APP} --watch",
+}
+```
+
+```json
+// nest-cli.json
+"projects": {
+    "gateway": {
+        "type": "application",
+        "entryFile": "apps/gateway/development",
+        "sourceRoot": "src"
+    }
+}
+```
+
+```json
+// webpack.config.js
+    const output = {
+        ...options,
+        entry: path.resolve(dirname, 'production.ts'),
+    }
+```

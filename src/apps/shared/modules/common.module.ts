@@ -1,8 +1,16 @@
 import { Global, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { Transport } from '@nestjs/microservices'
-import { AppLoggerService, ClientProxyModule, createWinstonLogger } from 'common'
+import {
+    AppLoggerService,
+    ClientProxyModule,
+    createWinstonLogger,
+    ExceptionLoggerFilter,
+    SuccessLoggingInterceptor
+} from 'common'
 import { AppConfigService, ClientProxyConfig, configSchema, ProjectName } from '../config'
+import { AppValidationPipe } from '../pipes/app-validation.pipe'
 
 @Global()
 @Module({
@@ -27,6 +35,9 @@ import { AppConfigService, ClientProxyConfig, configSchema, ProjectName } from '
     ],
     providers: [
         AppConfigService,
+        { provide: APP_PIPE, useClass: AppValidationPipe },
+        { provide: APP_FILTER, useClass: ExceptionLoggerFilter },
+        { provide: APP_INTERCEPTOR, useClass: SuccessLoggingInterceptor },
         {
             provide: AppLoggerService,
             useFactory: (config: AppConfigService) => {

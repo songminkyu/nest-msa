@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { CommonModule, MongooseConfigModule, RedisConfigModule } from 'shared'
-import { HealthModule, PipesModule } from './modules'
+import { HealthModule } from './modules'
 import {
     CustomersModule,
     MoviesModule,
@@ -25,8 +25,7 @@ import {
         TicketsModule,
         TicketHoldingModule,
         WatchRecordsModule,
-        PurchasesModule,
-        PipesModule
+        PurchasesModule
     ]
 })
 export class CoresModule {}

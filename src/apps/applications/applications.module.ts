@@ -9,7 +9,7 @@ import {
     RedisConfigModule,
     uniqueWhenTesting
 } from 'shared'
-import { HealthModule, PipesModule } from './modules'
+import { HealthModule } from './modules'
 import {
     BookingModule,
     PurchaseProcessModule,
@@ -32,8 +32,7 @@ import {
         ShowtimeCreationModule,
         RecommendationModule,
         BookingModule,
-        PurchaseProcessModule,
-        PipesModule
+        PurchaseProcessModule
     ]
 })
 export class ApplicationsModule {}
