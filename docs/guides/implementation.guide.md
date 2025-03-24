@@ -174,7 +174,7 @@ src
 - 직계 조상 폴더는 절대 경로를 사용하면 안 된다.
     ```ts
     /* users.service.ts에서 */
-    // 순환참조 발생
+    // 순환 참조 발생
     import { AuthService } from 'src/services'
     // 정상
     import { AuthService } from '../auth'
@@ -188,9 +188,9 @@ src
     import { AuthService } from '../services'
     ```
 
-## 6. testlib와 common의 상호 참조
+## 6. testlib와 common의 순환 참조
 
-src/libs에 testlib와 common가 있다. 이 두 라이브러리는 상호 참조 하는 것처럼 보인다.
+src/libs에 testlib와 common가 있다. 이 두 라이브러리는 순환 참조 하는 것처럼 보인다.
 
 기본적으로 `testlib`가 `common`를 참조한다. 그리고 `common`도 `testlib`를 참조하는 것처럼 보이는데, `common`에 `__tests__`가 존재하고 `__tests__`는 보통 `testlib`를 `import`하기 때문이다.
 
@@ -231,22 +231,6 @@ CommonTest --> TestLibClass : import
 ```ts
 import type { Fixture } from './create-test-context.fixture'
 ```
-
-## 9. Guard,Interceptor,Filter
-
-NestJS에서 요청이 처리되는 순서는 다음과 같습니다:
-
-미들웨어 (Middleware)
-가드 (Guards)
-인터셉터 (Interceptors) - 핸들러 실행 전
-파이프 (Pipes)
-라우트 핸들러 (Route Handler)
-인터셉터 (Interceptors) - 핸들러 실행 후
-예외 필터 (Exception Filters)
-가드는 요청이 라우트 핸들러에 도달하기 전에 실행되며, canActivate 메서드가 true를 반환해야만 이후 단계(인터셉터, 파이프, 핸들러 등)가 진행됩니다.
-
-인터셉터는 컨트롤러 메서드 실행 전후에 로직을 추가하는 데 사용됩니다. 가드에서 요청이 거부되면 컨트롤러에 도달하기 전에 요청이 차단되므로 인터셉터가 작동할 기회가 없습니다.
-단, **예외 필터(Exception Filter)**는 가드에서 던진 예외를 캐치할 수 있습니다. 인터셉터와 달리 예외 필터는 별도의 생명 주기를 갖습니다.
 
 ## 10. entry file
 

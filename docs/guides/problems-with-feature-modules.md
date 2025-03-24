@@ -8,40 +8,107 @@ Nest에서 Controller, Service, 그리고 Repository가 모두 같은 모듈에 
 > 기능 모듈은 특정 기능과 관련된 코드를 간단히 정리하여 코드를 체계적으로 유지하고 명확한 경계를 설정합니다.
 > 이는 특히 애플리케이션 및/또는 팀의 규모가 커짐에 따라 복잡성을 관리하고 SOLID 원칙에 따라 개발하는 데 도움이 됩니다.
 
-그러나 Feature Modules은 순환참조 문제가 쉽게 발생할 수 있다.
+그러나 Feature Modules은 순환 참조 문제가 쉽게 발생할 수 있다.
 
-## 모듈 간 순환참조
+## 모듈 간 순환 참조
 
-project -> scene -> room의 관계를 가지는 리소스가 있다고 가정한다.
+다음과 같이 일반적인 영화 엔티티를 관리하기 위한 MoviesController가 있다고 가정하자.
 
-DELETE /projects를 하려면 project에 속한 scene,room도 삭제해야 한다
-그러나 room이 scene을 참조하고 scene가 project를 참조하는 구조다.
-삭제를 위해서 project가 scene를 참조하면 순환참조가 된다.
-이 문제를 해결하기 위해서 ClearAssetService를 만들고 여기서 project,scene,roome을 삭제하는 기능을 구현한다.
-
-이 때, Controller가 각 모듈에 속하는 기존 구조는 문제가 된다.
-ProjectsController에서 ClearAssetService를 호출하면 Scene와 Room을 참조하게 된다.
-이것은 결국 순환 참조가 된다.
-
-그래서 `DELETE /projects`는 할 수 없고 ClearController를 만들고 `POST /clear/projects/${projectId}`로 해야 한다.
-이 REST API 디자인은 이해하기 어렵다.
-
-`Feature Modules` 구조에서는 아래와 같은 REST API 디자인은 어렵다. 왜냐하면 MoviesController 다른 모듈들을 참조해야 하는데 다른 모듈들 또한 MoviesModule을 참조해야 하기 때문이다.
-
-```sh
-# 요청하는 리소스가 앞에 오고 필터가 뒤따라 오는 REST API 설계
-/movies/screening
-/movies/weekly-best
-/movies/abc123/reviews
+```
+GET /movies
+GET /movies/{movieId}
 ```
 
-이 문제를 피하기 위해서 REST API의 디자인을 바꿔야 한다.
+여기에 고객에게 영화를 추천하는 REST API를 추가한다.
 
-```sh
-# 필터가 앞에 오고 요청하는 리소스가 뒤에 오는 설계
-/screening/movies
-/weekly-best/movies
-/reviews/movies/abc123
+```
+GET /movies/recommended
 ```
 
-그러나 이 디자인은 부자연스러워서 이해하기 어렵다.
+고객에게 영화를 추천하려면 고객이 관람한 영화 목록과 연령, 성별 등 다양한 정보를 알아야 한다. 이것을 MoviesService에서 처리하기 어렵기 때문에 RecommendationService를 만든다.
+
+그러면 MoviesController는 두 개의 서비스를 참조하게 된다.
+
+```ts
+export class MoviesController {
+    constructor(
+        private moviesService: MoviesService,
+        private recommendationService: RecommendationService
+    ) {}
+}
+```
+
+그런데 RecommendationService는 [MoviesService, CustomersService, WatchRecordsService]를 참조한다. 이 서비스를 모두 MoviesModule에서 참조하는 것은 부담스럽기 때문에 RecommendationService를 RecommendationModule로 옮긴다.
+
+이런 상황에서 MoviesModule에 MovicesController와 MoviesService를 함께 정의하면 어떻게 될까?
+
+```plantuml
+@startuml
+rectangle "MoviesModule" {
+  [MoviesController]
+  [MoviesService]
+}
+
+rectangle "RecommendationModule" {
+  [RecommendationService]
+}
+
+rectangle "CustomersModule" {
+}
+
+rectangle "WatchRecordsModule" {
+}
+
+MoviesController --> MoviesService
+MoviesController --> RecommendationService: 순환 참조#1
+RecommendationService --> MoviesService: 순환 참조#2
+RecommendationService --> CustomersModule
+RecommendationService --> WatchRecordsModule
+
+note top of MoviesController
+MoviesController가 MoviesModule에 소속되면 순환 참조가 발생한다.
+end note
+@enduml
+```
+
+RecommendationService와 MoviesService가 단방향 관계를 가지지만 MovieController와 MovieService가 MoviesModule로 묶여있기 때문에 모듈 레벨에서 순환 참조가 발생한다.
+
+그래서 MoviesController를 포함한 모든 Controller들을 ControllersModule이라는 독립된 모듈로 정의한 것이다.
+
+
+```plantuml
+@startuml
+
+rectangle "Controllers" {
+  [MoviesController]
+}
+
+rectangle "MoviesModule" {
+  [MoviesService]
+}
+
+rectangle "RecommendationModule" {
+  [RecommendationService]
+}
+
+
+MoviesController --> MoviesService
+MoviesController --> RecommendationService
+RecommendationService --> MoviesService
+
+note top of MoviesController
+MoviesController가 독립 모듈에 소속되면 순환 참조 발생하지 않음
+end note
+@enduml
+```
+
+만약, Feature Modules를 고수하면서 순환 참조 문제를 피하고 싶다면 다음과 같이 별도의 REST API를 정의하고 해당 컨트롤러를 만들어야 한다.
+
+```ts
+// GET /recommendation/movies
+export class RecommendationController {}
+```
+
+혹시 forwardRef를 사용하면 문제를 해결할 수 있다고 생각할지 모르겠다.
+
+forwardRef는 설계 단계의 문제를 구현 단계에서 해결하는 방법에 지나지 않는다. 근본 문제를 해결하는 것이 아니기 때문에 forwardRef를 사용하면 결국 더 큰 문제를 일으키게 될 것이다.
