@@ -107,7 +107,7 @@ Nest에서는 일반적으로 Controller, Service, Repository가 같은 모듈�
 
 엔티티 관리 서비스는 복수형으로 명명합니다.
 
-1. MovisService: 영화 엔티티를 관리합니다.
+1. MoviesService: 영화 엔티티를 관리합니다.
 1. TheatersService: 극장 엔티티를 관리합니다.
 1. TicketsService: 티켓 엔티티를 관리합니다.
 
