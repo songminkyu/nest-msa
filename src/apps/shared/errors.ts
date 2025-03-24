@@ -1,6 +1,5 @@
-export const Errors = {
-    ValidationFailed: {
-        code: 'ERR_VALIDATION_FAILED',
-        message: 'Validation failed'
-    }
+import { RequestValidationPipeErrors } from './pipes'
+
+export const SharedErrors = {
+    RequestValidation: RequestValidationPipeErrors
 }

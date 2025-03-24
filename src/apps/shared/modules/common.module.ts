@@ -10,7 +10,7 @@ import {
     SuccessLoggingInterceptor
 } from 'common'
 import { AppConfigService, ClientProxyConfig, configSchema, ProjectName } from '../config'
-import { AppValidationPipe } from '../pipes/app-validation.pipe'
+import { RequestValidationPipe } from '../pipes/request-validation.pipe'
 
 @Global()
 @Module({
@@ -35,7 +35,7 @@ import { AppValidationPipe } from '../pipes/app-validation.pipe'
     ],
     providers: [
         AppConfigService,
-        { provide: APP_PIPE, useClass: AppValidationPipe },
+        { provide: APP_PIPE, useClass: RequestValidationPipe },
         { provide: APP_FILTER, useClass: ExceptionLoggerFilter },
         { provide: APP_INTERCEPTOR, useClass: SuccessLoggingInterceptor },
         {

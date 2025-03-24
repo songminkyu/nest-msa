@@ -1,9 +1,15 @@
 import { Injectable, Module, UnsupportedMediaTypeException } from '@nestjs/common'
 import { MulterModule, MulterModuleOptions, MulterOptionsFactory } from '@nestjs/platform-express'
-import { Errors } from 'apps/gateway/errors'
 import { generateShortId } from 'common'
 import { diskStorage } from 'multer'
 import { AppConfigService } from 'shared'
+
+export const MulterConfigServiceErrors = {
+    InvalidFileType: {
+        code: 'ERR_FILE_UPLOAD_INVALID_FILE_TYPE',
+        message: 'File type not allowed.'
+    }
+}
 
 @Injectable()
 class MulterConfigService implements MulterOptionsFactory {
@@ -25,7 +31,7 @@ class MulterConfigService implements MulterOptionsFactory {
 
                 if (!allowedMimeTypes.includes(file.mimetype)) {
                     error = new UnsupportedMediaTypeException({
-                        ...Errors.FileUpload.InvalidFileType,
+                        ...MulterConfigServiceErrors.InvalidFileType,
                         allowedTypes: allowedMimeTypes
                     })
                 }

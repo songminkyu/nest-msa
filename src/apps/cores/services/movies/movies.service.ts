@@ -31,6 +31,7 @@ export class MoviesService {
     }
 
     async deleteMovie(movieId: string) {
+        // TODO deleteStorageFile 해야 한다
         await this.repository.deleteById(movieId)
         return true
     }

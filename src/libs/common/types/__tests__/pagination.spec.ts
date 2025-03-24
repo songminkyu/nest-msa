@@ -1,4 +1,4 @@
-import { Errors } from 'common/errors'
+import { CommonErrors } from 'common'
 import { withTestId } from 'testlib'
 import type { Fixture } from './pagination.fixture'
 
@@ -37,14 +37,14 @@ describe('Pagination', () => {
         await fix.httpClient
             .get('/pagination')
             .query({ orderby: 'wrong' })
-            .badRequest(Errors.Pagination.FormatInvalid)
+            .badRequest(CommonErrors.Pagination.FormatInvalid)
     })
 
     it('정렬 방향이 잘못되었을 때 BadRequest를 반환해야 한다', async () => {
         await fix.httpClient
             .get('/pagination')
             .query({ orderby: 'name:wrong' })
-            .badRequest(Errors.Pagination.DirectionInvalid)
+            .badRequest(CommonErrors.Pagination.DirectionInvalid)
     })
 
     it("'take' 값이 지정된 제한을 초과하면 BadRequest를 반환해야 한다", async () => {
@@ -53,7 +53,7 @@ describe('Pagination', () => {
         await fix.httpClient
             .get('/pagination/limited')
             .query({ take })
-            .badRequest({ ...Errors.Pagination.TakeLimitExceeded, take, takeLimit: 50 })
+            .badRequest({ ...CommonErrors.Pagination.TakeLimitExceeded, take, takeLimit: 50 })
     })
 
     it("'take' 값이 지정되지 않은 경우 기본값이 사용되어야 한다", async () => {

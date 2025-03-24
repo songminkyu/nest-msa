@@ -1,10 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { Errors } from 'apps/applications/errors'
 import { MoviesProxy, ShowtimeDto, ShowtimesProxy, TheatersProxy } from 'apps/cores'
 import { Assert, DateUtil } from 'common'
 import { ShowtimeBatchCreateJobData } from './types'
 
 type TimeslotMap = Map<number, ShowtimeDto>
+
+export const ShowtimeCreationValidatorServiceErrors = {
+    MovieNotFound: {
+        code: 'ERR_SHOWTIME_CREATION_MOVIE_NOT_FOUND',
+        message: 'The requested movie could not be found.'
+    },
+    TheaterNotFound: {
+        code: 'ERR_SHOWTIME_CREATION_THEATERS_NOT_FOUND',
+        message: 'One or more requested theaters could not be found.'
+    }
+}
 
 @Injectable()
 export class ShowtimeCreationValidatorService {
@@ -87,7 +97,7 @@ export class ShowtimeCreationValidatorService {
         const movieExists = await this.moviesService.moviesExist([movieId])
         if (!movieExists) {
             throw new NotFoundException({
-                ...Errors.ShowtimeCreation.MovieNotFound,
+                ...ShowtimeCreationValidatorServiceErrors.MovieNotFound,
                 movieId
             })
         }
@@ -97,7 +107,7 @@ export class ShowtimeCreationValidatorService {
         const theatersExist = await this.theatersService.theatersExist(theaterIds)
         if (!theatersExist) {
             throw new NotFoundException({
-                ...Errors.ShowtimeCreation.TheaterNotFound,
+                ...ShowtimeCreationValidatorServiceErrors.TheaterNotFound,
                 theaterIds
             })
         }

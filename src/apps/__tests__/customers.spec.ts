@@ -50,7 +50,7 @@ describe('/customers', () => {
                 .post('/customers')
                 .body({})
                 .badRequest({
-                    ...Errors.ValidationFailed,
+                    ...Errors.RequestValidation.Failed,
                     details: [
                         {
                             constraints: {
@@ -172,7 +172,7 @@ describe('/customers', () => {
                 .get('/customers')
                 .query({ wrong: 'value' })
                 .badRequest({
-                    ...Errors.ValidationFailed,
+                    ...Errors.RequestValidation.Failed,
                     details: [
                         {
                             constraints: { whitelistValidation: 'property wrong should not exist' },

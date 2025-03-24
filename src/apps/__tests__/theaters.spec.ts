@@ -38,7 +38,7 @@ describe('/theaters', () => {
                 .post('/theaters')
                 .body({})
                 .badRequest({
-                    ...Errors.ValidationFailed,
+                    ...Errors.RequestValidation.Failed,
                     details: [
                         {
                             constraints: {
@@ -154,7 +154,7 @@ describe('/theaters', () => {
                 .get('/theaters')
                 .query({ wrong: 'value' })
                 .badRequest({
-                    ...Errors.ValidationFailed,
+                    ...Errors.RequestValidation.Failed,
                     details: [
                         {
                             constraints: { whitelistValidation: 'property wrong should not exist' },

@@ -1,12 +1,18 @@
 import { BadRequestException, ValidationPipe } from '@nestjs/common'
-import { Errors } from 'shared/errors'
 
-export class AppValidationPipe extends ValidationPipe {
+export const RequestValidationPipeErrors = {
+    Failed: {
+        code: 'ERR_REQUEST_VALIDATION_FAILED',
+        message: 'Validation failed'
+    }
+}
+
+export class RequestValidationPipe extends ValidationPipe {
     constructor() {
         super({
             exceptionFactory: (errors) =>
                 new BadRequestException({
-                    ...Errors.ValidationFailed,
+                    ...RequestValidationPipeErrors.Failed,
                     details: errors.map((error) => ({
                         field: error.property,
                         constraints: error.constraints

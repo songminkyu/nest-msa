@@ -1,24 +1,30 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common'
-import { Errors } from 'apps/gateway/errors'
-import { Response } from 'express'
+
+export const MulterExceptionFilterErrors = {
+    MaxCountExceeded: {
+        code: 'ERR_FILE_UPLOAD_MAX_COUNT_EXCEEDED',
+        message: 'Too many files'
+    },
+    MaxSizeExceeded: {
+        code: 'ERR_FILE_UPLOAD_MAX_SIZE_EXCEEDED',
+        message: 'File too large'
+    }
+}
 
 @Catch(HttpException)
 export class MulterExceptionFilter implements ExceptionFilter {
-    catch(exception: any, host: ArgumentsHost) {
-        const http = host.switchToHttp()
-        const response = http.getResponse<Response>()
-
+    catch(exception: any, _host: ArgumentsHost) {
         let statusCode = exception.getStatus()
-        let responseBody = exception.getResponse()
+        let response = exception.getResponse()
 
-        if (typeof responseBody === 'object' && 'message' in responseBody) {
-            if (statusCode === 400 && responseBody.message === 'Too many files') {
-                responseBody = Errors.FileUpload.MaxCountExceeded
-            } else if (statusCode === 413 && responseBody.message === 'File too large') {
-                responseBody = Errors.FileUpload.MaxSizeExceeded
+        if (typeof response === 'object' && 'message' in response) {
+            if (statusCode === 400 && response.message === 'Too many files') {
+                exception.response = MulterExceptionFilterErrors.MaxCountExceeded
+            } else if (statusCode === 413 && response.message === 'File too large') {
+                exception.response = MulterExceptionFilterErrors.MaxSizeExceeded
             }
-        }
 
-        response.status(statusCode).json(responseBody)
+            throw exception
+        }
     }
 }

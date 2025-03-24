@@ -89,7 +89,7 @@ describe('/storage-files', () => {
 
         it('name 필드를 설정하지 않으면 BAD_REQUEST(400)를 반환해야 한다', async () => {
             await uploadFile([], []).badRequest({
-                ...Errors.ValidationFailed,
+                ...Errors.RequestValidation.Failed,
                 details: [{ constraints: { isString: 'name must be a string' }, field: 'name' }]
             })
         })

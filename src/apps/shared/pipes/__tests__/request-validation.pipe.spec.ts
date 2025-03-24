@@ -5,7 +5,7 @@ describe('AppValidationPipe', () => {
     let client: HttpTestClient
 
     beforeEach(async () => {
-        const { createFixture } = await import('./app-validation.pipe.fixture')
+        const { createFixture } = await import('./request-validation.pipe.fixture')
 
         const fixture = await createFixture()
         teardown = fixture.teardown

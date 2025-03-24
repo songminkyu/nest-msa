@@ -1,10 +1,10 @@
 import { BadRequestException, NotFoundException, OnModuleInit } from '@nestjs/common'
-import { Errors } from 'common/errors'
 import { differenceWith, uniq } from 'lodash'
 import { ClientSession, HydratedDocument, Model, QueryWithHelpers } from 'mongoose'
 import { PaginationOptionDto, PaginationResult } from '../types'
 import { Assert, Expect } from '../validator'
 import { objectId, objectIds } from './mongoose.util'
+import { MongooseErrors } from './errors'
 
 export class MongooseUpdateResult {
     modifiedCount: number
@@ -56,10 +56,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         const doc = await this.findById(id, session)
 
         if (!doc)
-            throw new NotFoundException({
-                ...Errors.Mongoose.DocumentNotFound,
-                notFoundId: id
-            })
+            throw new NotFoundException({ ...MongooseErrors.DocumentNotFound, notFoundId: id })
 
         return doc
     }
@@ -75,7 +72,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
 
         if (notFoundIds.length > 0) {
             throw new NotFoundException({
-                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                ...MongooseErrors.MultipleDocumentsNotFound,
                 notFoundIds: notFoundIds
             })
         }
@@ -111,7 +108,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         const { callback, pagination, session } = args
 
         if (!pagination.take) {
-            throw new BadRequestException(Errors.Pagination.TakeMissing)
+            throw new BadRequestException(MongooseErrors.TakeMissing)
         }
 
         const helpers = this.model.find({}, null, { session })
@@ -122,7 +119,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         if (pagination.take) {
             take = pagination.take
             if (take <= 0) {
-                throw new BadRequestException({ ...Errors.Pagination.TakeInvalid, take })
+                throw new BadRequestException({ ...MongooseErrors.TakeInvalid, take })
             }
             helpers.limit(take)
         }

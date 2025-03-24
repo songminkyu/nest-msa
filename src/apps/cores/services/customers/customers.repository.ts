@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Errors } from 'apps/cores/errors'
 import { MongooseRepository, objectId, QueryBuilder } from 'common'
 import { Model } from 'mongoose'
 import { MongooseConfig } from 'shared'
 import { CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
+import { CustomerErrors } from './errors'
 import { Customer } from './models'
 
 @Injectable()
@@ -59,10 +59,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         const customer = await this.model.findById(objectId(customerId)).select('+password').exec()
 
         if (!customer) {
-            throw new NotFoundException({
-                ...Errors.Customer.NotFound,
-                customerId
-            })
+            throw new NotFoundException({ ...CustomerErrors.NotFound, customerId })
         }
 
         return customer.password

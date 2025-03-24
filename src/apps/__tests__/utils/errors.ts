@@ -1,13 +1,13 @@
-import { Errors as AppsErrors } from 'apps/applications/errors'
-import { Errors as CoreErrors } from 'apps/cores/errors'
-import { Errors as GatewayErrors } from 'apps/gateway/errors'
-import { Errors as CommonErrors } from 'common/errors'
-import { Errors as SharedErrors } from 'shared/errors'
+import { ApplicationErrors } from 'apps/applications'
+import { CoreErrors } from 'apps/cores'
+import { GatewayErrors } from 'apps/gateway'
+import { CommonErrors } from 'common'
+import { SharedErrors } from 'shared'
 
 export const Errors = {
     ...CommonErrors,
     ...SharedErrors,
     ...GatewayErrors,
-    ...AppsErrors,
+    ...ApplicationErrors,
     ...CoreErrors
 }

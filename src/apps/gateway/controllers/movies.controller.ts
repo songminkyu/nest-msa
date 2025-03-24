@@ -9,15 +9,17 @@ import {
     Query,
     Req,
     UploadedFiles,
+    UseFilters,
     UseGuards,
     UseInterceptors,
     UsePipes
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
 import { RecommendationProxy } from 'apps/applications'
-import { AuthTokenPayload } from 'common'
 import { MovieCreateDto, MovieQueryDto, MoviesProxy, MovieUpdateDto } from 'apps/cores'
+import { AuthTokenPayload } from 'common'
 import { pick } from 'lodash'
+import { MulterExceptionFilter } from './filters'
 import { CustomerOptionalJwtAuthGuard } from './guards'
 import { DefaultPaginationPipe } from './pipes'
 
@@ -28,6 +30,7 @@ export class MoviesController {
         private recommendationService: RecommendationProxy
     ) {}
 
+    @UseFilters(new MulterExceptionFilter())
     @UseInterceptors(FilesInterceptor('files'))
     @Post()
     async createMovie(

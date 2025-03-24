@@ -1,8 +1,8 @@
 import { BadRequestException } from '@nestjs/common'
-import { Errors } from 'common/errors'
 import { escapeRegExp, uniq } from 'lodash'
 import { FilterQuery, Types } from 'mongoose'
 import { Expect } from '../validator'
+import { MongooseErrors } from './errors'
 
 export const newObjectId = () => new Types.ObjectId().toString()
 export const objectId = (id: string) => new Types.ObjectId(id)
@@ -77,7 +77,7 @@ export class QueryBuilder<T> {
 
     build({ allowEmpty }: QueryBuilderOptions): FilterQuery<T> {
         if (!allowEmpty && Object.keys(this.query).length === 0) {
-            throw new BadRequestException(Errors.Mongoose.FiltersRequired)
+            throw new BadRequestException(MongooseErrors.FiltersRequired)
         }
 
         return this.query

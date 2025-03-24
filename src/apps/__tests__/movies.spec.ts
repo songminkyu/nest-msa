@@ -47,7 +47,7 @@ describe('/movies', () => {
             await client
                 .post('/movies')
                 .body({})
-                .badRequest({ ...Errors.ValidationFailed, details: expect.any(Array) })
+                .badRequest({ ...Errors.RequestValidation.Failed, details: expect.any(Array) })
         })
     })
 
@@ -145,7 +145,7 @@ describe('/movies', () => {
                 .get('/movies')
                 .query({ wrong: 'value' })
                 .badRequest({
-                    ...Errors.ValidationFailed,
+                    ...Errors.RequestValidation.Failed,
                     details: [
                         {
                             constraints: { whitelistValidation: 'property wrong should not exist' },

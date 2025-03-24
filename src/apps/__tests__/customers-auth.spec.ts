@@ -41,14 +41,14 @@ describe('/customers(authentication)', () => {
             await client
                 .post('/customers/login')
                 .body({ email, password: 'wrong password' })
-                .unauthorized(Errors.Auth.Unauthorized)
+                .unauthorized(Errors.Unauthorized)
         })
 
         it('이메일이 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다', async () => {
             await client
                 .post('/customers/login')
                 .body({ email: 'unknown@mail.com', password: '.' })
-                .unauthorized(Errors.Auth.Unauthorized)
+                .unauthorized(Errors.Unauthorized)
         })
 
         it('customer가 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다', async () => {
@@ -62,7 +62,7 @@ describe('/customers(authentication)', () => {
             await client
                 .post('/customers/login')
                 .body({ email, password })
-                .unauthorized(Errors.Auth.Unauthorized)
+                .unauthorized(Errors.Unauthorized)
         })
     })
 
@@ -115,7 +115,7 @@ describe('/customers(authentication)', () => {
             await client
                 .get(`/customers/${customer.id}`)
                 .headers({ Authorization: `Bearer ${invalidToken}` })
-                .unauthorized(Errors.Auth.Unauthorized)
+                .unauthorized(Errors.Unauthorized)
         })
     })
 })
