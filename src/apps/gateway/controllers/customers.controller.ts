@@ -24,37 +24,36 @@ import { CustomerJwtAuthGuard, CustomerLocalAuthGuard, Public } from './guards'
 import { DefaultPaginationPipe } from './pipes'
 import { AuthRequest } from './types'
 
-
 @Controller('customers')
 @UseGuards(CustomerJwtAuthGuard)
 export class CustomersController {
-    constructor(private service: CustomersServiceProxy) {}
+    constructor(private customersService: CustomersServiceProxy) {}
 
     @Public()
     @Post()
     createCustomer(@Body() createDto: CustomerCreateDto) {
-        return this.service.createCustomer(createDto)
+        return this.customersService.createCustomer(createDto)
     }
 
     @Patch(':customerId')
     updateCustomer(@Param('customerId') customerId: string, @Body() updateDto: CustomerUpdateDto) {
-        return this.service.updateCustomer(customerId, updateDto)
+        return this.customersService.updateCustomer(customerId, updateDto)
     }
 
     @Get(':customerId')
     getCustomer(@Param('customerId') customerId: string) {
-        return this.service.getCustomer(customerId)
+        return this.customersService.getCustomer(customerId)
     }
 
     @Delete(':customerId')
     deleteCustomer(@Param('customerId') customerId: string) {
-        return this.service.deleteCustomer(customerId)
+        return this.customersService.deleteCustomer(customerId)
     }
 
     @UsePipes(DefaultPaginationPipe)
     @Get()
     findCustomers(@Query() queryDto: CustomerQueryDto) {
-        return this.service.findCustomers(queryDto)
+        return this.customersService.findCustomers(queryDto)
     }
 
     @UseGuards(CustomerLocalAuthGuard)
@@ -63,13 +62,13 @@ export class CustomersController {
     login(@Req() req: AuthRequest) {
         Assert.defined(req.user, 'req.user must be returned in LocalStrategy.validate')
 
-        return this.service.login(req.user.userId, req.user.email)
+        return this.customersService.login(req.user.userId, req.user.email)
     }
 
     @Public()
     @HttpCode(HttpStatus.OK)
     @Post('refresh')
     refreshToken(@Body('refreshToken') refreshToken: string) {
-        return this.service.refreshAuthTokens(refreshToken)
+        return this.customersService.refreshAuthTokens(refreshToken)
     }
 }

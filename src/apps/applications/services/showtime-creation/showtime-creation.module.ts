@@ -1,6 +1,6 @@
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
-import { MoviesProxy, ShowtimesProxy, TheatersProxy, TicketsProxy } from 'apps/cores'
+import { MoviesServiceProxy, ShowtimesProxy, TheatersProxy, TicketsProxy } from 'apps/cores'
 import { ShowtimeCreationValidatorService, ShowtimeCreationWorkerService } from './services'
 import { ShowtimeCreationController } from './showtime-creation.controller'
 import { ShowtimeCreationService } from './showtime-creation.service'
@@ -8,7 +8,7 @@ import { ShowtimeCreationService } from './showtime-creation.service'
 @Module({
     imports: [BullModule.registerQueue({ configKey: 'queue', name: 'showtime-creation' })],
     providers: [
-        MoviesProxy,
+        MoviesServiceProxy,
         TheatersProxy,
         ShowtimesProxy,
         TicketsProxy,

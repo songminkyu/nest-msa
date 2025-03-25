@@ -15,19 +15,19 @@ import {
     UsePipes
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
-import { RecommendationProxy } from 'apps/applications'
-import { MovieCreateDto, MovieQueryDto, MoviesProxy, MovieUpdateDto } from 'apps/cores'
-import { AuthTokenPayload } from 'common'
+import { RecommendationServiceProxy } from 'apps/applications'
+import { MovieCreateDto, MovieQueryDto, MoviesServiceProxy, MovieUpdateDto } from 'apps/cores'
 import { pick } from 'lodash'
 import { MulterExceptionFilter } from './filters'
 import { CustomerOptionalJwtAuthGuard } from './guards'
 import { DefaultPaginationPipe } from './pipes'
+import { AuthRequest } from './types'
 
 @Controller('movies')
 export class MoviesController {
     constructor(
-        private moviesService: MoviesProxy,
-        private recommendationService: RecommendationProxy
+        private moviesService: MoviesServiceProxy,
+        private recommendationService: RecommendationServiceProxy
     ) {}
 
     @UseFilters(new MulterExceptionFilter())
@@ -51,7 +51,7 @@ export class MoviesController {
 
     @UseGuards(CustomerOptionalJwtAuthGuard)
     @Get('recommended')
-    async findRecommendedMovies(@Req() req: { user: AuthTokenPayload }) {
+    async findRecommendedMovies(@Req() req: AuthRequest) {
         const customerId = req.user.userId
         return this.recommendationService.findRecommendedMovies(customerId)
     }

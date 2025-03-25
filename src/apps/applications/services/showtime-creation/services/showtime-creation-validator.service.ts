@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { MoviesProxy, ShowtimeDto, ShowtimesProxy, TheatersProxy } from 'apps/cores'
+import { MoviesServiceProxy, ShowtimeDto, ShowtimesProxy, TheatersProxy } from 'apps/cores'
 import { Assert, DateUtil } from 'common'
 import { ShowtimeBatchCreateJobData } from './types'
 
@@ -20,7 +20,7 @@ export const ShowtimeCreationValidatorServiceErrors = {
 export class ShowtimeCreationValidatorService {
     constructor(
         private theatersService: TheatersProxy,
-        private moviesService: MoviesProxy,
+        private moviesService: MoviesServiceProxy,
         private showtimesService: ShowtimesProxy
     ) {}
 
