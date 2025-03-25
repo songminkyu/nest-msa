@@ -1,4 +1,5 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common'
+import { GUARDS_METADATA } from '@nestjs/common/constants'
 import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'
 import { Observable } from 'rxjs'
@@ -44,7 +45,7 @@ export class CustomerJwtAuthGuard extends AuthGuard('customer-jwt') {
     }
 
     private isUsingGuard(target: any, guardType: any): boolean {
-        const guards = this.reflector.get<any[]>('__guards__', target) || []
+        const guards = this.reflector.get<any[]>(GUARDS_METADATA, target) || []
         return guards.some((guard) => guard === guardType)
     }
 }

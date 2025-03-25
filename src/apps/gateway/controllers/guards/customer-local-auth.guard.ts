@@ -8,6 +8,7 @@ export class CustomerLocalAuthGuard extends AuthGuard('customer-local') {
         if (err || !user) {
             throw new UnauthorizedException(AuthErrors.Unauthorized)
         }
+
         return user
     }
 }

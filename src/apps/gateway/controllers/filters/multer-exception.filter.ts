@@ -11,6 +11,10 @@ export const MulterExceptionFilterErrors = {
     }
 }
 
+/**
+ * Multer가 발생시키는 예외는 직접 수정할 수 없다.
+ * 그래서 ExceptionFilter를 통해 예외에 코드 값을 추가하여 처리한다.
+ */
 @Catch(HttpException)
 export class MulterExceptionFilter implements ExceptionFilter {
     catch(exception: any, _host: ArgumentsHost) {
@@ -23,8 +27,8 @@ export class MulterExceptionFilter implements ExceptionFilter {
             } else if (statusCode === 413 && response.message === 'File too large') {
                 exception.response = MulterExceptionFilterErrors.MaxSizeExceeded
             }
-
-            throw exception
         }
+
+        throw exception
     }
 }
