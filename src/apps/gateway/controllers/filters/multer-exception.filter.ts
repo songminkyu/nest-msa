@@ -22,11 +22,16 @@ export class MulterExceptionFilter implements ExceptionFilter {
         let response = exception.getResponse()
 
         if (typeof response === 'object' && 'message' in response) {
+            let errorCode = {}
+
             if (statusCode === 400 && response.message === 'Too many files') {
-                exception.response = MulterExceptionFilterErrors.MaxCountExceeded
+                errorCode = MulterExceptionFilterErrors.MaxCountExceeded
             } else if (statusCode === 413 && response.message === 'File too large') {
-                exception.response = MulterExceptionFilterErrors.MaxSizeExceeded
+                errorCode = MulterExceptionFilterErrors.MaxSizeExceeded
             }
+
+            // exception.response은 private readonly 속성이라서 직접 수정하는 것이 좋은 방법은 아니다.
+            exception.response = { ...exception.response, ...errorCode }
         }
 
         throw exception
