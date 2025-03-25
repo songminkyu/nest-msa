@@ -19,9 +19,11 @@ import {
     CustomersServiceProxy,
     CustomerUpdateDto
 } from 'apps/cores'
-import { Assert, AuthTokenPayload } from 'common'
+import { Assert } from 'common'
 import { CustomerJwtAuthGuard, CustomerLocalAuthGuard, Public } from './guards'
 import { DefaultPaginationPipe } from './pipes'
+import { AuthRequest } from './types'
+
 
 @Controller('customers')
 @UseGuards(CustomerJwtAuthGuard)
@@ -58,7 +60,7 @@ export class CustomersController {
     @UseGuards(CustomerLocalAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    login(@Req() req: { user: AuthTokenPayload }) {
+    login(@Req() req: AuthRequest) {
         Assert.defined(req.user, 'req.user must be returned in LocalStrategy.validate')
 
         return this.service.login(req.user.userId, req.user.email)
