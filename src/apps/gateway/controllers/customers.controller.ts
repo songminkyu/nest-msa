@@ -36,7 +36,10 @@ export class CustomersController {
     }
 
     @Patch(':customerId')
-    async updateCustomer(@Param('customerId') customerId: string, @Body() updateDto: CustomerUpdateDto) {
+    async updateCustomer(
+        @Param('customerId') customerId: string,
+        @Body() updateDto: CustomerUpdateDto
+    ) {
         return this.customersService.updateCustomer(customerId, updateDto)
     }
 

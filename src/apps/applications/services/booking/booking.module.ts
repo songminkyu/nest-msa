@@ -4,7 +4,13 @@ import { BookingController } from './booking.controller'
 import { BookingService } from './booking.service'
 
 @Module({
-    providers: [BookingService, ShowtimesProxy, TheatersServiceProxy, TicketHoldingProxy, TicketsProxy],
+    providers: [
+        BookingService,
+        ShowtimesProxy,
+        TheatersServiceProxy,
+        TicketHoldingProxy,
+        TicketsProxy
+    ],
     controllers: [BookingController]
 })
 export class BookingModule {}
