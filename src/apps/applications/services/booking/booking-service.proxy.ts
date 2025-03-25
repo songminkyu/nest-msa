@@ -5,7 +5,7 @@ import { ClientProxyConfig, Messages } from 'shared'
 import { ShowtimeSalesStatusDto } from './dtos'
 
 @Injectable()
-export class BookingProxy {
+export class BookingServiceProxy {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}

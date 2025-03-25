@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import {
-    BookingProxy,
+    BookingServiceProxy,
     PurchaseProcessProxy,
     RecommendationProxy,
     ShowtimeCreationProxy
@@ -31,7 +31,7 @@ import { HealthModule, MulterConfigModule } from './modules'
         MoviesProxy,
         TheatersProxy,
         ShowtimeCreationProxy,
-        BookingProxy,
+        BookingServiceProxy,
         PurchasesProxy,
         RecommendationProxy,
         PurchaseProcessProxy
