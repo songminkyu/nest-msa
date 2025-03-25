@@ -5,7 +5,7 @@ import {
     RecommendationProxy,
     ShowtimeCreationProxy
 } from 'apps/applications'
-import { CustomersProxy, MoviesProxy, PurchasesProxy, TheatersProxy } from 'apps/cores'
+import { CustomersServiceProxy, MoviesProxy, PurchasesProxy, TheatersProxy } from 'apps/cores'
 import { StorageFilesProxy } from 'apps/infrastructures'
 import { CommonModule } from 'shared'
 import {
@@ -26,7 +26,7 @@ import { HealthModule, MulterConfigModule } from './modules'
     providers: [
         CustomerLocalStrategy,
         CustomerJwtStrategy,
-        CustomersProxy,
+        CustomersServiceProxy,
         StorageFilesProxy,
         MoviesProxy,
         TheatersProxy,
