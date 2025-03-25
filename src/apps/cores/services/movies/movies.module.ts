@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { StorageFilesProxy } from 'apps/infrastructures'
+import { StorageFilesServiceProxy } from 'apps/infrastructures'
 import { MongooseConfig } from 'shared'
 import { Movie, MovieSchema } from './models'
 import { MoviesController } from './movies.controller'
@@ -14,7 +14,7 @@ import { MoviesService } from './movies.service'
             MongooseConfig.connName
         )
     ],
-    providers: [MoviesService, MoviesRepository, StorageFilesProxy],
+    providers: [MoviesService, MoviesRepository, StorageFilesServiceProxy],
     controllers: [MoviesController]
 })
 export class MoviesModule {}

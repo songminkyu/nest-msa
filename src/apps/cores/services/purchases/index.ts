@@ -1,5 +1,5 @@
 export * from './dtos'
 export * from './models'
+export * from './purchases-service.proxy'
 export * from './purchases.module'
-export * from './purchases.proxy'
 export * from './purchases.service'

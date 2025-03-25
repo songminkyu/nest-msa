@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import { pickItems } from 'common'
 import {
     PurchaseCreateDto,
     PurchaseItemDto,
@@ -10,9 +9,10 @@ import {
     TicketsProxy,
     TicketStatus
 } from 'apps/cores'
+import { pickItems } from 'common'
 import { uniq } from 'lodash'
 import { checkHeldTickets, checkMaxTicketsForPurchase, checkPurchaseDeadline } from '../domain'
-import { PurchaseProcessProxy } from '../purchase-process.proxy'
+import { PurchaseProcessServiceProxy } from '../purchase-process-service.proxy'
 
 @Injectable()
 export class TicketPurchaseProcessor {
@@ -20,7 +20,7 @@ export class TicketPurchaseProcessor {
         private ticketsService: TicketsProxy,
         private showtimesService: ShowtimesProxy,
         private ticketHoldingService: TicketHoldingProxy,
-        private purchaseProcessProxy: PurchaseProcessProxy
+        private purchaseProcessProxy: PurchaseProcessServiceProxy
     ) {}
 
     async validatePurchase(createDto: PurchaseCreateDto) {

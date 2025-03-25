@@ -11,7 +11,7 @@ import {
     UseInterceptors
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
-import { StorageFilesProxy } from 'apps/infrastructures'
+import { StorageFilesServiceProxy } from 'apps/infrastructures'
 import { IsString } from 'class-validator'
 import { createReadStream } from 'fs'
 import { pick } from 'lodash'
@@ -25,7 +25,7 @@ class UploadFileDto {
 
 @Controller(Routes.Http.StorageFiles)
 export class StorageFilesController {
-    constructor(private service: StorageFilesProxy) {}
+    constructor(private storageFilesService: StorageFilesServiceProxy) {}
 
     @UseFilters(new MulterExceptionFilter())
     @UseInterceptors(FilesInterceptor('files'))
@@ -35,13 +35,13 @@ export class StorageFilesController {
             pick(file, 'originalname', 'mimetype', 'size', 'path')
         )
 
-        const storageFiles = await this.service.saveFiles(createDtos)
+        const storageFiles = await this.storageFilesService.saveFiles(createDtos)
         return { storageFiles }
     }
 
     @Get(':fileId')
     async downloadFile(@Param('fileId') fileId: string) {
-        const file = await this.service.getStorageFile(fileId)
+        const file = await this.storageFilesService.getStorageFile(fileId)
 
         const readStream = createReadStream(file.storedPath)
 
@@ -56,6 +56,6 @@ export class StorageFilesController {
 
     @Delete(':fileId')
     async deleteStorageFile(@Param('fileId') fileId: string) {
-        return this.service.deleteStorageFile(fileId)
+        return this.storageFilesService.deleteStorageFile(fileId)
     }
 }

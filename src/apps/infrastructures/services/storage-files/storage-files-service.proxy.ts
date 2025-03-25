@@ -4,7 +4,7 @@ import { ClientProxyConfig, Messages } from 'shared'
 import { StorageFileCreateDto, StorageFileDto } from './dtos'
 
 @Injectable()
-export class StorageFilesProxy {
+export class StorageFilesServiceProxy {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}

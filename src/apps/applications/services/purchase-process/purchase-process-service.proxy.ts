@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
-import { ClientProxyService, InjectClientProxy } from 'common'
 import { PurchaseCreateDto, PurchaseDto } from 'apps/cores'
+import { ClientProxyService, InjectClientProxy } from 'common'
 import { ClientProxyConfig, Messages } from 'shared'
 
 @Injectable()
-export class PurchaseProcessProxy {
+export class PurchaseProcessServiceProxy {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}
