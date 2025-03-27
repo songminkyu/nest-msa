@@ -4,7 +4,7 @@ import { Messages } from 'shared'
 
 @Injectable()
 export class TicketHoldingClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     holdTickets(args: {
         customerId: string
@@ -12,11 +12,11 @@ export class TicketHoldingClient {
         ticketIds: string[]
         ttlMs: number
     }): Promise<boolean> {
-        return this.service.getJson(Messages.TicketHolding.holdTickets, args)
+        return this.proxy.getJson(Messages.TicketHolding.holdTickets, args)
     }
 
     findHeldTicketIds(showtimeId: string, customerId: string): Promise<string[]> {
-        return this.service.getJson(Messages.TicketHolding.findHeldTicketIds, {
+        return this.proxy.getJson(Messages.TicketHolding.findHeldTicketIds, {
             showtimeId,
             customerId
         })

@@ -5,21 +5,21 @@ import { Messages } from 'shared'
 
 @Injectable()
 export class PurchaseProcessClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     processPurchase(createDto: PurchaseCreateDto): Promise<PurchaseDto> {
-        return this.service.getJson(Messages.PurchaseProcess.processPurchase, createDto)
+        return this.proxy.getJson(Messages.PurchaseProcess.processPurchase, createDto)
     }
 
     emitTicketPurchased(customerId: string, ticketIds: string[]) {
-        return this.service.emit(Messages.PurchaseProcess.TicketPurchased, {
+        return this.proxy.emit(Messages.PurchaseProcess.TicketPurchased, {
             customerId,
             ticketIds
         })
     }
 
     emitTicketPurchaseCanceled(customerId: string, ticketIds: string[]) {
-        return this.service.emit(Messages.PurchaseProcess.TicketPurchaseCanceled, {
+        return this.proxy.emit(Messages.PurchaseProcess.TicketPurchaseCanceled, {
             customerId,
             ticketIds
         })

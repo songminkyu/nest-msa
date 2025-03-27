@@ -5,9 +5,9 @@ import { WatchRecordDto, WatchRecordQueryDto } from './dtos'
 
 @Injectable()
 export class WatchRecordsClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     findWatchRecords(queryDto: WatchRecordQueryDto): Promise<PaginationResult<WatchRecordDto>> {
-        return this.service.getJson(Messages.WatchRecords.findWatchRecords, queryDto)
+        return this.proxy.getJson(Messages.WatchRecords.findWatchRecords, queryDto)
     }
 }

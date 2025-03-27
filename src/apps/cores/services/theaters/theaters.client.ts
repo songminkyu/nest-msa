@@ -5,33 +5,33 @@ import { TheaterCreateDto, TheaterDto, TheaterQueryDto, TheaterUpdateDto } from 
 
 @Injectable()
 export class TheatersClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     createTheater(createDto: TheaterCreateDto): Promise<TheaterDto> {
-        return this.service.getJson(Messages.Theaters.createTheater, createDto)
+        return this.proxy.getJson(Messages.Theaters.createTheater, createDto)
     }
 
     updateTheater(theaterId: string, updateDto: TheaterUpdateDto): Promise<TheaterDto> {
-        return this.service.getJson(Messages.Theaters.updateTheater, { theaterId, updateDto })
+        return this.proxy.getJson(Messages.Theaters.updateTheater, { theaterId, updateDto })
     }
 
     getTheater(theaterId: string): Promise<TheaterDto> {
-        return this.service.getJson(Messages.Theaters.getTheater, theaterId)
+        return this.proxy.getJson(Messages.Theaters.getTheater, theaterId)
     }
 
     deleteTheater(theaterId: string): Promise<boolean> {
-        return this.service.getJson(Messages.Theaters.deleteTheater, theaterId)
+        return this.proxy.getJson(Messages.Theaters.deleteTheater, theaterId)
     }
 
     findTheaters(queryDto: TheaterQueryDto): Promise<TheaterDto[]> {
-        return this.service.getJson(Messages.Theaters.findTheaters, queryDto)
+        return this.proxy.getJson(Messages.Theaters.findTheaters, queryDto)
     }
 
     getTheatersByIds(theaterIds: string[]): Promise<TheaterDto[]> {
-        return this.service.getJson(Messages.Theaters.getTheatersByIds, theaterIds)
+        return this.proxy.getJson(Messages.Theaters.getTheatersByIds, theaterIds)
     }
 
     theatersExist(theaterIds: string[]): Promise<boolean> {
-        return this.service.getJson(Messages.Theaters.theatersExist, theaterIds)
+        return this.proxy.getJson(Messages.Theaters.theatersExist, theaterIds)
     }
 }

@@ -5,29 +5,29 @@ import { ShowtimeCreateDto, ShowtimeDto, ShowtimeFilterDto } from './dtos'
 
 @Injectable()
 export class ShowtimesClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     createShowtimes(createDtos: ShowtimeCreateDto[]): Promise<{ success: true; count: number }> {
-        return this.service.getJson(Messages.Showtimes.createShowtimes, createDtos)
+        return this.proxy.getJson(Messages.Showtimes.createShowtimes, createDtos)
     }
 
     getShowtimes(showtimeIds: string[]): Promise<ShowtimeDto[]> {
-        return this.service.getJson(Messages.Showtimes.getShowtimes, showtimeIds)
+        return this.proxy.getJson(Messages.Showtimes.getShowtimes, showtimeIds)
     }
 
     findAllShowtimes(filterDto: ShowtimeFilterDto): Promise<ShowtimeDto[]> {
-        return this.service.getJson(Messages.Showtimes.findAllShowtimes, filterDto)
+        return this.proxy.getJson(Messages.Showtimes.findAllShowtimes, filterDto)
     }
 
     findShowingMovieIds(): Promise<string[]> {
-        return this.service.getJson(Messages.Showtimes.findShowingMovieIds, {})
+        return this.proxy.getJson(Messages.Showtimes.findShowingMovieIds, {})
     }
 
     findTheaterIdsByMovieId(movieId: string): Promise<string[]> {
-        return this.service.getJson(Messages.Showtimes.findTheaterIdsByMovieId, movieId)
+        return this.proxy.getJson(Messages.Showtimes.findTheaterIdsByMovieId, movieId)
     }
 
     findShowdates(args: { movieId: string; theaterId: string }): Promise<Date[]> {
-        return this.service.getJson(Messages.Showtimes.findShowdates, args)
+        return this.proxy.getJson(Messages.Showtimes.findShowdates, args)
     }
 }

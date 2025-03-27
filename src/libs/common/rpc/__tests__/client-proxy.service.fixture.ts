@@ -12,7 +12,7 @@ import {
 
 @Controller()
 class SendTestController {
-    constructor(@InjectClientProxy() private client: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     @MessagePattern(withTestId('method'))
     method() {
@@ -21,12 +21,12 @@ class SendTestController {
 
     @Get('observable')
     getObservable() {
-        return this.client.send(withTestId('method'), {})
+        return this.proxy.send(withTestId('method'), {})
     }
 
     @Get('value')
     getValue() {
-        return this.client.getJson(withTestId('method'), {})
+        return this.proxy.getJson(withTestId('method'), {})
     }
 }
 

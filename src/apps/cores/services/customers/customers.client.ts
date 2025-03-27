@@ -5,37 +5,37 @@ import { CustomerCreateDto, CustomerDto, CustomerQueryDto, CustomerUpdateDto } f
 
 @Injectable()
 export class CustomersClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     async createCustomer(createDto: CustomerCreateDto): Promise<CustomerDto> {
-        return this.service.getJson<CustomerDto>(Messages.Customers.createCustomer, createDto)
+        return this.proxy.getJson<CustomerDto>(Messages.Customers.createCustomer, createDto)
     }
 
     updateCustomer(customerId: string, updateDto: CustomerUpdateDto): Promise<CustomerDto> {
-        return this.service.getJson(Messages.Customers.updateCustomer, { customerId, updateDto })
+        return this.proxy.getJson(Messages.Customers.updateCustomer, { customerId, updateDto })
     }
 
     getCustomer(customerId: string): Promise<CustomerDto> {
-        return this.service.getJson(Messages.Customers.getCustomer, customerId)
+        return this.proxy.getJson(Messages.Customers.getCustomer, customerId)
     }
 
     deleteCustomer(customerId: string): Promise<boolean> {
-        return this.service.getJson(Messages.Customers.deleteCustomer, customerId)
+        return this.proxy.getJson(Messages.Customers.deleteCustomer, customerId)
     }
 
     findCustomers(queryDto: CustomerQueryDto): Promise<CustomerDto[]> {
-        return this.service.getJson(Messages.Customers.findCustomers, queryDto)
+        return this.proxy.getJson(Messages.Customers.findCustomers, queryDto)
     }
 
     login(userId: string, email: string): Promise<JwtAuthTokens> {
-        return this.service.getJson(Messages.Customers.login, { userId, email })
+        return this.proxy.getJson(Messages.Customers.login, { userId, email })
     }
 
     refreshAuthTokens(refreshToken: string): Promise<JwtAuthTokens> {
-        return this.service.getJson(Messages.Customers.refreshAuthTokens, refreshToken)
+        return this.proxy.getJson(Messages.Customers.refreshAuthTokens, refreshToken)
     }
 
     authenticateCustomer(email: string, password: string): Promise<string | null> {
-        return this.service.getJson(Messages.Customers.authenticateCustomer, { email, password })
+        return this.proxy.getJson(Messages.Customers.authenticateCustomer, { email, password })
     }
 }

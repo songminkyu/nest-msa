@@ -6,14 +6,14 @@ import { ShowtimeSalesStatusDto } from './dtos'
 
 @Injectable()
 export class BookingClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     findShowingTheaters(args: { movieId: string; latlong: LatLong }): Promise<TheaterDto[]> {
-        return this.service.getJson(Messages.Booking.findShowingTheaters, args)
+        return this.proxy.getJson(Messages.Booking.findShowingTheaters, args)
     }
 
     findShowdates(args: { movieId: string; theaterId: string }): Promise<Date[]> {
-        return this.service.getJson(Messages.Booking.findShowdates, args)
+        return this.proxy.getJson(Messages.Booking.findShowdates, args)
     }
 
     findShowtimes(args: {
@@ -21,16 +21,16 @@ export class BookingClient {
         theaterId: string
         showdate: Date
     }): Promise<ShowtimeSalesStatusDto[]> {
-        return this.service.getJson(Messages.Booking.findShowtimes, args)
+        return this.proxy.getJson(Messages.Booking.findShowtimes, args)
     }
 
     getAvailableTickets(showtimeId: string): Promise<TicketDto[]> {
-        return this.service.getJson(Messages.Booking.getAvailableTickets, showtimeId)
+        return this.proxy.getJson(Messages.Booking.getAvailableTickets, showtimeId)
     }
 
     holdTickets(args: { customerId: string; showtimeId: string; ticketIds: string[] }): Promise<{
         heldTicketIds: string[]
     }> {
-        return this.service.getJson(Messages.Booking.holdTickets, args)
+        return this.proxy.getJson(Messages.Booking.holdTickets, args)
     }
 }

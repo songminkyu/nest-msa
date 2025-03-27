@@ -5,9 +5,9 @@ import { PaymentCreateDto, PaymentDto } from './dtos'
 
 @Injectable()
 export class PaymentsClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     processPayment(createDto: PaymentCreateDto): Promise<PaymentDto> {
-        return this.service.getJson(Messages.Payments.processPayment, createDto)
+        return this.proxy.getJson(Messages.Payments.processPayment, createDto)
     }
 }

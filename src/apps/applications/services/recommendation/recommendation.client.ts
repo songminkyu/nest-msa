@@ -5,9 +5,9 @@ import { Messages } from 'shared'
 
 @Injectable()
 export class RecommendationClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     findRecommendedMovies(customerId: string | null): Promise<MovieDto[]> {
-        return this.service.getJson(Messages.Recommendation.findRecommendedMovies, customerId)
+        return this.proxy.getJson(Messages.Recommendation.findRecommendedMovies, customerId)
     }
 }

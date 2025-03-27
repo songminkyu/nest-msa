@@ -6,36 +6,36 @@ import { MovieCreateDto, MovieDto, MovieQueryDto, MovieUpdateDto } from './dtos'
 
 @Injectable()
 export class MoviesClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     createMovie(
         movieCreateDto: MovieCreateDto,
         fileCreateDtos: StorageFileCreateDto[]
     ): Promise<MovieDto> {
-        return this.service.getJson(Messages.Movies.createMovie, { movieCreateDto, fileCreateDtos })
+        return this.proxy.getJson(Messages.Movies.createMovie, { movieCreateDto, fileCreateDtos })
     }
 
     updateMovie(movieId: string, updateDto: MovieUpdateDto): Promise<MovieDto> {
-        return this.service.getJson(Messages.Movies.updateMovie, { movieId, updateDto })
+        return this.proxy.getJson(Messages.Movies.updateMovie, { movieId, updateDto })
     }
 
     getMovie(movieId: string): Promise<MovieDto> {
-        return this.service.getJson(Messages.Movies.getMovie, movieId)
+        return this.proxy.getJson(Messages.Movies.getMovie, movieId)
     }
 
     deleteMovie(movieId: string): Promise<boolean> {
-        return this.service.getJson(Messages.Movies.deleteMovie, movieId)
+        return this.proxy.getJson(Messages.Movies.deleteMovie, movieId)
     }
 
     findMovies(queryDto: MovieQueryDto): Promise<MovieDto[]> {
-        return this.service.getJson(Messages.Movies.findMovies, queryDto)
+        return this.proxy.getJson(Messages.Movies.findMovies, queryDto)
     }
 
     getMoviesByIds(movieIds: string[]): Promise<MovieDto[]> {
-        return this.service.getJson(Messages.Movies.getMoviesByIds, movieIds)
+        return this.proxy.getJson(Messages.Movies.getMoviesByIds, movieIds)
     }
 
     moviesExist(movieIds: string[]): Promise<boolean> {
-        return this.service.getJson(Messages.Movies.moviesExist, movieIds)
+        return this.proxy.getJson(Messages.Movies.moviesExist, movieIds)
     }
 }

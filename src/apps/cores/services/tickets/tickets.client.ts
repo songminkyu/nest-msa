@@ -6,25 +6,25 @@ import { TicketStatus } from './models'
 
 @Injectable()
 export class TicketsClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     createTickets(createDtos: TicketCreateDto[]): Promise<{ success: boolean; count: number }> {
-        return this.service.getJson(Messages.Tickets.createTickets, createDtos)
+        return this.proxy.getJson(Messages.Tickets.createTickets, createDtos)
     }
 
     updateTicketStatus(ticketIds: string[], status: TicketStatus): Promise<TicketDto[]> {
-        return this.service.getJson(Messages.Tickets.updateTicketStatus, { ticketIds, status })
+        return this.proxy.getJson(Messages.Tickets.updateTicketStatus, { ticketIds, status })
     }
 
     findAllTickets(filterDto: TicketFilterDto): Promise<TicketDto[]> {
-        return this.service.getJson(Messages.Tickets.findAllTickets, filterDto)
+        return this.proxy.getJson(Messages.Tickets.findAllTickets, filterDto)
     }
 
     getSalesStatuses(ticketIds: string[]): Promise<SalesStatusByShowtimeDto[]> {
-        return this.service.getJson(Messages.Tickets.getSalesStatuses, ticketIds)
+        return this.proxy.getJson(Messages.Tickets.getSalesStatuses, ticketIds)
     }
 
     getTickets(ticketIds: string[]): Promise<TicketDto[]> {
-        return this.service.getJson(Messages.Tickets.getTickets, ticketIds)
+        return this.proxy.getJson(Messages.Tickets.getTickets, ticketIds)
     }
 }

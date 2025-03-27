@@ -5,17 +5,17 @@ import { StorageFileCreateDto, StorageFileDto } from './dtos'
 
 @Injectable()
 export class StorageFilesClient {
-    constructor(@InjectClientProxy() private service: ClientProxyService) {}
+    constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     saveFiles(createDtos: StorageFileCreateDto[]): Promise<StorageFileDto[]> {
-        return this.service.getJson(Messages.StorageFiles.saveFiles, createDtos)
+        return this.proxy.getJson(Messages.StorageFiles.saveFiles, createDtos)
     }
 
     getStorageFile(fileId: string): Promise<StorageFileDto> {
-        return this.service.getJson(Messages.StorageFiles.getStorageFile, fileId)
+        return this.proxy.getJson(Messages.StorageFiles.getStorageFile, fileId)
     }
 
     deleteStorageFiles(fileIds: string[]): Promise<boolean> {
-        return this.service.getJson(Messages.StorageFiles.deleteStorageFiles, fileIds)
+        return this.proxy.getJson(Messages.StorageFiles.deleteStorageFiles, fileIds)
     }
 }
