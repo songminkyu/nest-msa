@@ -1,6 +1,7 @@
-import { padNumber } from 'common'
+import { padNumber, Path } from 'common'
 import { MovieDto, MovieGenre, MovieRating, MoviesService } from 'apps/cores'
 import { createAllTestContexts, AllTestContexts } from './utils'
+import { createDummyFile } from 'testlib'
 
 export interface Fixture {
     testContext: AllTestContexts
@@ -37,8 +38,21 @@ export const createMovieDto = (overrides = {}) => {
 }
 
 export const createMovie = async (moviesService: MoviesService, override = {}) => {
+    // TODO create temp 급하게 넣었다. 재검토해라
+    const tempDir = await Path.createTempDirectory()
+    const fileSize = 1024
+    const filePath = Path.join(tempDir, 'image.png')
+    await createDummyFile(filePath, fileSize)
+
     const { createDto } = createMovieDto(override)
-    const movie = await moviesService.createMovie(createDto, [])
+    const movie = await moviesService.createMovie(createDto, [
+        {
+            originalname: 'image.png',
+            mimetype: 'image/png',
+            size: fileSize,
+            path: filePath
+        }
+    ])
     return movie
 }
 

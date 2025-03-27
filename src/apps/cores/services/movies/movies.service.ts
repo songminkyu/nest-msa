@@ -36,7 +36,7 @@ export class MoviesService {
             await movie.deleteOne({ session })
 
             const fileIds = movie.imageFileIds.map((id) => id.toString())
-            console.log(fileIds)
+
             await this.storageFilesService.deleteStorageFiles(fileIds)
 
             return true
