@@ -23,7 +23,8 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
          * 이 문제는 주로 단위 테스트 환경에서 빈번한 초기화로 인해 발생한다.
          * https://mongoosejs.com/docs/api/model.html#Model.createCollection()
          */
-        await this.model.init()
+        await this.model.createCollection()
+        await this.model.createIndexes()
     }
 
     newDocument(): HydratedDocument<Doc> {
