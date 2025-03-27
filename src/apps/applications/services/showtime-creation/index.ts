@@ -1,5 +1,5 @@
 export * from './dtos'
 export * from './services'
-export * from './showtime-creation-service.proxy'
+export * from './showtime-creation.client'
 export * from './showtime-creation.module'
 export * from './showtime-creation.service'

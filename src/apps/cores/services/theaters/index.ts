@@ -1,5 +1,5 @@
 export * from './dtos'
 export * from './models'
-export * from './theaters-service.proxy'
+export * from './theaters.client'
 export * from './theaters.module'
 export * from './theaters.service'

@@ -1,4 +1,4 @@
-export * from './customers-service.proxy'
+export * from './customers.client'
 export * from './customers.module'
 export * from './customers.service'
 export * from './dtos'

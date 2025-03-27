@@ -7,7 +7,7 @@ import {
     ShowtimeDto,
     ShowtimesProxy,
     TheaterDto,
-    TheatersServiceProxy,
+    TheatersProxy,
     TicketsProxy,
     TicketStatus
 } from 'apps/cores'
@@ -20,7 +20,7 @@ import { ShowtimeBatchCreateJobData } from './types'
 @Processor('showtime-creation')
 export class ShowtimeCreationWorkerService extends WorkerHost {
     constructor(
-        private theatersService: TheatersServiceProxy,
+        private theatersService: TheatersProxy,
         private showtimesService: ShowtimesProxy,
         private ticketsService: TicketsProxy,
         private validatorService: ShowtimeCreationValidatorService,

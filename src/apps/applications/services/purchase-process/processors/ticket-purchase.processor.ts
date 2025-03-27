@@ -12,7 +12,7 @@ import {
 import { pickItems } from 'common'
 import { uniq } from 'lodash'
 import { checkHeldTickets, checkMaxTicketsForPurchase, checkPurchaseDeadline } from '../domain'
-import { PurchaseProcessServiceProxy } from '../purchase-process-service.proxy'
+import { PurchaseProcessProxy } from '../purchase-process.client'
 
 @Injectable()
 export class TicketPurchaseProcessor {
@@ -20,7 +20,7 @@ export class TicketPurchaseProcessor {
         private ticketsService: TicketsProxy,
         private showtimesService: ShowtimesProxy,
         private ticketHoldingService: TicketHoldingProxy,
-        private purchaseProcessProxy: PurchaseProcessServiceProxy
+        private purchaseProcessProxy: PurchaseProcessProxy
     ) {}
 
     async validatePurchase(createDto: PurchaseCreateDto) {

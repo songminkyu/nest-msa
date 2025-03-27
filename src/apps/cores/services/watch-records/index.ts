@@ -1,5 +1,5 @@
 export * from './dtos'
 export * from './models'
+export * from './watch-records.client'
 export * from './watch-records.module'
-export * from './watch-records.proxy'
 export * from './watch-records.service'

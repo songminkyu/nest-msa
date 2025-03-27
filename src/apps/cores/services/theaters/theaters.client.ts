@@ -4,7 +4,7 @@ import { ClientProxyConfig, Messages } from 'shared'
 import { TheaterCreateDto, TheaterDto, TheaterQueryDto, TheaterUpdateDto } from './dtos'
 
 @Injectable()
-export class TheatersServiceProxy {
+export class TheatersProxy {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}

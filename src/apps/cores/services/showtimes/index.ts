@@ -1,5 +1,5 @@
 export * from './dtos'
 export * from './models'
 export * from './showtimes.module'
-export * from './showtimes.proxy'
+export * from './showtimes.client'
 export * from './showtimes.service'

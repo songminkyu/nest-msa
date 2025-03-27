@@ -12,7 +12,7 @@ import {
     UsePipes
 } from '@nestjs/common'
 import { EventPattern } from '@nestjs/microservices'
-import { ShowtimeBatchCreateDto, ShowtimeCreationServiceProxy } from 'apps/applications'
+import { ShowtimeBatchCreateDto, ShowtimeCreationProxy } from 'apps/applications'
 import { PaginationOptionDto } from 'common'
 import { Observable, Subject } from 'rxjs'
 import { Events } from 'shared'
@@ -22,7 +22,7 @@ import { DefaultPaginationPipe } from './pipes'
 export class ShowtimeCreationController implements OnModuleDestroy {
     private sseEventSubject = new Subject<MessageEvent>()
 
-    constructor(private showtimeCreationService: ShowtimeCreationServiceProxy) {}
+    constructor(private showtimeCreationService: ShowtimeCreationProxy) {}
 
     onModuleDestroy() {
         this.sseEventSubject.complete()

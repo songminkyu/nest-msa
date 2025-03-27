@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { LatLong, pickIds } from 'common'
-import { ShowtimesProxy, TheatersServiceProxy, TicketHoldingProxy, TicketsProxy } from 'apps/cores'
+import { ShowtimesProxy, TheatersProxy, TicketHoldingProxy, TicketsProxy } from 'apps/cores'
 import { generateShowtimesWithSalesStatus, sortTheatersByDistance } from './booking.utils'
 import { ShowtimeSalesStatusDto } from './dtos'
 
@@ -8,7 +8,7 @@ import { ShowtimeSalesStatusDto } from './dtos'
 export class BookingService {
     constructor(
         private showtimesService: ShowtimesProxy,
-        private theatersService: TheatersServiceProxy,
+        private theatersService: TheatersProxy,
         private ticketHoldingService: TicketHoldingProxy,
         private ticketsService: TicketsProxy
     ) {}

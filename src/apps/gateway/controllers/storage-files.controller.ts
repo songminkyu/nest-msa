@@ -11,7 +11,7 @@ import {
     UseInterceptors
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
-import { StorageFilesServiceProxy } from 'apps/infrastructures'
+import { StorageFilesClient } from 'apps/infrastructures'
 import { IsString } from 'class-validator'
 import { createReadStream } from 'fs'
 import { pick } from 'lodash'
@@ -25,7 +25,7 @@ class UploadFileDto {
 
 @Controller(Routes.Http.StorageFiles)
 export class StorageFilesController {
-    constructor(private storageFilesService: StorageFilesServiceProxy) {}
+    constructor(private storageFilesService: StorageFilesClient) {}
 
     @UseFilters(new MulterExceptionFilter())
     @UseInterceptors(FilesInterceptor('files'))

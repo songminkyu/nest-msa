@@ -1,5 +1,5 @@
 export * from './dtos'
 export * from './models'
-export * from './movies-service.proxy'
+export * from './movies.client'
 export * from './movies.module'
 export * from './movies.service'

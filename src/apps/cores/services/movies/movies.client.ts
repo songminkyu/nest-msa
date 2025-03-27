@@ -5,7 +5,7 @@ import { ClientProxyConfig, Messages } from 'shared'
 import { MovieCreateDto, MovieDto, MovieQueryDto, MovieUpdateDto } from './dtos'
 
 @Injectable()
-export class MoviesServiceProxy {
+export class MoviesProxy {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}

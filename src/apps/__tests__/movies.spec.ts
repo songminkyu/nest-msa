@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
 import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
-import { pickIds } from 'common'
+import { Path, pickIds } from 'common'
 import { expectEqualUnsorted, HttpTestClient, nullObjectId, objectToFields } from 'testlib'
 import { closeFixture, createMovie, createMovieDto, createMovies, Fixture } from './movies.fixture'
 import { Errors } from './utils'
@@ -89,10 +89,11 @@ describe('/movies', () => {
             await client.delete(`/movies/${movie.id}`).ok()
 
             const fileUrl = movie.images[0]
+            const fileId = Path.basename(fileUrl)
 
             await client
                 .get(fileUrl)
-                .notFound({ ...Errors.Mongoose.DocumentNotFound, notFoundId: movie.id })
+                .notFound({ ...Errors.Mongoose.DocumentNotFound, notFoundId: fileId })
         })
 
         it('영화가 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {

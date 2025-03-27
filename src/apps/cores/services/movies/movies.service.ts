@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { mapDocToDto, pickIds } from 'common'
-import { StorageFileCreateDto, StorageFilesServiceProxy } from 'apps/infrastructures'
+import { StorageFileCreateDto, StorageFilesClient } from 'apps/infrastructures'
 import { Routes } from 'shared'
 import { MovieCreateDto, MovieDto, MovieQueryDto, MovieUpdateDto } from './dtos'
 import { MovieDocument } from './models'
@@ -10,7 +10,7 @@ import { MoviesRepository } from './movies.repository'
 export class MoviesService {
     constructor(
         private repository: MoviesRepository,
-        private storageFilesService: StorageFilesServiceProxy
+        private storageFilesService: StorageFilesClient
     ) {}
 
     async createMovie(movieCreateDto: MovieCreateDto, fileCreateDtos: StorageFileCreateDto[]) {

@@ -15,8 +15,8 @@ import {
     UsePipes
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
-import { RecommendationServiceProxy } from 'apps/applications'
-import { MovieCreateDto, MovieQueryDto, MoviesServiceProxy, MovieUpdateDto } from 'apps/cores'
+import { RecommendationProxy } from 'apps/applications'
+import { MovieCreateDto, MovieQueryDto, MoviesProxy, MovieUpdateDto } from 'apps/cores'
 import { pick } from 'lodash'
 import { MulterExceptionFilter } from './filters'
 import { CustomerOptionalJwtAuthGuard } from './guards'
@@ -26,8 +26,8 @@ import { AuthRequest } from './types'
 @Controller('movies')
 export class MoviesController {
     constructor(
-        private moviesService: MoviesServiceProxy,
-        private recommendationService: RecommendationServiceProxy
+        private moviesService: MoviesProxy,
+        private recommendationService: RecommendationProxy
     ) {}
 
     @UseFilters(new MulterExceptionFilter())

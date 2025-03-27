@@ -16,7 +16,7 @@ import {
 import {
     CustomerCreateDto,
     CustomerQueryDto,
-    CustomersServiceProxy,
+    CustomersProxy,
     CustomerUpdateDto
 } from 'apps/cores'
 import { Assert } from 'common'
@@ -27,7 +27,7 @@ import { AuthRequest } from './types'
 @Controller('customers')
 @UseGuards(CustomerJwtAuthGuard)
 export class CustomersController {
-    constructor(private customersService: CustomersServiceProxy) {}
+    constructor(private customersService: CustomersProxy) {}
 
     @Public()
     @Post()

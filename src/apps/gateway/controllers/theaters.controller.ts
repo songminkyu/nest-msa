@@ -2,14 +2,14 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes } fr
 import {
     TheaterCreateDto,
     TheaterQueryDto,
-    TheatersServiceProxy,
+    TheatersProxy,
     TheaterUpdateDto
 } from 'apps/cores'
 import { DefaultPaginationPipe } from './pipes'
 
 @Controller('theaters')
 export class TheatersController {
-    constructor(private theatersService: TheatersServiceProxy) {}
+    constructor(private theatersService: TheatersProxy) {}
 
     @Post()
     async createTheater(@Body() createDto: TheaterCreateDto) {

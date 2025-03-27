@@ -4,7 +4,7 @@ import { ClientProxyService, InjectClientProxy } from 'common'
 import { ClientProxyConfig, Messages } from 'shared'
 
 @Injectable()
-export class RecommendationServiceProxy {
+export class RecommendationProxy {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}

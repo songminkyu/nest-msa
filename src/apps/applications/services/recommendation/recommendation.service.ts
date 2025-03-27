@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { OrderDirection } from 'common'
-import { MovieDto, MoviesServiceProxy, ShowtimesProxy, WatchRecordsProxy } from 'apps/cores'
+import { MovieDto, MoviesProxy, ShowtimesProxy, WatchRecordsProxy } from 'apps/cores'
 import { generateRecommendedMovies } from './recommendation.utils'
 
 @Injectable()
 export class RecommendationService {
     constructor(
         private showtimesService: ShowtimesProxy,
-        private moviesService: MoviesServiceProxy,
+        private moviesService: MoviesProxy,
         private watchRecordsService: WatchRecordsProxy
     ) {}
 

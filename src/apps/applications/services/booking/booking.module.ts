@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ShowtimesProxy, TheatersServiceProxy, TicketHoldingProxy, TicketsProxy } from 'apps/cores'
+import { ShowtimesProxy, TheatersProxy, TicketHoldingProxy, TicketsProxy } from 'apps/cores'
 import { BookingController } from './booking.controller'
 import { BookingService } from './booking.service'
 
@@ -7,7 +7,7 @@ import { BookingService } from './booking.service'
     providers: [
         BookingService,
         ShowtimesProxy,
-        TheatersServiceProxy,
+        TheatersProxy,
         TicketHoldingProxy,
         TicketsProxy
     ],
