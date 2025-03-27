@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
-import { PurchaseProcessProxy } from 'apps/applications'
-import { PurchaseCreateDto, PurchasesProxy } from 'apps/cores'
+import { PurchaseProcessClient } from 'apps/applications'
+import { PurchaseCreateDto, PurchasesClient } from 'apps/cores'
 
 @Controller('purchases')
 export class PurchasesController {
     constructor(
-        private purchasesService: PurchasesProxy,
-        private purchaseProcessService: PurchaseProcessProxy
+        private purchasesService: PurchasesClient,
+        private purchaseProcessService: PurchaseProcessClient
     ) {}
 
     @Post()

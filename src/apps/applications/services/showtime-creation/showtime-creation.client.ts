@@ -5,7 +5,7 @@ import { ClientProxyConfig, Messages } from 'shared'
 import { ShowtimeBatchCreateDto, ShowtimeBatchCreateResponse } from './dtos'
 
 @Injectable()
-export class ShowtimeCreationProxy {
+export class ShowtimeCreationClient {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}

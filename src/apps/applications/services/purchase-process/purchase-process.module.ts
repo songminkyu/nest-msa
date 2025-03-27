@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
-import { PurchasesProxy, ShowtimesProxy, TicketHoldingProxy, TicketsProxy } from 'apps/cores'
+import { PurchasesClient, ShowtimesClient, TicketHoldingClient, TicketsClient } from 'apps/cores'
 import { TicketPurchaseProcessor } from './processors'
-import { PurchaseProcessProxy } from './purchase-process.client'
+import { PurchaseProcessClient } from './purchase-process.client'
 import { PurchaseProcessController } from './purchase-process.controller'
 import { PurchaseProcessService } from './purchase-process.service'
 
@@ -9,11 +9,11 @@ import { PurchaseProcessService } from './purchase-process.service'
     providers: [
         PurchaseProcessService,
         TicketPurchaseProcessor,
-        PurchaseProcessProxy,
-        TicketsProxy,
-        TicketHoldingProxy,
-        PurchasesProxy,
-        ShowtimesProxy
+        PurchaseProcessClient,
+        TicketsClient,
+        TicketHoldingClient,
+        PurchasesClient,
+        ShowtimesClient
     ],
     controllers: [PurchaseProcessController]
 })

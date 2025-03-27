@@ -4,7 +4,7 @@ import { ClientProxyConfig, Messages } from 'shared'
 import { WatchRecordDto, WatchRecordQueryDto } from './dtos'
 
 @Injectable()
-export class WatchRecordsProxy {
+export class WatchRecordsClient {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}

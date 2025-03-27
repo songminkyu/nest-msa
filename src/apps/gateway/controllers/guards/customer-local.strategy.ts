@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
-import { CustomersProxy } from 'apps/cores'
+import { CustomersClient } from 'apps/cores'
 import { AuthTokenPayload } from 'common'
 import { Strategy } from 'passport-local'
 
 @Injectable()
 export class CustomerLocalStrategy extends PassportStrategy(Strategy, 'customer-local') {
-    constructor(private customersService: CustomersProxy) {
+    constructor(private customersService: CustomersClient) {
         super({
             usernameField: 'email',
             passwordField: 'password'

@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { newObjectId, PaginationOptionDto } from 'common'
-import { MoviesProxy, ShowtimesProxy, TheatersProxy } from 'apps/cores'
+import { MoviesClient, ShowtimesClient, TheatersClient } from 'apps/cores'
 import { ShowtimeBatchCreateDto, ShowtimeBatchCreateResponse } from './dtos'
 import { ShowtimeCreationWorkerService } from './services'
 
 @Injectable()
 export class ShowtimeCreationService {
     constructor(
-        private theatersService: TheatersProxy,
-        private moviesService: MoviesProxy,
-        private showtimesService: ShowtimesProxy,
+        private theatersService: TheatersClient,
+        private moviesService: MoviesClient,
+        private showtimesService: ShowtimesClient,
         private batchCreationService: ShowtimeCreationWorkerService
     ) {}
 

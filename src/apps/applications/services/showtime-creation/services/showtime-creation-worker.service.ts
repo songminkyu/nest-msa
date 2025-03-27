@@ -5,10 +5,10 @@ import { ClientProxyService, DateUtil, InjectClientProxy, jsonToObject, MethodLo
 import {
     Seatmap,
     ShowtimeDto,
-    ShowtimesProxy,
+    ShowtimesClient,
     TheaterDto,
-    TheatersProxy,
-    TicketsProxy,
+    TheatersClient,
+    TicketsClient,
     TicketStatus
 } from 'apps/cores'
 import { ClientProxyConfig, Events } from 'shared'
@@ -20,9 +20,9 @@ import { ShowtimeBatchCreateJobData } from './types'
 @Processor('showtime-creation')
 export class ShowtimeCreationWorkerService extends WorkerHost {
     constructor(
-        private theatersService: TheatersProxy,
-        private showtimesService: ShowtimesProxy,
-        private ticketsService: TicketsProxy,
+        private theatersService: TheatersClient,
+        private showtimesService: ShowtimesClient,
+        private ticketsService: TicketsClient,
         private validatorService: ShowtimeCreationValidatorService,
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService,
         @InjectQueue('showtime-creation') private queue: Queue

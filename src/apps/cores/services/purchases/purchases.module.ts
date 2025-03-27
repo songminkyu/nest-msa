@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { PaymentsProxy } from 'apps/infrastructures'
+import { PaymentsClient } from 'apps/infrastructures'
 import { MongooseConfig } from 'shared'
 import { Purchase, PurchaseSchema } from './models'
 import { PurchasesController } from './purchases.controller'
@@ -14,7 +14,7 @@ import { PurchasesService } from './purchases.service'
             MongooseConfig.connName
         )
     ],
-    providers: [PurchasesService, PurchasesRepository, PaymentsProxy],
+    providers: [PurchasesService, PurchasesRepository, PaymentsClient],
     controllers: [PurchasesController]
 })
 export class PurchasesModule {}

@@ -4,23 +4,23 @@ import {
     PurchaseItemDto,
     PurchaseItemType,
     ShowtimeDto,
-    ShowtimesProxy,
-    TicketHoldingProxy,
-    TicketsProxy,
+    ShowtimesClient,
+    TicketHoldingClient,
+    TicketsClient,
     TicketStatus
 } from 'apps/cores'
 import { pickItems } from 'common'
 import { uniq } from 'lodash'
 import { checkHeldTickets, checkMaxTicketsForPurchase, checkPurchaseDeadline } from '../domain'
-import { PurchaseProcessProxy } from '../purchase-process.client'
+import { PurchaseProcessClient } from '../purchase-process.client'
 
 @Injectable()
 export class TicketPurchaseProcessor {
     constructor(
-        private ticketsService: TicketsProxy,
-        private showtimesService: ShowtimesProxy,
-        private ticketHoldingService: TicketHoldingProxy,
-        private purchaseProcessProxy: PurchaseProcessProxy
+        private ticketsService: TicketsClient,
+        private showtimesService: ShowtimesClient,
+        private ticketHoldingService: TicketHoldingClient,
+        private purchaseProcessProxy: PurchaseProcessClient
     ) {}
 
     async validatePurchase(createDto: PurchaseCreateDto) {

@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common'
-import { ClientProxyService, InjectClientProxy } from 'common'
-import { ClientProxyConfig, Messages } from 'shared'
-import { ShowtimeCreateDto, ShowtimeDto, ShowtimeFilterDto } from './dtos'
+import { Injectable } from '@nestjs/common';
+import { ClientProxyService, InjectClientProxy } from 'common';
+import { ClientProxyConfig, Messages } from 'shared';
+import { ShowtimeCreateDto, ShowtimeDto, ShowtimeFilterDto } from './dtos';
 
 @Injectable()
-export class ShowtimesProxy {
+export class ShowtimesClient {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}

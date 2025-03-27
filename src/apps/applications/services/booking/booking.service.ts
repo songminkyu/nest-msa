@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { LatLong, pickIds } from 'common'
-import { ShowtimesProxy, TheatersProxy, TicketHoldingProxy, TicketsProxy } from 'apps/cores'
+import { ShowtimesClient, TheatersClient, TicketHoldingClient, TicketsClient } from 'apps/cores'
 import { generateShowtimesWithSalesStatus, sortTheatersByDistance } from './booking.utils'
 import { ShowtimeSalesStatusDto } from './dtos'
 
 @Injectable()
 export class BookingService {
     constructor(
-        private showtimesService: ShowtimesProxy,
-        private theatersService: TheatersProxy,
-        private ticketHoldingService: TicketHoldingProxy,
-        private ticketsService: TicketsProxy
+        private showtimesService: ShowtimesClient,
+        private theatersService: TheatersClient,
+        private ticketHoldingService: TicketHoldingClient,
+        private ticketsService: TicketsClient
     ) {}
 
     async findShowingTheaters(args: { movieId: string; latlong: LatLong }) {

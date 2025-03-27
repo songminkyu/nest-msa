@@ -4,7 +4,7 @@ import { ClientProxyConfig, Messages } from 'shared'
 import { PaymentCreateDto, PaymentDto } from './dtos'
 
 @Injectable()
-export class PaymentsProxy {
+export class PaymentsClient {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}

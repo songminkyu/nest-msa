@@ -5,7 +5,7 @@ import { SalesStatusByShowtimeDto, TicketCreateDto, TicketDto, TicketFilterDto }
 import { TicketStatus } from './models'
 
 @Injectable()
-export class TicketsProxy {
+export class TicketsClient {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}

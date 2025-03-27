@@ -3,7 +3,7 @@ import { ClientProxyService, InjectClientProxy } from 'common'
 import { ClientProxyConfig, Messages } from 'shared'
 
 @Injectable()
-export class TicketHoldingProxy {
+export class TicketHoldingClient {
     constructor(
         @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
     ) {}

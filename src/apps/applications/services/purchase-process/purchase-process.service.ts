@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { PurchaseCreateDto, PurchasesProxy } from 'apps/cores'
+import { PurchaseCreateDto, PurchasesClient } from 'apps/cores'
 import { TicketPurchaseProcessor } from './processors'
 
 @Injectable()
 export class PurchaseProcessService {
     constructor(
-        private purchasesService: PurchasesProxy,
+        private purchasesService: PurchasesClient,
         private ticketProcessor: TicketPurchaseProcessor
     ) {}
 
