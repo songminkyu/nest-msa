@@ -1,4 +1,3 @@
-import { DateUtil } from 'common'
 import {
     CustomersService,
     MovieDto,
@@ -11,6 +10,7 @@ import {
     TicketsService,
     TicketStatus
 } from 'apps/cores'
+import { DateUtil } from 'common'
 import { nullObjectId } from 'testlib'
 import { createCustomerAndLogin } from './customers-auth.fixture'
 import { createMovie } from './movies.fixture'
@@ -80,10 +80,10 @@ const createAllTickets = async (
     theaters: TheaterDto[],
     showtimes: ShowtimeDto[]
 ) => {
-    const theatersMap = new Map(theaters.map((theater) => [theater.id, theater]))
+    const theatersById = new Map(theaters.map((theater) => [theater.id, theater]))
 
     const createDtos = showtimes.flatMap((showtime) => {
-        const theater = theatersMap.get(showtime.theaterId)!
+        const theater = theatersById.get(showtime.theaterId)!
 
         return Seatmap.getAllSeats(theater.seatmap).map((seat) => ({
             batchId: nullObjectId,

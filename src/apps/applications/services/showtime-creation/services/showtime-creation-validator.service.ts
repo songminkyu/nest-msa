@@ -71,7 +71,7 @@ export class ShowtimeCreationValidatorService {
         const maxDate = DateUtil.latest(startTimes)
         const endDate = DateUtil.addMinutes(maxDate, durationMinutes)
 
-        const timeslotMapByTheater = new Map<string, TimeslotMap>()
+        const timeslotsByTheater = new Map<string, TimeslotMap>()
 
         for (const theaterId of theaterIds) {
             const fetchedShowtimes = await this.showtimesService.findAllShowtimes({
@@ -87,10 +87,10 @@ export class ShowtimeCreationValidatorService {
                 })
             }
 
-            timeslotMapByTheater.set(theaterId, timeslots)
+            timeslotsByTheater.set(theaterId, timeslots)
         }
 
-        return timeslotMapByTheater
+        return timeslotsByTheater
     }
 
     private async ensureMovieExists(movieId: string): Promise<void> {

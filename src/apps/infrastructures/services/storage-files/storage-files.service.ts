@@ -14,15 +14,20 @@ export class StorageFilesService {
     ) {}
 
     async saveFiles(createDtos: StorageFileCreateDto[]) {
-        // TODO getChecksum 같은 건 트랜잭션 밖에서 해야 한다.
+        const checksumByPath = new Map<string, string>()
+
+        for (const createDto of createDtos) {
+            const checksum = await getChecksum(createDto.path)
+            checksumByPath.set(createDto.path, checksum)
+        }
+
         const storageFiles = await this.repository.withTransaction(async (session) => {
             const storageFiles: HydratedDocument<StorageFile>[] = []
 
             for (const createDto of createDtos) {
-                const checksum = await getChecksum(createDto.path)
                 const storageFile = await this.repository.createStorageFile(
                     createDto,
-                    checksum,
+                    checksumByPath.get(createDto.path)!,
                     session
                 )
                 // TODO move가 아니라 copy하기 때문에 성능 영향이 있다

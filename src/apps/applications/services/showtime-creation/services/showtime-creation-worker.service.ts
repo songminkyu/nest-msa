@@ -108,15 +108,15 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     private async createTickets(showtimes: ShowtimeDto[], batchId: string) {
         let totalCount = 0
 
-        const theaterMap: Map<string, TheaterDto> = new Map()
+        const theatersById: Map<string, TheaterDto> = new Map()
 
         await Promise.all(
             showtimes.map(async (showtime) => {
-                let theater = theaterMap.get(showtime.theaterId)
+                let theater = theatersById.get(showtime.theaterId)
 
                 if (!theater) {
                     theater = await this.theatersService.getTheater(showtime.theaterId)
-                    theaterMap.set(showtime.theaterId, theater)
+                    theatersById.set(showtime.theaterId, theater)
                 }
 
                 const ticketCreateDtos = Seatmap.getAllSeats(theater!.seatmap).map((seat) => ({
