@@ -39,6 +39,8 @@ NestJS 기반 프로젝트 시작을 위한 통합 템플릿으로, 다음과 �
 
 자세한 설계 방식과 구조는 [Design Guide](./docs/guides/design.guide.md)를 참고하세요.
 
+TODO Gateway controller -> proxy -> Service controller -> service 순서로 호출되는 그림 첨부. 그림으로 해라 github에서 plantuml이 안 보인다.
+
 ```
 src
 ├── apps
