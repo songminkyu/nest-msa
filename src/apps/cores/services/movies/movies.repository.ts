@@ -2,13 +2,12 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectIds, QueryBuilder } from 'common'
 import { Model } from 'mongoose'
-import { MongooseConfig } from 'shared'
 import { MovieCreateDto, MovieQueryDto, MovieUpdateDto } from './dtos'
 import { Movie } from './models'
 
 @Injectable()
 export class MoviesRepository extends MongooseRepository<Movie> {
-    constructor(@InjectModel(Movie.name, MongooseConfig.connName) model: Model<Movie>) {
+    constructor(@InjectModel(Movie.name) model: Model<Movie>) {
         super(model)
     }
 

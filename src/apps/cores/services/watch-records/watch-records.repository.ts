@@ -2,13 +2,12 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, QueryBuilder } from 'common'
 import { Model } from 'mongoose'
-import { MongooseConfig } from 'shared'
 import { WatchRecordCreateDto, WatchRecordQueryDto } from './dtos'
 import { WatchRecord } from './models'
 
 @Injectable()
 export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
-    constructor(@InjectModel(WatchRecord.name, MongooseConfig.connName) model: Model<WatchRecord>) {
+    constructor(@InjectModel(WatchRecord.name) model: Model<WatchRecord>) {
         super(model)
     }
 

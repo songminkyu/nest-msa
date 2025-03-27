@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { AppConfigService, MongooseConfig, uniqueWhenTesting } from '../config'
+import { AppConfigService, uniqueWhenTesting } from '../config'
 
 @Module({
     imports: [
         MongooseModule.forRootAsync({
-            connectionName: MongooseConfig.connName,
             useFactory: async (config: AppConfigService) => {
                 const { user, password, host1, host2, host3, port, replica, database } =
                     config.mongo

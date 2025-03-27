@@ -2,13 +2,12 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, QueryBuilder } from 'common'
 import { Model } from 'mongoose'
-import { MongooseConfig } from 'shared'
 import { ShowtimeCreateDto, ShowtimeFilterDto } from './dtos'
 import { Showtime } from './models'
 
 @Injectable()
 export class ShowtimesRepository extends MongooseRepository<Showtime> {
-    constructor(@InjectModel(Showtime.name, MongooseConfig.connName) model: Model<Showtime>) {
+    constructor(@InjectModel(Showtime.name) model: Model<Showtime>) {
         super(model)
     }
 

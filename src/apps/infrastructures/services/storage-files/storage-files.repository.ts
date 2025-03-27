@@ -2,13 +2,12 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository } from 'common'
 import { ClientSession, Model } from 'mongoose'
-import { MongooseConfig } from 'shared'
 import { StorageFileCreateDto } from './dtos'
 import { StorageFile } from './models'
 
 @Injectable()
 export class StorageFilesRepository extends MongooseRepository<StorageFile> {
-    constructor(@InjectModel(StorageFile.name, MongooseConfig.connName) model: Model<StorageFile>) {
+    constructor(@InjectModel(StorageFile.name) model: Model<StorageFile>) {
         super(model)
     }
 

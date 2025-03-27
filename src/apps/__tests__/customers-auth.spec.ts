@@ -1,6 +1,5 @@
 import { getModelToken } from '@nestjs/mongoose'
 import { Customer, CustomerDto } from 'apps/cores'
-import { MongooseConfig } from 'shared'
 import { HttpTestClient } from 'testlib'
 import { closeFixture, Fixture } from './customers-auth.fixture'
 import { Errors } from './utils'
@@ -52,9 +51,7 @@ describe('/customers(authentication)', () => {
         })
 
         it('customer가 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다', async () => {
-            const model = fixture.testContext.coresContext.module.get(
-                getModelToken(Customer.name, MongooseConfig.connName)
-            )
+            const model = fixture.testContext.coresContext.module.get(getModelToken(Customer.name))
             jest.spyOn(model, 'findById').mockImplementation(() => ({
                 select: jest.fn().mockImplementation(() => ({ exec: jest.fn() }))
             }))

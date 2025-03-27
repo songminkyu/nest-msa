@@ -3,7 +3,6 @@ import { SchemaOptions } from 'mongoose'
 export const ProjectName = 'nest-seed'
 
 export class MongooseConfig {
-    static connName = 'mongo'
     static schemaOptions: SchemaOptions = {
         // https://mongoosejs.com/docs/guide.html#optimisticConcurrency
         optimisticConcurrency: true,
