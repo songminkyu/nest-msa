@@ -12,7 +12,7 @@ import {
 
 @Controller()
 class SendTestController {
-    constructor(@InjectClientProxy('name') private client: ClientProxyService) {}
+    constructor(@InjectClientProxy() private client: ClientProxyService) {}
 
     @MessagePattern(withTestId('method'))
     method() {
@@ -58,9 +58,7 @@ export async function createFixture() {
 
     const { httpClient, ...testContext } = await createHttpTestContext({
         metadata: {
-            imports: [
-                ClientProxyModule.registerAsync({ name: 'name', useFactory: () => brokerOptions })
-            ],
+            imports: [ClientProxyModule.registerAsync({ useFactory: () => brokerOptions })],
             controllers: [SendTestController, EmitTestController]
         },
         configureApp: async (app) => {

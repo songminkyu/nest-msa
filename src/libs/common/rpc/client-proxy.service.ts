@@ -7,7 +7,7 @@ import {
     Module,
     OnModuleDestroy
 } from '@nestjs/common'
-import { ClientProxy, ClientsModule, ClientsProviderAsyncOptions } from '@nestjs/microservices'
+import { ClientProvider, ClientProxy, ClientsModule } from '@nestjs/microservices'
 import { catchError, lastValueFrom, Observable } from 'rxjs'
 import { jsonToObject } from '../utils'
 
@@ -35,7 +35,7 @@ async function getProxyValue<T>(observer: Observable<T>): Promise<T> {
 export class ClientProxyService implements OnModuleDestroy {
     constructor(private proxy: ClientProxy) {}
 
-    static getToken(name: string) {
+    static getToken(name?: string) {
         return `ClientProxyService_${name}`
     }
 
@@ -59,27 +59,35 @@ export class ClientProxyService implements OnModuleDestroy {
     }
 }
 
-export function InjectClientProxy(name: string): ParameterDecorator {
+export function InjectClientProxy(name?: string): ParameterDecorator {
     return Inject(ClientProxyService.getToken(name))
+}
+
+export interface ClientProxyModuleOptions {
+    name?: string
+    useFactory?: (...args: any[]) => Promise<ClientProvider> | ClientProvider
+    inject?: any[]
 }
 
 @Global()
 @Module({})
 export class ClientProxyModule {
-    static registerAsync(options: ClientsProviderAsyncOptions): DynamicModule {
+    static registerAsync(options: ClientProxyModuleOptions): DynamicModule {
         const { name, useFactory, inject } = options
 
+        const clientName = name ?? 'DefaultClientProxy'
+
         const provider = {
-            provide: ClientProxyService.getToken(name as string),
+            provide: ClientProxyService.getToken(name),
             useFactory: async (proxy: ClientProxy) => {
                 return new ClientProxyService(proxy)
             },
-            inject: [name]
+            inject: [clientName]
         }
 
         return {
             module: ClientProxyModule,
-            imports: [ClientsModule.registerAsync([{ name, useFactory, inject }])],
+            imports: [ClientsModule.registerAsync([{ name: clientName, useFactory, inject }])],
             providers: [provider],
             exports: [provider]
         }
