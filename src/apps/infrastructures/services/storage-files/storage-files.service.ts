@@ -1,17 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { getChecksum, mapDocToDto, Path } from 'common'
 import { HydratedDocument } from 'mongoose'
 import { AppConfigService } from 'shared'
 import { StorageFileCreateDto, StorageFileDto } from './dtos'
 import { StorageFile, StorageFileDocument } from './models'
 import { StorageFilesRepository } from './storage-files.repository'
-
-export const MongooseErrors = {
-    MultipleDocumentsNotFound: {
-        code: 'ERR_MONGOOSE_MULTIPLE_DOCUMENTS_NOT_FOUND',
-        message: 'One or more documents not found'
-    },
-}
 
 @Injectable()
 export class StorageFilesService {
