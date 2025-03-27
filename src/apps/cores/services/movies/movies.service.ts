@@ -31,9 +31,18 @@ export class MoviesService {
     }
 
     async deleteMovie(movieId: string) {
-        // TODO deleteStorageFile 해야 한다
-        await this.repository.deleteById(movieId)
-        return true
+        const success = await this.repository.withTransaction(async (session) => {
+            const movie = await this.repository.getById(movieId)
+            await movie.deleteOne({ session })
+
+            const fileIds = movie.imageFileIds.map((id) => id.toString())
+            console.log(fileIds)
+            await this.storageFilesService.deleteStorageFiles(fileIds)
+
+            return true
+        })
+
+        return success
     }
 
     async findMovies(queryDto: MovieQueryDto) {

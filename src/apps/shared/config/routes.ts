@@ -12,7 +12,7 @@ export const Messages = createRouteMap(
         StorageFiles: {
             saveFiles: null,
             getStorageFile: null,
-            deleteStorageFile: null
+            deleteStorageFiles: null
         },
         Payments: {
             processPayment: null,

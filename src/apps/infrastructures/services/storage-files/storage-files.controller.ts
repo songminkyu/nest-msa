@@ -21,8 +21,8 @@ export class StorageFilesController {
         return this.service.getStorageFile(fileId)
     }
 
-    @MessagePattern(Messages.StorageFiles.deleteStorageFile)
-    deleteStorageFile(@Payload() fileId: string) {
-        return this.service.deleteStorageFile(fileId)
+    @MessagePattern(Messages.StorageFiles.deleteStorageFiles)
+    deleteStorageFile(@Payload() fileIds: string[]) {
+        return this.service.deleteStorageFiles(fileIds)
     }
 }

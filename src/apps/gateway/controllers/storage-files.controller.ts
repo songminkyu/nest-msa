@@ -55,7 +55,7 @@ export class StorageFilesController {
     }
 
     @Delete(':fileId')
-    async deleteStorageFile(@Param('fileId') fileId: string) {
-        return this.storageFilesService.deleteStorageFile(fileId)
+    async deleteStorageFiles(@Param('fileId') fileId: string) {
+        return this.storageFilesService.deleteStorageFiles([fileId])
     }
 }

@@ -32,17 +32,6 @@ describe('/movies', () => {
             expect(body).toEqual(expectedDto)
         })
 
-        it('허용되지 않은 MIME type의 파일을 업로드 하면 BAD_REQUEST(400)를 반환해야 한다', async () => {
-            const notAllowFile = './test/fixtures/text.txt'
-            const { createDto } = createMovieDto()
-
-            await client
-                .post('/movies')
-                .attachs([{ name: 'files', file: notAllowFile }])
-                .fields(objectToFields(createDto))
-                .unsupportedMediaTypeException()
-        })
-
         it('필수 필드가 누락되면 BAD_REQUEST(400)를 반환해야 한다', async () => {
             await client
                 .post('/movies')

@@ -55,8 +55,9 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
     async getById(id: string, session: SessionArg = undefined) {
         const doc = await this.findById(id, session)
 
-        if (!doc)
+        if (!doc) {
             throw new NotFoundException({ ...MongooseErrors.DocumentNotFound, notFoundId: id })
+        }
 
         return doc
     }
@@ -86,6 +87,8 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
     }
 
     async deleteByIds(ids: string[], session: SessionArg = undefined) {
+        await this.getByIds(ids)
+
         const result = await this.model.deleteMany(
             { _id: { $in: objectIds(ids) } as any },
             { session }

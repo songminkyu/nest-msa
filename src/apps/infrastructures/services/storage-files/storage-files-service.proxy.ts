@@ -17,7 +17,7 @@ export class StorageFilesServiceProxy {
         return this.service.getJson(Messages.StorageFiles.getStorageFile, fileId)
     }
 
-    deleteStorageFile(fileId: string): Promise<boolean> {
-        return this.service.getJson(Messages.StorageFiles.deleteStorageFile, fileId)
+    deleteStorageFiles(fileIds: string[]): Promise<boolean> {
+        return this.service.getJson(Messages.StorageFiles.deleteStorageFiles, fileIds)
     }
 }

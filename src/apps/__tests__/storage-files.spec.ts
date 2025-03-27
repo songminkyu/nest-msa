@@ -144,8 +144,8 @@ describe('/storage-files', () => {
 
         it('파일이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
             await client.delete(`/storage-files/${nullObjectId}`).notFound({
-                ...Errors.Mongoose.DocumentNotFound,
-                notFoundId: nullObjectId
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
             })
         })
     })

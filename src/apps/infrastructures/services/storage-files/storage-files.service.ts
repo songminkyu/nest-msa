@@ -1,10 +1,17 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { getChecksum, mapDocToDto, Path } from 'common'
 import { HydratedDocument } from 'mongoose'
 import { AppConfigService } from 'shared'
 import { StorageFileCreateDto, StorageFileDto } from './dtos'
 import { StorageFile, StorageFileDocument } from './models'
 import { StorageFilesRepository } from './storage-files.repository'
+
+export const MongooseErrors = {
+    MultipleDocumentsNotFound: {
+        code: 'ERR_MONGOOSE_MULTIPLE_DOCUMENTS_NOT_FOUND',
+        message: 'One or more documents not found'
+    },
+}
 
 @Injectable()
 export class StorageFilesService {
@@ -41,11 +48,13 @@ export class StorageFilesService {
         return this.toDto(file)
     }
 
-    async deleteStorageFile(fileId: string) {
-        await this.repository.deleteById(fileId)
+    async deleteStorageFiles(fileIds: string[]) {
+        await this.repository.deleteByIds(fileIds)
 
-        const targetPath = this.getStoragePath(fileId)
-        await Path.delete(targetPath)
+        for (const fileId of fileIds) {
+            const targetPath = this.getStoragePath(fileId)
+            await Path.delete(targetPath)
+        }
 
         return true
     }

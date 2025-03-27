@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals'
-import { OrderDirection, pickIds, pickItems } from 'common'
+import { MongooseErrors, OrderDirection, pickIds, pickItems } from 'common'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
 import {
     createSample,
@@ -309,10 +309,16 @@ describe('MongooseRepository', () => {
             expect(docs).toHaveLength(0)
         })
 
-        it('존재하지 않는 ID는 무시해야 한다', async () => {
-            const deletedCount = await fix.repository.deleteByIds([nullObjectId])
+        it('존재하지 않는 IDs의 경우 예외를 던져야 한다', async () => {
+            const promise = fix.repository.deleteByIds([nullObjectId])
 
-            expect(deletedCount).toEqual(0)
+            const error = await promise.catch((e) => e)
+
+            expect(error).toBeInstanceOf(fix.NotFoundException)
+            expect(error.response).toEqual({
+                ...MongooseErrors.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
+            })
         })
     })
 })
