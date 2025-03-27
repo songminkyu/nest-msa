@@ -37,7 +37,7 @@ export class MoviesService {
 
             const fileIds = movie.imageFileIds.map((id) => id.toString())
 
-            await this.storageFilesService.deleteStorageFiles(fileIds)
+            await this.storageFilesService.deleteFiles(fileIds)
 
             return true
         })

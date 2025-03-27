@@ -41,7 +41,7 @@ export class StorageFilesController {
 
     @Get(':fileId')
     async downloadFile(@Param('fileId') fileId: string) {
-        const file = await this.storageFilesService.getStorageFile(fileId)
+        const file = await this.storageFilesService.getFile(fileId)
 
         const readStream = createReadStream(file.storedPath)
 
@@ -56,6 +56,6 @@ export class StorageFilesController {
 
     @Delete(':fileId')
     async deleteStorageFiles(@Param('fileId') fileId: string) {
-        return this.storageFilesService.deleteStorageFiles([fileId])
+        return this.storageFilesService.deleteFiles([fileId])
     }
 }

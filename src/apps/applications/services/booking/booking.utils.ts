@@ -14,7 +14,9 @@ export function generateShowtimesWithSalesStatus(
     showtimes: ShowtimeDto[],
     salesStatuses: SalesStatusByShowtimeDto[]
 ) {
-    const salesStatusByShowtime = new Map(salesStatuses.map((status) => [status.showtimeId, status]))
+    const salesStatusByShowtime = new Map(
+        salesStatuses.map((status) => [status.showtimeId, status])
+    )
 
     const showtimeSalesStatuses = showtimes.map((showtime) => {
         const { total, sold, available } = salesStatusByShowtime.get(showtime.id)!
