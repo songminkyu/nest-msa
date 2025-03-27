@@ -115,8 +115,8 @@ describe('/storage-files', () => {
 
         it('파일이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
             await client.get(`/storage-files/${nullObjectId}`).notFound({
-                ...Errors.Mongoose.DocumentNotFound,
-                notFoundId: nullObjectId
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
             })
         })
     })
@@ -135,8 +135,8 @@ describe('/storage-files', () => {
 
             await client.delete(`/storage-files/${uploadedFile.id}`).ok()
             await client.get(`/storage-files/${uploadedFile.id}`).notFound({
-                ...Errors.Mongoose.DocumentNotFound,
-                notFoundId: uploadedFile.id
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [uploadedFile.id]
             })
 
             expect(Path.existsSync(filePath)).toBeFalsy()

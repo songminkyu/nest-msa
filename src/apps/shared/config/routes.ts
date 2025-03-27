@@ -11,7 +11,7 @@ export const Messages = createRouteMap(
     {
         StorageFiles: {
             saveFiles: null,
-            getFile: null,
+            getFiles: null,
             deleteFiles: null
         },
         Payments: {

@@ -93,7 +93,7 @@ describe('/movies', () => {
 
             await client
                 .get(fileUrl)
-                .notFound({ ...Errors.Mongoose.DocumentNotFound, notFoundId: fileId })
+                .notFound({ ...Errors.Mongoose.MultipleDocumentsNotFound, notFoundIds: [fileId] })
         })
 
         it('영화가 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {

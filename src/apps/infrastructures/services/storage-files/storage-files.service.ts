@@ -42,9 +42,9 @@ export class StorageFilesService {
         return this.toDtos(storageFiles)
     }
 
-    async getFile(fileId: string) {
-        const file = await this.repository.getById(fileId)
-        return this.toDto(file)
+    async getFiles(fileIds: string[]) {
+        const files = await this.repository.getByIds(fileIds)
+        return this.toDtos(files)
     }
 
     async deleteFiles(fileIds: string[]) {

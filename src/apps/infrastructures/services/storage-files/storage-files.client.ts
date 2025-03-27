@@ -11,8 +11,8 @@ export class StorageFilesClient {
         return this.proxy.getJson(Messages.StorageFiles.saveFiles, createDtos)
     }
 
-    getFile(fileId: string): Promise<StorageFileDto> {
-        return this.proxy.getJson(Messages.StorageFiles.getFile, fileId)
+    getFiles(fileIds: string[]): Promise<StorageFileDto[]> {
+        return this.proxy.getJson(Messages.StorageFiles.getFiles, fileIds)
     }
 
     deleteFiles(fileIds: string[]): Promise<boolean> {

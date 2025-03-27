@@ -16,13 +16,13 @@ export class StorageFilesController {
         return this.service.saveFiles(createDtos)
     }
 
-    @MessagePattern(Messages.StorageFiles.getFile)
-    getStorageFile(@Payload() fileId: string) {
-        return this.service.getFile(fileId)
+    @MessagePattern(Messages.StorageFiles.getFiles)
+    getFiles(@Payload() fileIds: string[]) {
+        return this.service.getFiles(fileIds)
     }
 
     @MessagePattern(Messages.StorageFiles.deleteFiles)
-    deleteStorageFile(@Payload() fileIds: string[]) {
+    deleteFiles(@Payload() fileIds: string[]) {
         return this.service.deleteFiles(fileIds)
     }
 }
