@@ -5,7 +5,7 @@ import { HealthCheckService, MongooseHealthIndicator, TerminusModule } from '@ne
 import { RedisHealthIndicator } from 'common'
 import Redis from 'ioredis'
 import mongoose from 'mongoose'
-import { MongooseConfig, RedisConfig } from 'shared'
+import { MongooseConfig } from 'shared'
 
 @Injectable()
 class HealthService {
@@ -14,14 +14,14 @@ class HealthService {
         private mongoose: MongooseHealthIndicator,
         private redis: RedisHealthIndicator,
         @Inject(getConnectionToken(MongooseConfig.connName)) private mongoConn: mongoose.Connection,
-        @Inject(getRedisConnectionToken(RedisConfig.connName)) private redisConn: Redis
+        @Inject(getRedisConnectionToken()) private redisConn: Redis
     ) {}
 
     check() {
         const checks = [
             async () =>
                 this.mongoose.pingCheck(MongooseConfig.connName, { connection: this.mongoConn }),
-            async () => this.redis.isHealthy(RedisConfig.connName, this.redisConn)
+            async () => this.redis.isHealthy('redis', this.redisConn)
         ]
 
         return this.health.check(checks)

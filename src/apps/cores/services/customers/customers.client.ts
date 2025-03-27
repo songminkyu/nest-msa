@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy, JwtAuthTokens } from 'common'
-import { ClientProxyConfig, Messages } from 'shared'
+import { Messages } from 'shared'
 import { CustomerCreateDto, CustomerDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
 
 @Injectable()
 export class CustomersClient {
-    constructor(
-        @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
-    ) {}
+    constructor(@InjectClientProxy() private service: ClientProxyService) {}
 
     async createCustomer(createDto: CustomerCreateDto): Promise<CustomerDto> {
         return this.service.getJson<CustomerDto>(Messages.Customers.createCustomer, createDto)

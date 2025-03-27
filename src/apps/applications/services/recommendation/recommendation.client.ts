@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { MovieDto } from 'apps/cores'
 import { ClientProxyService, InjectClientProxy } from 'common'
-import { ClientProxyConfig, Messages } from 'shared'
+import { Messages } from 'shared'
 
 @Injectable()
 export class RecommendationClient {
-    constructor(
-        @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
-    ) {}
+    constructor(@InjectClientProxy() private service: ClientProxyService) {}
 
     findRecommendedMovies(customerId: string | null): Promise<MovieDto[]> {
         return this.service.getJson(Messages.Recommendation.findRecommendedMovies, customerId)

@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy } from 'common'
-import { ClientProxyConfig, Messages } from 'shared'
+import { Messages } from 'shared'
 
 @Injectable()
 export class TicketHoldingClient {
-    constructor(
-        @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
-    ) {}
+    constructor(@InjectClientProxy() private service: ClientProxyService) {}
 
     holdTickets(args: {
         customerId: string

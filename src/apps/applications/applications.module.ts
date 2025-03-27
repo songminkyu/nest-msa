@@ -2,13 +2,7 @@ import { getRedisConnectionToken } from '@nestjs-modules/ioredis'
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import Redis from 'ioredis'
-import {
-    CommonModule,
-    ProjectName,
-    RedisConfig,
-    RedisConfigModule,
-    uniqueWhenTesting
-} from 'shared'
+import { CommonModule, ProjectName, RedisConfigModule, uniqueWhenTesting } from 'shared'
 import { HealthModule } from './modules'
 import {
     BookingModule,
@@ -27,7 +21,7 @@ import {
                 prefix: `{queue:${uniqueWhenTesting(ProjectName)}}`,
                 connection: redis
             }),
-            inject: [getRedisConnectionToken(RedisConfig.connName)]
+            inject: [getRedisConnectionToken()]
         }),
         ShowtimeCreationModule,
         RecommendationModule,

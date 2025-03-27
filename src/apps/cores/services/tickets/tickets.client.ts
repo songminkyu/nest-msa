@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy } from 'common'
-import { ClientProxyConfig, Messages } from 'shared'
+import { Messages } from 'shared'
 import { SalesStatusByShowtimeDto, TicketCreateDto, TicketDto, TicketFilterDto } from './dtos'
 import { TicketStatus } from './models'
 
 @Injectable()
 export class TicketsClient {
-    constructor(
-        @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
-    ) {}
+    constructor(@InjectClientProxy() private service: ClientProxyService) {}
 
     createTickets(createDtos: TicketCreateDto[]): Promise<{ success: boolean; count: number }> {
         return this.service.getJson(Messages.Tickets.createTickets, createDtos)

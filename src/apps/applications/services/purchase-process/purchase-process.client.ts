@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { PurchaseCreateDto, PurchaseDto } from 'apps/cores'
 import { ClientProxyService, InjectClientProxy } from 'common'
-import { ClientProxyConfig, Messages } from 'shared'
+import { Messages } from 'shared'
 
 @Injectable()
 export class PurchaseProcessClient {
-    constructor(
-        @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
-    ) {}
+    constructor(@InjectClientProxy() private service: ClientProxyService) {}
 
     processPurchase(createDto: PurchaseCreateDto): Promise<PurchaseDto> {
         return this.service.getJson(Messages.PurchaseProcess.processPurchase, createDto)

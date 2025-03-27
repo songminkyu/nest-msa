@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { TheaterDto, TicketDto } from 'apps/cores'
 import { ClientProxyService, InjectClientProxy, LatLong } from 'common'
-import { ClientProxyConfig, Messages } from 'shared'
+import { Messages } from 'shared'
 import { ShowtimeSalesStatusDto } from './dtos'
 
 @Injectable()
 export class BookingClient {
-    constructor(
-        @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
-    ) {}
+    constructor(@InjectClientProxy() private service: ClientProxyService) {}
 
     findShowingTheaters(args: { movieId: string; latlong: LatLong }): Promise<TheaterDto[]> {
         return this.service.getJson(Messages.Booking.findShowingTheaters, args)

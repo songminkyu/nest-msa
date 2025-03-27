@@ -5,7 +5,6 @@ import { ApplicationsModule, configureApplications } from 'apps/applications'
 import { configureCores, CoresModule } from 'apps/cores'
 import { configureGateway, GatewayModule } from 'apps/gateway'
 import { configureInfrastructures, InfrastructuresModule } from 'apps/infrastructures'
-import { RedisConfig } from 'shared'
 import {
     createHttpTestContext,
     createTestContext,
@@ -97,7 +96,7 @@ export async function createAllTestContexts({
     })
 
     const close = async () => {
-        const redisToken = getRedisConnectionToken(RedisConfig.connName)
+        const redisToken = getRedisConnectionToken()
 
         await gatewayContext.close()
 

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { CacheModule } from 'common'
-import { ProjectName, RedisConfig, uniqueWhenTesting } from 'shared'
+import { ProjectName, uniqueWhenTesting } from 'shared'
 import { TicketHoldingController } from './ticket-holding.controller'
 import { TicketHoldingService } from './ticket-holding.service'
 
@@ -8,7 +8,6 @@ import { TicketHoldingService } from './ticket-holding.service'
     imports: [
         CacheModule.register({
             name: 'ticket-holding',
-            redisName: RedisConfig.connName,
             prefix: `cache:${uniqueWhenTesting(ProjectName)}`
         })
     ],

@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy } from 'common'
-import { ClientProxyConfig, Messages } from 'shared'
+import { Messages } from 'shared'
 import { ShowtimeCreateDto, ShowtimeDto, ShowtimeFilterDto } from './dtos'
 
 @Injectable()
 export class ShowtimesClient {
-    constructor(
-        @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
-    ) {}
+    constructor(@InjectClientProxy() private service: ClientProxyService) {}
 
     createShowtimes(createDtos: ShowtimeCreateDto[]): Promise<{ success: true; count: number }> {
         return this.service.getJson(Messages.Showtimes.createShowtimes, createDtos)

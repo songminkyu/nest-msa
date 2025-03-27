@@ -1,7 +1,5 @@
 import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Injectable } from '@nestjs/common'
-import { Job, Queue } from 'bullmq'
-import { ClientProxyService, DateUtil, InjectClientProxy, jsonToObject, MethodLog } from 'common'
 import {
     Seatmap,
     ShowtimeDto,
@@ -11,7 +9,9 @@ import {
     TicketsClient,
     TicketStatus
 } from 'apps/cores'
-import { ClientProxyConfig, Events } from 'shared'
+import { Job, Queue } from 'bullmq'
+import { ClientProxyService, DateUtil, InjectClientProxy, jsonToObject, MethodLog } from 'common'
+import { Events } from 'shared'
 import { ShowtimeBatchCreateStatus } from '../dtos'
 import { ShowtimeCreationValidatorService } from './showtime-creation-validator.service'
 import { ShowtimeBatchCreateJobData } from './types'
@@ -24,7 +24,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         private showtimesService: ShowtimesClient,
         private ticketsService: TicketsClient,
         private validatorService: ShowtimeCreationValidatorService,
-        @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService,
+        @InjectClientProxy() private service: ClientProxyService,
         @InjectQueue('showtime-creation') private queue: Queue
     ) {
         super()

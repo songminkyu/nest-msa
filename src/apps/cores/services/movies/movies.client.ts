@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { StorageFileCreateDto } from 'apps/infrastructures'
 import { ClientProxyService, InjectClientProxy } from 'common'
-import { ClientProxyConfig, Messages } from 'shared'
+import { Messages } from 'shared'
 import { MovieCreateDto, MovieDto, MovieQueryDto, MovieUpdateDto } from './dtos'
 
 @Injectable()
 export class MoviesClient {
-    constructor(
-        @InjectClientProxy(ClientProxyConfig.connName) private service: ClientProxyService
-    ) {}
+    constructor(@InjectClientProxy() private service: ClientProxyService) {}
 
     createMovie(
         movieCreateDto: MovieCreateDto,

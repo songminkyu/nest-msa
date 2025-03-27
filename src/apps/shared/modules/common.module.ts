@@ -9,7 +9,7 @@ import {
     ExceptionLoggerFilter,
     SuccessLoggingInterceptor
 } from 'common'
-import { AppConfigService, ClientProxyConfig, configSchema, ProjectName } from '../config'
+import { AppConfigService, configSchema, ProjectName } from '../config'
 import { RequestValidationPipe } from '../pipes/request-validation.pipe'
 
 @Global()
@@ -22,7 +22,6 @@ import { RequestValidationPipe } from '../pipes/request-validation.pipe'
             validationOptions: { abortEarly: false }
         }),
         ClientProxyModule.registerAsync({
-            name: ClientProxyConfig.connName,
             useFactory: async (config: AppConfigService) => {
                 const { servers } = config.nats
                 return {
