@@ -1,18 +1,18 @@
-import { PaymentsService } from 'apps/infrastructures'
+import { PaymentsClient } from 'apps/infrastructures'
 import { nullObjectId } from 'testlib'
-import { createAllTestContexts, AllTestContexts } from './utils'
+import { AllTestContexts, createAllTestContexts } from './utils'
 
 export interface Fixture {
     testContext: AllTestContexts
-    paymentsService: PaymentsService
+    paymentsClient: PaymentsClient
 }
 
 export async function createFixture() {
     const testContext = await createAllTestContexts()
-    const module = testContext.infrasContext.module
-    const paymentsService = module.get(PaymentsService)
+    const module = testContext.coresContext.module
+    const paymentsClient = module.get(PaymentsClient)
 
-    return { testContext, paymentsService }
+    return { testContext, paymentsClient }
 }
 
 export async function closeFixture(fixture: Fixture) {
@@ -20,11 +20,7 @@ export async function closeFixture(fixture: Fixture) {
 }
 
 export const createPaymentDto = (overrides = {}) => {
-    const createDto = {
-        customerId: nullObjectId,
-        amount: 0,
-        ...overrides
-    }
+    const createDto = { customerId: nullObjectId, amount: 1, ...overrides }
 
     const expectedDto = {
         id: expect.any(String),
