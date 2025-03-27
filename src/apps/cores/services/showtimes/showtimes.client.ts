@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { ClientProxyService, InjectClientProxy } from 'common';
-import { ClientProxyConfig, Messages } from 'shared';
-import { ShowtimeCreateDto, ShowtimeDto, ShowtimeFilterDto } from './dtos';
+import { Injectable } from '@nestjs/common'
+import { ClientProxyService, InjectClientProxy } from 'common'
+import { ClientProxyConfig, Messages } from 'shared'
+import { ShowtimeCreateDto, ShowtimeDto, ShowtimeFilterDto } from './dtos'
 
 @Injectable()
 export class ShowtimesClient {
