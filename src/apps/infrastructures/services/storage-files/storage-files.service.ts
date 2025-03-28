@@ -30,7 +30,10 @@ export class StorageFilesService {
                     checksumByPath.get(createDto.path)!,
                     session
                 )
-                // TODO move가 아니라 copy하기 때문에 성능 영향이 있다
+
+                /**
+                 * 대부분 원본과 저장 위치의 파일 시스템이 달라서 move를 할 수 없다.
+                 */
                 await Path.copy(createDto.path, this.getStoragePath(storageFile.id))
 
                 storageFiles.push(storageFile)

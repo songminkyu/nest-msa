@@ -38,7 +38,7 @@ export const createMovieDto = (overrides = {}) => {
 }
 
 export const createMovie = async (moviesService: MoviesService, override = {}) => {
-    // TODO create temp 급하게 넣었다. 재검토해라
+    // TODO create temp 급하게 넣었다. 재검토해라. 한 번만 생성하는게 좋다.
     const tempDir = await Path.createTempDirectory()
     const fileSize = 1024
     const filePath = Path.join(tempDir, 'image.png')
@@ -53,6 +53,7 @@ export const createMovie = async (moviesService: MoviesService, override = {}) =
             path: filePath
         }
     ])
+
     return movie
 }
 
