@@ -4,6 +4,7 @@ import { Messages } from 'shared'
 import { TicketCreateDto, TicketFilterDto } from './dtos'
 import { TicketStatus } from './models'
 import { TicketsService } from './tickets.service'
+import { CreateTicketsResult } from './types'
 
 @Controller()
 export class TicketsController {
@@ -12,7 +13,7 @@ export class TicketsController {
     @MessagePattern(Messages.Tickets.createTickets)
     createTickets(
         @Payload(new ParseArrayPipe({ items: TicketCreateDto })) createDtos: TicketCreateDto[]
-    ) {
+    ): Promise<CreateTicketsResult> {
         return this.service.createTickets(createDtos)
     }
 

@@ -3,6 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
 import { ShowtimeCreateDto, ShowtimeFilterDto } from './dtos'
 import { ShowtimesService } from './showtimes.service'
+import { CreateShowtimesResult } from './types'
 
 @Controller()
 export class ShowtimesController {
@@ -11,7 +12,7 @@ export class ShowtimesController {
     @MessagePattern(Messages.Showtimes.createShowtimes)
     createShowtimes(
         @Payload(new ParseArrayPipe({ items: ShowtimeCreateDto })) createDtos: ShowtimeCreateDto[]
-    ) {
+    ): Promise<CreateShowtimesResult> {
         return this.service.createShowtimes(createDtos)
     }
 

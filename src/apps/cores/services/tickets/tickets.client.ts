@@ -3,12 +3,13 @@ import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
 import { SalesStatusByShowtimeDto, TicketCreateDto, TicketDto, TicketFilterDto } from './dtos'
 import { TicketStatus } from './models'
+import { CreateTicketsResult } from './types'
 
 @Injectable()
 export class TicketsClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    createTickets(createDtos: TicketCreateDto[]): Promise<{ success: boolean; count: number }> {
+    createTickets(createDtos: TicketCreateDto[]): Promise<CreateTicketsResult> {
         return this.proxy.getJson(Messages.Tickets.createTickets, createDtos)
     }
 
