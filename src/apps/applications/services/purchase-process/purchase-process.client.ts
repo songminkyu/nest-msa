@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { PurchaseCreateDto, PurchaseDto } from 'apps/cores'
 import { ClientProxyService, InjectClientProxy } from 'common'
-import { Messages } from 'shared'
+import { Events, Messages } from 'shared'
 
 @Injectable()
 export class PurchaseProcessClient {
@@ -12,14 +12,14 @@ export class PurchaseProcessClient {
     }
 
     emitTicketPurchased(customerId: string, ticketIds: string[]) {
-        return this.proxy.emit(Messages.PurchaseProcess.TicketPurchased, {
+        return this.proxy.emit(Events.PurchaseProcess.TicketPurchased, {
             customerId,
             ticketIds
         })
     }
 
     emitTicketPurchaseCanceled(customerId: string, ticketIds: string[]) {
-        return this.proxy.emit(Messages.PurchaseProcess.TicketPurchaseCanceled, {
+        return this.proxy.emit(Events.PurchaseProcess.TicketPurchaseCanceled, {
             customerId,
             ticketIds
         })

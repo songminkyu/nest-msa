@@ -16,7 +16,7 @@ export const Messages = createRouteMap(
         },
         Payments: {
             processPayment: null,
-            getPayment: null
+            getPayment: 'null'
         },
         WatchRecords: {
             createWatchRecord: null,
@@ -53,13 +53,13 @@ export const Messages = createRouteMap(
         },
         Purchases: {
             createPurchase: null,
-            getPurchase: null
+            getPurchase: 'null'
         },
         Movies: {
             createMovie: null,
             updateMovie: null,
-            getMovie: null,
-            deleteMovie: null,
+            getMovie: 'null',
+            deleteMovie: 'null',
             findMovies: null,
             getMoviesByIds: null,
             moviesExist: null
@@ -67,8 +67,8 @@ export const Messages = createRouteMap(
         Customers: {
             createCustomer: null,
             updateCustomer: null,
-            getCustomer: null,
-            deleteCustomer: null,
+            getCustomer: 'null',
+            deleteCustomer: 'null',
             findCustomers: null,
             login: null,
             refreshAuthTokens: null,
@@ -84,9 +84,7 @@ export const Messages = createRouteMap(
             findRecommendedMovies: null
         },
         PurchaseProcess: {
-            processPurchase: null,
-            TicketPurchased: null,
-            TicketPurchaseCanceled: null
+            processPurchase: null
         },
         Booking: {
             findShowingTheaters: null,
@@ -103,6 +101,10 @@ export const Events = createRouteMap(
     {
         ShowtimeCreation: {
             statusChanged: null
+        },
+        PurchaseProcess: {
+            TicketPurchased: null,
+            TicketPurchaseCanceled: null
         }
     },
     uniqueWhenTesting(`${ProjectName}.event`)
