@@ -6,6 +6,10 @@ import { StorageFileCreateDto, StorageFileDto } from './dtos'
 import { StorageFile, StorageFileDocument } from './models'
 import { StorageFilesRepository } from './storage-files.repository'
 
+/**
+ * StorageFilesService는 로컬에 저장하도록 구현되어있다.
+ * AWS나 GCP등 사용하는 인프라에 맞게 변경되어야 한다.
+ */
 @Injectable()
 export class StorageFilesService {
     constructor(

@@ -53,7 +53,7 @@ src
 │   │       └── showtime-creation   # 상영 시간 등록
 │   ├── cores                       # 핵심 기능 서비스를 모은 프로젝트
 │   │   └── services
-│   │       ├── customers           # 고객 관리(인증)
+│   │       ├── customers           # 고객 인증 및 관리. 'name' 인덱스 설정
 │   │       ├── movies              # 영화 관리(파일 업로드)
 │   │       ├── purchases           # 구매 관리
 │   │       ├── showtimes           # 상영 시간 관리
@@ -65,8 +65,8 @@ src
 │   │       └── controllers         # 클라이언트가 서비스를 사용할 수 있도록 REST API를 제공
 │   ├── infrastructures             # 외부 서비스를 모은 프로젝트
 │   │   └── services
-│   │       ├── payments            # 외부 결제 시스템
-│   │       └── storage-files       # 파일 저장소
+│   │       ├── payments            # 외부 결제 시스템 연동과 결제 내역을 관리.
+│   │       └── storage-files       # 파일 저장소와 저장된 파일 목록을 관리한다. AWS/GCP 등 사용하는 인프라에 맞게 변경해야 한다.
 │   └── shared                      # 서비스들이 공통으로 사용하는 코드
 │       ├── config                  # 설정 관련
 │       ├── modules                 # 공통으로 사용하는 모듈들

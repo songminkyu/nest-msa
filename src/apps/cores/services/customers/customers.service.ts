@@ -1,33 +1,32 @@
 import { ConflictException, Injectable } from '@nestjs/common'
-import { InjectJwtAuth, JwtAuthService, mapDocToDto, Password } from 'common'
+import { mapDocToDto } from 'common'
 import { CustomersRepository } from './customers.repository'
 import { CustomerCreateDto, CustomerDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
 import { CustomerErrors } from './errors'
 import { CustomerDocument } from './models'
+import { CustomerAuthenticationService } from './services'
 
 @Injectable()
 export class CustomersService {
     constructor(
         private repository: CustomersRepository,
-        @InjectJwtAuth('customer') private jwtAuthService: JwtAuthService
+        private authenticationService: CustomerAuthenticationService
     ) {}
 
     async createCustomer(createDto: CustomerCreateDto) {
-        const foundEmail = await this.repository.findByEmail(createDto.email)
+        const existingCustomer = await this.repository.findByEmail(createDto.email)
 
-        if (foundEmail) {
+        if (existingCustomer) {
             throw new ConflictException({
                 ...CustomerErrors.emailAlreadyExists,
                 email: createDto.email
             })
         }
 
-        const customer = await this.repository.createCustomer({
-            ...createDto,
-            password: await Password.hash(createDto.password)
-        })
+        const password = await this.authenticationService.hash(createDto.password)
+        const newCustomer = await this.repository.createCustomer({ ...createDto, password })
 
-        return this.toDto(customer)
+        return this.toDto(newCustomer)
     }
 
     async updateCustomer(customerId: string, updateDto: CustomerUpdateDto) {
@@ -51,25 +50,15 @@ export class CustomersService {
     }
 
     async login(userId: string, email: string) {
-        return this.jwtAuthService.generateAuthTokens(userId, email)
+        return this.authenticationService.login(userId, email)
     }
 
     async refreshAuthTokens(refreshToken: string) {
-        return this.jwtAuthService.refreshAuthTokens(refreshToken)
+        return this.authenticationService.refreshAuthTokens(refreshToken)
     }
 
     async authenticateCustomer(email: string, password: string) {
-        const customer = await this.repository.findByEmail(email)
-
-        if (!customer) return null
-
-        const gotPassword = await this.repository.getPassword(customer.id)
-
-        if (await Password.validate(password, gotPassword)) {
-            return customer.id
-        }
-
-        return null
+        return this.authenticationService.authenticateCustomer(email, password)
     }
 
     private toDto = (customer: CustomerDocument) =>

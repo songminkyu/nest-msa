@@ -7,13 +7,13 @@ import { CustomersController } from './customers.controller'
 import { CustomersRepository } from './customers.repository'
 import { CustomersService } from './customers.service'
 import { Customer, CustomerSchema } from './models'
+import { CustomerAuthenticationService } from './services'
 
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: Customer.name, schema: CustomerSchema }]),
         PassportModule,
         JwtAuthModule.register({
-            name: 'customer',
             prefix: `jwtauth:${uniqueWhenTesting(ProjectName)}`,
             useFactory: ({ auth }: AppConfigService) => ({
                 auth: {
@@ -26,7 +26,7 @@ import { Customer, CustomerSchema } from './models'
             inject: [AppConfigService]
         })
     ],
-    providers: [CustomersService, CustomersRepository],
+    providers: [CustomersService, CustomerAuthenticationService, CustomersRepository],
     controllers: [CustomersController]
 })
 export class CustomersModule {}
