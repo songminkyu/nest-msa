@@ -1,1 +1,1 @@
-export * from './redis.health-indicator';
+export * from './redis.health-indicator'
