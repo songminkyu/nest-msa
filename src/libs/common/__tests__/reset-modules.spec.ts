@@ -1,5 +1,7 @@
 import { getCounter, incrementCounter } from './reset-modules.fixture'
 
+const mockForResetTest = jest.fn().mockReturnValue('value')
+
 describe('resetModules 기능 검증', () => {
     it('카운터 초기값 확인 및 증가 테스트', () => {
         expect(getCounter()).toBe(0)
@@ -15,5 +17,9 @@ describe('resetModules 기능 검증', () => {
         const { getCounter: getFreshCounter } = await import('./reset-modules.fixture')
 
         expect(getFreshCounter()).toBe(0)
+    })
+
+    it('resetMocks가 모킹을 초기화 하는지 검증', () => {
+        expect(mockForResetTest()).not.toEqual('value')
     })
 })
