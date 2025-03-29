@@ -10,7 +10,15 @@ import {
     TicketStatus
 } from 'apps/cores'
 import { Job, Queue } from 'bullmq'
-import { ClientProxyService, DateUtil, InjectClientProxy, jsonToObject, MethodLog } from 'common'
+import {
+    Assert,
+    ClientProxyService,
+    DateUtil,
+    Expect,
+    InjectClientProxy,
+    jsonToObject,
+    MethodLog
+} from 'common'
 import { Events } from 'shared'
 import { ShowtimeBatchCreateStatus } from '../dtos'
 import { ShowtimeCreationValidatorService } from './showtime-creation-validator.service'
@@ -108,18 +116,19 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     private async createTickets(showtimes: ShowtimeDto[], batchId: string) {
         let totalCount = 0
 
-        const theatersById: Map<string, TheaterDto> = new Map()
+        const theaterIds = Array.from(new Set(showtimes.map((showtime) => showtime.theaterId)))
+        const theaters = await this.theatersService.getTheaters(theaterIds)
+
+        const theatersById = new Map<string, TheaterDto>()
+        theaters.forEach((theater) => theatersById.set(theater.id, theater))
 
         await Promise.all(
             showtimes.map(async (showtime) => {
-                let theater = theatersById.get(showtime.theaterId)
+                const theater = theatersById.get(showtime.theaterId)!
 
-                if (!theater) {
-                    theater = await this.theatersService.getTheaters([showtime.theaterId])
-                    theatersById.set(showtime.theaterId, theater)
-                }
+                Assert.defined(theater, 'The theater must exist.')
 
-                const ticketCreateDtos = Seatmap.getAllSeats(theater!.seatmap).map((seat) => ({
+                const ticketCreateDtos = Seatmap.getAllSeats(theater.seatmap).map((seat) => ({
                     showtimeId: showtime.id,
                     theaterId: showtime.theaterId,
                     movieId: showtime.movieId,

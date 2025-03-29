@@ -21,7 +21,8 @@ export class TheatersController {
 
     @Get(':theaterId')
     async getTheater(@Param('theaterId') theaterId: string) {
-        return this.theatersService.getTheaters([theaterId])
+        const theaters = await this.theatersService.getTheaters([theaterId])
+        return theaters[0]
     }
 
     @Delete(':theaterId')

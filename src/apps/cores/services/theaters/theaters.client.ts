@@ -15,7 +15,7 @@ export class TheatersClient {
         return this.proxy.getJson(Messages.Theaters.updateTheater, { theaterId, updateDto })
     }
 
-    getTheaters(theaterIds: string[]): Promise<TheaterDto> {
+    getTheaters(theaterIds: string[]): Promise<TheaterDto[]> {
         return this.proxy.getJson(Messages.Theaters.getTheaters, theaterIds)
     }
 

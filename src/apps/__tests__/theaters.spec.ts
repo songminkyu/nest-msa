@@ -104,8 +104,8 @@ describe('/theaters', () => {
 
         it('극장이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
             await client.delete(`/theaters/${nullObjectId}`).notFound({
-                ...Errors.Mongoose.DocumentNotFound,
-                notFoundId: nullObjectId
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
             })
         })
     })
@@ -123,9 +123,8 @@ describe('/theaters', () => {
 
         it('극장이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
             await client.get(`/theaters/${nullObjectId}`).notFound({
-                ...Errors.Mongoose.DocumentNotFound,
-                message: 'Document not found',
-                notFoundId: nullObjectId
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
             })
         })
     })
