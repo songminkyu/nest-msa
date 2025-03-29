@@ -15,12 +15,12 @@ export class TheatersClient {
         return this.proxy.getJson(Messages.Theaters.updateTheater, { theaterId, updateDto })
     }
 
-    getTheater(theaterId: string): Promise<TheaterDto> {
-        return this.proxy.getJson(Messages.Theaters.getTheater, theaterId)
+    getTheaters(theaterIds: string[]): Promise<TheaterDto> {
+        return this.proxy.getJson(Messages.Theaters.getTheaters, theaterIds)
     }
 
-    deleteTheater(theaterId: string): Promise<boolean> {
-        return this.proxy.getJson(Messages.Theaters.deleteTheater, theaterId)
+    deleteTheaters(theaterIds: string[]): Promise<boolean> {
+        return this.proxy.getJson(Messages.Theaters.deleteTheaters, theaterIds)
     }
 
     findTheaters(queryDto: TheaterQueryDto): Promise<TheaterDto[]> {

@@ -21,12 +21,12 @@ export class TheatersController {
 
     @Get(':theaterId')
     async getTheater(@Param('theaterId') theaterId: string) {
-        return this.theatersService.getTheater(theaterId)
+        return this.theatersService.getTheaters([theaterId])
     }
 
     @Delete(':theaterId')
     async deleteTheater(@Param('theaterId') theaterId: string) {
-        return this.theatersService.deleteTheater(theaterId)
+        return this.theatersService.deleteTheaters([theaterId])
     }
 
     @UsePipes(DefaultPaginationPipe)

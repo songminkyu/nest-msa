@@ -18,13 +18,13 @@ export class TheatersService {
         return this.toDto(theater)
     }
 
-    async getTheater(theaterId: string) {
-        const theater = await this.repository.getById(theaterId)
-        return this.toDto(theater)
+    async getTheaters(theaterIds: string[]) {
+        const theaters = await this.repository.getByIds(theaterIds)
+        return this.toDtos(theaters)
     }
 
-    async deleteTheater(theaterId: string) {
-        await this.repository.deleteById(theaterId)
+    async deleteTheaters(theaterIds: string[]) {
+        await this.repository.deleteByIds(theaterIds)
         return true
     }
 

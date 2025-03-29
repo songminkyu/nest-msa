@@ -21,14 +21,14 @@ export class TheatersController {
         return this.service.updateTheater(theaterId, updateDto)
     }
 
-    @MessagePattern(Messages.Theaters.getTheater)
-    getTheater(@Payload() theaterId: string) {
-        return this.service.getTheater(theaterId)
+    @MessagePattern(Messages.Theaters.getTheaters)
+    getTheaters(@Payload() theaterIds: string[]) {
+        return this.service.getTheaters(theaterIds)
     }
 
-    @MessagePattern(Messages.Theaters.deleteTheater)
-    deleteTheater(@Payload() theaterId: string) {
-        return this.service.deleteTheater(theaterId)
+    @MessagePattern(Messages.Theaters.deleteTheaters)
+    deleteTheaters(@Payload() theaterIds: string[]) {
+        return this.service.deleteTheaters(theaterIds)
     }
 
     @MessagePattern(Messages.Theaters.findTheaters)

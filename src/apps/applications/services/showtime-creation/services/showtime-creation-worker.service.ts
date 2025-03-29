@@ -115,7 +115,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
                 let theater = theatersById.get(showtime.theaterId)
 
                 if (!theater) {
-                    theater = await this.theatersService.getTheater(showtime.theaterId)
+                    theater = await this.theatersService.getTheaters([showtime.theaterId])
                     theatersById.set(showtime.theaterId, theater)
                 }
 

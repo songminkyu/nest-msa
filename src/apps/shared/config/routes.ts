@@ -37,8 +37,8 @@ export const Messages = createRouteMap(
         Theaters: {
             createTheater: null,
             updateTheater: null,
-            getTheater: null,
-            deleteTheater: null,
+            getTheaters: null,
+            deleteTheaters: null,
             findTheaters: null,
             getTheatersByIds: null,
             theatersExist: null

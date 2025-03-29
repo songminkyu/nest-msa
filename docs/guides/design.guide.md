@@ -272,3 +272,17 @@ getTheater(theaterId: string) {
 deleteTheater(theaterId: string) {
 }
 ```
+
+다만, REST API는 단일 객체를 요청하는 경우가 많기 때문에 아래와 같이 단수로 받아서 복수로 요청한다.
+
+```ts
+@Get(':theaterId')
+async getTheater(@Param('theaterId') theaterId: string) {
+    return this.theatersService.getTheaters([theaterId])
+}
+
+@Delete(':theaterId')
+async deleteTheater(@Param('theaterId') theaterId: string) {
+    return this.theatersService.deleteTheaters([theaterId])
+}
+```
