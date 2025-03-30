@@ -1,5 +1,5 @@
-import { DateUtil, pickIds } from 'common'
 import { ShowtimeDto, ShowtimesService } from 'apps/cores'
+import { DateUtil, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, testObjectId } from 'testlib'
 import {
     closeFixture,
@@ -130,7 +130,7 @@ describe('Showtimes Module', () => {
         expect(foundIds).toEqual(movieIds)
     })
 
-    it('findTheaterIdsByMovieId', async () => {
+    it('findTheaterIds', async () => {
         const movieId = testObjectId('a1')
         const createDtos = [
             createShowtimeDto({
@@ -150,7 +150,7 @@ describe('Showtimes Module', () => {
         const { success } = await service.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const theaterIds = await service.findTheaterIdsByMovieId(movieId)
+        const theaterIds = await service.findTheaterIds({ movieIds: [movieId] })
         expect(theaterIds).toEqual([testObjectId('b2'), testObjectId('b3')])
     })
 

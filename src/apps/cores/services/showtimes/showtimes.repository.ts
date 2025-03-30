@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { MongooseRepository, objectId, QueryBuilder } from 'common'
+import { Expect, MongooseRepository, objectId, objectIds, QueryBuilder } from 'common'
 import { Model } from 'mongoose'
-import { ShowtimeCreateDto, ShowtimeFilterDto } from './dtos'
+import { ShowtimeCreateDto, ShowtimeFilterDto, TheaterInShowtimeFilterDto } from './dtos'
 import { Showtime } from './models'
+import { uniq } from 'lodash'
 
 @Injectable()
 export class ShowtimesRepository extends MongooseRepository<Showtime> {
@@ -47,10 +48,13 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         return movieIds.map((id) => id.toString())
     }
 
-    async findTheaterIdsByMovieId(movieId: string) {
-        const theaterIds = await this.model
-            .distinct('theaterId', { movieId: objectId(movieId) })
-            .exec()
+    async findTheaterIds(filterDto: TheaterInShowtimeFilterDto) {
+        const builder = new QueryBuilder<Showtime>()
+        builder.addIn('movieId', filterDto.movieIds)
+
+        const query = builder.build({})
+
+        const theaterIds = await this.model.distinct('theaterId', query).exec()
         return theaterIds.map((id) => id.toString())
     }
 

@@ -8,9 +8,11 @@ type FailureHandler = (message: string) => void
 class Validator {
     constructor(private handler: FailureHandler) {}
 
-    equalLength(a: any[], b: any[], message: string) {
+    equalLength(a: any[] | undefined, b: any[] | undefined, message: string) {
         if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
-            this.handler(`${message} first: ${a.length}, second: ${b.length}`)
+            this.handler(
+                `${message} first: ${a ? a.length : undefined}, second: ${b ? b.length : undefined}`
+            )
         }
     }
 

@@ -47,7 +47,7 @@ export const Messages = createRouteMap(
             getShowtimes: null,
             findAllShowtimes: null,
             findShowingMovieIds: null,
-            findTheaterIdsByMovieId: null,
+            findTheaterIds: null,
             findShowdates: null
         },
         Purchases: {

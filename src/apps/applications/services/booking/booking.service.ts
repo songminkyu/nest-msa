@@ -15,7 +15,7 @@ export class BookingService {
 
     async findShowingTheaters(args: { movieId: string; latlong: LatLong }) {
         const { movieId, latlong } = args
-        const theaterIds = await this.showtimesService.findTheaterIdsByMovieId(movieId)
+        const theaterIds = await this.showtimesService.findTheaterIds({movieIds:[movieId]})
         const theaters = await this.theatersService.getTheaters(theaterIds)
         const showingTheaters = sortTheatersByDistance(theaters, latlong)
 
