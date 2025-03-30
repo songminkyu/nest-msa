@@ -29,7 +29,7 @@ export class ShowtimesService {
     async findShowingMovieIds() {
         const currentTime = new Date()
 
-        return this.repository.findMovieIdsShowingAfter(currentTime)
+        return this.repository.findMovieIds({ startTimeRange: { start: currentTime } })
     }
 
     async findTheaterIds(filterDto: ShowtimeFilterDto) {

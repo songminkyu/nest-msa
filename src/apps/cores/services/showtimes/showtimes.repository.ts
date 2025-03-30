@@ -27,26 +27,28 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
     }
 
     async findAllShowtimes(filterDto: ShowtimeFilterDto) {
-        const query = this.buildFindQuery(filterDto)
+        const query = this.buildQuery(filterDto)
 
         const showtimes = await this.model.find(query).sort({ startTime: 1 }).exec()
         return showtimes
     }
 
-    async findMovieIdsShowingAfter(time: Date) {
-        const movieIds = await this.model.distinct('movieId', { startTime: { $gt: time } }).exec()
+    async findMovieIds(filterDto: ShowtimeFilterDto) {
+        const query = this.buildQuery(filterDto)
+
+        const movieIds = await this.model.distinct('movieId', query).exec()
         return movieIds.map((id) => id.toString())
     }
 
     async findTheaterIds(filterDto: ShowtimeFilterDto) {
-        const query = this.buildFindQuery(filterDto)
+        const query = this.buildQuery(filterDto)
 
         const theaterIds = await this.model.distinct('theaterId', query).exec()
         return theaterIds.map((id) => id.toString())
     }
 
     async findShowdates(filterDto: ShowtimeFilterDto) {
-        const query = this.buildFindQuery(filterDto)
+        const query = this.buildQuery(filterDto, true)
 
         const showdates = await this.model.aggregate([
             { $match: query },
@@ -58,7 +60,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         return showdates.map((item) => new Date(item._id))
     }
 
-    private buildFindQuery(filterDto: ShowtimeFilterDto) {
+    private buildQuery(filterDto: ShowtimeFilterDto, allowEmpty: boolean = false) {
         const { batchIds, movieIds, theaterIds, startTimeRange, endTimeRange } = filterDto
 
         const builder = new QueryBuilder<Showtime>()
@@ -68,7 +70,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         builder.addRange('startTime', startTimeRange)
         builder.addRange('endTime', endTimeRange)
 
-        const query = builder.build({})
+        const query = builder.build({ allowEmpty })
 
         return query
     }
