@@ -58,12 +58,13 @@ export class MoviesController {
 
     @Get(':movieId')
     async getMovie(@Param('movieId') movieId: string) {
-        return this.moviesService.getMovie(movieId)
+        const movies = await this.moviesService.getMovies([movieId])
+        return movies[0]
     }
 
     @Delete(':movieId')
     async deleteMovie(@Param('movieId') movieId: string) {
-        return this.moviesService.deleteMovie(movieId)
+        return this.moviesService.deleteMovies([movieId])
     }
 
     @UsePipes(DefaultPaginationPipe)

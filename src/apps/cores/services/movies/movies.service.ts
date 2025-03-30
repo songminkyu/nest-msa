@@ -25,19 +25,21 @@ export class MoviesService {
         return this.toDto(movie)
     }
 
-    async getMovie(movieId: string) {
-        const movie = await this.repository.getById(movieId)
-        return this.toDto(movie)
+    async getMovies(movieIds: string[]) {
+        const movies = await this.repository.getByIds(movieIds)
+        return this.toDtos(movies)
     }
 
-    async deleteMovie(movieId: string) {
+    async deleteMovies(movieIds: string[]) {
         const success = await this.repository.withTransaction(async (session) => {
-            const movie = await this.repository.getById(movieId)
-            await movie.deleteOne({ session })
+            const movies = await this.repository.getByIds(movieIds)
 
-            const fileIds = movie.imageFileIds.map((id) => id.toString())
+            for (const movie of movies) {
+                await movie.deleteOne({ session })
 
-            await this.storageFilesService.deleteFiles(fileIds)
+                const fileIds = movie.imageFileIds.map((id) => id.toString())
+                await this.storageFilesService.deleteFiles(fileIds)
+            }
 
             return true
         })

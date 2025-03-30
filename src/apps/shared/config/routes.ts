@@ -58,8 +58,8 @@ export const Messages = createRouteMap(
         Movies: {
             createMovie: null,
             updateMovie: null,
-            getMovie: 'null',
-            deleteMovie: 'null',
+            getMovies: null,
+            deleteMovies: null,
             findMovies: null,
             getMoviesByIds: null,
             moviesExist: null

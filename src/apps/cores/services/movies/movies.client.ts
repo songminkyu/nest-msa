@@ -19,12 +19,12 @@ export class MoviesClient {
         return this.proxy.getJson(Messages.Movies.updateMovie, { movieId, updateDto })
     }
 
-    getMovie(movieId: string): Promise<MovieDto> {
-        return this.proxy.getJson(Messages.Movies.getMovie, movieId)
+    getMovies(movieIds: string[]): Promise<MovieDto[]> {
+        return this.proxy.getJson(Messages.Movies.getMovies, movieIds)
     }
 
-    deleteMovie(movieId: string): Promise<boolean> {
-        return this.proxy.getJson(Messages.Movies.deleteMovie, movieId)
+    deleteMovies(movieIds: string[]): Promise<boolean> {
+        return this.proxy.getJson(Messages.Movies.deleteMovies, movieIds)
     }
 
     findMovies(queryDto: MovieQueryDto): Promise<MovieDto[]> {

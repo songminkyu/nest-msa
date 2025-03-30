@@ -21,14 +21,14 @@ export class MoviesController {
         return this.service.updateMovie(movieId, updateDto)
     }
 
-    @MessagePattern(Messages.Movies.getMovie)
-    getMovie(@Payload() movieId: string) {
-        return this.service.getMovie(movieId)
+    @MessagePattern(Messages.Movies.getMovies)
+    getMovies(@Payload() movieIds: string[]) {
+        return this.service.getMovies(movieIds)
     }
 
-    @MessagePattern(Messages.Movies.deleteMovie)
-    deleteMovie(@Payload() movieId: string) {
-        return this.service.deleteMovie(movieId)
+    @MessagePattern(Messages.Movies.deleteMovies)
+    deleteMovies(@Payload() movieIds: string[]) {
+        return this.service.deleteMovies(movieIds)
     }
 
     @MessagePattern(Messages.Movies.findMovies)

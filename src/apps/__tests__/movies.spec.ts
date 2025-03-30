@@ -82,7 +82,7 @@ describe('/movies', () => {
             await client.delete(`/movies/${movie.id}`).ok()
             await client
                 .get(`/movies/${movie.id}`)
-                .notFound({ ...Errors.Mongoose.DocumentNotFound, notFoundId: movie.id })
+                .notFound({ ...Errors.Mongoose.MultipleDocumentsNotFound, notFoundIds: [movie.id] })
         })
 
         it('영화를 삭제하면 파일도 삭제되어야 한다', async () => {
@@ -97,9 +97,10 @@ describe('/movies', () => {
         })
 
         it('영화가 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
-            await client
-                .delete(`/movies/${nullObjectId}`)
-                .notFound({ ...Errors.Mongoose.DocumentNotFound, notFoundId: nullObjectId })
+            await client.delete(`/movies/${nullObjectId}`).notFound({
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
+            })
         })
     })
 
@@ -115,9 +116,10 @@ describe('/movies', () => {
         })
 
         it('영화가 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
-            await client
-                .get(`/movies/${nullObjectId}`)
-                .notFound({ ...Errors.Mongoose.DocumentNotFound, notFoundId: nullObjectId })
+            await client.get(`/movies/${nullObjectId}`).notFound({
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
+            })
         })
     })
 
