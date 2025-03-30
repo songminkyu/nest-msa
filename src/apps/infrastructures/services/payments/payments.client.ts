@@ -11,7 +11,7 @@ export class PaymentsClient {
         return this.proxy.getJson(Messages.Payments.processPayment, createDto)
     }
 
-    getPayment(paymentId: string): Promise<PaymentDto> {
-        return this.proxy.getJson(Messages.Payments.getPayment, paymentId)
+    getPayments(paymentIds: string[]): Promise<PaymentDto> {
+        return this.proxy.getJson(Messages.Payments.getPayments, paymentIds)
     }
 }

@@ -23,11 +23,11 @@ describe('Payments Module', () => {
         expect(payment).toEqual(expectedDto)
     })
 
-    it('getPayment', async () => {
+    it('getPayments', async () => {
         const { createDto } = createPaymentDto()
         const createdPayment = await paymentsClient.processPayment(createDto)
 
-        const gotPayment = await paymentsClient.getPayment(createdPayment.id)
-        expect(gotPayment).toEqual(createdPayment)
+        const gotPayments = await paymentsClient.getPayments([createdPayment.id])
+        expect(gotPayments).toEqual([createdPayment])
     })
 })

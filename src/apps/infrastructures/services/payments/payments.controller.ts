@@ -13,8 +13,8 @@ export class PaymentsController {
         return this.service.processPayment(createDto)
     }
 
-    @MessagePattern(Messages.Payments.getPayment)
-    getPayment(@Payload() paymentId: string) {
-        return this.service.getPayment(paymentId)
+    @MessagePattern(Messages.Payments.getPayments)
+    getPayments(@Payload() paymentIds: string[]) {
+        return this.service.getPayments(paymentIds)
     }
 }

@@ -45,7 +45,7 @@ describe('Purchases Module', () => {
     })
 
     it('결제 정보가 조회돼야 한다', async () => {
-        const payment = await paymentsService.getPayment(purchase.paymentId)
-        expect(payment.amount).toEqual(purchase.totalPrice)
+        const payments = await paymentsService.getPayments([purchase.paymentId])
+        expect(payments[0].amount).toEqual(purchase.totalPrice)
     })
 })

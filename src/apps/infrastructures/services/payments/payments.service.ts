@@ -14,12 +14,14 @@ export class PaymentsService {
         return this.toDto(payment)
     }
 
-    async getPayment(paymentId: string) {
-        const payment = await this.repository.getById(paymentId)
+    async getPayments(paymentIds: string[]) {
+        const payments = await this.repository.getByIds(paymentIds)
 
-        return this.toDto(payment)
+        return this.toDtos(payments)
     }
 
     private toDto = (payment: PaymentDocument) =>
         mapDocToDto(payment, PaymentDto, ['id', 'customerId', 'amount', 'createdAt', 'updatedAt'])
+
+    private toDtos = (payments: PaymentDocument[]) => payments.map((payment) => this.toDto(payment))
 }

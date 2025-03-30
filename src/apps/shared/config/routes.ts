@@ -16,7 +16,7 @@ export const Messages = createRouteMap(
         },
         Payments: {
             processPayment: null,
-            getPayment: 'null'
+            getPayments: null
         },
         WatchRecords: {
             createWatchRecord: null,

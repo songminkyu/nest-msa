@@ -71,8 +71,8 @@ describe('/purchase-process', () => {
         })
 
         it('결제 정보를 조회할 수 있어야 한다', async () => {
-            const payment = await fixture.paymentsService.getPayment(purchase.paymentId)
-            expect(payment.amount).toEqual(purchase.totalPrice)
+            const payments = await fixture.paymentsService.getPayments([purchase.paymentId])
+            expect(payments[0].amount).toEqual(purchase.totalPrice)
         })
 
         it('구매한 티켓은 sold 상태여야 한다', async () => {
