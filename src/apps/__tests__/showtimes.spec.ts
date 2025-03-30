@@ -181,7 +181,10 @@ describe('Showtimes Module', () => {
         const { success } = await service.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const showdates = await service.findShowdates({ movieId, theaterId })
+        const showdates = await service.findShowdates({
+            movieIds: [movieId],
+            theaterIds: [theaterId]
+        })
         expect(showdates.map((showdate) => showdate.getTime())).toEqual([
             new Date('2000-01-02').getTime(),
             new Date('2000-01-04').getTime()

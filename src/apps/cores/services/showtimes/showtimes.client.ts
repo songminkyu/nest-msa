@@ -1,12 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
-import {
-    ShowtimeCreateDto,
-    ShowtimeDto,
-    ShowtimeFilterDto,
-    TheaterInShowtimeFilterDto
-} from './dtos'
+import { ShowtimeCreateDto, ShowtimeDto, ShowtimeFilterDto } from './dtos'
 import { CreateShowtimesResult } from './types'
 
 @Injectable()
@@ -29,11 +24,11 @@ export class ShowtimesClient {
         return this.proxy.getJson(Messages.Showtimes.findShowingMovieIds, {})
     }
 
-    findTheaterIds(filterDto: TheaterInShowtimeFilterDto): Promise<string[]> {
+    findTheaterIds(filterDto: ShowtimeFilterDto): Promise<string[]> {
         return this.proxy.getJson(Messages.Showtimes.findTheaterIds, filterDto)
     }
 
-    findShowdates(args: { movieId: string; theaterId: string }): Promise<Date[]> {
-        return this.proxy.getJson(Messages.Showtimes.findShowdates, args)
+    findShowdates(filterDto: ShowtimeFilterDto): Promise<Date[]> {
+        return this.proxy.getJson(Messages.Showtimes.findShowdates, filterDto)
     }
 }

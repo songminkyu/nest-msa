@@ -56,7 +56,7 @@ src
 │   │       ├── customers           # 고객 인증 및 관리. 'name' 인덱스 설정. 서비스 분리. mock을 사용한 단위 테스트.
 │   │       ├── movies              # 영화 관리(파일 업로드). 파일 업로드. 파일 url 생성.
 │   │       ├── purchases           # 구매 관리.
-│   │       ├── showtimes           # 상영 시간 관리
+│   │       ├── showtimes           # 상영 시간 관리. 다양한 쿼리
 │   │       ├── theaters            # 극장 관리
 │   │       ├── ticket-holding      # 티켓 선점 관리
 │   │       ├── tickets             # 티켓 관리

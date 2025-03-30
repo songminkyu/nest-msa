@@ -22,8 +22,12 @@ export class BookingService {
         return showingTheaters
     }
 
+    // TODO { movieId: string; theaterId: string } interface 정의해라
     async findShowdates(args: { movieId: string; theaterId: string }) {
-        return this.showtimesService.findShowdates(args)
+        return this.showtimesService.findShowdates({
+            movieIds: [args.movieId],
+            theaterIds: [args.theaterId]
+        })
     }
 
     async findShowtimes(args: { movieId: string; theaterId: string; showdate: Date }) {

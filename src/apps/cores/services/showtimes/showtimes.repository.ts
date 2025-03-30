@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Expect, MongooseRepository, objectId, objectIds, QueryBuilder } from 'common'
+import { MongooseRepository, objectId, QueryBuilder } from 'common'
 import { Model } from 'mongoose'
-import { ShowtimeCreateDto, ShowtimeFilterDto, TheaterInShowtimeFilterDto } from './dtos'
+import { ShowtimeCreateDto, ShowtimeFilterDto } from './dtos'
 import { Showtime } from './models'
-import { uniq } from 'lodash'
 
 @Injectable()
 export class ShowtimesRepository extends MongooseRepository<Showtime> {
@@ -28,6 +27,38 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
     }
 
     async findAllShowtimes(filterDto: ShowtimeFilterDto) {
+        const query = this.buildFindQuery(filterDto)
+
+        const showtimes = await this.model.find(query).sort({ startTime: 1 }).exec()
+        return showtimes
+    }
+
+    async findMovieIdsShowingAfter(time: Date) {
+        const movieIds = await this.model.distinct('movieId', { startTime: { $gt: time } }).exec()
+        return movieIds.map((id) => id.toString())
+    }
+
+    async findTheaterIds(filterDto: ShowtimeFilterDto) {
+        const query = this.buildFindQuery(filterDto)
+
+        const theaterIds = await this.model.distinct('theaterId', query).exec()
+        return theaterIds.map((id) => id.toString())
+    }
+
+    async findShowdates(filterDto: ShowtimeFilterDto) {
+        const query = this.buildFindQuery(filterDto)
+
+        const showdates = await this.model.aggregate([
+            { $match: query },
+            { $project: { date: { $dateToString: { format: '%Y-%m-%d', date: '$startTime' } } } },
+            { $group: { _id: '$date' } },
+            { $sort: { _id: 1 } }
+        ])
+
+        return showdates.map((item) => new Date(item._id))
+    }
+
+    private buildFindQuery(filterDto: ShowtimeFilterDto) {
         const { batchIds, movieIds, theaterIds, startTimeRange, endTimeRange } = filterDto
 
         const builder = new QueryBuilder<Showtime>()
@@ -39,35 +70,6 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
 
         const query = builder.build({})
 
-        const showtimes = await this.model.find(query).sort({ startTime: 1 }).exec()
-        return showtimes
-    }
-
-    async findMovieIdsShowingAfter(time: Date) {
-        const movieIds = await this.model.distinct('movieId', { startTime: { $gt: time } }).exec()
-        return movieIds.map((id) => id.toString())
-    }
-
-    async findTheaterIds(filterDto: TheaterInShowtimeFilterDto) {
-        const builder = new QueryBuilder<Showtime>()
-        builder.addIn('movieId', filterDto.movieIds)
-
-        const query = builder.build({})
-
-        const theaterIds = await this.model.distinct('theaterId', query).exec()
-        return theaterIds.map((id) => id.toString())
-    }
-
-    async findShowdates(args: { movieId: string; theaterId: string }) {
-        const { movieId, theaterId } = args
-
-        const showdates = await this.model.aggregate([
-            { $match: { movieId: objectId(movieId), theaterId: objectId(theaterId) } },
-            { $project: { date: { $dateToString: { format: '%Y-%m-%d', date: '$startTime' } } } },
-            { $group: { _id: '$date' } },
-            { $sort: { _id: 1 } }
-        ])
-
-        return showdates.map((item) => new Date(item._id))
+        return query
     }
 }
