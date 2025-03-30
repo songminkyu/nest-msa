@@ -11,7 +11,7 @@ export class PurchasesClient {
         return this.proxy.getJson(Messages.Purchases.createPurchase, createDto)
     }
 
-    getPurchase(purchaseId: string): Promise<PurchaseDto> {
-        return this.proxy.getJson(Messages.Purchases.getPurchase, purchaseId)
+    getPurchases(purchaseIds: string[]): Promise<PurchaseDto[]> {
+        return this.proxy.getJson(Messages.Purchases.getPurchases, purchaseIds)
     }
 }

@@ -16,6 +16,7 @@ export class PurchasesController {
 
     @Get(':purchseId')
     async getPurchase(@Param('purchseId') purchseId: string) {
-        return this.purchasesService.getPurchase(purchseId)
+        const purchases = await this.purchasesService.getPurchases([purchseId])
+        return purchases[0]
     }
 }

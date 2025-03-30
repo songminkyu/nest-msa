@@ -40,8 +40,8 @@ describe('Purchases Module', () => {
     })
 
     it('구매 정보를 조회해야 한다', async () => {
-        const gotPurchase = await purchasesService.getPurchase(purchase.id)
-        expect(gotPurchase).toEqual(purchase)
+        const gotPurchases = await purchasesService.getPurchases([purchase.id])
+        expect(gotPurchases).toEqual([purchase])
     })
 
     it('결제 정보가 조회돼야 한다', async () => {

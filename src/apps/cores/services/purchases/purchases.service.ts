@@ -26,10 +26,10 @@ export class PurchasesService {
         return this.toDto(purchase)
     }
 
-    async getPurchase(purchaseId: string) {
-        const purchase = await this.repository.getById(purchaseId)
+    async getPurchases(purchaseIds: string[]) {
+        const purchases = await this.repository.getByIds(purchaseIds)
 
-        return this.toDto(purchase)
+        return this.toDtos(purchases)
     }
 
     private toDto = (purchase: PurchaseDocument) =>
@@ -42,4 +42,7 @@ export class PurchasesService {
             'createdAt',
             'updatedAt'
         ])
+
+    private toDtos = (purchases: PurchaseDocument[]) =>
+        purchases.map((purchase) => this.toDto(purchase))
 }

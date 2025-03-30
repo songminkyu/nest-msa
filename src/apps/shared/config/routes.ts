@@ -53,7 +53,7 @@ export const Messages = createRouteMap(
         },
         Purchases: {
             createPurchase: null,
-            getPurchase: 'null'
+            getPurchases: null
         },
         Movies: {
             createMovie: null,
