@@ -32,6 +32,7 @@ export class ShowtimesService {
         return this.repository.findMovieIdsShowingAfter(currentTime)
     }
 
+    // TODO findTheaterIds로 변경
     async findTheaterIdsByMovieId(movieId: string) {
         return this.repository.findTheaterIdsByMovieId(movieId)
     }

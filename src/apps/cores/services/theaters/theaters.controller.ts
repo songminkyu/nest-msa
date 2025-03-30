@@ -36,11 +36,6 @@ export class TheatersController {
         return this.service.findTheaters(queryDto)
     }
 
-    @MessagePattern(Messages.Theaters.getTheatersByIds)
-    getTheatersByIds(@Payload() theaterIds: string[]) {
-        return this.service.getTheatersByIds(theaterIds)
-    }
-
     @MessagePattern(Messages.Theaters.theatersExist)
     theatersExist(@Payload() theaterIds: string[]) {
         return this.service.theatersExist(theaterIds)

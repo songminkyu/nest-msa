@@ -1,5 +1,4 @@
 import { expect } from '@jest/globals'
-import { pickIds } from 'common'
 import { TheaterDto } from 'apps/cores'
 import { expectEqualUnsorted, HttpTestClient, nullObjectId } from 'testlib'
 import {
@@ -169,29 +168,6 @@ describe('/theaters', () => {
 
             const expected = theaters.filter((theater) => theater.name.startsWith(partialName))
             expectEqualUnsorted(body.items, expected)
-        })
-    })
-
-    describe('getTheatersByIds', () => {
-        let theaters: TheaterDto[]
-
-        beforeEach(async () => {
-            theaters = await createTheaters(fixture.theatersService)
-        })
-
-        it('theaterIds로 극장을 검색할 수 있어야 한다', async () => {
-            const expectedTheaters = theaters.slice(0, 5)
-            const theaterIds = pickIds(expectedTheaters)
-
-            const gotTheaters = await fixture.theatersService.getTheatersByIds(theaterIds)
-
-            expectEqualUnsorted(gotTheaters, expectedTheaters)
-        })
-
-        it('극장이 존재하지 않으면 NotFoundException을 던져야 한다', async () => {
-            const promise = fixture.theatersService.getTheatersByIds([nullObjectId])
-
-            await expect(promise).rejects.toThrow('One or more documents not found')
         })
     })
 })

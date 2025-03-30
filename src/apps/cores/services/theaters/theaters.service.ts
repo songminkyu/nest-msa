@@ -37,12 +37,6 @@ export class TheatersService {
         }
     }
 
-    async getTheatersByIds(theaterIds: string[]) {
-        const theaters = await this.repository.getByIds(theaterIds)
-
-        return this.toDtos(theaters)
-    }
-
     async theatersExist(theaterIds: string[]) {
         return this.repository.existByIds(theaterIds)
     }

@@ -40,7 +40,6 @@ export const Messages = createRouteMap(
             getTheaters: null,
             deleteTheaters: null,
             findTheaters: null,
-            getTheatersByIds: null,
             theatersExist: null
         },
         Showtimes: {
