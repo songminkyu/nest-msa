@@ -21,14 +21,14 @@ export class CustomersController {
         return this.service.updateCustomer(customerId, updateDto)
     }
 
-    @MessagePattern(Messages.Customers.getCustomer)
-    getCustomer(@Payload() customerId: string) {
-        return this.service.getCustomer(customerId)
+    @MessagePattern(Messages.Customers.getCustomers)
+    getCustomers(@Payload() customerIds: string[]) {
+        return this.service.getCustomers(customerIds)
     }
 
-    @MessagePattern(Messages.Customers.deleteCustomer)
-    deleteCustomer(@Payload() customerId: string) {
-        return this.service.deleteCustomer(customerId)
+    @MessagePattern(Messages.Customers.deleteCustomers)
+    deleteCustomers(@Payload() customerIds: string[]) {
+        return this.service.deleteCustomers(customerIds)
     }
 
     @MessagePattern(Messages.Customers.findCustomers)

@@ -67,8 +67,8 @@ export const Messages = createRouteMap(
         Customers: {
             createCustomer: null,
             updateCustomer: null,
-            getCustomer: 'null',
-            deleteCustomer: 'null',
+            getCustomers: null,
+            deleteCustomers: null,
             findCustomers: null,
             login: null,
             refreshAuthTokens: null,

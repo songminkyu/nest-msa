@@ -40,12 +40,13 @@ export class CustomersController {
 
     @Get(':customerId')
     async getCustomer(@Param('customerId') customerId: string) {
-        return this.customersService.getCustomer(customerId)
+        const customers = await this.customersService.getCustomers([customerId])
+        return customers[0]
     }
 
     @Delete(':customerId')
     async deleteCustomer(@Param('customerId') customerId: string) {
-        return this.customersService.deleteCustomer(customerId)
+        return this.customersService.deleteCustomers([customerId])
     }
 
     @UsePipes(DefaultPaginationPipe)

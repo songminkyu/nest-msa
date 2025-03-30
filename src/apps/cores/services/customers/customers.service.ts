@@ -39,13 +39,13 @@ export class CustomersService {
         return this.toDto(customer)
     }
 
-    async getCustomer(customerId: string) {
-        const customer = await this.repository.getById(customerId)
-        return this.toDto(customer)
+    async getCustomers(customerIds: string[]) {
+        const customers = await this.repository.getByIds(customerIds)
+        return this.toDtos(customers)
     }
 
-    async deleteCustomer(customerId: string) {
-        await this.repository.deleteById(customerId)
+    async deleteCustomers(customerIds: string[]) {
+        await this.repository.deleteByIds(customerIds)
         return true
     }
 

@@ -116,15 +116,15 @@ describe('/customers', () => {
         it('고객을 삭제해야 한다', async () => {
             await client.delete(`/customers/${customer.id}`).ok()
             await client.get(`/customers/${customer.id}`).notFound({
-                ...Errors.Mongoose.DocumentNotFound,
-                notFoundId: customer.id
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [customer.id]
             })
         })
 
         it('고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
             await client.delete(`/customers/${nullObjectId}`).notFound({
-                ...Errors.Mongoose.DocumentNotFound,
-                notFoundId: nullObjectId
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
             })
         })
     })
@@ -142,8 +142,8 @@ describe('/customers', () => {
 
         it('고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
             await client.get(`/customers/${nullObjectId}`).notFound({
-                ...Errors.Mongoose.DocumentNotFound,
-                notFoundId: nullObjectId
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
             })
         })
     })

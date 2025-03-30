@@ -15,12 +15,12 @@ export class CustomersClient {
         return this.proxy.getJson(Messages.Customers.updateCustomer, { customerId, updateDto })
     }
 
-    getCustomer(customerId: string): Promise<CustomerDto> {
-        return this.proxy.getJson(Messages.Customers.getCustomer, customerId)
+    getCustomers(customerIds: string[]): Promise<CustomerDto[]> {
+        return this.proxy.getJson(Messages.Customers.getCustomers, customerIds)
     }
 
-    deleteCustomer(customerId: string): Promise<boolean> {
-        return this.proxy.getJson(Messages.Customers.deleteCustomer, customerId)
+    deleteCustomers(customerIds: string[]): Promise<boolean> {
+        return this.proxy.getJson(Messages.Customers.deleteCustomers, customerIds)
     }
 
     findCustomers(queryDto: CustomerQueryDto): Promise<CustomerDto[]> {
