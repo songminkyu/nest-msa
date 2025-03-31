@@ -59,7 +59,7 @@ src
 │   │       ├── showtimes           # 상영 시간 관리. 다양한 쿼리
 │   │       ├── theaters            # 극장 관리
 │   │       ├── ticket-holding      # 티켓 선점 관리
-│   │       ├── tickets             # 티켓 관리
+│   │       ├── tickets             # 티켓 관리. 컨트롤러에서 array 검증.
 │   │       └── watch-records       # 영화 관람 기록 관리
 │   ├── gateway
 │   │       └── controllers         # 클라이언트가 서비스를 사용할 수 있도록 REST API를 제공

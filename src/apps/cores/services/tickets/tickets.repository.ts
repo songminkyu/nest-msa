@@ -40,7 +40,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
             { $set: { status } }
         )
 
-        return result as MongooseUpdateResult
+        return result
     }
 
     async findAllTickets(queryDto: TicketQueryDto) {

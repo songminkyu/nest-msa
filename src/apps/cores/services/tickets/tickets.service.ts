@@ -34,8 +34,8 @@ export class TicketsService {
         return this.toDtos(tickets)
     }
 
-    async getSalesStatuses(ticketIds: string[]) {
-        const statuses = await this.repository.getSalesStatuses(ticketIds)
+    async getSalesStatuses(showtimeIds: string[]) {
+        const statuses = await this.repository.getSalesStatuses(showtimeIds)
         return statuses
     }
 

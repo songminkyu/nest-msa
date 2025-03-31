@@ -31,8 +31,8 @@ export class TicketsController {
     }
 
     @MessagePattern(Messages.Tickets.getSalesStatuses)
-    getSalesStatuses(@Payload() ticketIds: string[]) {
-        return this.service.getSalesStatuses(ticketIds)
+    getSalesStatuses(@Payload() showtimeIds: string[]) {
+        return this.service.getSalesStatuses(showtimeIds)
     }
 
     @MessagePattern(Messages.Tickets.getTickets)

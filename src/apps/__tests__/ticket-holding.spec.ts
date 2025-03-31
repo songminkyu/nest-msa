@@ -1,10 +1,10 @@
+import { TicketHoldingClient } from 'apps/cores'
 import { generateShortId, sleep } from 'common'
-import { TicketHoldingService } from 'apps/cores'
 import { closeFixture, Fixture } from './ticket-holding.fixture'
 
 describe('TicketHolding Module', () => {
     let fixture: Fixture
-    let service: TicketHoldingService
+    let service: TicketHoldingClient
 
     const customerA = 'customerId#1'
     const customerB = 'customerId#2'
