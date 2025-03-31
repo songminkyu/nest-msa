@@ -60,6 +60,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         return showdates.map((item) => new Date(item._id))
     }
 
+    // TODO buildQuery 다른 곳도
     private buildQuery(filterDto: ShowtimeFilterDto, allowEmpty: boolean = false) {
         const { batchIds, movieIds, theaterIds, startTimeRange, endTimeRange } = filterDto
 

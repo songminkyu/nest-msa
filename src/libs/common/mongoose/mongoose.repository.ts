@@ -1,10 +1,10 @@
 import { BadRequestException, NotFoundException, OnModuleInit } from '@nestjs/common'
 import { differenceWith, uniq } from 'lodash'
 import { ClientSession, HydratedDocument, Model, QueryWithHelpers } from 'mongoose'
-import { PaginationOptionDto, PaginationResult } from '../types'
+import { CommonQueryDto, PaginationResult } from '../query'
 import { Assert, Expect } from '../validator'
-import { objectId, objectIds } from './mongoose.util'
 import { MongooseErrors } from './errors'
+import { objectId, objectIds } from './mongoose.util'
 
 export class MongooseUpdateResult {
     modifiedCount: number
@@ -106,7 +106,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
 
     async findWithPagination(args: {
         callback?: (helpers: QueryWithHelpers<Array<Doc>, Doc>) => void
-        pagination: PaginationOptionDto
+        pagination: CommonQueryDto
         session?: SessionArg
     }) {
         const { callback, pagination, session } = args

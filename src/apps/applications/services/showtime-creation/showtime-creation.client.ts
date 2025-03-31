@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { MovieDto, ShowtimeDto, TheaterDto } from 'apps/cores'
-import { ClientProxyService, InjectClientProxy, PaginationOptionDto } from 'common'
+import { ClientProxyService, InjectClientProxy, CommonQueryDto } from 'common'
 import { Messages } from 'shared'
 import { ShowtimeBatchCreateDto, ShowtimeBatchCreateResponse } from './dtos'
 
@@ -8,11 +8,11 @@ import { ShowtimeBatchCreateDto, ShowtimeBatchCreateResponse } from './dtos'
 export class ShowtimeCreationClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    findMovies(queryDto: PaginationOptionDto): Promise<MovieDto[]> {
+    findMovies(queryDto: CommonQueryDto): Promise<MovieDto[]> {
         return this.proxy.getJson(Messages.ShowtimeCreation.findMovies, queryDto)
     }
 
-    findTheaters(queryDto: PaginationOptionDto): Promise<TheaterDto[]> {
+    findTheaters(queryDto: CommonQueryDto): Promise<TheaterDto[]> {
         return this.proxy.getJson(Messages.ShowtimeCreation.findTheaters, queryDto)
     }
 

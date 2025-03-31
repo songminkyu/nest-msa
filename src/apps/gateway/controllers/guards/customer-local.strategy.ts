@@ -16,6 +16,7 @@ export class CustomerLocalStrategy extends PassportStrategy(Strategy, 'customer-
     async validate(email: string, password: string): Promise<AuthTokenPayload | null> {
         const userId = await this.customersService.authenticateCustomer(email, password)
 
+        // TODO customerId
         return userId ? { userId, email } : null
     }
 }

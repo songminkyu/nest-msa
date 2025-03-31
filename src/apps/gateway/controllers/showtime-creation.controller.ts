@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common'
 import { EventPattern } from '@nestjs/microservices'
 import { ShowtimeBatchCreateDto, ShowtimeCreationClient } from 'apps/applications'
-import { PaginationOptionDto } from 'common'
+import { CommonQueryDto } from 'common'
 import { Observable, Subject } from 'rxjs'
 import { Events } from 'shared'
 import { DefaultPaginationPipe } from './pipes'
@@ -30,13 +30,13 @@ export class ShowtimeCreationController implements OnModuleDestroy {
 
     @UsePipes(DefaultPaginationPipe)
     @Get('theaters')
-    async findTheaters(@Query() queryDto: PaginationOptionDto) {
+    async findTheaters(@Query() queryDto: CommonQueryDto) {
         return this.showtimeCreationService.findTheaters(queryDto)
     }
 
     @UsePipes(DefaultPaginationPipe)
     @Get('movies')
-    async findMovies(@Query() queryDto: PaginationOptionDto) {
+    async findMovies(@Query() queryDto: CommonQueryDto) {
         return this.showtimeCreationService.findMovies(queryDto)
     }
 

@@ -1,7 +1,7 @@
 import { IsOptional } from 'class-validator'
-import { PaginationOptionDto } from 'common'
+import { CommonQueryDto } from 'common'
 
-export class WatchRecordQueryDto extends PaginationOptionDto {
+export class WatchRecordQueryDto extends CommonQueryDto {
     @IsOptional()
     customerId?: string
 }

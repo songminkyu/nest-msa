@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { newObjectId, PaginationOptionDto } from 'common'
+import { newObjectId, CommonQueryDto } from 'common'
 import { MoviesClient, ShowtimesClient, TheatersClient } from 'apps/cores'
 import { ShowtimeBatchCreateDto, ShowtimeBatchCreateResponse } from './dtos'
 import { ShowtimeCreationWorkerService } from './services'
@@ -13,11 +13,11 @@ export class ShowtimeCreationService {
         private batchCreationService: ShowtimeCreationWorkerService
     ) {}
 
-    async findMovies(queryDto: PaginationOptionDto) {
+    async findMovies(queryDto: CommonQueryDto) {
         return this.moviesService.findMovies(queryDto)
     }
 
-    async findTheaters(queryDto: PaginationOptionDto) {
+    async findTheaters(queryDto: CommonQueryDto) {
         return this.theatersService.findTheaters(queryDto)
     }
 
