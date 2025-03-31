@@ -2,7 +2,12 @@ import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
 import { CustomersService } from './customers.service'
-import { CustomerAuthPayloadDto, CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
+import {
+    CustomerAuthPayloadDto,
+    CustomerCreateDto,
+    CustomerQueryDto,
+    CustomerUpdateDto
+} from './dtos'
 
 @Controller()
 export class CustomersController {

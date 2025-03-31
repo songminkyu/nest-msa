@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy, JwtAuthTokens } from 'common'
 import { Messages } from 'shared'
-import { CustomerAuthPayloadDto, CustomerCreateDto, CustomerDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
+import {
+    CustomerAuthPayloadDto,
+    CustomerCreateDto,
+    CustomerDto,
+    CustomerQueryDto,
+    CustomerUpdateDto
+} from './dtos'
 
 @Injectable()
 export class CustomersClient {
