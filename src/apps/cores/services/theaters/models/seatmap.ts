@@ -45,7 +45,7 @@ export class Seatmap {
     @Type(() => SeatBlock)
     blocks: SeatBlock[]
 
-    static getAllSeats = (seatmap: Seatmap) => Array.from(seatsIterator(seatmap))
+    static getAllSeats = (seatmap: Seatmap) => Array.from(this.seatsIterator(seatmap))
     static getSeatCount = (seatmap: Seatmap) => {
         let count = 0
 
@@ -61,17 +61,17 @@ export class Seatmap {
 
         return count
     }
-}
 
-function* seatsIterator(seatmap: Seatmap): IterableIterator<Seat> {
-    for (const block of seatmap.blocks) {
-        for (const row of block.rows) {
-            for (let i = 0; i < row.seats.length; i++) {
-                if (row.seats[i] !== 'X') {
-                    yield {
-                        block: block.name,
-                        row: row.name,
-                        seatnum: i + 1
+    static *seatsIterator(seatmap: Seatmap): IterableIterator<Seat> {
+        for (const block of seatmap.blocks) {
+            for (const row of block.rows) {
+                for (let i = 0; i < row.seats.length; i++) {
+                    if (row.seats[i] !== 'X') {
+                        yield {
+                            block: block.name,
+                            row: row.name,
+                            seatnum: i + 1
+                        }
                     }
                 }
             }

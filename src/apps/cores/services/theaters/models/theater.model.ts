@@ -24,3 +24,5 @@ export class Theater extends MongooseSchema {
 }
 export type TheaterDocument = HydratedDocument<Theater>
 export const TheaterSchema = createMongooseSchema(Theater)
+
+TheaterSchema.index({ name: 'text' })

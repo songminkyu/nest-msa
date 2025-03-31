@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { CacheService, InjectCache } from 'common'
+import { TicketHoldDto } from './dtos'
 
 const getCustomerKey = (showtimeId: string, customerId: string) =>
     `Customer:{${showtimeId}}:${customerId}`
@@ -9,14 +10,7 @@ const getTicketKey = (showtimeId: string, ticketId: string) => `Ticket:{${showti
 export class TicketHoldingService {
     constructor(@InjectCache('ticket-holding') private cacheService: CacheService) {}
 
-    async holdTickets(args: {
-        customerId: string
-        showtimeId: string
-        ticketIds: string[]
-        ttlMs: number
-    }) {
-        const { customerId, showtimeId, ticketIds, ttlMs } = args
-
+    async holdTickets({ customerId, showtimeId, ticketIds, ttlMs }: TicketHoldDto) {
         const ticketKeys = ticketIds.map((ticketId) => getTicketKey(showtimeId, ticketId))
         const customerKeyStr = getCustomerKey(showtimeId, customerId)
         const keys = [...ticketKeys, customerKeyStr]
