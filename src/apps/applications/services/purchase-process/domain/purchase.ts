@@ -16,6 +16,7 @@ export const PurchaseErrors = {
     }
 }
 
+// Purchase를 모델로 만드는 것은?
 // TODO to Config
 // TODO 이거 static class로 만들어라
 const PURCHASE_MAX_TICKETS = 10
