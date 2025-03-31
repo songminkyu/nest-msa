@@ -39,41 +39,43 @@ NestJS 기반 프로젝트 시작을 위한 통합 템플릿으로, 다음과 �
 
 자세한 설계 방식과 구조는 [Design Guide](./docs/guides/design.guide.md)를 참고하세요.
 
-TODO Gateway controller -> proxy -> Service controller -> service 순서로 호출되는 그림 첨부. 그림으로 해라 github에서 plantuml이 안 보인다.
+### 폴더 구조
 
 ```
 src
 ├── apps
-│   ├── __tests__                   # apps의 통합 테스트
-│   ├── applications                # application 서비스를 모은 프로젝트
+│   ├── __tests__     # apps의 통합 테스트
+│   ├── applications    # application 서비스를 모은 프로젝트
 │   │   └── services
 │   │       ├── booking             # 영화 티켓 예매 프로세스
 │   │       ├── purchase-process    # 티켓 구매 프로세스
 │   │       ├── recommendation      # 영화 추천
 │   │       └── showtime-creation   # 상영 시간 등록
-│   ├── cores                       # 핵심 기능 서비스를 모은 프로젝트
+│   ├── cores    # 핵심 기능 서비스를 모은 프로젝트
 │   │   └── services
-│   │       ├── customers           # 고객 인증 및 관리. password(select: false). 'name' 인덱스 설정. 서비스 분리. mock을 사용한 단위 테스트.
-│   │       ├── movies              # 영화 관리(파일 업로드). 파일 업로드. 파일 url 생성.
-│   │       ├── purchases           # 구매 관리.
-│   │       ├── showtimes           # 상영 시간 관리. 다양한 쿼리
-│   │       ├── theaters            # 극장 관리
-│   │       ├── ticket-holding      # 티켓 선점 관리
-│   │       ├── tickets             # 티켓 관리. 컨트롤러에서 array 검증.
-│   │       └── watch-records       # 영화 관람 기록 관리
-│   ├── gateway
-│   │       └── controllers         # 클라이언트가 서비스를 사용할 수 있도록 REST API를 제공
-│   ├── infrastructures             # 외부 서비스를 모은 프로젝트
+│   │       ├── customers         # 고객 인증 및 관리. password 숨김. 서비스 분리.
+│   │       │                       mock을 사용한 단위 테스트.
+│   │       ├── movies            # 영화 관리(파일 업로드). 파일 업로드. 파일 url 생성.
+│   │       ├── purchases         # 구매 관리.
+│   │       ├── showtimes         # 상영 시간 관리. 다양한 쿼리
+│   │       ├── theaters          # 극장 관리. 'name' 인덱스 설정.
+│   │       ├── ticket-holding    # 티켓 선점 관리
+│   │       ├── tickets           # 티켓 관리. 컨트롤러에서 array 검증.
+│   │       └── watch-records     # 영화 관람 기록 관리
+│   ├── gateway    # 클라이언트가 서비스를 사용할 수 있도록 REST API를 제공
+│   │       └── controllers
+│   ├── infrastructures           # 외부 서비스를 모은 프로젝트
 │   │   └── services
-│   │       ├── payments            # 외부 결제 시스템 연동과 결제 내역을 관리.
-│   │       └── storage-files       # 파일 저장소와 저장된 파일 목록을 관리한다. AWS/GCP 등 사용하는 인프라에 맞게 변경해야 한다.
-│   └── shared                      # 서비스들이 공통으로 사용하는 코드
-│       ├── config                  # 설정 관련
-│       ├── modules                 # 공통으로 사용하는 모듈들
-│       └── pipes                   # 공통으로 사용하는 nestjs 파이프 등
-└── libs                            # 특정 프로젝트에 종속되지 않는 공통 기능들
-    ├── common                      # 공통 기능 모음
-    └── testlib                     # 테스트 관련 기능 모음
+│   │       ├── payments          # 외부 결제 시스템 연동과 결제 내역을 관리.
+│   │       └── storage-files     # 파일 저장소와 저장된 파일 목록을 관리한다.
+│   │                               AWS/GCP 등 사용하는 인프라에 맞게 변경해야 한다.
+│   └── shared         # 서비스들이 공통으로 사용하는 코드
+│       ├── config     # 설정 관련
+│       ├── modules    # 공통으로 사용하는 모듈들
+│       └── pipes      # 공통으로 사용하는 nestjs 파이프 등
+└── libs            # 특정 프로젝트에 종속되지 않는 공통 기능들
+    ├── common      # 공통 기능 모음
+    └── testlib     # 테스트 관련 기능 모음
 ```
 
 ## 3. 프로젝트 이름 변경

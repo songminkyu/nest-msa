@@ -20,5 +20,4 @@ export class Customer extends MongooseSchema {
 export type CustomerDocument = HydratedDocument<Customer>
 export const CustomerSchema = createMongooseSchema(Customer)
 
-/* `name` 필드에 대해 텍스트 인덱스를 생성해서 고객 이름에 대한 검색을 가능하게 합니다. */
 CustomerSchema.index({ name: 'text' })
