@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
-import { SalesStatusByShowtimeDto, TicketCreateDto, TicketDto, TicketFilterDto } from './dtos'
+import { SalesStatusByShowtimeDto, TicketCreateDto, TicketDto, TicketQueryDto } from './dtos'
 import { TicketStatus } from './models'
 import { CreateTicketsResult } from './types'
 
@@ -17,8 +17,8 @@ export class TicketsClient {
         return this.proxy.getJson(Messages.Tickets.updateTicketStatus, { ticketIds, status })
     }
 
-    findAllTickets(filterDto: TicketFilterDto): Promise<TicketDto[]> {
-        return this.proxy.getJson(Messages.Tickets.findAllTickets, filterDto)
+    findAllTickets(queryDto: TicketQueryDto): Promise<TicketDto[]> {
+        return this.proxy.getJson(Messages.Tickets.findAllTickets, queryDto)
     }
 
     getSalesStatuses(ticketIds: string[]): Promise<SalesStatusByShowtimeDto[]> {

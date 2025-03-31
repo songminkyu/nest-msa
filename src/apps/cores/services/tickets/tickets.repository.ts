@@ -1,8 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { MongooseRepository, MongooseUpdateResult, objectId, objectIds, QueryBuilder } from 'common'
+import {
+    MongooseRepository,
+    MongooseUpdateResult,
+    objectId,
+    objectIds,
+    QueryBuilder,
+    QueryBuilderOptions
+} from 'common'
 import { Model } from 'mongoose'
-import { SalesStatusByShowtimeDto, TicketCreateDto, TicketFilterDto } from './dtos'
+import { SalesStatusByShowtimeDto, TicketCreateDto, TicketQueryDto } from './dtos'
 import { Ticket, TicketStatus } from './models'
 
 @Injectable()
@@ -36,16 +43,8 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
         return result as MongooseUpdateResult
     }
 
-    async findAllTickets(filterDto: TicketFilterDto) {
-        const { batchIds, movieIds, theaterIds, showtimeIds } = filterDto
-
-        const builder = new QueryBuilder<Ticket>()
-        builder.addIn('batchId', batchIds)
-        builder.addIn('movieId', movieIds)
-        builder.addIn('theaterId', theaterIds)
-        builder.addIn('showtimeId', showtimeIds)
-
-        const query = builder.build({})
+    async findAllTickets(queryDto: TicketQueryDto) {
+        const query = this.buildQuery(queryDto)
 
         const tickets = await this.model.find(query).sort({ batchId: 1 }).exec()
         return tickets
@@ -58,11 +57,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
                 $group: {
                     _id: '$showtimeId',
                     total: { $sum: 1 },
-                    sold: {
-                        $sum: {
-                            $cond: [{ $eq: ['$status', TicketStatus.sold] }, 1, 0]
-                        }
-                    }
+                    sold: { $sum: { $cond: [{ $eq: ['$status', TicketStatus.sold] }, 1, 0] } }
                 }
             },
             {
@@ -77,5 +72,18 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
         ])
 
         return salesStatuses as SalesStatusByShowtimeDto[]
+    }
+
+    private buildQuery(queryDto: TicketQueryDto, options: QueryBuilderOptions = {}) {
+        const { batchIds, movieIds, theaterIds, showtimeIds } = queryDto
+
+        const builder = new QueryBuilder<Ticket>()
+        builder.addIn('batchId', batchIds)
+        builder.addIn('movieId', movieIds)
+        builder.addIn('theaterId', theaterIds)
+        builder.addIn('showtimeId', showtimeIds)
+
+        const query = builder.build(options)
+        return query
     }
 }

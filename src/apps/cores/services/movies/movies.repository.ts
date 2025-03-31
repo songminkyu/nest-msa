@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { MongooseRepository, objectIds, QueryBuilder } from 'common'
+import { MongooseRepository, objectIds, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
 import { MovieCreateDto, MovieQueryDto, MovieUpdateDto } from './dtos'
 import { Movie } from './models'
@@ -40,25 +40,32 @@ export class MoviesRepository extends MongooseRepository<Movie> {
     }
 
     async findMovies(queryDto: MovieQueryDto) {
-        const { title, genre, releaseDate, plot, director, rating, ...pagination } = queryDto
+        const { take, skip, orderby } = queryDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const builder = new QueryBuilder<Movie>()
-                builder.addRegex('title', title)
-                builder.addEqual('genre', genre)
-                builder.addEqual('releaseDate', releaseDate)
-                builder.addRegex('plot', plot)
-                builder.addRegex('director', director)
-                builder.addEqual('rating', rating)
-
-                const query = builder.build({ allowEmpty: true })
+                const query = this.buildQuery(queryDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
-            pagination
+            pagination: { take, skip, orderby }
         })
 
         return paginated
+    }
+
+    private buildQuery(queryDto: MovieQueryDto, options: QueryBuilderOptions) {
+        const { title, genre, releaseDate, plot, director, rating } = queryDto
+
+        const builder = new QueryBuilder<Movie>()
+        builder.addRegex('title', title)
+        builder.addEqual('genre', genre)
+        builder.addEqual('releaseDate', releaseDate)
+        builder.addRegex('plot', plot)
+        builder.addRegex('director', director)
+        builder.addEqual('rating', rating)
+
+        const query = builder.build(options)
+        return query
     }
 }

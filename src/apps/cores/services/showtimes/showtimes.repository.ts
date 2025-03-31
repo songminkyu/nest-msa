@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { MongooseRepository, objectId, QueryBuilder } from 'common'
+import { MongooseRepository, objectId, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
-import { ShowtimeCreateDto, ShowtimeFilterDto } from './dtos'
+import { ShowtimeCreateDto, ShowtimeQueryDto } from './dtos'
 import { Showtime } from './models'
 
 @Injectable()
@@ -26,29 +26,29 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         await this.saveMany(showtimes)
     }
 
-    async findAllShowtimes(filterDto: ShowtimeFilterDto) {
-        const query = this.buildQuery(filterDto)
+    async findAllShowtimes(queryDto: ShowtimeQueryDto) {
+        const query = this.buildQuery(queryDto)
 
         const showtimes = await this.model.find(query).sort({ startTime: 1 }).exec()
         return showtimes
     }
 
-    async findMovieIds(filterDto: ShowtimeFilterDto) {
-        const query = this.buildQuery(filterDto)
+    async findMovieIds(queryDto: ShowtimeQueryDto) {
+        const query = this.buildQuery(queryDto)
 
         const movieIds = await this.model.distinct('movieId', query).exec()
         return movieIds.map((id) => id.toString())
     }
 
-    async findTheaterIds(filterDto: ShowtimeFilterDto) {
-        const query = this.buildQuery(filterDto)
+    async findTheaterIds(queryDto: ShowtimeQueryDto) {
+        const query = this.buildQuery(queryDto)
 
         const theaterIds = await this.model.distinct('theaterId', query).exec()
         return theaterIds.map((id) => id.toString())
     }
 
-    async findShowdates(filterDto: ShowtimeFilterDto) {
-        const query = this.buildQuery(filterDto, true)
+    async findShowdates(queryDto: ShowtimeQueryDto) {
+        const query = this.buildQuery(queryDto)
 
         const showdates = await this.model.aggregate([
             { $match: query },
@@ -60,9 +60,8 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         return showdates.map((item) => new Date(item._id))
     }
 
-    // TODO buildQuery 다른 곳도
-    private buildQuery(filterDto: ShowtimeFilterDto, allowEmpty: boolean = false) {
-        const { batchIds, movieIds, theaterIds, startTimeRange, endTimeRange } = filterDto
+    private buildQuery(queryDto: ShowtimeQueryDto, options: QueryBuilderOptions = {}) {
+        const { batchIds, movieIds, theaterIds, startTimeRange, endTimeRange } = queryDto
 
         const builder = new QueryBuilder<Showtime>()
         builder.addIn('batchId', batchIds)
@@ -71,8 +70,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         builder.addRange('startTime', startTimeRange)
         builder.addRange('endTime', endTimeRange)
 
-        const query = builder.build({ allowEmpty })
-
+        const query = builder.build(options)
         return query
     }
 }

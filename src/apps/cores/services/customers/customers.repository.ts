@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { MongooseRepository, objectId, QueryBuilder } from 'common'
+import { MongooseRepository, objectId, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
 import { CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
 import { CustomerErrors } from './errors'
@@ -32,19 +32,15 @@ export class CustomersRepository extends MongooseRepository<Customer> {
     }
 
     async findCustomers(queryDto: CustomerQueryDto) {
-        const { name, email, ...pagination } = queryDto
+        const { take, skip, orderby } = queryDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const builder = new QueryBuilder<Customer>()
-                builder.addRegex('name', name)
-                builder.addRegex('email', email)
-
-                const query = builder.build({ allowEmpty: true })
+                const query = this.buildQuery(queryDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
-            pagination
+            pagination: { take, skip, orderby }
         })
 
         return paginated
@@ -62,5 +58,16 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         }
 
         return customer.password
+    }
+
+    private buildQuery(queryDto: CustomerQueryDto, options: QueryBuilderOptions) {
+        const { name, email } = queryDto
+
+        const builder = new QueryBuilder<Customer>()
+        builder.addRegex('name', name)
+        builder.addRegex('email', email)
+
+        const query = builder.build(options)
+        return query
     }
 }

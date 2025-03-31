@@ -1,7 +1,7 @@
 import { Controller, ParseArrayPipe } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
-import { TicketCreateDto, TicketFilterDto } from './dtos'
+import { TicketCreateDto, TicketQueryDto } from './dtos'
 import { TicketStatus } from './models'
 import { TicketsService } from './tickets.service'
 import { CreateTicketsResult } from './types'
@@ -26,8 +26,8 @@ export class TicketsController {
     }
 
     @MessagePattern(Messages.Tickets.findAllTickets)
-    findAllTickets(@Payload() filterDto: TicketFilterDto) {
-        return this.service.findAllTickets(filterDto)
+    findAllTickets(@Payload() queryDto: TicketQueryDto) {
+        return this.service.findAllTickets(queryDto)
     }
 
     @MessagePattern(Messages.Tickets.getSalesStatuses)

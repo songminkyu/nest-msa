@@ -1,7 +1,7 @@
 import { IsOptional } from 'class-validator'
-import { DateRange } from 'common'
+import { CommonQueryDto, DateRange } from 'common'
 
-export class ShowtimeFilterDto {
+export class ShowtimeQueryDto extends CommonQueryDto {
     @IsOptional()
     batchIds?: string[]
 
