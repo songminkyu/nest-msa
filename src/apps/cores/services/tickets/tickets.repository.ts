@@ -1,13 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import {
-    MongooseRepository,
-    MongooseUpdateResult,
-    objectId,
-    objectIds,
-    QueryBuilder,
-    QueryBuilderOptions
-} from 'common'
+import { MongooseRepository, objectId, objectIds, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
 import { SalesStatusByShowtimeDto, TicketCreateDto, TicketQueryDto } from './dtos'
 import { Ticket, TicketStatus } from './models'

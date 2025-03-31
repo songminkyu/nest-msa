@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common'
 import { mapDocToDto } from 'common'
 import { CustomersRepository } from './customers.repository'
 import {
-    CustomerAuthPayloadDto,
+    CustomerAuthPayload,
     CustomerCreateDto,
     CustomerDto,
     CustomerQueryDto,
@@ -60,7 +60,7 @@ export class CustomersService {
         return { ...paginated, items: this.toDtos(items) }
     }
 
-    async generateAuthTokens(payload: CustomerAuthPayloadDto) {
+    async generateAuthTokens(payload: CustomerAuthPayload) {
         return this.authenticationService.generateAuthTokens(payload)
     }
 

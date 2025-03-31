@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy, JwtAuthTokens } from 'common'
 import { Messages } from 'shared'
 import {
-    CustomerAuthPayloadDto,
+    CustomerAuthPayload,
     CustomerCreateDto,
     CustomerDto,
     CustomerQueryDto,
@@ -33,7 +33,7 @@ export class CustomersClient {
         return this.proxy.getJson(Messages.Customers.findCustomers, queryDto)
     }
 
-    generateAuthTokens(payload: CustomerAuthPayloadDto): Promise<JwtAuthTokens> {
+    generateAuthTokens(payload: CustomerAuthPayload): Promise<JwtAuthTokens> {
         return this.proxy.getJson(Messages.Customers.login, payload)
     }
 
