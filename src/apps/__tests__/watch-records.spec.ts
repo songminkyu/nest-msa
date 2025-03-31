@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
+import { WatchRecordDto, WatchRecordsClient } from 'apps/cores'
 import { OrderDirection } from 'common'
-import { WatchRecordDto, WatchRecordsService } from 'apps/cores'
 import { expectEqualUnsorted, testObjectId } from 'testlib'
 import {
     closeFixture,
@@ -11,7 +11,7 @@ import {
 
 describe('WatchRecords Module', () => {
     let fixture: Fixture
-    let service: WatchRecordsService
+    let service: WatchRecordsClient
 
     beforeEach(async () => {
         const { createFixture } = await import('./watch-records.fixture')

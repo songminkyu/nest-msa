@@ -1,17 +1,17 @@
 import { DateUtil } from 'common'
-import { WatchRecordsService } from 'apps/cores'
+import { WatchRecordsClient, WatchRecordsService } from 'apps/cores'
 import { nullObjectId, testObjectId } from 'testlib'
 import { AllTestContexts, createAllTestContexts } from './utils'
 
 export interface Fixture {
     testContext: AllTestContexts
-    watchRecordsService: WatchRecordsService
+    watchRecordsService: WatchRecordsClient
 }
 
 export async function createFixture() {
     const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-    const watchRecordsService = module.get(WatchRecordsService)
+    const module = testContext.appsContext.module
+    const watchRecordsService = module.get(WatchRecordsClient)
 
     return { testContext, watchRecordsService }
 }
@@ -34,14 +34,14 @@ export const createWatchRecordDto = (overrides = {}) => {
     return { createDto, expectedDto }
 }
 
-export const createWatchRecord = async (service: WatchRecordsService, override = {}) => {
+export const createWatchRecord = async (service: WatchRecordsClient, override = {}) => {
     const { createDto } = createWatchRecordDto(override)
 
     const watchRecord = await service.createWatchRecord(createDto)
     return watchRecord
 }
 
-export const createWatchRecords = async (service: WatchRecordsService, overrides = {}) => {
+export const createWatchRecords = async (service: WatchRecordsClient, overrides = {}) => {
     const baseDate = new Date(0)
 
     return Promise.all(
