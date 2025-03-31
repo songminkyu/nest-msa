@@ -15,11 +15,6 @@ export const JwtAuthServiceErrors = {
     }
 }
 
-export interface AuthTokenPayload {
-    userId: string
-    email: string
-}
-
 export class JwtAuthTokens {
     accessToken: string
     refreshToken: string
@@ -49,32 +44,32 @@ export class JwtAuthService {
         return `${this.prefix}:${key}`
     }
 
-    async generateAuthTokens(userId: string, email: string): Promise<JwtAuthTokens> {
-        const commonPayload = { userId, email }
+    async generateAuthTokens(payload: object): Promise<JwtAuthTokens> {
         const accessToken = await this.createToken(
-            commonPayload,
+            payload,
             this.config.accessSecret,
             this.config.accessTokenTtlMs
         )
+        const refreshTokenId = generateShortId(30)
         const refreshToken = await this.createToken(
-            commonPayload,
+            { ...payload, refreshTokenId },
             this.config.refreshSecret,
             this.config.refreshTokenTtlMs
         )
-        await this.storeRefreshToken(userId, refreshToken)
+        await this.storeRefreshToken(refreshTokenId, refreshToken)
         return { accessToken, refreshToken }
     }
 
     async refreshAuthTokens(refreshToken: string) {
         const payload = await this.getAuthTokenPayload(refreshToken)
 
-        const storedRefreshToken = await this.getStoredRefreshToken(payload.userId)
+        const storedRefreshToken = await this.getStoredRefreshToken(payload.refreshTokenId)
 
         if (storedRefreshToken !== refreshToken) {
             throw new UnauthorizedException(JwtAuthServiceErrors.RefreshTokenInvalid)
         }
 
-        return this.generateAuthTokens(payload.userId, payload.email)
+        return this.generateAuthTokens(payload)
     }
 
     private async getAuthTokenPayload(token: string) {
@@ -93,7 +88,7 @@ export class JwtAuthService {
         }
     }
 
-    private async createToken(payload: AuthTokenPayload, secret: string, ttlMs: number) {
+    private async createToken(payload: object, secret: string, ttlMs: number) {
         const expiresIn = DateUtil.fromMs(ttlMs)
 
         const token = await this.jwtService.signAsync(
@@ -103,12 +98,17 @@ export class JwtAuthService {
         return token
     }
 
-    private async storeRefreshToken(userId: string, refreshToken: string) {
-        await this.redis.set(this.getKey(userId), refreshToken, 'PX', this.config.refreshTokenTtlMs)
+    private async storeRefreshToken(refreshTokenId: string, refreshToken: string) {
+        await this.redis.set(
+            this.getKey(refreshTokenId),
+            refreshToken,
+            'PX',
+            this.config.refreshTokenTtlMs
+        )
     }
 
-    private async getStoredRefreshToken(userId: string) {
-        const value = await this.redis.get(this.getKey(userId))
+    private async getStoredRefreshToken(refreshTokenId: string) {
+        const value = await this.redis.get(this.getKey(refreshTokenId))
         return value
     }
 }

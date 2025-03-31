@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
-import { CustomersClient } from 'apps/cores'
-import { AuthTokenPayload } from 'common'
+import { CustomerAuthPayloadDto, CustomersClient } from 'apps/cores'
 import { Strategy } from 'passport-local'
 
 @Injectable()
@@ -13,10 +12,9 @@ export class CustomerLocalStrategy extends PassportStrategy(Strategy, 'customer-
         })
     }
 
-    async validate(email: string, password: string): Promise<AuthTokenPayload | null> {
-        const userId = await this.customersService.authenticateCustomer(email, password)
+    async validate(email: string, password: string): Promise<CustomerAuthPayloadDto | null> {
+        const customerId = await this.customersService.authenticateCustomer(email, password)
 
-        // TODO customerId
-        return userId ? { userId, email } : null
+        return customerId ? { customerId, email } : null
     }
 }

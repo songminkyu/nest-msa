@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
 import { CustomersService } from './customers.service'
-import { CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
+import { CustomerAuthPayloadDto, CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
 
 @Controller()
 export class CustomersController {
@@ -37,8 +37,8 @@ export class CustomersController {
     }
 
     @MessagePattern(Messages.Customers.login)
-    login(@Payload('userId') userId: string, @Payload('email') email: string) {
-        return this.service.login(userId, email)
+    generateAuthTokens(@Payload() payload: CustomerAuthPayloadDto) {
+        return this.service.generateAuthTokens(payload)
     }
 
     @MessagePattern(Messages.Customers.refreshAuthTokens)

@@ -28,7 +28,7 @@ export async function createCustomerAndLogin(customersService: CustomersService)
     const password = 'password'
     const customer = await createCustomer(customersService, { email, password })
 
-    const authTokens = await customersService.login(customer.id, email)
+    const authTokens = await customersService.generateAuthTokens({ customerId: customer.id, email })
     const accessToken = authTokens.accessToken
 
     return { customer, accessToken }

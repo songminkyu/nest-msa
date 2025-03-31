@@ -1,6 +1,6 @@
-import { AuthTokenPayload } from 'common'
+import { CustomerAuthPayloadDto } from 'apps/cores'
 import { Request } from 'express'
 
-export interface AuthRequest extends Request {
-    user: AuthTokenPayload
+export interface CustomerAuthRequest extends Request {
+    user: CustomerAuthPayloadDto
 }

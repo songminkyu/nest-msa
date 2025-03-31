@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Patch, Req, UseGuards } from '@nestjs/com
 import { BookingClient } from 'apps/applications'
 import { DateUtil, LatLong, LatLongQuery } from 'common'
 import { CustomerJwtAuthGuard } from './guards'
-import { AuthRequest } from './types'
+import { CustomerAuthRequest } from './types'
 
 @Controller('booking')
 export class BookingController {
@@ -44,9 +44,9 @@ export class BookingController {
     async holdTickets(
         @Param('showtimeId') showtimeId: string,
         @Body('ticketIds') ticketIds: string[],
-        @Req() req: AuthRequest
+        @Req() req: CustomerAuthRequest
     ) {
-        const customerId = req.user.userId
+        const customerId = req.user.customerId
         return this.bookingService.holdTickets({ customerId, showtimeId, ticketIds })
     }
 }

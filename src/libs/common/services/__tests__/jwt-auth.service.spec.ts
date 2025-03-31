@@ -14,7 +14,8 @@ describe('JwtAuthService', () => {
     })
 
     it('인증 토큰을 생성해야 한다', async () => {
-        const tokens = await fix.jwtService.generateAuthTokens('userId', 'email')
+        const payload = { userId: 'userId', email: 'email' }
+        const tokens = await fix.jwtService.generateAuthTokens(payload)
 
         expect(tokens).toEqual({
             accessToken: expect.any(String),
@@ -27,7 +28,8 @@ describe('JwtAuthService', () => {
         let refreshToken: string
 
         beforeEach(async () => {
-            const tokens = await fix.jwtService.generateAuthTokens('userId', 'email')
+            const payload = { userId: 'userId', email: 'email' }
+            const tokens = await fix.jwtService.generateAuthTokens(payload)
             accessToken = tokens.accessToken
             refreshToken = tokens.refreshToken
         })

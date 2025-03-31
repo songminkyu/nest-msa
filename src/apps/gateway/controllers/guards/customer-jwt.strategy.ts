@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
-import { AuthTokenPayload } from 'common'
+import { CustomerAuthPayloadDto } from 'apps/cores'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { AppConfigService } from 'shared'
 
@@ -14,10 +14,10 @@ export class CustomerJwtStrategy extends PassportStrategy(Strategy, 'customer-jw
         })
     }
 
-    validate(payload: AuthTokenPayload): AuthTokenPayload | null {
+    validate(payload: CustomerAuthPayloadDto): CustomerAuthPayloadDto | null {
         /**
          * 아래처럼 중간에서 제어할 수 있다
-         * const exists = await this.service.customersExist([payload.userId])
+         * const exists = await this.service.customersExist([payload.customerId])
          * return exists ? payload : null
          */
         return payload

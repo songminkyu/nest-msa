@@ -1,7 +1,13 @@
 import { ConflictException, Injectable } from '@nestjs/common'
 import { mapDocToDto } from 'common'
 import { CustomersRepository } from './customers.repository'
-import { CustomerCreateDto, CustomerDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
+import {
+    CustomerAuthPayloadDto,
+    CustomerCreateDto,
+    CustomerDto,
+    CustomerQueryDto,
+    CustomerUpdateDto
+} from './dtos'
 import { CustomerErrors } from './errors'
 import { CustomerDocument } from './models'
 import { CustomerAuthenticationService } from './services'
@@ -54,8 +60,8 @@ export class CustomersService {
         return { ...paginated, items: this.toDtos(items) }
     }
 
-    async login(userId: string, email: string) {
-        return this.authenticationService.login(userId, email)
+    async generateAuthTokens(payload: CustomerAuthPayloadDto) {
+        return this.authenticationService.generateAuthTokens(payload)
     }
 
     async refreshAuthTokens(refreshToken: string) {

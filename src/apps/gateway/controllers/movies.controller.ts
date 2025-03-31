@@ -21,7 +21,7 @@ import { pick } from 'lodash'
 import { MulterExceptionFilter } from './filters'
 import { CustomerOptionalJwtAuthGuard } from './guards'
 import { DefaultPaginationPipe } from './pipes'
-import { AuthRequest } from './types'
+import { CustomerAuthRequest } from './types'
 
 @Controller('movies')
 export class MoviesController {
@@ -51,8 +51,8 @@ export class MoviesController {
 
     @UseGuards(CustomerOptionalJwtAuthGuard)
     @Get('recommended')
-    async findRecommendedMovies(@Req() req: AuthRequest) {
-        const customerId = req.user.userId
+    async findRecommendedMovies(@Req() req: CustomerAuthRequest) {
+        const customerId = req.user.customerId
         return this.recommendationService.findRecommendedMovies(customerId)
     }
 

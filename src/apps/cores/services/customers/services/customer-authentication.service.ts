@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { compare, hash } from 'bcrypt'
 import { InjectJwtAuth, JwtAuthService } from 'common'
 import { CustomersRepository } from '../customers.repository'
+import { CustomerAuthPayloadDto } from '../dtos'
 
 @Injectable()
 export class CustomerAuthenticationService {
@@ -10,8 +11,8 @@ export class CustomerAuthenticationService {
         @InjectJwtAuth() private jwtAuthService: JwtAuthService
     ) {}
 
-    async login(userId: string, email: string) {
-        return this.jwtAuthService.generateAuthTokens(userId, email)
+    async generateAuthTokens(payload: CustomerAuthPayloadDto) {
+        return this.jwtAuthService.generateAuthTokens(payload)
     }
 
     async refreshAuthTokens(refreshToken: string) {
