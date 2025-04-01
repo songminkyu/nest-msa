@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { ClientProxyService, InjectClientProxy } from 'common'
+import { ClientProxyService, DeleteResult, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
 import { TheaterCreateDto, TheaterDto, TheaterQueryDto, TheaterUpdateDto } from './dtos'
 
@@ -19,7 +19,7 @@ export class TheatersClient {
         return this.proxy.getJson(Messages.Theaters.getTheaters, theaterIds)
     }
 
-    deleteTheaters(theaterIds: string[]): Promise<boolean> {
+    deleteTheaters(theaterIds: string[]): Promise<DeleteResult> {
         return this.proxy.getJson(Messages.Theaters.deleteTheaters, theaterIds)
     }
 

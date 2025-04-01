@@ -2,6 +2,7 @@ import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { MoviesClient, ShowtimesClient, TheatersClient, TicketsClient } from 'apps/cores'
 import { ShowtimeCreationValidatorService, ShowtimeCreationWorkerService } from './services'
+import { ShowtimeCreationClient } from './showtime-creation.client'
 import { ShowtimeCreationController } from './showtime-creation.controller'
 import { ShowtimeCreationService } from './showtime-creation.service'
 
@@ -12,6 +13,7 @@ import { ShowtimeCreationService } from './showtime-creation.service'
         TheatersClient,
         ShowtimesClient,
         TicketsClient,
+        ShowtimeCreationClient,
         ShowtimeCreationService,
         ShowtimeCreationWorkerService,
         ShowtimeCreationValidatorService

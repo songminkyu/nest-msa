@@ -325,8 +325,8 @@ describe('MongooseRepository', () => {
         it('should delete multiple documents at once', async () => {
             const ids = pickIds(samples.slice(0, 10))
 
-            const deletedCount = await fix.repository.deleteByIds(ids)
-            expect(deletedCount).toEqual(ids.length)
+            const deleteResult = await fix.repository.deleteByIds(ids)
+            expect(deleteResult).toEqual({ deletedCount: ids.length })
 
             const docs = await fix.repository.findByIds(ids)
 

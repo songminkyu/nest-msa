@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { MovieDto, ShowtimeDto, TheaterDto } from 'apps/cores'
-import { ClientProxyService, InjectClientProxy, CommonQueryDto } from 'common'
-import { Messages } from 'shared'
+import { ClientProxyService, CommonQueryDto, InjectClientProxy } from 'common'
+import { Events, Messages } from 'shared'
 import { ShowtimeBatchCreateDto, ShowtimeBatchCreateResponse } from './dtos'
 
 @Injectable()
@@ -22,5 +22,9 @@ export class ShowtimeCreationClient {
 
     createBatchShowtimes(createDto: ShowtimeBatchCreateDto): Promise<ShowtimeBatchCreateResponse> {
         return this.proxy.getJson(Messages.ShowtimeCreation.createBatchShowtimes, createDto)
+    }
+
+    emitStatusChanged(payload: any) {
+        return this.proxy.emit(Events.ShowtimeCreation.statusChanged, payload)
     }
 }

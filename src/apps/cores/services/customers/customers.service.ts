@@ -51,8 +51,8 @@ export class CustomersService {
     }
 
     async deleteCustomers(customerIds: string[]) {
-        await this.repository.deleteByIds(customerIds)
-        return true
+        const deleteResult = await this.repository.deleteByIds(customerIds)
+        return deleteResult
     }
 
     async findCustomers(queryDto: CustomerQueryDto) {

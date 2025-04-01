@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { ClientProxyService, InjectClientProxy } from 'common'
+import { ClientProxyService, DeleteResult, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
 import { StorageFileCreateDto, StorageFileDto } from './dtos'
 
@@ -15,7 +15,7 @@ export class StorageFilesClient {
         return this.proxy.getJson(Messages.StorageFiles.getFiles, fileIds)
     }
 
-    deleteFiles(fileIds: string[]): Promise<boolean> {
+    deleteFiles(fileIds: string[]): Promise<DeleteResult> {
         return this.proxy.getJson(Messages.StorageFiles.deleteFiles, fileIds)
     }
 }

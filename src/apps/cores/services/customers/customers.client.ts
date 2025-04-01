@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { ClientProxyService, InjectClientProxy, JwtAuthTokens } from 'common'
+import { ClientProxyService, DeleteResult, InjectClientProxy, JwtAuthTokens } from 'common'
 import { Messages } from 'shared'
 import {
     CustomerAuthPayload,
@@ -25,7 +25,7 @@ export class CustomersClient {
         return this.proxy.getJson(Messages.Customers.getCustomers, customerIds)
     }
 
-    deleteCustomers(customerIds: string[]): Promise<boolean> {
+    deleteCustomers(customerIds: string[]): Promise<DeleteResult> {
         return this.proxy.getJson(Messages.Customers.deleteCustomers, customerIds)
     }
 

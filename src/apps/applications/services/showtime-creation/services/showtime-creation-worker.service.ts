@@ -10,16 +10,9 @@ import {
     TicketStatus
 } from 'apps/cores'
 import { Job, Queue } from 'bullmq'
-import {
-    Assert,
-    ClientProxyService,
-    DateUtil,
-    InjectClientProxy,
-    jsonToObject,
-    MethodLog
-} from 'common'
-import { Events } from 'shared'
+import { Assert, DateUtil, jsonToObject, MethodLog } from 'common'
 import { ShowtimeBatchCreateStatus } from '../dtos'
+import { ShowtimeCreationClient } from '../showtime-creation.client'
 import { ShowtimeCreationValidatorService } from './showtime-creation-validator.service'
 import { ShowtimeBatchCreateJobData } from './types'
 
@@ -31,7 +24,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         private showtimesService: ShowtimesClient,
         private ticketsService: TicketsClient,
         private validatorService: ShowtimeCreationValidatorService,
-        @InjectClientProxy() private service: ClientProxyService,
+        private client: ShowtimeCreationClient,
         @InjectQueue('showtime-creation') private queue: Queue
     ) {
         super()
@@ -48,7 +41,10 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     }
 
     async enqueueTask(data: ShowtimeBatchCreateJobData) {
-        this.emit({ status: ShowtimeBatchCreateStatus.waiting, batchId: data.batchId })
+        this.client.emitStatusChanged({
+            status: ShowtimeBatchCreateStatus.waiting,
+            batchId: data.batchId
+        })
 
         await this.queue.add('showtime-creation.create', data)
     }
@@ -57,7 +53,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         try {
             await this.executeShowtimesCreation(jsonToObject(job.data))
         } catch (error) {
-            this.emit({
+            this.client.emitStatusChanged({
                 status: ShowtimeBatchCreateStatus.error,
                 batchId: job.data.batchId,
                 message: error.message
@@ -67,12 +63,15 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
 
     @MethodLog()
     private async executeShowtimesCreation(data: ShowtimeBatchCreateJobData) {
-        this.emit({ status: ShowtimeBatchCreateStatus.processing, batchId: data.batchId })
+        this.client.emitStatusChanged({
+            status: ShowtimeBatchCreateStatus.processing,
+            batchId: data.batchId
+        })
 
         const conflictingShowtimes = await this.validatorService.validate(data)
 
         if (conflictingShowtimes.length > 0) {
-            this.emit({
+            this.client.emitStatusChanged({
                 status: ShowtimeBatchCreateStatus.fail,
                 batchId: data.batchId,
                 conflictingShowtimes
@@ -81,17 +80,13 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
             const createdShowtimes = await this.createShowtimes(data)
             const ticketCreatedCount = await this.createTickets(createdShowtimes, data.batchId)
 
-            this.emit({
+            this.client.emitStatusChanged({
                 status: ShowtimeBatchCreateStatus.complete,
                 batchId: data.batchId,
                 showtimeCreatedCount: createdShowtimes.length,
                 ticketCreatedCount
             })
         }
-    }
-
-    private emit(payload: any) {
-        this.service.emit(Events.ShowtimeCreation.statusChanged, payload)
     }
 
     private async createShowtimes(data: ShowtimeBatchCreateJobData) {
