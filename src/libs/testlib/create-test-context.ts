@@ -48,7 +48,7 @@ export async function createTestContext({
 
     if (configureApp) await configureApp(app, brokers)
 
-    // vscode에 특화된 코드임
+    // Code specific to VSCode
     const isDebuggingEnabled = process.env.VSCODE_INSPECTOR_OPTIONS !== undefined
     app.useLogger(isDebuggingEnabled ? console : false)
 

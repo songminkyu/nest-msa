@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common'
-import { jsonToObject, Byte } from 'common'
+import { Byte, jsonToObject } from 'common'
 import { createWriteStream } from 'fs'
 import { reject } from 'lodash'
 import superagent from 'superagent'
@@ -83,7 +83,7 @@ export class HttpTestClient {
     download(downloadFilePath: string) {
         const writeStream = createWriteStream(downloadFilePath)
 
-        // 기본값인 200MB 제한을 해제함
+        // Remove the default 200MB limit
         this.agent.maxResponseSize(Byte.fromString('1TB'))
 
         this.agent.buffer().parse((res, callback) => {
@@ -172,7 +172,10 @@ export class HttpTestClient {
     }
 
     async send(status: number, expected?: any): Promise<superagent.Response> {
-        // ok(() => true)를 하지 않으면 400 이상 상태 코드는 예외를 던진다.
+        /*
+        Without ok(() => true), status codes 400 and above will throw an exception.
+        ok(() => true)를 하지 않으면 400 이상 상태 코드는 예외를 던진다.
+        */
         const res = await this.agent.ok(() => true)
 
         if (res.status !== status) {

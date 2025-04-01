@@ -44,17 +44,14 @@ export function getAvailablePort(): Promise<number> {
 }
 
 /**
+ * The objectToFields function converts an object into an array of fields.
+ * Each key-value pair is mapped to { name: key, value: processedValue }.
+ *
  * objectToFields 함수는 객체를 필드 배열로 변환합니다.
  * 각 객체의 키-값 쌍을 { name: key, value: processedValue } 형태로 매핑합니다.
  *
- * - 문자열인 경우: 그대로 사용합니다.
- * - Date 객체인 경우: ISO 형식의 문자열로 변환합니다.
- * - 배열인 경우: JSON 문자열로 변환합니다.
- * - null 또는 undefined 인 경우: 빈 문자열로 변환합니다.
- * - 그 외의 경우: JSON 문자열로 변환합니다.
- *
- * @param createDto 변환할 객체
- * @returns {Array<{name: string, value: string}>} 변환된 필드 배열
+ * @param createDto The object to transform
+ * @returns {Array<{ name: string, value: string }>} The transformed array of fields
  */
 export const objectToFields = (createDto: any) => {
     const fields = Object.entries(createDto).map(([key, value]) => {

@@ -44,9 +44,11 @@ function getAnythingKeys(obj: Record<string, any>): string[] {
 }
 
 /**
+ * Sorts and compares arrays of objects.
  * 객체 배열을 정렬하여 비교합니다.
- * @param actual 실제 객체 배열
- * @param expected 기대 객체 배열
+ *
+ * @param actual The actual array of objects
+ * @param expected The expected array of objects
  * @example
  * expectEqualUnsorted([{ id: 1, name: 'test' }], [{ id: expect.any(Number), name: 'test' }]);
  */

@@ -13,11 +13,13 @@ describe('createTestContext', () => {
         await fix?.teardown()
     })
 
-    it('RPC 메시지를 전송하면 응답해야 한다', async () => {
+    /* RPC 메시지를 전송하면 응답해야 한다 */
+    it('should respond when an RPC message is sent', async () => {
         await fix.rpcClient.expect(withTestId('getRpcMessage'), { arg: 'value' }, { id: 'value' })
     })
 
-    it('Http 메시지를 전송하면 응답해야 한다', async () => {
+    /* Http 메시지를 전송하면 응답해야 한다 */
+    it('should respond when an HTTP message is sent', async () => {
         await fix.httpClient.get('/message/value').ok({ received: 'value' })
     })
 })
