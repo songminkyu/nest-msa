@@ -23,7 +23,6 @@ export function MethodLog(options: MethodLogOptions = {}): MethodDecorator {
         const className = target.constructor.name
         const logger = new Logger(className)
 
-        // 래핑된 함수 정의
         function wrappedMethod(...args: any[]) {
             const paramNames = getParameterNames(originalMethod)
             const filteredArgs = args.filter((_, index) => !excludeArgs.includes(paramNames[index]))
@@ -43,7 +42,7 @@ export function MethodLog(options: MethodLogOptions = {}): MethodDecorator {
                 throw error
             }
 
-            // Promise 반환인 경우
+            // Promise
             if (result instanceof Promise) {
                 result
                     .then((value) => {
@@ -62,7 +61,7 @@ export function MethodLog(options: MethodLogOptions = {}): MethodDecorator {
                     })
                 return result
             }
-            // Observable 반환인 경우
+            // Observable
             else if (isObservable(result)) {
                 return result.pipe(
                     tap((value) => {
@@ -82,7 +81,7 @@ export function MethodLog(options: MethodLogOptions = {}): MethodDecorator {
                     })
                 )
             }
-            // 동기 반환인 경우
+            // synchronous
             else {
                 logger[level](`End ${className}.${propertyKey}.${callId}`, {
                     args: filteredArgs,
@@ -93,7 +92,10 @@ export function MethodLog(options: MethodLogOptions = {}): MethodDecorator {
             }
         }
 
-        // 다른 데코레이터가 영향을 받지 않도록 원본 메서드에 설정된 모든 메타데이터를 wrappedMethod로 복사
+        /*
+        Copy all metadata from the original method to the wrapped method so that other decorators are unaffected
+        다른 데코레이터가 영향을 받지 않도록 원본 메서드에 설정된 모든 메타데이터를 wrappedMethod로 복사
+        */
         const metadataKeys = Reflect.getMetadataKeys(originalMethod)
         for (const key of metadataKeys) {
             const metadata = Reflect.getMetadata(key, originalMethod)

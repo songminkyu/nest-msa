@@ -14,7 +14,8 @@ describe('Pagination', () => {
         await fix?.teardown()
     })
 
-    it('HttpController에서 PaginationOptionDto을 처리해야 한다', async () => {
+    /* HttpController에서 PaginationOptionDto을 처리해야 한다 */
+    it('should handle PaginationOptionDto in HttpController', async () => {
         const skip = 2
         const take = 3
         await fix.httpClient
@@ -23,7 +24,8 @@ describe('Pagination', () => {
             .ok({ response: { orderby: { direction: 'asc', name: 'name' }, skip, take } })
     })
 
-    it('RpcController에서 PaginationOptionDto을 처리해야 한다', async () => {
+    /* RpcController에서 PaginationOptionDto을 처리해야 한다 */
+    it('should handle PaginationOptionDto in RpcController', async () => {
         const skip = 2
         const take = 3
         const input = { orderby: { direction: 'asc', name: 'name' }, skip, take }
@@ -33,21 +35,24 @@ describe('Pagination', () => {
         })
     })
 
-    it('orderby 형식이 잘못되었을 때 BadRequest를 반환해야 한다', async () => {
+    /* orderby 형식이 잘못되었을 때 BadRequest를 반환해야 한다 */
+    it('should return BadRequest when the orderby format is invalid', async () => {
         await fix.httpClient
             .get('/pagination')
             .query({ orderby: 'wrong' })
             .badRequest(CommonErrors.Pagination.FormatInvalid)
     })
 
-    it('정렬 방향이 잘못되었을 때 BadRequest를 반환해야 한다', async () => {
+    /* 정렬 방향이 잘못되었을 때 BadRequest를 반환해야 한다 */
+    it('should return BadRequest when the sort direction is invalid', async () => {
         await fix.httpClient
             .get('/pagination')
             .query({ orderby: 'name:wrong' })
             .badRequest(CommonErrors.Pagination.DirectionInvalid)
     })
 
-    it("'take' 값이 지정된 제한을 초과하면 BadRequest를 반환해야 한다", async () => {
+    /* 'take' 값이 지정된 제한을 초과하면 BadRequest를 반환해야 한다 */
+    it("should return BadRequest when the 'take' value exceeds the specified limit", async () => {
         const take = 51
 
         await fix.httpClient
@@ -56,7 +61,8 @@ describe('Pagination', () => {
             .badRequest({ ...CommonErrors.Pagination.TakeLimitExceeded, take, takeLimit: 50 })
     })
 
-    it("'take' 값이 지정되지 않은 경우 기본값이 사용되어야 한다", async () => {
+    /* 'take' 값이 지정되지 않은 경우 기본값이 사용되어야 한다 */
+    it("should use the default value if the 'take' value is not specified", async () => {
         await fix.httpClient
             .get('/pagination/limited')
             .query({})

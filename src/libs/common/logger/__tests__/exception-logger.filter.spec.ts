@@ -13,7 +13,8 @@ describe('ExceptionLoggerFilter', () => {
         await fix?.teardown()
     })
 
-    it('HttpController에서 HttpException을 던지면 Logger.warn()으로 기록해야 한다', async () => {
+    /* HttpController에서 HttpException을 던지면 Logger.warn()으로 기록해야 한다 */
+    it('should log HttpExceptions in an HttpController via Logger.warn()', async () => {
         await fix.httpClient.get('/exception').notFound({ code: 'ERR_CODE', message: 'message' })
 
         expect(fix.spyWarn).toHaveBeenCalledTimes(1)
@@ -26,7 +27,8 @@ describe('ExceptionLoggerFilter', () => {
         })
     })
 
-    it('HttpController에서 Error을 던지면 Logger.error()으로 기록해야 한다', async () => {
+    /* HttpController에서 Error을 던지면 Logger.error()으로 기록해야 한다 */
+    it('should log generic Errors in an HttpController via Logger.error()', async () => {
         await fix.httpClient.get('/error').internalServerError()
 
         expect(fix.spyError).toHaveBeenCalledTimes(1)
@@ -39,7 +41,8 @@ describe('ExceptionLoggerFilter', () => {
         })
     })
 
-    it('RpcController에서 HttpException을 던지면 Logger.warn()으로 기록해야 한다', async () => {
+    /* RpcController에서 HttpException을 던지면 Logger.warn()으로 기록해야 한다 */
+    it('should log HttpExceptions in an RpcController via Logger.warn()', async () => {
         const subject = withTestId('exception')
         await fix.rpcClient.error(
             subject,
@@ -60,7 +63,8 @@ describe('ExceptionLoggerFilter', () => {
         })
     })
 
-    it('RpcController에서 Error을 던지면 Logger.error()으로 기록해야 한다', async () => {
+    /* RpcController에서 Error을 던지면 Logger.error()으로 기록해야 한다 */
+    it('should log generic Errors in an RpcController via Logger.error()', async () => {
         const subject = withTestId('error')
         await fix.rpcClient.error(subject, {}, Error('error message'))
 
@@ -74,7 +78,8 @@ describe('ExceptionLoggerFilter', () => {
         })
     })
 
-    it('알 수 없는 ContextType이면 Logger.error()로 기록해야 한다', async () => {
+    /* 알 수 없는 ContextType이면 Logger.error()로 기록해야 한다 */
+    it('should log as Logger.error() when the ContextType is unknown', async () => {
         const { ExecutionContextHost } = await import('@nestjs/core/helpers/execution-context-host')
         jest.spyOn(ExecutionContextHost.prototype, 'getType').mockReturnValue('unknown')
 

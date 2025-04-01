@@ -13,7 +13,8 @@ describe('LatLong', () => {
         await fix?.teardown()
     })
 
-    it('두 위경도 간의 거리를 미터 단위로 계산해야 한다', () => {
+    /* 두 위경도 간의 거리를 미터 단위로 계산해야 한다 */
+    it('should calculate the distance in meters between two coordinates', () => {
         const seoul: LatLong = { latitude: 37.5665, longitude: 126.978 }
         const busan: LatLong = { latitude: 35.1796, longitude: 129.0756 }
 
@@ -26,28 +27,32 @@ describe('LatLong', () => {
         expect(actualDistance).toBeLessThan(expectedDistance + tolerance)
     })
 
-    it('유효한 위경도 쿼리를 처리해야 한다', async () => {
+    /* 유효한 위경도 쿼리를 처리해야 한다 */
+    it('should handle a valid lat-long query', async () => {
         await fix.httpClient
             .get('/latlong')
             .query({ location: '37.123,128.678' })
             .ok({ latitude: 37.123, longitude: 128.678 })
     })
 
-    it('latlong 값이 없으면 BadRequestException을 던져야 한다', async () => {
+    /* latlong 값이 없으면 BadRequestException을 던져야 한다 */
+    it('should throw a BadRequestException if no latlong value is provided', async () => {
         await fix.httpClient.get('/latlong').badRequest({
             code: 'ERR_LATLONG_REQUIRED',
             message: 'The latlong query parameter is required'
         })
     })
 
-    it('잘못된 형식인 경우 BadRequestException을 던져야 한다', async () => {
+    /* 잘못된 형식인 경우 BadRequestException을 던져야 한다 */
+    it('should throw a BadRequestException if the latlong format is invalid', async () => {
         await fix.httpClient.get('/latlong').query({ location: '37.123' }).badRequest({
             code: 'ERR_LATLONG_FORMAT_INVALID',
             message: 'LatLong should be in the format "latitude,longitude"'
         })
     })
 
-    it('범위를 벗어난 값인 경우 BadRequestException을 던져야 한다', async () => {
+    /* 범위를 벗어난 값인 경우 BadRequestException을 던져야 한다 */
+    it('should throw a BadRequestException if values are out of range', async () => {
         await fix.httpClient
             .get('/latlong')
             .query({ location: '91,181' })

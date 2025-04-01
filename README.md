@@ -164,7 +164,7 @@ src
 
 ## 8. 빌드 및 E2E 테스트
 
-`npm run test:e2e`을 실행하면 프로젝트 빌드부터 실행까지 전체 과정을 테스트합니다. 빌드 및 실행에 필요한 자세항 사항은 이 명령에 사용된 스크립트를 참고합니다.
+`npm run test:e2e`을 실행하면 프로젝트 빌드부터 실행까지 전체 과정을 테스트합니다. 빌드 및 실행에 필요한 자세한 사항은 이 명령에 사용된 스크립트를 참고합니다.
 
 - ./Dockerfile
 - ./docker-compose.yml
@@ -174,7 +174,7 @@ src
 
 이 프로젝트는 PlantUML을 사용해서 설계했습니다. 설계 문서는 `./docs/designs`에 있으며 이것을 보려면 PlantUML(jebbs.plantuml) 확장을 설치해야 합니다.
 
-<img src="./docs/images/design-sample.png" alt="PlantUML로 작성한 문서" width="588"/>
+<img src="./docs/images/design-sample.png" alt="PlantUML로 작성한 문서" width="1061"/>
 
 만약 PlantUML 문서가 보이지 않으면 다음을 참고하세요.
 

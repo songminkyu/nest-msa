@@ -7,7 +7,10 @@ import { createTestContext, getMongoTestConnection, withTestId } from 'testlib'
 @NestSchema({
     toJSON: {
         transform: function (doc, ret) {
-            // Buffer로 저장해도 로드하면 mongo.Binary 타입이다.
+            /*
+            Even if stored as Buffer, it is recognized as mongo.Binary when loaded.
+            Buffer로 저장해도 로드하면 mongo.Binary 타입이다.
+            */
             ret.ofBuffer = ret.ofBuffer?.map((b: any) => (b instanceof mongo.Binary ? b.buffer : b))
             return ret
         }
