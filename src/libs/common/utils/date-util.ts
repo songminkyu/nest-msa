@@ -143,9 +143,6 @@ export class DateUtil {
         return `${year}${month}${day}`
     }
 
-
-
-
     /**
      * Converts a YYYYMMDD or YYYYMMDDHHmm format string into a Date object.
      * If the string length is 8 (YYYYMMDD), the time is set to 00:00.
