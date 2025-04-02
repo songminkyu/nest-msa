@@ -32,6 +32,14 @@ describe('spy examples', () => {
         expect(mockFunc).toHaveBeenCalled()
     })
 
+    it('Class getter mocking', () => {
+        const localObj = new Module.HelloClass()
+        const mockFunc = jest.spyOn(localObj, 'value', 'get').mockReturnValue(1000)
+
+        expect(localObj.value).toEqual(1000)
+        expect(mockFunc).toHaveBeenCalled()
+    })
+
     it('Dynamic import instance method', async () => {
         const { Logger } = await import('@nestjs/common')
 
