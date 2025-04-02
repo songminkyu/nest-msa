@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
-import { TicketHoldDto } from './dtos'
+import { HoldTicketsDto } from './dtos'
 
 @Injectable()
 export class TicketHoldingClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    holdTickets(holdDto: TicketHoldDto): Promise<boolean> {
+    holdTickets(holdDto: HoldTicketsDto): Promise<boolean> {
         return this.proxy.getJson(Messages.TicketHolding.holdTickets, holdDto)
     }
 

@@ -1,8 +1,19 @@
 import { Injectable } from '@nestjs/common'
-import { LatLong, pickIds } from 'common'
-import { ShowtimesClient, TheatersClient, TicketHoldingClient, TicketsClient } from 'apps/cores'
+import {
+    HoldTicketsDto,
+    ShowtimesClient,
+    TheatersClient,
+    TicketHoldingClient,
+    TicketsClient
+} from 'apps/cores'
+import { pickIds } from 'common'
 import { generateShowtimesWithSalesStatus, sortTheatersByDistance } from './booking.utils'
-import { ShowtimeSalesStatusDto } from './dtos'
+import {
+    FindShowdatesDto,
+    FindShowingTheatersDto,
+    FindShowtimesDto,
+    ShowtimeSalesStatusDto
+} from './dtos'
 
 @Injectable()
 export class BookingService {
@@ -13,8 +24,7 @@ export class BookingService {
         private ticketsService: TicketsClient
     ) {}
 
-    async findShowingTheaters(args: { movieId: string; latlong: LatLong }) {
-        const { movieId, latlong } = args
+    async findShowingTheaters({ movieId, latlong }: FindShowingTheatersDto) {
         const theaterIds = await this.showtimesService.findTheaterIds({ movieIds: [movieId] })
         const theaters = await this.theatersService.getTheaters(theaterIds)
         const showingTheaters = sortTheatersByDistance(theaters, latlong)
@@ -22,17 +32,11 @@ export class BookingService {
         return showingTheaters
     }
 
-    // TODO { movieId: string; theaterId: string } interface 정의해라
-    async findShowdates(args: { movieId: string; theaterId: string }) {
-        return this.showtimesService.findShowdates({
-            movieIds: [args.movieId],
-            theaterIds: [args.theaterId]
-        })
+    async findShowdates({ movieId, theaterId }: FindShowdatesDto) {
+        return this.showtimesService.findShowdates({ movieIds: [movieId], theaterIds: [theaterId] })
     }
 
-    async findShowtimes(args: { movieId: string; theaterId: string; showdate: Date }) {
-        const { movieId, theaterId, showdate } = args
-
+    async findShowtimes({ movieId, theaterId, showdate }: FindShowtimesDto) {
         const startOfDay = new Date(showdate)
         startOfDay.setHours(0, 0, 0, 0)
 
@@ -58,11 +62,8 @@ export class BookingService {
         return tickets
     }
 
-    async holdTickets(args: { customerId: string; showtimeId: string; ticketIds: string[] }) {
-        const seatHoldExpirationTime = 10 * 60 * 1000
-
-        await this.ticketHoldingService.holdTickets({ ...args, ttlMs: seatHoldExpirationTime })
-
-        return { heldTicketIds: args.ticketIds }
+    async holdTickets(dto: HoldTicketsDto) {
+        const success = await this.ticketHoldingService.holdTickets(dto)
+        return { success }
     }
 }

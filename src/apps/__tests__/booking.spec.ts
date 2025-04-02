@@ -105,7 +105,7 @@ describe('Booking', () => {
                 .patch(`/booking/showtimes/${showtimeId}/tickets`)
                 .headers({ Authorization: `Bearer ${fixture.accessToken}` })
                 .body({ ticketIds })
-                .ok({ heldTicketIds: ticketIds })
+                .ok({ success: true })
         })
     })
 })

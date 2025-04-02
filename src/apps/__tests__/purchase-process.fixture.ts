@@ -124,7 +124,6 @@ export const holdTickets = async (fixture: Fixture, showtimeId: string, tickets:
     await fixture.ticketHoldingService.holdTickets({
         customerId: fixture.customer.id,
         showtimeId,
-        ticketIds: pickIds(tickets),
-        ttlMs: 10000
+        ticketIds: pickIds(tickets)
     })
 }

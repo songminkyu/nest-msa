@@ -1,36 +1,35 @@
 import { Injectable } from '@nestjs/common'
-import { TheaterDto, TicketDto } from 'apps/cores'
-import { ClientProxyService, InjectClientProxy, LatLong } from 'common'
+import { HoldTicketsDto, TheaterDto, TicketDto } from 'apps/cores'
+import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
-import { ShowtimeSalesStatusDto } from './dtos'
+import {
+    FindShowdatesDto,
+    FindShowingTheatersDto,
+    FindShowtimesDto,
+    ShowtimeSalesStatusDto
+} from './dtos'
 
 @Injectable()
 export class BookingClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    findShowingTheaters(args: { movieId: string; latlong: LatLong }): Promise<TheaterDto[]> {
-        return this.proxy.getJson(Messages.Booking.findShowingTheaters, args)
+    findShowingTheaters(dto: FindShowingTheatersDto): Promise<TheaterDto[]> {
+        return this.proxy.getJson(Messages.Booking.findShowingTheaters, dto)
     }
 
-    findShowdates(args: { movieId: string; theaterId: string }): Promise<Date[]> {
-        return this.proxy.getJson(Messages.Booking.findShowdates, args)
+    findShowdates(dto: FindShowdatesDto): Promise<Date[]> {
+        return this.proxy.getJson(Messages.Booking.findShowdates, dto)
     }
 
-    findShowtimes(args: {
-        movieId: string
-        theaterId: string
-        showdate: Date
-    }): Promise<ShowtimeSalesStatusDto[]> {
-        return this.proxy.getJson(Messages.Booking.findShowtimes, args)
+    findShowtimes(dto: FindShowtimesDto): Promise<ShowtimeSalesStatusDto[]> {
+        return this.proxy.getJson(Messages.Booking.findShowtimes, dto)
     }
 
     getAvailableTickets(showtimeId: string): Promise<TicketDto[]> {
         return this.proxy.getJson(Messages.Booking.getAvailableTickets, showtimeId)
     }
 
-    holdTickets(args: { customerId: string; showtimeId: string; ticketIds: string[] }): Promise<{
-        heldTicketIds: string[]
-    }> {
-        return this.proxy.getJson(Messages.Booking.holdTickets, args)
+    holdTickets(dto: HoldTicketsDto): Promise<{ success: boolean }> {
+        return this.proxy.getJson(Messages.Booking.holdTickets, dto)
     }
 }

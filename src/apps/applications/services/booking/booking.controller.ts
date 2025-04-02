@@ -1,30 +1,27 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { LatLong } from 'common'
 import { Messages } from 'shared'
 import { BookingService } from './booking.service'
+import { FindShowingTheatersDto, FindShowdatesDto, FindShowtimesDto } from './dtos'
+import { HoldTicketsDto } from 'apps/cores'
 
 @Controller()
 export class BookingController {
     constructor(private service: BookingService) {}
 
     @MessagePattern(Messages.Booking.findShowingTheaters)
-    findShowingTheaters(@Payload('movieId') movieId: string, @Payload('latlong') latlong: LatLong) {
-        return this.service.findShowingTheaters({ movieId, latlong })
+    findShowingTheaters(@Payload() dto: FindShowingTheatersDto) {
+        return this.service.findShowingTheaters(dto)
     }
 
     @MessagePattern(Messages.Booking.findShowdates)
-    findShowdates(@Payload('movieId') movieId: string, @Payload('theaterId') theaterId: string) {
-        return this.service.findShowdates({ movieId, theaterId })
+    findShowdates(@Payload() dto: FindShowdatesDto) {
+        return this.service.findShowdates(dto)
     }
 
     @MessagePattern(Messages.Booking.findShowtimes)
-    findShowtimes(
-        @Payload('movieId') movieId: string,
-        @Payload('theaterId') theaterId: string,
-        @Payload('showdate') showdate: Date
-    ) {
-        return this.service.findShowtimes({ movieId, theaterId, showdate })
+    findShowtimes(@Payload() dto: FindShowtimesDto) {
+        return this.service.findShowtimes(dto)
     }
 
     @MessagePattern(Messages.Booking.getAvailableTickets)
@@ -33,11 +30,7 @@ export class BookingController {
     }
 
     @MessagePattern(Messages.Booking.holdTickets)
-    holdTickets(
-        @Payload('customerId') customerId: string,
-        @Payload('showtimeId') showtimeId: string,
-        @Payload('ticketIds') ticketIds: string[]
-    ) {
-        return this.service.holdTickets({ customerId, showtimeId, ticketIds })
+    holdTickets(@Payload() dto: HoldTicketsDto) {
+        return this.service.holdTickets(dto)
     }
 }

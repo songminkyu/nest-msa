@@ -1,6 +1,6 @@
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsPositive, IsString } from 'class-validator'
+import { ArrayNotEmpty, IsArray, IsNotEmpty, IsString } from 'class-validator'
 
-export class TicketHoldDto {
+export class HoldTicketsDto {
     @IsString()
     @IsNotEmpty()
     customerId: string
@@ -13,8 +13,4 @@ export class TicketHoldDto {
     @ArrayNotEmpty()
     @IsString({ each: true })
     ticketIds: string[]
-
-    @IsPositive()
-    @IsNotEmpty()
-    ttlMs: number
 }

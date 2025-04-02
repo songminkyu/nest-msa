@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { CacheService, InjectCache } from 'common'
-import { TicketHoldDto } from './dtos'
+import { HoldTicketsDto } from './dtos'
 
 const getCustomerKey = (showtimeId: string, customerId: string) =>
     `Customer:{${showtimeId}}:${customerId}`
@@ -10,7 +10,18 @@ const getTicketKey = (showtimeId: string, ticketId: string) => `Ticket:{${showti
 export class TicketHoldingService {
     constructor(@InjectCache('ticket-holding') private cacheService: CacheService) {}
 
-    async holdTickets({ customerId, showtimeId, ticketIds, ttlMs }: TicketHoldDto) {
+    get seatHoldExpirationTime() {
+        /*
+        This value rarely changes. Moreover, it is unlikely to vary depending on the theater or service.
+        Therefore, it is unnecessary to set it through configuration or to inject it from an external source.
+
+        이 값은 거의 변경되지 않는다. 또한 극장이나 서비스 마다 달라질 가능성도 없다.
+        그래서 환경설정으로 설정하게 하거나 외부에서 주입받는 것은 불필요하다.
+        */
+        return 10 * 60 * 1000
+    }
+
+    async holdTickets({ customerId, showtimeId, ticketIds }: HoldTicketsDto) {
         const ticketKeys = ticketIds.map((ticketId) => getTicketKey(showtimeId, ticketId))
         const customerKeyStr = getCustomerKey(showtimeId, customerId)
         const keys = [...ticketKeys, customerKeyStr]
@@ -57,7 +68,7 @@ export class TicketHoldingService {
         `
         const result = await this.cacheService.executeScript(script, keys, [
             customerId,
-            ttlMs.toString(),
+            this.seatHoldExpirationTime.toString(),
             JSON.stringify(ticketIds),
             showtimeId
         ])

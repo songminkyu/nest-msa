@@ -1,18 +1,20 @@
-import { TicketHoldingClient } from 'apps/cores'
+import { TicketHoldingClient, TicketHoldingService } from 'apps/cores'
 import { AllTestContexts, createAllTestContexts } from './utils'
 
 export interface Fixture {
     testContext: AllTestContexts
-    ticketHoldingService: TicketHoldingClient
+    ticketHoldingClient: TicketHoldingClient
+    ticketHoldingService: TicketHoldingService
 }
 
 export async function createFixture() {
     const testContext = await createAllTestContexts()
-    const module = testContext.appsContext.module
+    const { appsContext, coresContext } = testContext
 
-    const ticketHoldingService = module.get(TicketHoldingClient)
+    const ticketHoldingClient = appsContext.module.get(TicketHoldingClient)
+    const ticketHoldingService = coresContext.module.get(TicketHoldingService)
 
-    return { testContext, ticketHoldingService }
+    return { testContext, ticketHoldingClient, ticketHoldingService }
 }
 
 export async function closeFixture(fixture: Fixture) {
