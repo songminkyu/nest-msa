@@ -1,5 +1,5 @@
 import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
-import { generateRecommendedMovies } from '../recommendation.utils'
+import { MovieRecommender } from '..'
 
 describe('RecommendationService', () => {
     describe('generateRecommendedMovies', () => {
@@ -15,7 +15,8 @@ describe('RecommendationService', () => {
             images: []
         })
 
-        it('사용자의 관람 이력이 없을 때, 개봉일 최신 순으로 정렬한다', () => {
+        /* 사용자의 관람 이력이 없을 때, 개봉일 최신 순으로 정렬한다 */
+        it('should sort by the latest release date if the user has no watch history', () => {
             const showingMovies: MovieDto[] = [
                 createDto('1', [MovieGenre.Action], new Date('2023-09-01')),
                 createDto('2', [MovieGenre.Drama], new Date('2023-10-01')),
@@ -23,12 +24,13 @@ describe('RecommendationService', () => {
             ]
             const watchedMovies: MovieDto[] = []
 
-            const result = generateRecommendedMovies(showingMovies, watchedMovies)
+            const result = MovieRecommender.getRecommendations(showingMovies, watchedMovies)
 
             expect(result.map((movie) => movie.id)).toEqual(['2', '1', '3'])
         })
 
-        it('사용자의 선호 장르에 따라 영화가 추천된다', () => {
+        /* 사용자의 선호 장르에 따라 영화가 추천된다 */
+        it('should recommend movies based on the user’s preferred genres', () => {
             const showingMovies: MovieDto[] = [
                 createDto('1', [MovieGenre.Action], new Date('2023-09-01')),
                 createDto('2', [MovieGenre.Drama], new Date('2023-10-01')),
@@ -40,12 +42,13 @@ describe('RecommendationService', () => {
                 createDto('6', [MovieGenre.Drama], new Date('2023-05-01'))
             ]
 
-            const result = generateRecommendedMovies(showingMovies, watchedMovies)
+            const result = MovieRecommender.getRecommendations(showingMovies, watchedMovies)
 
             expect(result.map((movie) => movie.id)).toEqual(['1', '2', '3'])
         })
 
-        it('이미 본 영화는 추천 목록에서 제외된다', () => {
+        /* 이미 본 영화는 추천 목록에서 제외된다 */
+        it('should exclude movies that the user has already watched from the recommendation list', () => {
             const showingMovies: MovieDto[] = [
                 createDto('1', [MovieGenre.Action], new Date('2023-09-01')),
                 createDto('2', [MovieGenre.Drama], new Date('2023-10-01')),
@@ -55,7 +58,7 @@ describe('RecommendationService', () => {
                 createDto('2', [MovieGenre.Drama], new Date('2023-10-01'))
             ]
 
-            const result = generateRecommendedMovies(showingMovies, watchedMovies)
+            const result = MovieRecommender.getRecommendations(showingMovies, watchedMovies)
 
             expect(result.map((movie) => movie.id)).toEqual(['1', '3'])
         })

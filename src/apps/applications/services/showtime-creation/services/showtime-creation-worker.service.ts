@@ -11,10 +11,9 @@ import {
 } from 'apps/cores'
 import { Job, Queue } from 'bullmq'
 import { Assert, DateUtil, jsonToObject, MethodLog } from 'common'
-import { ShowtimeBatchCreateStatus } from '../dtos'
 import { ShowtimeCreationClient } from '../showtime-creation.client'
 import { ShowtimeCreationValidatorService } from './showtime-creation-validator.service'
-import { ShowtimeBatchCreateJobData } from './types'
+import { ShowtimeBatchCreateJobData, ShowtimeBatchCreateStatus } from './types'
 
 @Injectable()
 @Processor('showtime-creation')
@@ -31,12 +30,17 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     }
 
     async onModuleInit() {
-        /**
-         * onModuleInit에서 Redis가 오프라인이면 BullMQ 초기화 작업이 offlineQueue에 대기한다.
-         * 이 상태에서 Redis가 온라인 되기 전에 onModuleDestroy가 호출되면,
-         * offlineQueue의 작업들이 'Error: Connection is closed' 오류를 던진다.
-         * 이를 해결하기 위해 waitUntilReady로 Redis가 온라인 될 때까지 대기한다.
-         */
+        /*
+        When Redis is offline during onModuleInit, the BullMQ initialization tasks wait in the offlineQueue.
+        In this state, if onModuleDestroy is called before Redis comes online,
+        the tasks in the offlineQueue throw an 'Error: Connection is closed' error.
+        To address this, we use waitUntilReady so that the system waits until Redis is online.
+
+        onModuleInit에서 Redis가 오프라인이면 BullMQ 초기화 작업이 offlineQueue에 대기한다.
+        이 상태에서 Redis가 온라인 되기 전에 onModuleDestroy가 호출되면,
+        offlineQueue의 작업들이 'Error: Connection is closed' 오류를 던진다.
+        이를 해결하기 위해 waitUntilReady로 Redis가 온라인 될 때까지 대기한다.
+        */
         await this.worker.waitUntilReady()
     }
 

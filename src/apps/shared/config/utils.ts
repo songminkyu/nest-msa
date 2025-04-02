@@ -15,27 +15,27 @@ type Paths<T, ParentPath extends string = ''> = {
 }
 
 /**
- * `createRouteMap`은 입력된 객체를 문자열로 변환해주는 함수입니다.
- * 이 함수는 객체의 각 리프(leaf) 노드를 해당 경로를 나타내는 점(.)으로 구분된 문자열로 바꿔줍니다.
- * 주로 `@MessagePattern` 데코레이터와 함께 메시지 패턴을 일관되게 정의하기 위해 사용됩니다.
+ * 'createRouteMap' is a function that converts the input object to a string.
+ * This function replaces each leaf node of the object with a string separated by dots (.) that represent the path.
+ * It is mainly used alongside the '@MessagePattern' decorator to define message patterns consistently.
  *
- * 예를 들어, 다음과 같은 객체가 입력되면:
+ * 'createRouteMap'은 입력된 객체를 문자열로 변환해주는 함수입니다.
+ * 이 함수는 객체의 각 리프(leaf) 노드를 해당 경로를 나타내는 점(.)으로 구분된 문자열로 바꿔줍니다.
+ * 주로 '@MessagePattern' 데코레이터와 함께 메시지 패턴을 일관되게 정의하기 위해 사용됩니다.
+ *
+ * For example, given an object like this:
  * {
  *   Booking: {
  *     findShowingTheaters: null
  *   }
  * }
- * 결과는 다음과 같습니다:
+ * The result would be:
  * {
  *   Booking: {
  *     findShowingTheaters: "Booking.findShowingTheaters"
  *   }
  * }
- * 이 결과는 `@MessagePattern(Messages.Booking.findShowingTheaters)`와 같은 형식으로 사용됩니다.
- *
- * @param obj 변환할 중첩 객체
- * @param parentPath 재귀 호출 시 사용되는 현재 경로 접두사 (기본값: 빈 문자열)
- * @returns 입력 객체와 동일한 구조를 가지며, 리프 값이 경로 문자열로 대체된 객체
+ * This result is used in a format such as '@MessagePattern(Messages.Booking.findShowingTheaters)'.
  */
 export function createRouteMap<T extends Record<string, any>>(
     obj: T,

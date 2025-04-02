@@ -23,18 +23,23 @@ export class TicketHoldingService {
             local ticketIdsJson = ARGV[4]
             local showtimeId = ARGV[5]
 
+            -- Check if the ticket is already held by another customer
             -- 티켓이 이미 다른 고객에 의해 선점되었는지 확인
             for i = 1, #KEYS - 1 do
                 local key = KEYS[i]
                 local ownerId = redis.call('GET', key)
                 if ownerId and ownerId ~= customerId then
-                    return 0 -- 티켓 선점 실패
+                    -- Ticket holding failed
+                    -- 티켓 선점 실패
+                    return 0
                 end
             end
 
+            -- Customer key (last element in KEYS array)
             -- 고객 키 (KEYS 배열의 마지막 요소)
             local customerKey = KEYS[#KEYS]
 
+            -- Get the list of tickets previously held by the customer
             -- 이전에 고객이 선점한 티켓 목록 가져오기
             local previousTicketIdsJson = redis.call('GET', customerKey)
             if previousTicketIdsJson then
@@ -45,16 +50,20 @@ export class TicketHoldingService {
                 end
             end
 
+            -- Set all tickets to the current customer
             -- 모든 티켓을 현재 고객으로 설정
             for i = 1, #KEYS - 1 do
                 local key = KEYS[i]
                 redis.call('SET', key, customerId, 'PX', ttlMs)
             end
 
+            -- Save the ticket list for the customer
             -- 고객에 대한 티켓 목록 저장
             redis.call('SET', customerKey, ticketIdsJson, 'PX', ttlMs)
 
-            return 1 -- 티켓 선점 성공
+            -- Ticket holding succeeded
+            -- 티켓 선점 성공
+            return 1
         `
         const result = await this.cacheService.executeScript(script, keys, [
             customerId,

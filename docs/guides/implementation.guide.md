@@ -188,6 +188,12 @@ src
     import { AuthService } from '../services'
     ```
 
+TODO export *이걸 뭐라고 하지? 하여튼 이 항목 따로 작성해라
+// export * 은 안티 패턴이라고 한다.
+// 여기서 export *을 하는 것은 의도한 것이다.
+// 이렇게 하면 순환 참조를 쉽게 발견할 수 있다.
+// applications,cores,infrastructures 에서는 각각 index.ts를 둔다
+
 ## 6. testlib와 common의 순환 참조
 
 src/libs에 testlib와 common가 있다. 이 두 라이브러리는 순환 참조 하는 것처럼 보인다.

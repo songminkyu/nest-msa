@@ -16,32 +16,37 @@ describe('AppValidationPipe', () => {
         await teardown()
     })
 
-    it('배열의 각 필드가 올바른지 검증해야 한다', async () => {
+    /* 배열의 각 필드가 올바른지 검증해야 한다 */
+    it('should validate each field in the array', async () => {
         await client
             .post('/array')
             .body([{ sampleId: 'id', date: new Date(0) }])
             .created([{ sampleId: 'id', date: new Date(0) }])
     })
 
-    it('필드가 올바른지 검증해야 한다', async () => {
+    /* 필드가 올바른지 검증해야 한다 */
+    it('should validate the fields', async () => {
         await client
             .post('/')
             .body({ sampleId: 'id', date: new Date(0) })
             .created({ sampleId: 'id', date: new Date(0) })
     })
 
-    it('잘못된 필드를 전송하면 Bad Request를 반환해야 한다', async () => {
+    /* 잘못된 필드를 전송하면 Bad Request를 반환해야 한다 */
+    it('should return Bad Request if invalid fields are sent', async () => {
         await client.post('/').body({ wrong: 'id' }).badRequest()
     })
 
-    it('잘못된 필드를 배열로 전송하면 Bad Request를 반환해야 한다', async () => {
+    /* 잘못된 필드를 배열로 전송하면 Bad Request를 반환해야 한다 */
+    it('should return Bad Request if invalid fields are sent as an array', async () => {
         await client
             .post('/array')
             .body([{ sampleId: 'id', date: 'wrong' }])
             .badRequest()
     })
 
-    it('중첩된 배열의 각 필드가 올바른지 검증해야 한다', async () => {
+    /* 중첩된 배열의 각 필드가 올바른지 검증해야 한다 */
+    it('should validate each field in the nested array', async () => {
         const sample = { sampleId: 'id', date: new Date(0) }
         await client
             .post('/nested')
@@ -49,7 +54,8 @@ describe('AppValidationPipe', () => {
             .created([sample])
     })
 
-    it('잘못된 필드를 중첩된 배열로 전송하면 Bad Request를 반환해야 한다', async () => {
+    /* 잘못된 필드를 중첩된 배열로 전송하면 Bad Request를 반환해야 한다 */
+    it('should return Bad Request if invalid fields are sent in a nested array', async () => {
         const sample = { sampleId: 'id', date: 'wrong' }
         await client
             .post('/nested')

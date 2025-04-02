@@ -10,17 +10,20 @@ Therefore, it is unnecessary to set it through configuration or to inject it fro
 export const Rules = {
     Ticket: {
         /*
-        티켓 구매 가능 시간
-         */
+        Ticket purchase deadline (how many minutes before the show it can be purchased)
+        티켓 구매 가능 시간 (상영 시작 전 몇 분까지 구매 가능한지)
+        */
         purchaseDeadlineMinutes: 30,
 
         /*
-        최대 구매 가능 수
+        Maximum number of tickets that can be purchased at once
+        한 번에 구매할 수 있는 최대 티켓 수
         */
         maxTicketsPerPurchase: 10,
 
         /*
-        티켓 선점 시간
+        Time duration a ticket can be temporarily held (reserved)
+        티켓을 임시로 선점할 수 있는 시간
         */
         holdExpirationTime: Time.toMs('10m')
     }

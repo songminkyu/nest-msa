@@ -1,19 +1,22 @@
 import { createRouteMap } from '../utils'
 
 describe('createRoutes', () => {
-    it('2단계 경로를 생성해야 한다', async () => {
+    /* 2단계 경로를 생성해야 한다 */
+    it('should create a 2-level path', async () => {
         const Messages = createRouteMap({ Movies: { findMovies: null, createMovies: null } })
 
         expect(Messages.Movies.findMovies).toEqual('Movies.findMovies')
     })
 
-    it('3단계 경로를 생성해야 한다', async () => {
+    /* 3단계 경로를 생성해야 한다 */
+    it('should create a 3-level path', async () => {
         const Messages = createRouteMap({ Apps: { Tickets: { findTickets: null } } })
 
         expect(Messages.Apps.Tickets.findTickets).toEqual('Apps.Tickets.findTickets')
     })
 
-    it('prefix를 설정해야 한다', async () => {
+    /* prefix를 설정해야 한다 */
+    it('should set a prefix', async () => {
         const Messages = createRouteMap(
             { Movies: { findMovies: null, createMovies: null } },
             'Prefix'

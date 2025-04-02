@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { MoviesClient, ShowtimeDto, ShowtimesClient, TheatersClient } from 'apps/cores'
-import { Assert, DateUtil } from 'common'
+import { Assert, DateUtil, Time } from 'common'
 import { ShowtimeBatchCreateJobData } from './types'
 
 type TimeslotMap = Map<number, ShowtimeDto>
@@ -115,7 +115,7 @@ export class ShowtimeCreationValidatorService {
 }
 
 const iterateEvery10Mins = (start: Date, end: Date, callback: (time: number) => boolean | void) => {
-    for (let time = start.getTime(); time <= end.getTime(); time = time + 10 * 60 * 1000) {
+    for (let time = start.getTime(); time <= end.getTime(); time = time + Time.toMs('10m')) {
         if (false === callback(time)) {
             break
         }

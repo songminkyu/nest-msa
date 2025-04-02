@@ -1,10 +1,9 @@
 import { Controller, ParseArrayPipe } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
-import { TicketCreateDto, TicketQueryDto } from './dtos'
+import { CreateTicketsResult, TicketCreateDto, TicketQueryDto } from './dtos'
 import { TicketStatus } from './models'
 import { TicketsService } from './tickets.service'
-import { CreateTicketsResult } from './types'
 
 @Controller()
 export class TicketsController {

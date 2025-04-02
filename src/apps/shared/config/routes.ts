@@ -3,7 +3,11 @@ import { createRouteMap, uniqueWhenTesting } from './utils'
 
 export const Routes = {
     Http: {
-        StorageFiles: '/storage-files' // MoviesService에서 경로를 참조한다.
+        /*
+        Refer to the path in the MoviesService.
+        MoviesService에서 경로를 참조한다.
+        */
+        StorageFiles: '/storage-files'
     }
 }
 

@@ -21,7 +21,6 @@ export class BookingController {
         return this.bookingService.findShowdates({ movieId, theaterId })
     }
 
-    // TODO Dto로 만들어야 하나?
     @Get('movies/:movieId/theaters/:theaterId/showdates/:showdate/showtimes')
     async findShowtimes(
         @Param('movieId') movieId: string,

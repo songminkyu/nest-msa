@@ -1,3 +1,4 @@
+export * from './create-tickets.result'
 export * from './ticket-create.dto'
 export * from './ticket-query.dto'
 export * from './ticket-sales-status.dto'
