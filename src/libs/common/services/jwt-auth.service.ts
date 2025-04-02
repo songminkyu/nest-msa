@@ -2,7 +2,7 @@ import { getRedisConnectionToken } from '@nestjs-modules/ioredis'
 import { DynamicModule, Inject, Injectable, Module, UnauthorizedException } from '@nestjs/common'
 import { JwtModule, JwtService } from '@nestjs/jwt'
 import Redis from 'ioredis'
-import { DateUtil, generateShortId, notUsed } from '../utils'
+import { generateShortId, notUsed, Time } from '../utils'
 
 export const JwtAuthServiceErrors = {
     RefreshTokenInvalid: {
@@ -89,7 +89,7 @@ export class JwtAuthService {
     }
 
     private async createToken(payload: object, secret: string, ttlMs: number) {
-        const expiresIn = DateUtil.fromMs(ttlMs)
+        const expiresIn = Time.fromMs(ttlMs)
 
         const token = await this.jwtService.signAsync(
             { ...payload, jti: generateShortId() },

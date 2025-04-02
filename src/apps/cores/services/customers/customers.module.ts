@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { PassportModule } from '@nestjs/passport'
-import { DateUtil, JwtAuthModule } from 'common'
+import { JwtAuthModule, Time } from 'common'
 import { AppConfigService, ProjectName, uniqueWhenTesting } from 'shared'
 import { CustomersController } from './customers.controller'
 import { CustomersRepository } from './customers.repository'
@@ -18,9 +18,9 @@ import { CustomerAuthenticationService } from './services'
             useFactory: ({ auth }: AppConfigService) => ({
                 auth: {
                     accessSecret: auth.accessSecret,
-                    accessTokenTtlMs: DateUtil.toMs(auth.accessTokenExpiration),
+                    accessTokenTtlMs: Time.toMs(auth.accessTokenExpiration),
                     refreshSecret: auth.refreshSecret,
-                    refreshTokenTtlMs: DateUtil.toMs(auth.refreshTokenExpiration)
+                    refreshTokenTtlMs: Time.toMs(auth.refreshTokenExpiration)
                 }
             }),
             inject: [AppConfigService]

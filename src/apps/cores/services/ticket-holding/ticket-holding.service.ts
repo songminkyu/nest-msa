@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { CacheService, InjectCache } from 'common'
+import { CacheService, InjectCache, Time } from 'common'
 import { HoldTicketsDto } from './dtos'
 
 const getCustomerKey = (showtimeId: string, customerId: string) =>
@@ -18,7 +18,7 @@ export class TicketHoldingService {
         이 값은 거의 변경되지 않는다. 또한 극장이나 서비스 마다 달라질 가능성도 없다.
         그래서 환경설정으로 설정하게 하거나 외부에서 주입받는 것은 불필요하다.
         */
-        return 10 * 60 * 1000
+        return Time.toMs('10m')
     }
 
     async holdTickets({ customerId, showtimeId, ticketIds }: HoldTicketsDto) {

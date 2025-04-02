@@ -1,40 +1,6 @@
 import { DateUtil } from 'common'
 
 describe('DateUtil', () => {
-    describe('toMs', () => {
-        /* 시간 형식 문자열을 밀리초(ms)로 변환해야 한다 */
-        it('should convert a time format string into milliseconds (ms)', () => {
-            expect(DateUtil.toMs('30m')).toEqual(30 * 60 * 1000)
-            expect(DateUtil.toMs('45s')).toEqual(45 * 1000)
-            expect(DateUtil.toMs('1d')).toEqual(24 * 60 * 60 * 1000)
-            expect(DateUtil.toMs('2h')).toEqual(2 * 60 * 60 * 1000)
-            expect(DateUtil.toMs('1d 2h')).toEqual((24 + 2) * 60 * 60 * 1000)
-            expect(DateUtil.toMs('1d2h')).toEqual((24 + 2) * 60 * 60 * 1000)
-            expect(DateUtil.toMs('-30s')).toEqual(-30 * 1000)
-            expect(DateUtil.toMs('0.5s')).toEqual(0.5 * 1000)
-            expect(DateUtil.toMs('500ms')).toEqual(500)
-        })
-
-        /* 잘못된 형식 입력 시 예외를 던져야 한다 */
-        it('should throw an exception for invalid input format', () => {
-            expect(() => DateUtil.toMs('2z')).toThrow(Error)
-        })
-    })
-
-    describe('fromMs', () => {
-        /* 밀리초(ms)를 시간 형식 문자열로 변환해야 한다 */
-        it('should convert milliseconds (ms) to a time format string', () => {
-            expect(DateUtil.fromMs(30 * 60 * 1000)).toEqual('30m')
-            expect(DateUtil.fromMs(45 * 1000)).toEqual('45s')
-            expect(DateUtil.fromMs(24 * 60 * 60 * 1000)).toEqual('1d')
-            expect(DateUtil.fromMs(2 * 60 * 60 * 1000)).toEqual('2h')
-            expect(DateUtil.fromMs((24 + 2) * 60 * 60 * 1000)).toEqual('1d2h')
-            expect(DateUtil.fromMs(500)).toEqual('500ms')
-            expect(DateUtil.fromMs(0)).toEqual('0ms')
-            expect(DateUtil.fromMs(-30 * 1000)).toEqual('-30s')
-        })
-    })
-
     describe('fromYMD', () => {
         /* YYYYMMDDHHmm 형식 문자열을 Date 객체로 변환 */
         it('should convert a YYYYMMDDHHmm format string to a Date object', () => {
