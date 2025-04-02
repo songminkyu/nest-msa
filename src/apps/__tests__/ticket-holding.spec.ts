@@ -1,11 +1,10 @@
-import { TicketHoldingClient, TicketHoldingService } from 'apps/cores'
+import { TicketHoldingClient } from 'apps/cores'
 import { generateShortId, sleep } from 'common'
 import { closeFixture, Fixture } from './ticket-holding.fixture'
 
 describe('TicketHolding Module', () => {
     let fixture: Fixture
     let client: TicketHoldingClient
-    let service: TicketHoldingService
 
     const customerA = 'customerId#1'
     const customerB = 'customerId#2'
@@ -17,7 +16,6 @@ describe('TicketHolding Module', () => {
 
         fixture = await createFixture()
         client = fixture.ticketHoldingClient
-        service = fixture.ticketHoldingService
     })
 
     afterEach(async () => {
@@ -58,8 +56,9 @@ describe('TicketHolding Module', () => {
         })
 
         it('시간이 만료되면 티켓을 다시 선점할 수 있어야 한다', async () => {
+            const { Rules } = await import('shared')
             const holdDuration = 1000
-            jest.spyOn(service, 'seatHoldExpirationTime', 'get').mockReturnValue(1000)
+            Rules.Ticket.holdExpirationTime = holdDuration
 
             const initialResult = await client.holdTickets({
                 showtimeId,
@@ -148,8 +147,12 @@ describe('TicketHolding Module', () => {
         })
 
         it('만료된 티켓은 반환되지 않아야 한다', async () => {
+            const { Rules } = await import('shared')
             const holdDuration = 1000
-            jest.spyOn(service, 'seatHoldExpirationTime', 'get').mockReturnValue(holdDuration)
+            Rules.Ticket.holdExpirationTime = holdDuration
+
+            // const holdDuration = 1000
+            // jest.spyOn(DomainRules, 'holdExpirationTime', 'get').mockReturnValue(1000)
 
             await client.holdTickets({ showtimeId, customerId: customerA, ticketIds })
 

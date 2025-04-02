@@ -1,4 +1,5 @@
 export * from './config'
 export * from './etc'
 export * from './routes'
+export * from './rules'
 export * from './utils'

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import {
     PurchaseCreateDto,
     PurchaseItemDto,
@@ -9,10 +9,25 @@ import {
     TicketsClient,
     TicketStatus
 } from 'apps/cores'
-import { pickItems } from 'common'
+import { DateUtil, pickItems } from 'common'
 import { uniq } from 'lodash'
-import { checkHeldTickets, checkMaxTicketsForPurchase, checkPurchaseDeadline } from '../domain'
+import { Rules } from 'shared'
 import { PurchaseProcessClient } from '../purchase-process.client'
+
+export const PurchaseErrors = {
+    MaxTicketsExceeded: {
+        code: 'ERR_PURCHASE_MAX_TICKETS_EXCEEDED',
+        message: 'You have exceeded the maximum number of tickets allowed for purchase.'
+    },
+    DeadlineExceeded: {
+        code: 'ERR_PURCHASE_DEADLINE_EXCEEDED',
+        message: 'The purchase deadline has passed.'
+    },
+    TicketNotHeld: {
+        code: 'ERR_PURCHASE_TICKET_NOT_HELD',
+        message: 'Only held tickets can be purchased.'
+    }
+}
 
 @Injectable()
 export class TicketPurchaseProcessor {
@@ -27,8 +42,8 @@ export class TicketPurchaseProcessor {
         const ticketItems = createDto.items.filter((item) => item.type === PurchaseItemType.ticket)
         const showtimes = await this.getShowtimes(ticketItems)
 
-        checkMaxTicketsForPurchase(ticketItems.length)
-        await this.validatePurchaseTime(showtimes)
+        this.validateTicketCount(ticketItems)
+        this.validatePurchaseTime(showtimes)
         await this.validateHeldTickets(createDto.customerId, showtimes, ticketItems)
 
         return true
@@ -44,9 +59,27 @@ export class TicketPurchaseProcessor {
         return showtimes
     }
 
-    private async validatePurchaseTime(showtimes: ShowtimeDto[]) {
-        for (const showtime of showtimes) {
-            await checkPurchaseDeadline(showtime.startTime)
+    private validateTicketCount(ticketItems: PurchaseItemDto[]) {
+        if (Rules.Ticket.maxTicketsPerPurchase < ticketItems.length) {
+            throw new BadRequestException({
+                ...PurchaseErrors.MaxTicketsExceeded,
+                maxCount: Rules.Ticket.maxTicketsPerPurchase
+            })
+        }
+    }
+
+    private validatePurchaseTime(showtimes: ShowtimeDto[]) {
+        for (const { startTime } of showtimes) {
+            const cutoffTime = DateUtil.addMinutes(new Date(), Rules.Ticket.purchaseDeadlineMinutes)
+
+            if (startTime.getTime() < cutoffTime.getTime()) {
+                throw new BadRequestException({
+                    ...PurchaseErrors.DeadlineExceeded,
+                    deadlineMinutes: Rules.Ticket.purchaseDeadlineMinutes,
+                    startTime: startTime.toString(),
+                    cutoffTime: cutoffTime.toString()
+                })
+            }
         }
     }
 
@@ -67,7 +100,11 @@ export class TicketPurchaseProcessor {
 
         const purchaseTicketIds = pickItems(ticketItems, 'ticketId')
 
-        checkHeldTickets(heldTicketIds, purchaseTicketIds)
+        const isAllExist = purchaseTicketIds.every((ticketId) => heldTicketIds.includes(ticketId))
+
+        if (!isAllExist) {
+            throw new BadRequestException(PurchaseErrors.TicketNotHeld)
+        }
     }
 
     async completePurchase(createDto: PurchaseCreateDto) {
