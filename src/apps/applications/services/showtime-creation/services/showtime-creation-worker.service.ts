@@ -55,7 +55,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
 
     async process(job: Job<ShowtimeBatchCreateJobData>) {
         try {
-            await this.executeShowtimesCreation(jsonToObject(job.data))
+            await this.processShowtimesCreation(jsonToObject(job.data))
         } catch (error) {
             this.client.emitStatusChanged({
                 status: ShowtimeBatchCreateStatus.error,
@@ -66,7 +66,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     }
 
     @MethodLog()
-    private async executeShowtimesCreation(data: ShowtimeBatchCreateJobData) {
+    private async processShowtimesCreation(data: ShowtimeBatchCreateJobData) {
         this.client.emitStatusChanged({
             status: ShowtimeBatchCreateStatus.processing,
             batchId: data.batchId
