@@ -9,7 +9,7 @@ import {
     createHttpTestContext,
     createTestContext,
     getNatsTestConnection,
-    HttpTestClient,
+    HttpTestContext,
     ModuleMetadataEx,
     TestContext
 } from 'testlib'
@@ -18,43 +18,34 @@ function createConfigServiceMock(mockValues: Record<string, any>) {
     const realConfigService = new ConfigService()
 
     return {
-        get: jest.fn((key: string) => {
-            if (key in mockValues) {
-                return mockValues[key]
-            }
-            return realConfigService.get(key)
-        })
+        original: ConfigService,
+        replacement: {
+            get: jest.fn((key: string) =>
+                key in mockValues ? mockValues[key] : realConfigService.get(key)
+            )
+        }
     }
 }
 
 type TestContextOpts = ModuleMetadataEx & { config?: Record<string, any> }
 
-function createMetadata(
-    module: Type<any>,
-    metadata: TestContextOpts = {},
-    mockValues: Record<string, any> = {}
-): ModuleMetadataEx {
+function createMetadata(module: Type<any>, metadata: TestContextOpts = {}): ModuleMetadataEx {
     const { ignoreGuards, ignoreProviders, overrideProviders, config } = metadata
-    const mergedMockValues = { ...mockValues, ...config }
-    const configMock = createConfigServiceMock(mergedMockValues)
+    const configMock = createConfigServiceMock({ ...config })
 
     return {
         imports: [module],
         ignoreProviders,
         ignoreGuards,
-        overrideProviders: [
-            { original: ConfigService, replacement: configMock },
-            ...(overrideProviders ?? [])
-        ]
+        overrideProviders: [configMock, ...(overrideProviders ?? [])]
     }
 }
 
 export class AllTestContexts {
-    gatewayContext: TestContext
+    gatewayContext: HttpTestContext
     appsContext: TestContext
     coresContext: TestContext
     infrasContext: TestContext
-    httpClient: HttpTestClient
     close: () => Promise<void>
 }
 
@@ -116,8 +107,7 @@ export async function createAllTestContexts({
         appsContext,
         coresContext,
         infrasContext,
-        close,
-        httpClient: gatewayContext.httpClient
+        close
     }
 }
 // TODO 모든 client를 export 하는 모듈이 필요할지도 모른다.

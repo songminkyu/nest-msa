@@ -13,7 +13,7 @@ describe('/movies', () => {
         const { createFixture } = await import('./movies.fixture')
 
         fixture = await createFixture()
-        client = fixture.testContext.httpClient
+        client = fixture.testContext.gatewayContext.httpClient
     })
 
     afterEach(async () => {

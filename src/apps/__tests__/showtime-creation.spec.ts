@@ -18,7 +18,7 @@ describe('/showtime-creation', () => {
         const { createFixture } = await import('./showtime-creation.fixture')
 
         fixture = await createFixture()
-        client = fixture.testContext.httpClient
+        client = fixture.testContext.gatewayContext.httpClient
         movie = fixture.movie
         theater = fixture.theater
     })

@@ -119,5 +119,5 @@ export async function createFixture() {
         await testContext?.close()
     }
 
-    return { teardown, httpClient: testContext.httpClient, movie, accessToken }
+    return { teardown, httpClient: testContext.gatewayContext.httpClient, movie, accessToken }
 }
