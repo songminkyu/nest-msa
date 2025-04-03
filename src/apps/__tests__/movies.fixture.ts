@@ -1,24 +1,9 @@
-import { padNumber, Path } from 'common'
-import { MovieDto, MovieGenre, MovieRating, MoviesService } from 'apps/cores'
-import { createAllTestContexts, AllTestContexts } from './utils'
-import { createDummyFile } from 'testlib'
-
-export interface Fixture {
-    testContext: AllTestContexts
-    moviesService: MoviesService
-}
-
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-    const moviesService = module.get(MoviesService)
-
-    return { testContext, moviesService }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
+import { MovieGenre, MovieRating } from 'apps/cores'
+import { padNumber } from 'common'
+import { TestFiles } from 'shared'
+import { HttpTestClient } from 'testlib'
+import { AllTestContexts, createAllTestContexts } from './utils'
+import { AllProviders } from './utils/clients'
 
 export const createMovieDto = (overrides = {}) => {
     const createDto = {
@@ -37,54 +22,59 @@ export const createMovieDto = (overrides = {}) => {
     return { createDto, expectedDto }
 }
 
-export const createMovie = async (moviesService: MoviesService, override = {}) => {
-    // TODO create temp 급하게 넣었다. 재검토해라. 한 번만 생성하는게 좋다.
-    const tempDir = await Path.createTempDirectory()
-    const fileSize = 1024
-    const filePath = Path.join(tempDir, 'image.png')
-    await createDummyFile(filePath, fileSize)
+export const createMovie = async ({ providers }: AllTestContexts, override = {}) => {
+    const { createDto: movieCreateDto } = createMovieDto(override)
 
-    const { createDto } = createMovieDto(override)
-    const movie = await moviesService.createMovie(createDto, [
-        {
-            originalname: 'image.png',
-            mimetype: 'image/png',
-            size: fileSize,
-            path: filePath
-        }
-    ])
+    const fileCreateDtos = [
+        { originalname: 'image.png', mimetype: 'image/png', ...TestFiles.image }
+    ]
 
+    const movie = await providers.moviesClient.createMovie(movieCreateDto, fileCreateDtos)
     return movie
 }
 
-export const createMovies = async (moviesService: MoviesService, overrides = {}) => {
-    const promises: Promise<MovieDto>[] = []
+export const createMovies = async (testContext: AllTestContexts, overrides = {}) => {
+    const createDtos: object[] = []
 
     const genres = [
         [MovieGenre.Action, MovieGenre.Comedy],
         [MovieGenre.Romance, MovieGenre.Drama],
         [MovieGenre.Thriller, MovieGenre.Western]
     ]
-    const directors = ['James Cameron', 'Steven Spielberg']
-    let i = 0
 
-    genres.map((genre) => {
-        directors.map((director) => {
+    const directors = ['James Cameron', 'Steven Spielberg']
+
+    let i = 0
+    genres.forEach((genre) => {
+        directors.forEach((director) => {
             const tag = padNumber(i++, 3)
             const title = `title-${tag}`
             const plot = `plot-${tag}`
 
-            const promise = createMovie(moviesService, {
-                title,
-                plot,
-                genre,
-                director,
-                ...overrides
-            })
-
-            promises.push(promise)
+            createDtos.push({ title, plot, genre, director, ...overrides })
         })
     })
 
-    return Promise.all(promises)
+    return Promise.all(createDtos.map((createDto) => createMovie(testContext, createDto)))
+}
+
+export interface Fixture extends AllProviders {
+    testContext: AllTestContexts
+    teardown: () => Promise<void>
+    httpClient: HttpTestClient
+}
+
+export async function createFixture() {
+    const testContext = await createAllTestContexts()
+
+    const teardown = async () => {
+        await testContext?.close()
+    }
+
+    return {
+        ...testContext.providers,
+        testContext,
+        teardown,
+        httpClient: testContext.gatewayContext.httpClient
+    }
 }

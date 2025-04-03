@@ -48,7 +48,7 @@ export async function closeFixture(fixture: Fixture) {
 export const createWatchedMovies = async (fixture: Fixture, dtos: Partial<MovieDto>[]) => {
     const watchedMovies = await Promise.all(
         dtos.map(async (dto) => {
-            const movie = await createMovie(fixture.moviesService, dto)
+            const movie = await createMovie(fixture.testContext, dto)
 
             fixture.watchRecordsService.createWatchRecord({
                 customerId: fixture.customer.id,
@@ -66,7 +66,7 @@ export const createWatchedMovies = async (fixture: Fixture, dtos: Partial<MovieD
 
 export const createShowingMovies = async (fixture: Fixture, dtos: Partial<MovieDto>[]) => {
     const showingMovies = await Promise.all(
-        dtos.map((dto) => createMovie(fixture.moviesService, dto))
+        dtos.map((dto) => createMovie(fixture.testContext, dto))
     )
 
     const showtimesCreateDtos = showingMovies.map((movie) => ({

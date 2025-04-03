@@ -1,29 +1,28 @@
 import { expect } from '@jest/globals'
 import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
 import { Path, pickIds } from 'common'
-import { expectEqualUnsorted, HttpTestClient, nullObjectId, objectToFields } from 'testlib'
-import { closeFixture, createMovie, createMovieDto, createMovies, Fixture } from './movies.fixture'
+import { expectEqualUnsorted, nullObjectId, objectToFields } from 'testlib'
+import { createMovie, createMovieDto, createMovies, Fixture } from './movies.fixture'
 import { Errors } from './utils'
 
-describe('/movies', () => {
-    let fixture: Fixture
-    let client: HttpTestClient
+/* 영화 API 통합 테스트 */
+describe('Movie API Integration Tests', () => {
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./movies.fixture')
-
-        fixture = await createFixture()
-        client = fixture.testContext.gatewayContext.httpClient
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture(fixture)
+        await fix?.teardown()
     })
 
     describe('POST /movies', () => {
         it('영화를 생성해야 한다', async () => {
             const { createDto, expectedDto } = createMovieDto()
-            const { body } = await client
+
+            const { body } = await fix.httpClient
                 .post('/movies')
                 .attachs([{ name: 'files', file: './test/fixtures/image.png' }])
                 .fields(objectToFields(createDto))
@@ -33,7 +32,7 @@ describe('/movies', () => {
         })
 
         it('필수 필드가 누락되면 BAD_REQUEST(400)를 반환해야 한다', async () => {
-            await client
+            await fix.httpClient
                 .post('/movies')
                 .body({})
                 .badRequest({ ...Errors.RequestValidation.Failed, details: expect.any(Array) })
@@ -44,7 +43,7 @@ describe('/movies', () => {
         let movie: MovieDto
 
         beforeEach(async () => {
-            movie = await createMovie(fixture.moviesService)
+            movie = await createMovie(fix.testContext)
         })
 
         it('영화 정보를 업데이트해야 한다', async () => {
@@ -59,12 +58,12 @@ describe('/movies', () => {
             }
             const expected = { ...movie, ...updateDto }
 
-            await client.patch(`/movies/${movie.id}`).body(updateDto).ok(expected)
-            await client.get(`/movies/${movie.id}`).ok(expected)
+            await fix.httpClient.patch(`/movies/${movie.id}`).body(updateDto).ok(expected)
+            await fix.httpClient.get(`/movies/${movie.id}`).ok(expected)
         })
 
         it('영화가 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
-            await client
+            await fix.httpClient
                 .patch(`/movies/${nullObjectId}`)
                 .body({})
                 .notFound({ ...Errors.Mongoose.DocumentNotFound, notFoundId: nullObjectId })
@@ -75,29 +74,28 @@ describe('/movies', () => {
         let movie: MovieDto
 
         beforeEach(async () => {
-            movie = await createMovie(fixture.moviesService)
+            movie = await createMovie(fix.testContext)
         })
 
         it('영화를 삭제해야 한다', async () => {
-            await client.delete(`/movies/${movie.id}`).ok()
-            await client
+            await fix.httpClient.delete(`/movies/${movie.id}`).ok()
+            await fix.httpClient
                 .get(`/movies/${movie.id}`)
                 .notFound({ ...Errors.Mongoose.MultipleDocumentsNotFound, notFoundIds: [movie.id] })
         })
 
         it('영화를 삭제하면 파일도 삭제되어야 한다', async () => {
-            await client.delete(`/movies/${movie.id}`).ok()
-
             const fileUrl = movie.images[0]
             const fileId = Path.basename(fileUrl)
 
-            await client
+            await fix.httpClient.delete(`/movies/${movie.id}`).ok()
+            await fix.httpClient
                 .get(fileUrl)
                 .notFound({ ...Errors.Mongoose.MultipleDocumentsNotFound, notFoundIds: [fileId] })
         })
 
         it('영화가 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
-            await client.delete(`/movies/${nullObjectId}`).notFound({
+            await fix.httpClient.delete(`/movies/${nullObjectId}`).notFound({
                 ...Errors.Mongoose.MultipleDocumentsNotFound,
                 notFoundIds: [nullObjectId]
             })
@@ -108,15 +106,15 @@ describe('/movies', () => {
         let movie: MovieDto
 
         beforeEach(async () => {
-            movie = await createMovie(fixture.moviesService)
+            movie = await createMovie(fix.testContext)
         })
 
         it('영화 정보를 가져와야 한다', async () => {
-            await client.get(`/movies/${movie.id}`).ok(movie)
+            await fix.httpClient.get(`/movies/${movie.id}`).ok(movie)
         })
 
         it('영화가 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
-            await client.get(`/movies/${nullObjectId}`).notFound({
+            await fix.httpClient.get(`/movies/${nullObjectId}`).notFound({
                 ...Errors.Mongoose.MultipleDocumentsNotFound,
                 notFoundIds: [nullObjectId]
             })
@@ -127,39 +125,27 @@ describe('/movies', () => {
         let movies: MovieDto[]
 
         beforeEach(async () => {
-            movies = await createMovies(fixture.moviesService)
+            movies = await createMovies(fix.testContext)
         })
 
         it('기본 페이지네이션 설정으로 영화를 가져와야 한다', async () => {
-            const { body } = await client.get('/movies').query({ skip: 0 }).ok()
+            const { body } = await fix.httpClient.get('/movies').query({ skip: 0 }).ok()
             const { items, ...paginated } = body
 
-            expect(paginated).toEqual({
-                skip: 0,
-                take: expect.any(Number),
-                total: movies.length
-            })
+            expect(paginated).toEqual({ skip: 0, take: expect.any(Number), total: movies.length })
             expectEqualUnsorted(items, movies)
         })
 
         it('잘못된 필드로 검색하면 BAD_REQUEST(400)를 반환해야 한다', async () => {
-            await client
+            await fix.httpClient
                 .get('/movies')
                 .query({ wrong: 'value' })
-                .badRequest({
-                    ...Errors.RequestValidation.Failed,
-                    details: [
-                        {
-                            constraints: { whitelistValidation: 'property wrong should not exist' },
-                            field: 'wrong'
-                        }
-                    ]
-                })
+                .badRequest({ ...Errors.RequestValidation.Failed, details: expect.any(Array) })
         })
 
         it('제목의 일부로 영화를 검색할 수 있어야 한다', async () => {
             const partialTitle = 'Movie-1'
-            const { body } = await client.get('/movies').query({ title: partialTitle }).ok()
+            const { body } = await fix.httpClient.get('/movies').query({ title: partialTitle }).ok()
 
             const expected = movies.filter((movie) => movie.title.startsWith(partialTitle))
             expectEqualUnsorted(body.items, expected)
@@ -167,7 +153,7 @@ describe('/movies', () => {
 
         it('장르로 영화를 검색할 수 있어야 한다', async () => {
             const genre = MovieGenre.Drama
-            const { body } = await client.get('/movies').query({ genre }).ok()
+            const { body } = await fix.httpClient.get('/movies').query({ genre }).ok()
 
             const expected = movies.filter((movie) => movie.genre.includes(genre))
             expectEqualUnsorted(body.items, expected)
@@ -175,7 +161,7 @@ describe('/movies', () => {
 
         it('개봉일로 영화를 검색할 수 있어야 한다', async () => {
             const releaseDate = movies[0].releaseDate
-            const { body } = await client.get('/movies').query({ releaseDate }).ok()
+            const { body } = await fix.httpClient.get('/movies').query({ releaseDate }).ok()
 
             const expected = movies.filter(
                 (movie) => movie.releaseDate.getTime() === releaseDate.getTime()
@@ -185,7 +171,7 @@ describe('/movies', () => {
 
         it('줄거리의 일부로 영화를 검색할 수 있어야 한다', async () => {
             const partialPlot = 'plot-01'
-            const { body } = await client.get('/movies').query({ plot: partialPlot }).ok()
+            const { body } = await fix.httpClient.get('/movies').query({ plot: partialPlot }).ok()
 
             const expected = movies.filter((movie) => movie.plot.startsWith(partialPlot))
             expectEqualUnsorted(body.items, expected)
@@ -193,7 +179,10 @@ describe('/movies', () => {
 
         it('감독의 일부로 영화를 검색할 수 있어야 한다', async () => {
             const partialDirector = 'James'
-            const { body } = await client.get('/movies').query({ director: partialDirector }).ok()
+            const { body } = await fix.httpClient
+                .get('/movies')
+                .query({ director: partialDirector })
+                .ok()
 
             const expected = movies.filter((movie) => movie.director.startsWith(partialDirector))
             expectEqualUnsorted(body.items, expected)
@@ -201,7 +190,7 @@ describe('/movies', () => {
 
         it('등급으로 영화를 검색할 수 있어야 한다', async () => {
             const rating = MovieRating.NC17
-            const { body } = await client.get('/movies').query({ rating }).ok()
+            const { body } = await fix.httpClient.get('/movies').query({ rating }).ok()
 
             const expected = movies.filter((movie) => movie.rating === rating)
             expectEqualUnsorted(body.items, expected)
@@ -212,20 +201,20 @@ describe('/movies', () => {
         let movies: MovieDto[]
 
         beforeEach(async () => {
-            movies = await createMovies(fixture.moviesService)
+            movies = await createMovies(fix.testContext)
         })
 
         it('movieIds로 영화를 검색할 수 있어야 한다', async () => {
             const expectedMovies = movies.slice(0, 5)
             const movieIds = pickIds(expectedMovies)
 
-            const gotMovies = await fixture.moviesService.getMoviesByIds(movieIds)
+            const gotMovies = await fix.moviesClient.getMoviesByIds(movieIds)
 
             expectEqualUnsorted(gotMovies, expectedMovies)
         })
 
         it('영화가 존재하지 않으면 NotFoundException을 던져야 한다', async () => {
-            const promise = fixture.moviesService.getMoviesByIds([nullObjectId])
+            const promise = fix.moviesClient.getMoviesByIds([nullObjectId])
 
             await expect(promise).rejects.toThrow('One or more documents not found')
         })

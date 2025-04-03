@@ -13,6 +13,7 @@ import {
     ModuleMetadataEx,
     TestContext
 } from 'testlib'
+import { AllProviders, getProviders } from './clients'
 
 function createConfigServiceMock(mockValues: Record<string, any>) {
     const realConfigService = new ConfigService()
@@ -42,6 +43,7 @@ function createMetadata(module: Type<any>, metadata: TestContextOpts = {}): Modu
 }
 
 export class AllTestContexts {
+    providers: AllProviders
     gatewayContext: HttpTestContext
     appsContext: TestContext
     coresContext: TestContext
@@ -101,8 +103,10 @@ export async function createAllTestContexts({
 
         await infrasContext.close()
     }
+    const providers = await getProviders(gatewayContext, appsContext, coresContext, infrasContext)
 
     return {
+        providers,
         gatewayContext,
         appsContext,
         coresContext,
@@ -110,4 +114,3 @@ export async function createAllTestContexts({
         close
     }
 }
-// TODO 모든 client를 export 하는 모듈이 필요할지도 모른다.

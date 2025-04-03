@@ -1,12 +1,11 @@
-import { DateUtil, jsonToObject } from 'common'
 import {
     MovieDto,
-    MoviesService,
     ShowtimeCreateDto,
     ShowtimesService,
     TheaterDto,
     TheatersService
 } from 'apps/cores'
+import { DateUtil, jsonToObject } from 'common'
 import { HttpTestClient, nullObjectId } from 'testlib'
 import { createMovie } from './movies.fixture'
 import { createTheater } from './theaters.fixture'
@@ -24,8 +23,7 @@ export async function createFixture() {
     const module = testContext.coresContext.module
 
     const showtimesService = module.get(ShowtimesService)
-    const moviesService = module.get(MoviesService)
-    const movie = await createMovie(moviesService)
+    const movie = await createMovie(testContext)
     const theatersService = module.get(TheatersService)
     const theater = await createTheater(theatersService)
 

@@ -106,11 +106,9 @@ export interface Fixture {
 
 export async function createFixture() {
     const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-    const moviesService = module.get(MoviesService)
 
     const accessToken = await login(testContext)
-    const movie = await createMovie(moviesService, {})
+    const movie = await createMovie(testContext, {})
     const theaters = await createTheaters(testContext)
     const showtimes = await createAllShowtimes(testContext, theaters, movie)
     await createAllTickets(testContext, theaters, showtimes)

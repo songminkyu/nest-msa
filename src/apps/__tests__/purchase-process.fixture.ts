@@ -1,9 +1,7 @@
-import { DateUtil, pickIds } from 'common'
 import {
     CustomerDto,
     CustomersService,
     MovieDto,
-    MoviesService,
     PurchaseCreateDto,
     PurchaseItemType,
     PurchasesService,
@@ -18,14 +16,15 @@ import {
     TicketStatus
 } from 'apps/cores'
 import { PaymentsService } from 'apps/infrastructures'
+import { DateUtil, pickIds } from 'common'
 import { nullObjectId } from 'testlib'
+import { TicketPurchaseProcessor } from '../applications/services/purchase-process/processors'
 import { createCustomer } from './customers.fixture'
 import { createMovie } from './movies.fixture'
 import { createShowtimeDto, createShowtimes } from './showtimes.fixture'
 import { createTheater } from './theaters.fixture'
 import { createTicketDto, createTickets } from './tickets.fixture'
 import { AllTestContexts, createAllTestContexts } from './utils'
-import { TicketPurchaseProcessor } from '../applications/services/purchase-process/processors'
 
 export interface Fixture {
     testContext: AllTestContexts
@@ -47,8 +46,7 @@ export async function createFixture() {
     const customersService = module.get(CustomersService)
     const customer = await createCustomer(customersService)
 
-    const moviesService = module.get(MoviesService)
-    const movie = await createMovie(moviesService)
+    const movie = await createMovie(testContext)
 
     const theatersService = module.get(TheatersService)
     const theater = await createTheater(theatersService, {
