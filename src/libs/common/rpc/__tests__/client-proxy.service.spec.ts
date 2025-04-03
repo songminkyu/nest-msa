@@ -34,13 +34,20 @@ describe('ClientProxyService', () => {
     describe('emit', () => {
         /* Microservice에 이벤트를 전송해야 한다 */
         it('should send an event to the microservice', async () => {
+            // TODO console.log 삭제
+            console.log('Emit Test #1')
             const promise = new Promise((resolve, reject) => {
+                console.log('Emit Test #2')
                 fix.httpClient.get('/handle-event').sse((value) => resolve(value), reject)
+                console.log('Emit Test #3')
             })
 
+            console.log('Emit Test #4')
             await fix.rpcClient.emit(withTestId('emitEvent'), { arg: 'value' })
 
+            console.log('Emit Test #5')
             await expect(promise).resolves.toEqual('{"arg":"value"}')
+            console.log('Emit Test #6')
         })
 
         /* null payload를 보내야 한다 */

@@ -1,7 +1,7 @@
 import { Controller, Get, MessageEvent, Sse } from '@nestjs/common'
 import { EventPattern, MessagePattern, NatsOptions, Transport } from '@nestjs/microservices'
 import { ClientProxyModule, ClientProxyService, InjectClientProxy } from 'common'
-import { Observable, Subject } from 'rxjs'
+import { Observable, ReplaySubject, Subject } from 'rxjs'
 import {
     createHttpTestContext,
     getNatsTestConnection,
@@ -32,16 +32,30 @@ class SendTestController {
 
 @Controller()
 class EmitTestController {
-    private eventSubject = new Subject<MessageEvent>()
+    // TODO console.log 삭제
+    /*
+    ReplaySubject is configured with a buffer size of 1 to store the last event.
+    If the event is emitted before the httpClient’s SSE request is established,
+    it replays the latest event to ensure the test passes without a timeout.
+
+    ReplaySubject는 버퍼 크기 1로 설정되어 마지막 이벤트를 저장합니다.
+    httpClient의 sse 요청보다 이벤트가 먼저 실행될 경우, 해당 마지막 이벤트를 재생하여
+    타임아웃 발생 없이 테스트가 성공하도록 합니다.
+     */
+    private eventSubject = new ReplaySubject<MessageEvent>(1)
 
     @EventPattern(withTestId('emitEvent'))
     async handleEvent(data: any) {
-        this.eventSubject.next({ data })
-        this.eventSubject.complete()
+        console.log('Emit Controller #1')
+        const r1 = this.eventSubject.next({ data })
+        console.log('Emit Controller #2', r1)
+        const r2 = this.eventSubject.complete()
+        console.log('Emit Controller #3', r2)
     }
 
     @Sse('handle-event')
     observeEvent(): Observable<MessageEvent> {
+        console.log('Emit Controller #4')
         return this.eventSubject.asObservable()
     }
 }
