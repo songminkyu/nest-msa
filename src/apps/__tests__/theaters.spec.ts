@@ -18,7 +18,7 @@ describe('/theaters', () => {
         const { createFixture } = await import('./theaters.fixture')
 
         fixture = await createFixture()
-        client = fixture.testContext.client
+        client = fixture.testContext.httpClient
     })
 
     afterEach(async () => {

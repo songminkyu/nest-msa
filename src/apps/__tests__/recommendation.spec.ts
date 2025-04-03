@@ -15,7 +15,7 @@ describe('Recommendation Module', () => {
         const { createFixture } = await import('./recommendation.fixture')
 
         fixture = await createFixture()
-        client = fixture.testContext.client
+        client = fixture.testContext.httpClient
     })
 
     afterEach(async () => {

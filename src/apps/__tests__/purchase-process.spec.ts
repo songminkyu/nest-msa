@@ -28,7 +28,7 @@ describe('/purchase-process', () => {
         const { createFixture } = await import('./purchase-process.fixture')
 
         fixture = await createFixture()
-        client = fixture.testContext.client
+        client = fixture.testContext.httpClient
         customerId = fixture.customer.id
     })
 

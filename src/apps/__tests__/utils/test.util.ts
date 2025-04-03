@@ -54,7 +54,7 @@ export class AllTestContexts {
     appsContext: TestContext
     coresContext: TestContext
     infrasContext: TestContext
-    client: HttpTestClient
+    httpClient: HttpTestClient
     close: () => Promise<void>
 }
 
@@ -117,7 +117,7 @@ export async function createAllTestContexts({
         coresContext,
         infrasContext,
         close,
-        client: gatewayContext.httpClient
+        httpClient: gatewayContext.httpClient
     }
 }
 // TODO 모든 client를 export 하는 모듈이 필요할지도 모른다.

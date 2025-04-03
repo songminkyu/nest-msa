@@ -30,7 +30,7 @@ describe('/storage-files', () => {
         const { createFixture } = await import('./storage-files.fixture')
 
         fixture = await createFixture()
-        client = fixture.testContext.client
+        client = fixture.testContext.httpClient
         config = fixture.config
     })
 

@@ -15,7 +15,7 @@ describe('/customers(authentication)', () => {
         const { createFixture } = await import('./customers-auth.fixture')
 
         fixture = await createFixture()
-        client = fixture.testContext.client
+        client = fixture.testContext.httpClient
         customer = fixture.customer
         email = customer.email
         password = fixture.password
