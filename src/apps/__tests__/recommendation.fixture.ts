@@ -1,6 +1,5 @@
 import {
     CustomerDto,
-    CustomersService,
     MovieDto,
     MoviesService,
     ShowtimesService,
@@ -10,7 +9,7 @@ import { nullObjectId } from 'testlib'
 import { createCustomerAndLogin } from './customers-auth.fixture'
 import { createMovie } from './movies.fixture'
 import { createShowtimes } from './showtimes.fixture'
-import { createAllTestContexts, AllTestContexts } from './utils'
+import { AllTestContexts, createAllTestContexts } from './utils'
 
 export interface Fixture {
     testContext: AllTestContexts
