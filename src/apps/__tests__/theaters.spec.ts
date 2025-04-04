@@ -41,7 +41,7 @@ describe('Theater Integration Tests', () => {
 
         it('극장 정보를 업데이트해야 한다', async () => {
             const updateDto = {
-                name: `Update-Name`,
+                name: 'update-name',
                 latlong: { latitude: 30.0, longitude: 120.0 },
                 seatmap: []
             }
@@ -124,7 +124,7 @@ describe('Theater Integration Tests', () => {
         })
 
         it('이름의 일부로 극장을 검색할 수 있어야 한다', async () => {
-            const partialName = 'Theater-'
+            const partialName = 'Theater-1'
             const { body } = await fix.httpClient.get('/theaters').query({ name: partialName }).ok()
 
             const expected = theaters.filter((theater) => theater.name.startsWith(partialName))

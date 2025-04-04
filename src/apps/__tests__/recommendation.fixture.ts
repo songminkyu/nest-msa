@@ -28,8 +28,7 @@ export async function createFixture() {
     const moviesService = module.get(MoviesService)
     const watchRecordsService = module.get(WatchRecordsService)
     const showtimesService = module.get(ShowtimesService)
-    const customersService = module.get(CustomersService)
-    const { customer, accessToken } = await createCustomerAndLogin(customersService)
+    const { customer, accessToken } = await createCustomerAndLogin(testContext)
 
     return {
         testContext,

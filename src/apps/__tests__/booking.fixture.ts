@@ -45,7 +45,6 @@ async function createAllTickets(
 }
 
 async function createTheaters(testContext: AllTestContexts) {
-
     const theaters = await Promise.all([
         createTheater(testContext, { latlong: { latitude: 30.0, longitude: 130.0 } }),
         createTheater(testContext, { latlong: { latitude: 31.0, longitude: 131.0 } }),
@@ -90,12 +89,6 @@ async function createAllShowtimes(
     return showtimes
 }
 
-async function login({ coresContext }: AllTestContexts) {
-    const customersService = coresContext.module.get(CustomersService)
-    const { accessToken } = await createCustomerAndLogin(customersService)
-    return accessToken
-}
-
 export interface Fixture {
     teardown: () => Promise<void>
     httpClient: HttpTestClient
@@ -106,7 +99,7 @@ export interface Fixture {
 export async function createFixture() {
     const testContext = await createAllTestContexts()
 
-    const accessToken = await login(testContext)
+    const { accessToken } = await createCustomerAndLogin(testContext)
     const movie = await createMovie(testContext, {})
     const theaters = await createTheaters(testContext)
     const showtimes = await createAllShowtimes(testContext, theaters, movie)

@@ -1,26 +1,7 @@
 import { CustomerJwtAuthGuard } from 'apps/gateway'
 import { omit } from 'lodash'
-import { CustomersService } from 'apps/cores'
+import { HttpTestClient } from 'testlib'
 import { AllTestContexts, createAllTestContexts } from './utils'
-
-export interface Fixture {
-    testContext: AllTestContexts
-    customersService: CustomersService
-}
-
-export async function createFixture() {
-    const testContext = await createAllTestContexts({
-        http: { ignoreGuards: [CustomerJwtAuthGuard] }
-    })
-    const module = testContext.coresContext.module
-    const customersService = module.get(CustomersService)
-
-    return { testContext, customersService }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
 
 export const createCustomerDto = (overrides = {}) => {
     const createDto = {
@@ -36,24 +17,48 @@ export const createCustomerDto = (overrides = {}) => {
     return { createDto, expectedDto }
 }
 
-export const createCustomer = async (customersService: CustomersService, override = {}) => {
+export const createCustomer = async ({ providers }: AllTestContexts, override = {}) => {
     const { createDto } = createCustomerDto(override)
-    const customer = await customersService.createCustomer(createDto)
+
+    const customer = await providers.customersClient.createCustomer(createDto)
     return customer
 }
 
 export const createCustomers = async (
-    customersService: CustomersService,
+    testContext: AllTestContexts,
     length: number = 20,
     overrides = {}
 ) => {
     return Promise.all(
         Array.from({ length }, async (_, index) =>
-            createCustomer(customersService, {
+            createCustomer(testContext, {
                 name: `Customer-${index}`,
                 email: `user-${index}@mail.com`,
                 ...overrides
             })
         )
     )
+}
+
+export interface Fixture {
+    testContext: AllTestContexts
+    teardown: () => Promise<void>
+    httpClient: HttpTestClient
+}
+
+export async function createFixture() {
+    const testContext = await createAllTestContexts({
+        http: { ignoreGuards: [CustomerJwtAuthGuard] }
+    })
+
+    const teardown = async () => {
+        await testContext?.close()
+    }
+
+    return {
+        ...testContext.providers,
+        testContext,
+        teardown,
+        httpClient: testContext.gatewayContext.httpClient
+    }
 }

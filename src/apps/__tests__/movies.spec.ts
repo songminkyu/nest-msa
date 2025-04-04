@@ -114,12 +114,10 @@ describe('Movie Integration Tests', () => {
         })
 
         it('영화가 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
-            await fix.httpClient
-                .get(`/movies/${nullObjectId}`)
-                .notFound({
-                    ...Errors.Mongoose.MultipleDocumentsNotFound,
-                    notFoundIds: [nullObjectId]
-                })
+            await fix.httpClient.get(`/movies/${nullObjectId}`).notFound({
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
+            })
         })
     })
 

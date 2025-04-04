@@ -1,35 +1,37 @@
-import { CustomerDto, CustomersService } from 'apps/cores'
+import { HttpTestClient } from 'testlib'
 import { createCustomer } from './customers.fixture'
-import { createAllTestContexts, AllTestContexts } from './utils'
+import { AllTestContexts, createAllTestContexts } from './utils'
+
+// 이건 다른 곳에서 사용한다.
+export async function createCustomerAndLogin(testContext: AllTestContexts) {
+    const email = 'user@mail.com'
+    const password = 'password'
+    const customer = await createCustomer(testContext, { email, password })
+
+    const { customersClient } = testContext.providers
+    const authTokens = await customersClient.generateAuthTokens({ customerId: customer.id, email })
+    const accessToken = authTokens.accessToken
+
+    return { customer, accessToken }
+}
 
 export interface Fixture {
     testContext: AllTestContexts
-    password: string
-    customer: CustomerDto
+    teardown: () => Promise<void>
+    httpClient: HttpTestClient
 }
 
 export async function createFixture() {
     const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-    const customersService = module.get(CustomersService)
-    const email = 'user@mail.com'
-    const password = 'password'
-    const customer = await createCustomer(customersService, { email, password })
 
-    return { testContext, password, customer }
-}
+    const teardown = async () => {
+        await testContext?.close()
+    }
 
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
-
-export async function createCustomerAndLogin(customersService: CustomersService) {
-    const email = 'user@mail.com'
-    const password = 'password'
-    const customer = await createCustomer(customersService, { email, password })
-
-    const authTokens = await customersService.generateAuthTokens({ customerId: customer.id, email })
-    const accessToken = authTokens.accessToken
-
-    return { customer, accessToken }
+    return {
+        ...testContext.providers,
+        testContext,
+        teardown,
+        httpClient: testContext.gatewayContext.httpClient
+    }
 }

@@ -1,6 +1,5 @@
 import {
     CustomerDto,
-    CustomersService,
     MovieDto,
     PurchaseCreateDto,
     PurchaseItemType,
@@ -9,7 +8,6 @@ import {
     ShowtimeDto,
     ShowtimesService,
     TheaterDto,
-    TheatersService,
     TicketDto,
     TicketHoldingService,
     TicketsService,
@@ -43,8 +41,7 @@ export async function createFixture() {
     const testContext = await createAllTestContexts()
     const module = testContext.coresContext.module
 
-    const customersService = module.get(CustomersService)
-    const customer = await createCustomer(customersService)
+    const customer = await createCustomer(testContext)
 
     const movie = await createMovie(testContext)
 
