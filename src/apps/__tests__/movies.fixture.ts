@@ -1,8 +1,7 @@
 import { MovieGenre, MovieRating } from 'apps/cores'
 import { padNumber } from 'common'
-import { TestFiles } from 'shared'
 import { HttpTestClient } from 'testlib'
-import { AllTestContexts, createAllTestContexts } from './utils'
+import { AllTestContexts, createAllTestContexts, TestFiles } from './utils'
 import { AllProviders } from './utils/clients'
 
 export const createMovieDto = (overrides = {}) => {

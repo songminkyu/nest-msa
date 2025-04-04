@@ -1,6 +1,7 @@
 import { padNumber } from 'common'
-import { createAllTestContexts, AllTestContexts } from './utils'
 import { HttpTestClient } from 'testlib'
+import { AllTestContexts, createAllTestContexts } from './utils'
+import { AllProviders } from './utils/clients'
 
 export const createTheaterDto = (overrides = {}) => {
     const createDto = {
@@ -34,7 +35,7 @@ export const createTheaters = async (
     )
 }
 
-export interface Fixture {
+export interface Fixture extends AllProviders {
     testContext: AllTestContexts
     teardown: () => Promise<void>
     httpClient: HttpTestClient

@@ -51,7 +51,7 @@ describe('Customer Authentication Tests', () => {
             /*
             CustomersRepository의 아래 코드를 모의하는 것이다. 코드 커버리지를 위해 작성한 테스트다.
 
-            this.model.findById(objectId(customerId)).select('+password').exec()
+            this.model.findById(customerId).select('+password').exec()
             */
             const model = fix.testContext.coresContext.module.get(getModelToken(Customer.name))
 
@@ -77,6 +77,7 @@ describe('Customer Authentication Tests', () => {
                 .post('/customers/login')
                 .body({ email, password })
                 .ok()
+
             accessToken = body.accessToken
             refreshToken = body.refreshToken
         })
@@ -110,6 +111,7 @@ describe('Customer Authentication Tests', () => {
                 .post('/customers/login')
                 .body({ email, password })
                 .ok()
+
             accessToken = body.accessToken
         })
 
@@ -121,11 +123,9 @@ describe('Customer Authentication Tests', () => {
         })
 
         it('잘못된 accessToken을 제공하면 UNAUTHORIZED(401)를 반환해야 한다', async () => {
-            const invalidToken = 'SampleToken'
-
             await fix.httpClient
                 .get(`/customers/${customer.id}`)
-                .headers({ Authorization: `Bearer ${invalidToken}` })
+                .headers({ Authorization: 'Bearer Invalid-Token' })
                 .unauthorized(Errors.Auth.Unauthorized)
         })
     })

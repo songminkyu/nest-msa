@@ -1,4 +1,3 @@
-import { Path } from 'common'
 import { SchemaOptions } from 'mongoose'
 
 export const ProjectName = 'nest-seed'
@@ -14,9 +13,4 @@ export class MongooseConfig {
         validateBeforeSave: true,
         toJSON: { virtuals: true, flattenObjectIds: true, versionKey: false }
     }
-}
-
-export const TestFiles = {
-    image: { path: Path.join('./test/fixtures', 'image.png'), size: 854634 },
-    smallText: { path: Path.join('./test/fixtures', 'text.txt'), size: 976 }
 }
