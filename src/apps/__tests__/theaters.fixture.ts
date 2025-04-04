@@ -1,22 +1,6 @@
 import { padNumber } from 'common'
-import { TheatersService } from 'apps/cores'
 import { createAllTestContexts, AllTestContexts } from './utils'
-
-export interface Fixture {
-    testContext: AllTestContexts
-    theatersService: TheatersService
-}
-
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-    const theatersService = module.get(TheatersService)
-    return { testContext, theatersService }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
+import { HttpTestClient } from 'testlib'
 
 export const createTheaterDto = (overrides = {}) => {
     const createDto = {
@@ -31,25 +15,42 @@ export const createTheaterDto = (overrides = {}) => {
     return { createDto, expectedDto }
 }
 
-export const createTheater = async (theatersService: TheatersService, override = {}) => {
+export const createTheater = async ({ providers }: AllTestContexts, override = {}) => {
     const { createDto } = createTheaterDto(override)
-    const theater = await theatersService.createTheater(createDto)
+
+    const theater = await providers.theatersClient.createTheater(createDto)
     return theater
 }
 
 export const createTheaters = async (
-    theatersService: TheatersService,
+    testContext: AllTestContexts,
     length: number = 20,
     overrides = {}
 ) => {
     return Promise.all(
         Array.from({ length }, async (_, index) =>
-            createTheater(theatersService, {
-                name: `Theater-${padNumber(index, 3)}`,
-                latlong: { latitude: 38.123, longitude: 138.678 },
-                seatmap: { blocks: [{ name: 'A', rows: [{ name: '1', seats: 'OOOOXXOOOO' }] }] },
-                ...overrides
-            })
+            createTheater(testContext, { name: `Theater-${padNumber(index, 3)}`, ...overrides })
         )
     )
+}
+
+export interface Fixture {
+    testContext: AllTestContexts
+    teardown: () => Promise<void>
+    httpClient: HttpTestClient
+}
+
+export async function createFixture() {
+    const testContext = await createAllTestContexts()
+
+    const teardown = async () => {
+        await testContext?.close()
+    }
+
+    return {
+        ...testContext.providers,
+        testContext,
+        teardown,
+        httpClient: testContext.gatewayContext.httpClient
+    }
 }

@@ -48,8 +48,7 @@ export async function createFixture() {
 
     const movie = await createMovie(testContext)
 
-    const theatersService = module.get(TheatersService)
-    const theater = await createTheater(theatersService, {
+    const theater = await createTheater(testContext, {
         seatmap: { blocks: [{ name: 'A', rows: [{ name: '1', seats: 'OOOOOOOOOOOO' }] }] }
     })
 

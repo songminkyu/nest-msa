@@ -5,8 +5,8 @@ import { expectEqualUnsorted, nullObjectId, objectToFields } from 'testlib'
 import { createMovie, createMovieDto, createMovies, Fixture } from './movies.fixture'
 import { Errors } from './utils'
 
-/* 영화 API 통합 테스트 */
-describe('Movie API Integration Tests', () => {
+/* 영화 통합 테스트 */
+describe('Movie Integration Tests', () => {
     let fix: Fixture
 
     beforeEach(async () => {
@@ -114,10 +114,12 @@ describe('Movie API Integration Tests', () => {
         })
 
         it('영화가 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
-            await fix.httpClient.get(`/movies/${nullObjectId}`).notFound({
-                ...Errors.Mongoose.MultipleDocumentsNotFound,
-                notFoundIds: [nullObjectId]
-            })
+            await fix.httpClient
+                .get(`/movies/${nullObjectId}`)
+                .notFound({
+                    ...Errors.Mongoose.MultipleDocumentsNotFound,
+                    notFoundIds: [nullObjectId]
+                })
         })
     })
 

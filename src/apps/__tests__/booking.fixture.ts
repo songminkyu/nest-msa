@@ -44,19 +44,18 @@ async function createAllTickets(
     await createTickets(ticketsService, createTicketDtos)
 }
 
-async function createTheaters({ coresContext }: AllTestContexts) {
-    const theatersService = coresContext.module.get(TheatersService)
+async function createTheaters(testContext: AllTestContexts) {
 
     const theaters = await Promise.all([
-        createTheater(theatersService, { latlong: { latitude: 30.0, longitude: 130.0 } }),
-        createTheater(theatersService, { latlong: { latitude: 31.0, longitude: 131.0 } }),
-        createTheater(theatersService, { latlong: { latitude: 32.0, longitude: 132.0 } }),
-        createTheater(theatersService, { latlong: { latitude: 33.0, longitude: 133.0 } }),
-        createTheater(theatersService, { latlong: { latitude: 34.0, longitude: 134.0 } }),
-        createTheater(theatersService, { latlong: { latitude: 35.0, longitude: 135.0 } }),
-        createTheater(theatersService, { latlong: { latitude: 36.0, longitude: 136.0 } }),
-        createTheater(theatersService, { latlong: { latitude: 37.0, longitude: 137.0 } }),
-        createTheater(theatersService, { latlong: { latitude: 38.0, longitude: 138.0 } })
+        createTheater(testContext, { latlong: { latitude: 30.0, longitude: 130.0 } }),
+        createTheater(testContext, { latlong: { latitude: 31.0, longitude: 131.0 } }),
+        createTheater(testContext, { latlong: { latitude: 32.0, longitude: 132.0 } }),
+        createTheater(testContext, { latlong: { latitude: 33.0, longitude: 133.0 } }),
+        createTheater(testContext, { latlong: { latitude: 34.0, longitude: 134.0 } }),
+        createTheater(testContext, { latlong: { latitude: 35.0, longitude: 135.0 } }),
+        createTheater(testContext, { latlong: { latitude: 36.0, longitude: 136.0 } }),
+        createTheater(testContext, { latlong: { latitude: 37.0, longitude: 137.0 } }),
+        createTheater(testContext, { latlong: { latitude: 38.0, longitude: 138.0 } })
     ])
 
     return theaters
