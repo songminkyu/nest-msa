@@ -1,7 +1,6 @@
-import { CustomerJwtAuthGuard } from 'apps/gateway'
 import { omit } from 'lodash'
-import { HttpTestClient } from 'testlib'
-import { AllTestContexts, createAllTestContexts } from './utils'
+import { CommonFixture, createCommonFixture } from './utils'
+import { CustomerJwtAuthGuard } from 'apps/gateway'
 
 export const createCustomerDto = (overrides = {}) => {
     const createDto = {
@@ -17,21 +16,17 @@ export const createCustomerDto = (overrides = {}) => {
     return { createDto, expectedDto }
 }
 
-export const createCustomer = async ({ providers }: AllTestContexts, override = {}) => {
+export const createCustomer = async (fix: CommonFixture, override = {}) => {
     const { createDto } = createCustomerDto(override)
 
-    const customer = await providers.customersClient.createCustomer(createDto)
+    const customer = await fix.customersClient.createCustomer(createDto)
     return customer
 }
 
-export const createCustomers = async (
-    testContext: AllTestContexts,
-    length: number = 20,
-    overrides = {}
-) => {
+export const createCustomers = async (fix: CommonFixture, length: number = 20, overrides = {}) => {
     return Promise.all(
         Array.from({ length }, async (_, index) =>
-            createCustomer(testContext, {
+            createCustomer(fix, {
                 name: `Customer-${index}`,
                 email: `user-${index}@mail.com`,
                 ...overrides
@@ -40,25 +35,18 @@ export const createCustomers = async (
     )
 }
 
-export interface Fixture {
-    testContext: AllTestContexts
+export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>
-    httpClient: HttpTestClient
 }
 
-export async function createFixture() {
-    const testContext = await createAllTestContexts({
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture({
         gateway: { ignoreGuards: [CustomerJwtAuthGuard] }
     })
 
     const teardown = async () => {
-        await testContext?.close()
+        await commonFixture?.close()
     }
 
-    return {
-        ...testContext.providers,
-        testContext,
-        teardown,
-        httpClient: testContext.gatewayContext.httpClient
-    }
+    return { ...commonFixture, teardown }
 }

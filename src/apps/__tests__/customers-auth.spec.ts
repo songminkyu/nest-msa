@@ -15,7 +15,7 @@ describe('Customer Authentication Tests', () => {
         const { createFixture } = await import('./customers-auth.fixture')
         fix = await createFixture()
 
-        customer = await createCustomer(fix.testContext, { email, password })
+        customer = await createCustomer(fix, { email, password })
     })
 
     afterEach(async () => {
@@ -53,7 +53,7 @@ describe('Customer Authentication Tests', () => {
 
             this.model.findById(customerId).select('+password').exec()
             */
-            const model = fix.testContext.coresContext.module.get(getModelToken(Customer.name))
+            const model = fix.coresContext.module.get(getModelToken(Customer.name))
 
             jest.spyOn(model, 'findById').mockReturnValue({
                 select: jest.fn().mockReturnValue({

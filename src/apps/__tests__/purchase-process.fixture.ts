@@ -3,90 +3,43 @@ import {
     MovieDto,
     PurchaseCreateDto,
     PurchaseItemType,
-    PurchasesService,
     Seatmap,
     ShowtimeDto,
-    ShowtimesService,
     TheaterDto,
     TicketDto,
-    TicketHoldingService,
-    TicketsService,
     TicketStatus
 } from 'apps/cores'
-import { PaymentsService } from 'apps/infrastructures'
 import { DateUtil, pickIds } from 'common'
 import { nullObjectId } from 'testlib'
-import { TicketPurchaseProcessor } from '../applications/services/purchase-process/processors'
 import { createCustomer } from './customers.fixture'
 import { createMovie } from './movies.fixture'
 import { createShowtimeDto, createShowtimes } from './showtimes.fixture'
 import { createTheater } from './theaters.fixture'
 import { createTicketDto, createTickets } from './tickets.fixture'
-import { AllTestContexts, createAllTestContexts } from './utils'
+import { CommonFixture, createCommonFixture } from './utils'
 
-export interface Fixture {
-    testContext: AllTestContexts
-    customer: CustomerDto
-    movie: MovieDto
-    theater: TheaterDto
-    showtimesService: ShowtimesService
-    purchasesService: PurchasesService
-    paymentsService: PaymentsService
-    ticketsService: TicketsService
-    ticketHoldingService: TicketHoldingService
-    ticketPurchaseProcessor: TicketPurchaseProcessor
-}
-
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-
-    const customer = await createCustomer(testContext)
-
-    const movie = await createMovie(testContext)
-
-    const theater = await createTheater(testContext, {
-        seatmap: { blocks: [{ name: 'A', rows: [{ name: '1', seats: 'OOOOOOOOOOOO' }] }] }
-    })
-
-    const showtimesService = module.get(ShowtimesService)
-    const ticketsService = module.get(TicketsService)
-    const ticketHoldingService = module.get(TicketHoldingService)
-    const purchasesService = module.get(PurchasesService)
-    const paymentsService = testContext.infrasContext.module.get(PaymentsService)
-    const ticketPurchaseProcessor = testContext.appsContext.module.get(TicketPurchaseProcessor)
-
-    return {
-        testContext,
-        customer,
-        movie,
-        theater,
-        purchasesService,
-        paymentsService,
-        ticketsService,
-        ticketHoldingService,
-        showtimesService,
-        ticketPurchaseProcessor
-    }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
-
-export const createShowtime = async (fixture: Fixture, startTime: Date) => {
+export const createShowtime = async (
+    fix: CommonFixture,
+    movie: MovieDto,
+    theater: TheaterDto,
+    startTime: Date
+) => {
     const createDto = createShowtimeDto({
-        movieId: fixture.movie.id,
-        theaterId: fixture.theater.id,
+        movieId: movie.id,
+        theaterId: theater.id,
         startTime,
         endTime: DateUtil.addMinutes(startTime, 90)
     })
-    const showtimes = await createShowtimes(fixture.showtimesService, [createDto])
+    const showtimes = await createShowtimes(fix, [createDto])
     return showtimes[0]
 }
 
-export const createAllTickets = async (fixture: Fixture, showtime: ShowtimeDto) => {
-    const createDtos = Seatmap.getAllSeats(fixture.theater.seatmap).map((seat) =>
+export const createAllTickets = async (
+    fix: CommonFixture,
+    theater: TheaterDto,
+    showtime: ShowtimeDto
+) => {
+    const createDtos = Seatmap.getAllSeats(theater.seatmap).map((seat) =>
         createTicketDto({
             movieId: showtime.movieId,
             theaterId: showtime.theaterId,
@@ -96,14 +49,11 @@ export const createAllTickets = async (fixture: Fixture, showtime: ShowtimeDto) 
         })
     )
 
-    const tickets = await createTickets(fixture.ticketsService, createDtos)
+    const tickets = await createTickets(fix, createDtos)
     return tickets
 }
 
-export const createPurchase = async (
-    purchasesService: PurchasesService,
-    override: Partial<PurchaseCreateDto>
-) => {
+export const createPurchase = async (fix: CommonFixture, override: Partial<PurchaseCreateDto>) => {
     const createDto = {
         customerId: nullObjectId,
         totalPrice: 1000,
@@ -111,7 +61,7 @@ export const createPurchase = async (
         ...override
     } as PurchaseCreateDto
 
-    return purchasesService.createPurchase(createDto)
+    return fix.purchasesService.createPurchase(createDto)
 }
 
 export const holdTickets = async (fixture: Fixture, showtimeId: string, tickets: TicketDto[]) => {
@@ -120,4 +70,27 @@ export const holdTickets = async (fixture: Fixture, showtimeId: string, tickets:
         showtimeId,
         ticketIds: pickIds(tickets)
     })
+}
+
+export interface Fixture extends CommonFixture {
+    teardown: () => Promise<void>
+    customer: CustomerDto
+    movie: MovieDto
+    theater: TheaterDto
+}
+
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture()
+
+    const customer = await createCustomer(commonFixture)
+    const movie = await createMovie(commonFixture)
+    const theater = await createTheater(commonFixture, {
+        seatmap: { blocks: [{ name: 'A', rows: [{ name: '1', seats: 'OOOOOOOOOOOO' }] }] }
+    })
+
+    const teardown = async () => {
+        await commonFixture?.close()
+    }
+
+    return { ...commonFixture, teardown, customer, movie, theater }
 }

@@ -1,24 +1,6 @@
-import { WatchRecordsClient } from 'apps/cores'
 import { DateUtil } from 'common'
 import { nullObjectId, testObjectId } from 'testlib'
-import { AllTestContexts, createAllTestContexts } from './utils'
-
-export interface Fixture {
-    testContext: AllTestContexts
-    watchRecordsService: WatchRecordsClient
-}
-
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const module = testContext.appsContext.module
-    const watchRecordsService = module.get(WatchRecordsClient)
-
-    return { testContext, watchRecordsService }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
+import { CommonFixture, createCommonFixture } from './utils'
 
 export const createWatchRecordDto = (overrides = {}) => {
     const createDto = {
@@ -34,23 +16,37 @@ export const createWatchRecordDto = (overrides = {}) => {
     return { createDto, expectedDto }
 }
 
-export const createWatchRecord = async (service: WatchRecordsClient, override = {}) => {
+export const createWatchRecord = async (fix: CommonFixture, override = {}) => {
     const { createDto } = createWatchRecordDto(override)
 
-    const watchRecord = await service.createWatchRecord(createDto)
+    const watchRecord = await fix.watchRecordsClient.createWatchRecord(createDto)
     return watchRecord
 }
 
-export const createWatchRecords = async (service: WatchRecordsClient, overrides = {}) => {
+export const createWatchRecords = async (fix: CommonFixture, overrides = {}) => {
     const baseDate = new Date(0)
 
     return Promise.all(
         Array.from({ length: 10 }, async (_, index) =>
-            createWatchRecord(service, {
+            createWatchRecord(fix, {
                 movieId: testObjectId(`${index}`),
                 watchDate: DateUtil.addDays(baseDate, index),
                 ...overrides
             })
         )
     )
+}
+
+export interface Fixture extends CommonFixture {
+    teardown: () => Promise<void>
+}
+
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture()
+
+    const teardown = async () => {
+        await commonFixture?.close()
+    }
+
+    return { ...commonFixture, teardown }
 }

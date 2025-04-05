@@ -36,7 +36,7 @@ describe('Theater Integration Tests', () => {
         let theater: TheaterDto
 
         beforeEach(async () => {
-            theater = await createTheater(fix.testContext)
+            theater = await createTheater(fix)
         })
 
         it('극장 정보를 업데이트해야 한다', async () => {
@@ -63,7 +63,7 @@ describe('Theater Integration Tests', () => {
         let theater: TheaterDto
 
         beforeEach(async () => {
-            theater = await createTheater(fix.testContext)
+            theater = await createTheater(fix)
         })
 
         it('극장을 삭제해야 한다', async () => {
@@ -86,7 +86,7 @@ describe('Theater Integration Tests', () => {
         let theater: TheaterDto
 
         beforeEach(async () => {
-            theater = await createTheater(fix.testContext)
+            theater = await createTheater(fix)
         })
 
         it('극장 정보를 가져와야 한다', async () => {
@@ -105,7 +105,7 @@ describe('Theater Integration Tests', () => {
         let theaters: TheaterDto[]
 
         beforeEach(async () => {
-            theaters = await createTheaters(fix.testContext)
+            theaters = await createTheaters(fix)
         })
 
         it('기본 페이지네이션 설정으로 극장을 가져와야 한다', async () => {

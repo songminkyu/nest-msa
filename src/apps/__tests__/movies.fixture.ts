@@ -1,8 +1,6 @@
 import { MovieGenre, MovieRating } from 'apps/cores'
 import { padNumber } from 'common'
-import { HttpTestClient } from 'testlib'
-import { AllTestContexts, createAllTestContexts, TestFile, TestFiles } from './utils'
-import { AllProviders } from './utils/clients'
+import { CommonFixture, createCommonFixture, TestFile, TestFiles } from './utils'
 
 export const createMovieDto = (overrides = {}) => {
     const createDto = {
@@ -21,14 +19,14 @@ export const createMovieDto = (overrides = {}) => {
     return { createDto, expectedDto }
 }
 
-export const createMovie = async ({ providers }: AllTestContexts, override = {}) => {
+export const createMovie = async (fix: CommonFixture, override = {}) => {
     const { createDto } = createMovieDto(override)
 
-    const movie = await providers.moviesClient.createMovie(createDto, [TestFiles.image])
+    const movie = await fix.moviesClient.createMovie(createDto, [TestFiles.image])
     return movie
 }
 
-export const createMovies = async (testContext: AllTestContexts, overrides = {}) => {
+export const createMovies = async (fix: CommonFixture, overrides = {}) => {
     const createDtos: object[] = []
 
     const genres = [
@@ -50,28 +48,20 @@ export const createMovies = async (testContext: AllTestContexts, overrides = {})
         })
     })
 
-    return Promise.all(createDtos.map((createDto) => createMovie(testContext, createDto)))
+    return Promise.all(createDtos.map((createDto) => createMovie(fix, createDto)))
 }
 
-export interface Fixture extends AllProviders {
-    testContext: AllTestContexts
+export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>
-    httpClient: HttpTestClient
     files: { image: TestFile }
 }
 
 export async function createFixture() {
-    const testContext = await createAllTestContexts()
+    const commonFixture = await createCommonFixture()
 
     const teardown = async () => {
-        await testContext?.close()
+        await commonFixture?.close()
     }
 
-    return {
-        ...testContext.providers,
-        testContext,
-        teardown,
-        httpClient: testContext.gatewayContext.httpClient,
-        files: { image: TestFiles.image }
-    }
+    return { ...commonFixture, teardown, files: { image: TestFiles.image } }
 }

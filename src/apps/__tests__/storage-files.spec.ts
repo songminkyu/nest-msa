@@ -86,7 +86,7 @@ describe('File Upload Tests', () => {
             tempDir = await Path.createTempDirectory()
 
             const { saveFile } = await import('./storage-files.fixture')
-            uploadedFile = await saveFile(fix.testContext, fix.files.large)
+            uploadedFile = await saveFile(fix, fix.files.large)
         })
 
         afterEach(async () => {
@@ -117,7 +117,7 @@ describe('File Upload Tests', () => {
         let uploadedFile: StorageFileDto
 
         beforeEach(async () => {
-            uploadedFile = await saveFile(fix.testContext, fix.files.large)
+            uploadedFile = await saveFile(fix, fix.files.large)
         })
 
         it('파일을 삭제해야 한다', async () => {

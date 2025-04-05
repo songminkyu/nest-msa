@@ -1,33 +1,29 @@
-import { PaymentsClient } from 'apps/infrastructures'
 import { nullObjectId } from 'testlib'
-import { AllTestContexts, createAllTestContexts } from './utils'
-
-export interface Fixture {
-    testContext: AllTestContexts
-    paymentsClient: PaymentsClient
-}
-
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const coresModule = testContext.coresContext.module
-    const paymentsClient = coresModule.get(PaymentsClient)
-
-    return { testContext, paymentsClient }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
+import { CommonFixture, createCommonFixture } from './utils'
 
 export const createPaymentDto = (overrides = {}) => {
     const createDto = { customerId: nullObjectId, amount: 1, ...overrides }
 
     const expectedDto = {
+        ...createDto,
         id: expect.any(String),
         createdAt: expect.any(Date),
-        updatedAt: expect.any(Date),
-        ...createDto
+        updatedAt: expect.any(Date)
     }
 
     return { createDto, expectedDto }
+}
+
+export interface Fixture extends CommonFixture {
+    teardown: () => Promise<void>
+}
+
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture()
+
+    const teardown = async () => {
+        await commonFixture?.close()
+    }
+
+    return { ...commonFixture, teardown }
 }

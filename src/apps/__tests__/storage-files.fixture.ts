@@ -1,18 +1,13 @@
 import { Path } from 'common'
-import { HttpTestClient } from 'testlib'
-import { AllTestContexts, createAllTestContexts, TestFile, TestFiles } from './utils'
-import { AllProviders } from './utils/clients'
+import { CommonFixture, createCommonFixture, TestFile, TestFiles } from './utils'
 
-export async function saveFile(testContext: AllTestContexts, file: TestFile) {
-    const files = await testContext.providers.storageFilesClient.saveFiles([file])
+export async function saveFile(fixture: CommonFixture, file: TestFile) {
+    const files = await fixture.storageFilesClient.saveFiles([file])
     return files[0]
 }
 
-// TODO AllProviders => CommonFixture?
-export interface Fixture extends AllProviders {
-    testContext: AllTestContexts
+export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>
-    httpClient: HttpTestClient
     uploadDir: string
     maxFileSizeBytes: number
     maxFilesPerUpload: number
@@ -30,7 +25,7 @@ export async function createFixture() {
     const maxFileSizeBytes = files.oversized.size
     const maxFilesPerUpload = 2
 
-    const testContext = await createAllTestContexts({
+    const commonFixture = await createCommonFixture({
         gateway: {
             config: {
                 FILE_UPLOAD_DIRECTORY: uploadDir,
@@ -43,18 +38,9 @@ export async function createFixture() {
     })
 
     const teardown = async () => {
-        await testContext?.close()
+        await commonFixture?.close()
         await Path.delete(uploadDir)
     }
 
-    return {
-        ...testContext.providers,
-        testContext,
-        teardown,
-        httpClient: testContext.gatewayContext.httpClient,
-        uploadDir,
-        maxFileSizeBytes,
-        maxFilesPerUpload,
-        files
-    }
+    return { ...commonFixture, teardown, uploadDir, maxFileSizeBytes, maxFilesPerUpload, files }
 }

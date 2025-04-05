@@ -1,8 +1,7 @@
-import { ShowtimeDto, ShowtimesService } from 'apps/cores'
+import { ShowtimeDto } from 'apps/cores'
 import { DateUtil, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, testObjectId } from 'testlib'
 import {
-    closeFixture,
     createShowtimeDto,
     createShowtimeDtos,
     createShowtimes,
@@ -10,27 +9,24 @@ import {
 } from './showtimes.fixture'
 
 describe('Showtimes Module', () => {
-    let fixture: Fixture
-    let service: ShowtimesService
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./showtimes.fixture')
-
-        fixture = await createFixture()
-        service = fixture.showtimesService
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture(fixture)
+        await fix?.teardown()
     })
 
     it('createShowtimes', async () => {
         const { createDtos, expectedDtos } = createShowtimeDtos()
 
-        const { success } = await service.createShowtimes(createDtos)
+        const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const showtimes = await service.findAllShowtimes({
+        const showtimes = await fix.showtimesClient.findAllShowtimes({
             startTimeRange: { start: new Date(0), end: new Date('9999') }
         })
 
@@ -40,16 +36,16 @@ describe('Showtimes Module', () => {
     describe('findAllShowtimes', () => {
         beforeEach(async () => {
             const { createDtos } = createShowtimeDtos()
-            const { success } = await service.createShowtimes(createDtos)
+            const { success } = await fix.showtimesClient.createShowtimes(createDtos)
             expect(success).toBeTruthy()
         })
 
         const createAndFindShowtimes = async (overrides = {}, findFilter = {}) => {
             const { createDtos, expectedDtos } = createShowtimeDtos(overrides)
-            const { success } = await service.createShowtimes(createDtos)
+            const { success } = await fix.showtimesClient.createShowtimes(createDtos)
             expect(success).toBeTruthy()
 
-            const showtimes = await service.findAllShowtimes(findFilter)
+            const showtimes = await fix.showtimesClient.findAllShowtimes(findFilter)
             expectEqualUnsorted(showtimes, expectedDtos)
         }
 
@@ -74,7 +70,7 @@ describe('Showtimes Module', () => {
                 end: new Date(2000, 0, 1, 49, 0)
             }
 
-            const showtimes = await service.findAllShowtimes({ startTimeRange })
+            const showtimes = await fix.showtimesClient.findAllShowtimes({ startTimeRange })
             expect(showtimes).toHaveLength(50)
         })
 
@@ -89,16 +85,16 @@ describe('Showtimes Module', () => {
 
         beforeEach(async () => {
             const { createDtos } = createShowtimeDtos()
-            showtimes = await createShowtimes(service, createDtos)
+            showtimes = await createShowtimes(fix, createDtos)
         })
 
         it('상영시간 정보를 가져와야 한다', async () => {
-            const gotShowtime = await service.getShowtimes(pickIds(showtimes))
+            const gotShowtime = await fix.showtimesClient.getShowtimes(pickIds(showtimes))
             expect(gotShowtime).toEqual(showtimes)
         })
 
         it('상영시간이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
-            const promise = service.getShowtimes([nullObjectId])
+            const promise = fix.showtimesClient.getShowtimes([nullObjectId])
             await expect(promise).rejects.toThrow(`One or more documents not found`)
         })
     })
@@ -123,10 +119,10 @@ describe('Showtimes Module', () => {
             })
         ]
 
-        const { success } = await service.createShowtimes(createDtos)
+        const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const foundIds = await service.findShowingMovieIds()
+        const foundIds = await fix.showtimesClient.findShowingMovieIds()
         expect(foundIds).toEqual(movieIds)
     })
 
@@ -147,10 +143,10 @@ describe('Showtimes Module', () => {
             })
         ]
 
-        const { success } = await service.createShowtimes(createDtos)
+        const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const theaterIds = await service.findTheaterIds({ movieIds: [movieId] })
+        const theaterIds = await fix.showtimesClient.findTheaterIds({ movieIds: [movieId] })
         expect(theaterIds).toEqual([testObjectId('b2'), testObjectId('b3')])
     })
 
@@ -178,10 +174,10 @@ describe('Showtimes Module', () => {
             })
         ]
 
-        const { success } = await service.createShowtimes(createDtos)
+        const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const showdates = await service.findShowdates({
+        const showdates = await fix.showtimesClient.findShowdates({
             movieIds: [movieId],
             theaterIds: [theaterId]
         })

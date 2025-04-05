@@ -1,41 +1,38 @@
+import { TicketStatus } from 'apps/cores'
 import { pickIds } from 'common'
-import { TicketsService, TicketStatus } from 'apps/cores'
 import { expectEqualUnsorted, testObjectId } from 'testlib'
-import { closeFixture, createTicketDtos, createTickets, Fixture } from './tickets.fixture'
+import { createTicketDtos, createTickets, Fixture } from './tickets.fixture'
 
 describe('Tickets Module', () => {
-    let fixture: Fixture
-    let service: TicketsService
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./tickets.fixture')
-
-        fixture = await createFixture()
-        service = fixture.ticketsService
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture(fixture)
+        await fix?.teardown()
     })
 
     it('createTickets', async () => {
         const { createDtos, expectedDtos } = createTicketDtos()
 
-        const tickets = await createTickets(service, createDtos)
+        const tickets = await createTickets(fix, createDtos)
         expectEqualUnsorted(tickets, expectedDtos)
     })
 
     describe('findAllTickets', () => {
         beforeEach(async () => {
             const { createDtos } = createTicketDtos()
-            await createTickets(service, createDtos)
+            await createTickets(fix, createDtos)
         })
 
         const createAndFindTickets = async (overrides = {}, findFilter = {}) => {
             const { createDtos, expectedDtos } = createTicketDtos(overrides)
-            await service.createTickets(createDtos)
+            await fix.ticketsClient.createTickets(createDtos)
 
-            const tickets = await service.findAllTickets(findFilter)
+            const tickets = await fix.ticketsClient.findAllTickets(findFilter)
             expectEqualUnsorted(tickets, expectedDtos)
         }
 
@@ -67,11 +64,14 @@ describe('Tickets Module', () => {
 
     it('updateTicketStatus', async () => {
         const { createDtos } = createTicketDtos({})
-        const tickets = await createTickets(service, createDtos)
+        const tickets = await createTickets(fix, createDtos)
         const ticket = tickets[0]
         expect(ticket.status).toEqual(TicketStatus.available)
 
-        const updatedTickets = await service.updateTicketStatus([ticket.id], TicketStatus.sold)
+        const updatedTickets = await fix.ticketsClient.updateTicketStatus(
+            [ticket.id],
+            TicketStatus.sold
+        )
         const updatedStatuses = updatedTickets.map((ticket) => ticket.status)
         expect(updatedStatuses).toEqual([TicketStatus.sold])
     })
@@ -82,10 +82,10 @@ describe('Tickets Module', () => {
         const soldCount = 5
 
         const { createDtos } = createTicketDtos({ showtimeId }, ticketCount)
-        const tickets = await createTickets(service, createDtos)
+        const tickets = await createTickets(fix, createDtos)
         const ticketIds = pickIds(tickets.slice(0, soldCount))
-        await service.updateTicketStatus(ticketIds, TicketStatus.sold)
-        const salesStatuses = await service.getSalesStatuses([showtimeId])
+        await fix.ticketsClient.updateTicketStatus(ticketIds, TicketStatus.sold)
+        const salesStatuses = await fix.ticketsClient.getSalesStatuses([showtimeId])
 
         expect(salesStatuses).toEqual([
             { showtimeId, total: ticketCount, sold: soldCount, available: ticketCount - soldCount }

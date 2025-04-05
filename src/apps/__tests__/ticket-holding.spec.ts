@@ -1,10 +1,8 @@
-import { TicketHoldingClient } from 'apps/cores'
 import { generateShortId, sleep } from 'common'
-import { closeFixture, Fixture } from './ticket-holding.fixture'
+import { Fixture } from './ticket-holding.fixture'
 
 describe('TicketHolding Module', () => {
-    let fixture: Fixture
-    let client: TicketHoldingClient
+    let fix: Fixture
 
     const customerA = 'customerId#1'
     const customerB = 'customerId#2'
@@ -13,25 +11,27 @@ describe('TicketHolding Module', () => {
 
     beforeEach(async () => {
         const { createFixture } = await import('./ticket-holding.fixture')
-
-        fixture = await createFixture()
-        client = fixture.ticketHoldingClient
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture(fixture)
+        await fix?.teardown()
+    })
+
+    it('test', async () => {
+        console.log('------A')
     })
 
     describe('holdTickets', () => {
         it('티켓을 정해진 시간 동안 선점해야 한다', async () => {
-            const firstResult = await client.holdTickets({
+            const firstResult = await fix.ticketHoldingClient.holdTickets({
                 showtimeId,
                 customerId: customerA,
                 ticketIds
             })
             expect(firstResult).toBeTruthy()
 
-            const secondResult = await client.holdTickets({
+            const secondResult = await fix.ticketHoldingClient.holdTickets({
                 showtimeId,
                 customerId: customerB,
                 ticketIds
@@ -40,14 +40,14 @@ describe('TicketHolding Module', () => {
         })
 
         it('고객은 자신이 선점한 티켓을 다시 선점할 수 있다', async () => {
-            const firstResult = await client.holdTickets({
+            const firstResult = await fix.ticketHoldingClient.holdTickets({
                 showtimeId,
                 customerId: customerA,
                 ticketIds
             })
             expect(firstResult).toBeTruthy()
 
-            const secondResult = await client.holdTickets({
+            const secondResult = await fix.ticketHoldingClient.holdTickets({
                 showtimeId,
                 customerId: customerA,
                 ticketIds
@@ -60,7 +60,7 @@ describe('TicketHolding Module', () => {
             const holdDuration = 1000
             Rules.Ticket.holdExpirationTime = holdDuration
 
-            const initialResult = await client.holdTickets({
+            const initialResult = await fix.ticketHoldingClient.holdTickets({
                 showtimeId,
                 customerId: customerA,
                 ticketIds
@@ -69,7 +69,7 @@ describe('TicketHolding Module', () => {
 
             await sleep(holdDuration + 500)
 
-            const postExpiryResult = await client.holdTickets({
+            const postExpiryResult = await fix.ticketHoldingClient.holdTickets({
                 showtimeId,
                 customerId: customerB,
                 ticketIds
@@ -81,21 +81,21 @@ describe('TicketHolding Module', () => {
             const firstTickets = ['ticketId#1', 'ticketId#2']
             const newTickets = ['ticketId#3', 'ticketId#4']
 
-            const holdA1 = await client.holdTickets({
+            const holdA1 = await fix.ticketHoldingClient.holdTickets({
                 showtimeId,
                 customerId: customerA,
                 ticketIds: firstTickets
             })
             expect(holdA1).toBeTruthy()
 
-            const holdA2 = await client.holdTickets({
+            const holdA2 = await fix.ticketHoldingClient.holdTickets({
                 showtimeId,
                 customerId: customerA,
                 ticketIds: newTickets
             })
             expect(holdA2).toBeTruthy()
 
-            const holdB = await client.holdTickets({
+            const holdB = await fix.ticketHoldingClient.holdTickets({
                 showtimeId,
                 customerId: customerB,
                 ticketIds: firstTickets
@@ -114,7 +114,7 @@ describe('TicketHolding Module', () => {
 
                         await Promise.all(
                             customers.map((customer) =>
-                                client.holdTickets({
+                                fix.ticketHoldingClient.holdTickets({
                                     showtimeId,
                                     customerId: customer,
                                     ticketIds
@@ -124,7 +124,7 @@ describe('TicketHolding Module', () => {
 
                         const findResults = await Promise.all(
                             customers.map((customer) =>
-                                client.findHeldTicketIds(showtimeId, customer)
+                                fix.ticketHoldingClient.findHeldTicketIds(showtimeId, customer)
                             )
                         )
 
@@ -141,8 +141,15 @@ describe('TicketHolding Module', () => {
 
     describe('findHeldTicketIds', () => {
         it('선점한 티켓을 반환해야 한다', async () => {
-            await client.holdTickets({ showtimeId, customerId: customerA, ticketIds })
-            const heldTickets = await client.findHeldTicketIds(showtimeId, customerA)
+            await fix.ticketHoldingClient.holdTickets({
+                showtimeId,
+                customerId: customerA,
+                ticketIds
+            })
+            const heldTickets = await fix.ticketHoldingClient.findHeldTicketIds(
+                showtimeId,
+                customerA
+            )
             expect(heldTickets).toEqual(ticketIds)
         })
 
@@ -151,29 +158,40 @@ describe('TicketHolding Module', () => {
             const holdDuration = 1000
             Rules.Ticket.holdExpirationTime = holdDuration
 
-            // const holdDuration = 1000
-            // jest.spyOn(DomainRules, 'holdExpirationTime', 'get').mockReturnValue(1000)
-
-            await client.holdTickets({ showtimeId, customerId: customerA, ticketIds })
+            await fix.ticketHoldingClient.holdTickets({
+                showtimeId,
+                customerId: customerA,
+                ticketIds
+            })
 
             await sleep(holdDuration + 500)
 
-            const heldTickets = await client.findHeldTicketIds(showtimeId, customerA)
+            const heldTickets = await fix.ticketHoldingClient.findHeldTicketIds(
+                showtimeId,
+                customerA
+            )
             expect(heldTickets).toEqual([])
         })
     })
 
     describe('releaseTickets', () => {
         it('고객이 선점한 티켓을 해제해야 한다', async () => {
-            await client.holdTickets({ showtimeId, customerId: customerA, ticketIds })
+            await fix.ticketHoldingClient.holdTickets({
+                showtimeId,
+                customerId: customerA,
+                ticketIds
+            })
 
-            const releaseRes = await client.releaseTickets(showtimeId, customerA)
+            const releaseRes = await fix.ticketHoldingClient.releaseTickets(showtimeId, customerA)
             expect(releaseRes).toBeTruthy()
 
-            const heldTickets = await client.findHeldTicketIds(showtimeId, customerA)
+            const heldTickets = await fix.ticketHoldingClient.findHeldTicketIds(
+                showtimeId,
+                customerA
+            )
             expect(heldTickets).toEqual([])
 
-            const secondResult = await client.holdTickets({
+            const secondResult = await fix.ticketHoldingClient.holdTickets({
                 showtimeId,
                 customerId: customerB,
                 ticketIds

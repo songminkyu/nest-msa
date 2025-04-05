@@ -9,11 +9,12 @@ import {
     createHttpTestContext,
     createTestContext,
     getNatsTestConnection,
+    HttpTestClient,
     HttpTestContext,
     ModuleMetadataEx,
     TestContext
 } from 'testlib'
-import { AllProviders, getProviders } from './clients'
+import { AllProviders, getAllProviders } from './all-providers'
 
 function createConfigServiceMock(mockValues: Record<string, any>) {
     const realConfigService = new ConfigService()
@@ -42,16 +43,16 @@ function createMetadata(module: Type<any>, metadata: TestContextOpts = {}): Modu
     }
 }
 
-export class AllTestContexts {
-    providers: AllProviders
+export class CommonFixture extends AllProviders {
     gatewayContext: HttpTestContext
     appsContext: TestContext
     coresContext: TestContext
     infrasContext: TestContext
+    httpClient: HttpTestClient
     close: () => Promise<void>
 }
 
-export async function createAllTestContexts({
+export async function createCommonFixture({
     gateway,
     apps,
     cores,
@@ -61,7 +62,7 @@ export async function createAllTestContexts({
     apps?: TestContextOpts
     cores?: TestContextOpts
     infras?: TestContextOpts
-} = {}): Promise<AllTestContexts> {
+} = {}): Promise<CommonFixture> {
     const { servers: brokers } = await getNatsTestConnection()
 
     const infrasContext = await createTestContext({
@@ -88,6 +89,15 @@ export async function createAllTestContexts({
         configureApp: configureGateway
     })
 
+    const providers = await getAllProviders(
+        gatewayContext,
+        appsContext,
+        coresContext,
+        infrasContext
+    )
+
+    const httpClient = gatewayContext.httpClient
+
     const close = async () => {
         const redisToken = getRedisConnectionToken()
 
@@ -103,14 +113,14 @@ export async function createAllTestContexts({
 
         await infrasContext.close()
     }
-    const providers = await getProviders(gatewayContext, appsContext, coresContext, infrasContext)
 
     return {
-        providers,
+        ...providers,
         gatewayContext,
         appsContext,
         coresContext,
         infrasContext,
+        httpClient,
         close
     }
 }

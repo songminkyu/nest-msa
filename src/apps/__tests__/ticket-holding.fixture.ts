@@ -1,20 +1,15 @@
-import { TicketHoldingClient } from 'apps/cores'
-import { AllTestContexts, createAllTestContexts } from './utils'
+import { CommonFixture, createCommonFixture } from './utils'
 
-export interface Fixture {
-    testContext: AllTestContexts
-    ticketHoldingClient: TicketHoldingClient
+export interface Fixture extends CommonFixture {
+    teardown: () => Promise<void>
 }
 
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const { appsContext } = testContext
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture()
 
-    const ticketHoldingClient = appsContext.module.get(TicketHoldingClient)
+    const teardown = async () => {
+        await commonFixture?.close()
+    }
 
-    return { testContext, ticketHoldingClient }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
+    return { ...commonFixture, teardown }
 }

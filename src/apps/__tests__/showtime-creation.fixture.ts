@@ -1,37 +1,9 @@
-import {
-    MovieDto,
-    ShowtimeCreateDto,
-    ShowtimesService,
-    TheaterDto,
-    TheatersService
-} from 'apps/cores'
+import { MovieDto, ShowtimeCreateDto, TheaterDto } from 'apps/cores'
 import { DateUtil, jsonToObject } from 'common'
 import { HttpTestClient, nullObjectId } from 'testlib'
 import { createMovie } from './movies.fixture'
 import { createTheater } from './theaters.fixture'
-import { AllTestContexts, createAllTestContexts } from './utils'
-
-export interface Fixture {
-    testContext: AllTestContexts
-    showtimesService: ShowtimesService
-    movie: MovieDto
-    theater: TheaterDto
-}
-
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-
-    const showtimesService = module.get(ShowtimesService)
-    const movie = await createMovie(testContext)
-    const theater = await createTheater(testContext)
-
-    return { testContext, showtimesService, movie, theater }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
+import { CommonFixture, createCommonFixture } from './utils'
 
 export const createShowtimeDtos = (startTimes: Date[], overrides = {}) => {
     const createDtos: ShowtimeCreateDto[] = []
@@ -68,4 +40,22 @@ export const monitorEvents = (client: HttpTestClient, waitStatuses: string[]) =>
             }
         }, reject)
     })
+}
+
+export interface Fixture extends CommonFixture {
+    teardown: () => Promise<void>
+    movie: MovieDto
+    theater: TheaterDto
+}
+
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture()
+    const movie = await createMovie(commonFixture)
+    const theater = await createTheater(commonFixture)
+
+    const teardown = async () => {
+        await commonFixture?.close()
+    }
+
+    return { ...commonFixture, teardown, movie, theater }
 }

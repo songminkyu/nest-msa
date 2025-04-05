@@ -1,25 +1,7 @@
-import { ShowtimeCreateDto, ShowtimeDto, ShowtimesService } from 'apps/cores'
+import { ShowtimeCreateDto, ShowtimeDto } from 'apps/cores'
 import { omit, uniq } from 'lodash'
 import { nullObjectId } from 'testlib'
-import { createAllTestContexts, AllTestContexts } from './utils'
-
-export interface Fixture {
-    testContext: AllTestContexts
-    showtimesService: ShowtimesService
-}
-
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-
-    const showtimesService = module.get(ShowtimesService)
-
-    return { testContext, showtimesService }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
+import { CommonFixture, createCommonFixture } from './utils'
 
 export const createShowtimeDto = (overrides = {}) => ({
     batchId: nullObjectId,
@@ -50,12 +32,26 @@ export const createShowtimeDtos = (overrides = {}, length: number = 100) => {
     return { createDtos, expectedDtos }
 }
 
-export async function createShowtimes(service: ShowtimesService, createDtos: ShowtimeCreateDto[]) {
-    const { success } = await service.createShowtimes(createDtos)
+export async function createShowtimes(fix: CommonFixture, createDtos: ShowtimeCreateDto[]) {
+    const { success } = await fix.showtimesClient.createShowtimes(createDtos)
     expect(success).toBeTruthy()
 
     const batchIds = uniq(createDtos.map((dto) => dto.batchId))
 
-    const showtimes = await service.findAllShowtimes({ batchIds })
+    const showtimes = await fix.showtimesClient.findAllShowtimes({ batchIds })
     return showtimes
+}
+
+export interface Fixture extends CommonFixture {
+    teardown: () => Promise<void>
+}
+
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture()
+
+    const teardown = async () => {
+        await commonFixture?.close()
+    }
+
+    return { ...commonFixture, teardown }
 }

@@ -1,28 +1,37 @@
 import {
-    ShowtimeCreationClient,
     BookingClient,
-    RecommendationClient,
-    PurchaseProcessClient,
     BookingService,
+    PurchaseProcessClient,
     PurchaseProcessService,
+    RecommendationClient,
     RecommendationService,
-    ShowtimeCreationService
+    ShowtimeCreationClient,
+    ShowtimeCreationService,
+    TicketPurchaseProcessor
 } from 'apps/applications'
 import {
     CustomersClient,
-    MoviesClient,
-    TheatersClient,
-    PurchasesClient,
-    TicketHoldingClient,
-    TicketsClient,
     CustomersService,
+    MoviesClient,
     MoviesService,
+    PurchasesClient,
     PurchasesService,
+    ShowtimesClient,
+    TheatersClient,
     TheatersService,
+    TicketHoldingClient,
     TicketHoldingService,
-    TicketsService
+    TicketsClient,
+    TicketsService,
+    WatchRecordsClient,
+    WatchRecordsService
 } from 'apps/cores'
-import { StorageFilesClient, StorageFilesService } from 'apps/infrastructures'
+import {
+    PaymentsClient,
+    PaymentsService,
+    StorageFilesClient,
+    StorageFilesService
+} from 'apps/infrastructures'
 import { HttpTestContext, TestContext } from 'testlib'
 
 export class AllProviders {
@@ -37,6 +46,8 @@ export class AllProviders {
     purchaseProcessClient: PurchaseProcessClient
     ticketHoldingClient: TicketHoldingClient
     ticketsClient: TicketsClient
+    paymentsClient: PaymentsClient
+    paymentsService: PaymentsService
     bookingService: BookingService
     purchaseProcessService: PurchaseProcessService
     recommendationService: RecommendationService
@@ -48,9 +59,13 @@ export class AllProviders {
     ticketHoldingService: TicketHoldingService
     ticketsService: TicketsService
     storageFilesService: StorageFilesService
+    ticketPurchaseProcessor: TicketPurchaseProcessor
+    watchRecordsService: WatchRecordsService
+    watchRecordsClient: WatchRecordsClient
+    showtimesClient: ShowtimesClient
 }
 
-export async function getProviders(
+export async function getAllProviders(
     gatewayContext: HttpTestContext,
     appsContext: TestContext,
     coresContext: TestContext,
@@ -74,17 +89,23 @@ export async function getProviders(
     const purchaseProcessService = appsModule.get(PurchaseProcessService)
     const recommendationService = appsModule.get(RecommendationService)
     const showtimeCreationService = appsModule.get(ShowtimeCreationService)
+    const ticketPurchaseProcessor = appsModule.get(TicketPurchaseProcessor)
+    const showtimesClient = appsModule.get(ShowtimesClient)
+    const watchRecordsClient = appsModule.get(WatchRecordsClient)
 
     const { module: coresModule } = coresContext
+    const paymentsClient = coresModule.get(PaymentsClient)
     const customersService = coresModule.get(CustomersService)
     const moviesService = coresModule.get(MoviesService)
     const purchasesService = coresModule.get(PurchasesService)
     const theatersService = coresModule.get(TheatersService)
     const ticketHoldingService = coresModule.get(TicketHoldingService)
     const ticketsService = coresModule.get(TicketsService)
+    const watchRecordsService = coresModule.get(WatchRecordsService)
 
     const { module: infrasModule } = infrasContext
     const storageFilesService = infrasModule.get(StorageFilesService)
+    const paymentsService = infrasModule.get(PaymentsService)
 
     return {
         customersClient,
@@ -98,6 +119,7 @@ export async function getProviders(
         purchaseProcessClient,
         ticketHoldingClient,
         ticketsClient,
+        paymentsClient,
         bookingService,
         purchaseProcessService,
         recommendationService,
@@ -108,6 +130,11 @@ export async function getProviders(
         theatersService,
         ticketHoldingService,
         ticketsService,
-        storageFilesService
+        storageFilesService,
+        ticketPurchaseProcessor,
+        paymentsService,
+        watchRecordsService,
+        watchRecordsClient,
+        showtimesClient
     }
 }

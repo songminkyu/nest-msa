@@ -1,32 +1,23 @@
 import { MovieDto, MovieGenre } from 'apps/cores'
-import { HttpTestClient } from 'testlib'
-import {
-    closeFixture,
-    createShowingMovies,
-    createWatchedMovies,
-    Fixture
-} from './recommendation.fixture'
+import { createShowingMovies, createWatchedMovies, Fixture } from './recommendation.fixture'
 
 describe('Recommendation Module', () => {
-    let fixture: Fixture
-    let client: HttpTestClient
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./recommendation.fixture')
-
-        fixture = await createFixture()
-        client = fixture.testContext.gatewayContext.httpClient
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture(fixture)
+        await fix?.teardown()
     })
 
     describe('/movies/recommended', () => {
         let showingMovies: MovieDto[]
 
         beforeEach(async () => {
-            await createWatchedMovies(fixture, [
+            await createWatchedMovies(fix, fix.customer, [
                 { title: 'Action1', genre: [MovieGenre.Action] },
                 { title: 'Action2', genre: [MovieGenre.Action] },
                 { title: 'Action3', genre: [MovieGenre.Action] },
@@ -35,7 +26,7 @@ describe('Recommendation Module', () => {
                 { title: 'Drama1', genre: [MovieGenre.Drama] }
             ])
 
-            showingMovies = await createShowingMovies(fixture, [
+            showingMovies = await createShowingMovies(fix, [
                 {
                     title: 'Fantasy',
                     genre: [MovieGenre.Fantasy],
@@ -65,9 +56,9 @@ describe('Recommendation Module', () => {
         })
 
         it('고객이 가장 많이 관람한 genre, 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다', async () => {
-            const { body } = await client
+            const { body } = await fix.httpClient
                 .get('/movies/recommended')
-                .headers({ Authorization: `Bearer ${fixture.accessToken}` })
+                .headers({ Authorization: `Bearer ${fix.accessToken}` })
                 .ok()
 
             expect(body).toEqual([
@@ -80,7 +71,7 @@ describe('Recommendation Module', () => {
         })
 
         it('로그인을 하지 않으면 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다', async () => {
-            const { body } = await client.get('/movies/recommended').ok()
+            const { body } = await fix.httpClient.get('/movies/recommended').ok()
 
             expect(body).toEqual([
                 showingMovies[4], // 2900-05-01

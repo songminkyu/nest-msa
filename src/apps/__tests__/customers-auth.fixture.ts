@@ -1,37 +1,30 @@
-import { HttpTestClient } from 'testlib'
 import { createCustomer } from './customers.fixture'
-import { AllTestContexts, createAllTestContexts } from './utils'
+import { CommonFixture, createCommonFixture } from './utils'
 
-// 이건 다른 곳에서 사용한다.
-export async function createCustomerAndLogin(testContext: AllTestContexts) {
+// TODO 이건 다른 곳에서 사용한다.
+export async function createCustomerAndLogin(fix: CommonFixture) {
     const email = 'user@mail.com'
     const password = 'password'
-    const customer = await createCustomer(testContext, { email, password })
+    const customer = await createCustomer(fix, { email, password })
 
-    const { customersClient } = testContext.providers
-    const authTokens = await customersClient.generateAuthTokens({ customerId: customer.id, email })
-    const accessToken = authTokens.accessToken
+    const { accessToken } = await fix.customersClient.generateAuthTokens({
+        customerId: customer.id,
+        email
+    })
 
     return { customer, accessToken }
 }
 
-export interface Fixture {
-    testContext: AllTestContexts
+export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>
-    httpClient: HttpTestClient
 }
 
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture()
 
     const teardown = async () => {
-        await testContext?.close()
+        await commonFixture?.close()
     }
 
-    return {
-        ...testContext.providers,
-        testContext,
-        teardown,
-        httpClient: testContext.gatewayContext.httpClient
-    }
+    return { ...commonFixture, teardown }
 }

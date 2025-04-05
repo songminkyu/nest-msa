@@ -1,24 +1,7 @@
-import { TicketCreateDto, TicketDto, TicketsService, TicketStatus } from 'apps/cores'
+import { TicketCreateDto, TicketDto, TicketStatus } from 'apps/cores'
 import { omit, uniq } from 'lodash'
 import { nullObjectId } from 'testlib'
-import { createAllTestContexts, AllTestContexts } from './utils'
-
-export interface Fixture {
-    testContext: AllTestContexts
-    ticketsService: TicketsService
-}
-
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-    const ticketsService = module.get(TicketsService)
-
-    return { testContext, ticketsService }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
+import { CommonFixture, createCommonFixture } from './utils'
 
 export const createTicketDto = (overrides = {}) => ({
     batchId: nullObjectId,
@@ -46,12 +29,26 @@ export const createTicketDtos = (overrides = {}, length: number = 100) => {
     return { createDtos, expectedDtos }
 }
 
-export async function createTickets(service: TicketsService, createDtos: TicketCreateDto[]) {
-    const { success } = await service.createTickets(createDtos)
+export async function createTickets(fix: CommonFixture, createDtos: TicketCreateDto[]) {
+    const { success } = await fix.ticketsService.createTickets(createDtos)
     expect(success).toBeTruthy()
 
     const batchIds = uniq(createDtos.map((dto) => dto.batchId))
 
-    const tickets = await service.findAllTickets({ batchIds })
+    const tickets = await fix.ticketsService.findAllTickets({ batchIds })
     return tickets
+}
+
+export interface Fixture extends CommonFixture {
+    teardown: () => Promise<void>
+}
+
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture()
+
+    const teardown = async () => {
+        await commonFixture?.close()
+    }
+
+    return { ...commonFixture, teardown }
 }

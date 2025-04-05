@@ -43,7 +43,7 @@ describe('Movie Integration Tests', () => {
         let movie: MovieDto
 
         beforeEach(async () => {
-            movie = await createMovie(fix.testContext)
+            movie = await createMovie(fix)
         })
 
         it('영화 정보를 업데이트해야 한다', async () => {
@@ -74,7 +74,7 @@ describe('Movie Integration Tests', () => {
         let movie: MovieDto
 
         beforeEach(async () => {
-            movie = await createMovie(fix.testContext)
+            movie = await createMovie(fix)
         })
 
         it('영화를 삭제해야 한다', async () => {
@@ -106,7 +106,7 @@ describe('Movie Integration Tests', () => {
         let movie: MovieDto
 
         beforeEach(async () => {
-            movie = await createMovie(fix.testContext)
+            movie = await createMovie(fix)
         })
 
         it('영화 정보를 가져와야 한다', async () => {
@@ -125,7 +125,7 @@ describe('Movie Integration Tests', () => {
         let movies: MovieDto[]
 
         beforeEach(async () => {
-            movies = await createMovies(fix.testContext)
+            movies = await createMovies(fix)
         })
 
         it('기본 페이지네이션 설정으로 영화를 가져와야 한다', async () => {
@@ -201,7 +201,7 @@ describe('Movie Integration Tests', () => {
         let movies: MovieDto[]
 
         beforeEach(async () => {
-            movies = await createMovies(fix.testContext)
+            movies = await createMovies(fix)
         })
 
         it('movieIds로 영화를 검색할 수 있어야 한다', async () => {

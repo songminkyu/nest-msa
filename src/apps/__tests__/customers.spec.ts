@@ -46,7 +46,7 @@ describe('Customer Integration Tests', () => {
         let customer: CustomerDto
 
         beforeEach(async () => {
-            customer = await createCustomer(fix.testContext)
+            customer = await createCustomer(fix)
         })
 
         it('고객 정보를 업데이트해야 한다', async () => {
@@ -73,7 +73,7 @@ describe('Customer Integration Tests', () => {
         let customer: CustomerDto
 
         beforeEach(async () => {
-            customer = await createCustomer(fix.testContext)
+            customer = await createCustomer(fix)
         })
 
         it('고객을 삭제해야 한다', async () => {
@@ -96,7 +96,7 @@ describe('Customer Integration Tests', () => {
         let customer: CustomerDto
 
         beforeEach(async () => {
-            customer = await createCustomer(fix.testContext)
+            customer = await createCustomer(fix)
         })
 
         it('고객 정보를 가져와야 한다', async () => {
@@ -115,7 +115,7 @@ describe('Customer Integration Tests', () => {
         let customers: CustomerDto[]
 
         beforeEach(async () => {
-            customers = await createCustomers(fix.testContext)
+            customers = await createCustomers(fix)
         })
 
         it('기본 페이지네이션 설정으로 고객을 가져와야 한다', async () => {
