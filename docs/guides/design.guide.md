@@ -317,3 +317,59 @@ async deleteTheater(@Param('theaterId') theaterId: string) {
     return this.theatersService.deleteTheaters([theaterId])
 }
 ```
+
+## 6. Message Broker
+
+### 6.1 Nats를 선택한 이유
+
+Nest가 지원하는 몇 개의 메시지 브로커 중에서 Nats를 선택했다.
+
+- Nats는 현재까지 개발과 지원이 활발하게 이루어지고 있다.
+- Nats의 JetStream을 사용하면 로깅 시스템 구축 시 Kafka를 대체할 가능성이 있다.
+- 성능 확장이 쉽다
+- 가벼워서 운영 뿐만 아니라 개발 환경을 구성하기 쉽다.
+
+### 6.2. Kafka 배제 이유
+
+message broker로 kafka를 고려했으나 다음의 이유로 선택하지 않았다.
+
+1. kafkajs는 심각한 성능 문제가 있다. 특히 maxWaitTimeInMs를 설정하는 부분이 문제다.
+   kafkajs는 무한 loop를 돌면서 메시지가 존재하는지 체크하고 없으면 maxWaitTimeInMs 만큼 sleep 한다. 그래서 jest로 테스트를 실행하고 종료할 때 maxWaitTimeInMs 만큼 대기를 해야 한다.
+   즉, 간단한 테스트라고 해도 최소한 maxWaitTimeInMs 만큼의 시간이 소요된다. 무한 loop 자체로도 성능에 좋은 구조는 아니다. 무엇보다 kafkajs는 유지보수가 2022년에 종료된 것으로 보인다.
+
+2. 테스트를 위해서 kafka 컨테이너를 초기화 할 때 topic을 생성해야 한다. topic은 controller에서 정의하는 메서드의 2배 만큼 생성하게 된다. 예를 들어 Customer 서비스에서 getCustomer 메시지를 정의했다면, topic은 getCustomer, getCustomer.reply 두 개를 생성해야 한다. 문제는 topic 1개를 생성하는 시간이 초 단위로 소요된다. 140개의 topic을 생성하는데 3분 정도 기다려야 한다.
+
+3. kafka 컨테이너는 메모리를 많이 사용한다. kafka는 broker*3, controller*3이 최소 구성요소인데 각 컨테이너가 1기가 정도 사용한다. 이 정도 메모리 사용량은 운영에 문제는 없겠지만 로컬 개발 환경을 구성하는 데는 부담이다.
+
+테스트에 사용한 kafka의 topic을 생성하는 스크립트를 남긴다.
+
+```bash
+#!/bin/bash
+set -e
+. "$(dirname "$0")/common.cfg"
+
+kafka_topics() {
+    # $@ 대신 $*를 사용한 이유는 $@는 각 인자를 따로따로 인식하기 때문이다.
+    # $*는 --if-not-exists --topic getMessage 등을 그냥 공백으로 이어붙여준다.
+    docker exec $KAFKA_BROKER1 sh -c "./kafka-topics.sh --bootstrap-server ${KAFKA_BROKER_LIST} $*"
+}
+
+while IFS= read -r MESSAGE; do
+    # 빈 줄이거나 '#'로 시작하는 경우 건너뛰기
+    if [ -z "$MESSAGE" ] || [[ "$MESSAGE" == \#* ]]; then
+        continue
+    fi
+
+    kafka_topics --create --if-not-exists --topic "${MESSAGE}"
+    kafka_topics --create --if-not-exists --topic "${MESSAGE}.reply"
+done <messages.txt
+
+kafka_topics --list
+```
+
+### 6.3. 그 외 메시지 브로커들
+
+그 외 다른 메시지 브로커는 아래의 이유로 선택하지 않았다.
+
+- MQTT는 IoT 장치와 같이 리소스가 제한된 환경에 최적화되어 있어, 대규모 시스템에서는 성능이 부족할 수 있습니다.
+- RabbitMQ는 설정과 관리가 복잡하며, 특히 클러스터링이나 고가용성(HA)을 구현하는 데 어려움이 있을 수 있습니다.
