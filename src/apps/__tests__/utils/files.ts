@@ -3,6 +3,8 @@ import { Path } from 'common'
 export interface TestFile {
     path: string
     size: number
+    originalname: string
+    mimetype: string
 }
 
 export const TestFiles = {
@@ -37,5 +39,3 @@ export const TestFiles = {
         mimetype: 'text/plain'
     }
 }
-
-// TODO 파일 자체를 여기로 옮기는 방법은?

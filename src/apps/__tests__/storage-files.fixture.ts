@@ -4,11 +4,7 @@ import { AllTestContexts, createAllTestContexts, TestFile, TestFiles } from './u
 import { AllProviders } from './utils/clients'
 
 export async function saveFile(testContext: AllTestContexts, file: TestFile) {
-    // 좀 더 범용적으로 고쳐라
-    const files = await testContext.providers.storageFilesClient.saveFiles([
-        { originalname: 'large.txt', mimetype: 'text/plain', ...file }
-    ])
-
+    const files = await testContext.providers.storageFilesClient.saveFiles([file])
     return files[0]
 }
 
