@@ -124,6 +124,22 @@ src
 
     1. VSCode 메뉴: "View" → "Command Palette" → "Dev Containers: Rebuild Container"
 
+### 5.1. 언어 설정
+
+`.devcontainer/Dockerfile`에 한국어 사용을 위해서 아래와 깉이 설정되어 있다. 영어 외에 다른 언어를 사용한다면 각 언어에 맞게 이 설정을 변경해야 한다.
+
+```dockerfile
+# for Korean
+RUN apt-get install -y locales \
+    && sed -i '/ko_KR.UTF-8/s/^# //g' /etc/locale.gen \
+    && locale-gen ko_KR.UTF-8 \
+    && update-locale LANG=ko_KR.UTF-8
+
+ENV LANG=ko_KR.UTF-8 \
+    LANGUAGE=ko_KR:ko \
+    LC_ALL=ko_KR.UTF-8
+```
+
 ## 6. 통합 테스트 및 디버깅
 
 이 프로젝트는 MSA와 TDD를 지향하기 때문에 테스트를 실행해서 기능을 검증할 것을 권장합니다. 이유는 다음과 같습니다:

@@ -13,7 +13,7 @@
         "strictBindCallApply": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
-        "target": "ES2021",
+        "target": "es2024",
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "sourceMap": true,

@@ -277,3 +277,34 @@ import type { Fixture } from './create-test-context.fixture'
         entry: path.resolve(dirname, 'production.ts'),
     }
 ```
+
+## 11. 테스트 코드를 .spec.ts와 .fixture.ts로 분리
+
+.spec.ts에 fixture 설정 코드를 넣으면 무엇을 테스트 하려는 것인지 파악하기가 어렵다.
+그래서 .spec.ts에는 테스트 로직에 집중한다. 테스트에 필요한 리소스나 설정은 .fixture.ts에 둔다.
+
+테스트 전반에 사용되는 코드는 src/apps/__tests__/utils에 모아놨다. 이 중에서 clients.ts를 보면 사용하는 Service의 인스턴스를 module.get()으로 미리 얻어놓은 것을 볼 수 있다.
+테스트 과정에서 이런 인스턴스들이 필요한데 테스트 로직에 집중하기 위해서 공통으로 사용되는 코드를 이런 식으로 작성했다.
+
+새로운 서비스를 추가하고 테스트 코드를 작성한다면 clients.ts와 create-all-test-contexts.ts을 변경해야 할 것이다.
+
+```ts
+import { CustomersClient, MoviesClient } from 'apps/cores'
+import { HttpTestContext, TestContext } from 'testlib'
+
+export class AllProviders {
+    customersClient: CustomersClient
+    moviesClient: MoviesClient
+}
+
+export async function getProviders( coresContext: TestContext ) {
+    const { module: coresModule } = coresContext
+    const customersService = coresModule.get(CustomersService)
+    const moviesService = coresModule.get(MoviesService)
+
+    return {
+        customersClient,
+        moviesClient,
+    }
+}
+```

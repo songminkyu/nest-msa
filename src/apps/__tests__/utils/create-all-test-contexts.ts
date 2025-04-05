@@ -52,12 +52,12 @@ export class AllTestContexts {
 }
 
 export async function createAllTestContexts({
-    http,
+    gateway,
     apps,
     cores,
     infras
 }: {
-    http?: TestContextOpts
+    gateway?: TestContextOpts
     apps?: TestContextOpts
     cores?: TestContextOpts
     infras?: TestContextOpts
@@ -83,7 +83,7 @@ export async function createAllTestContexts({
     })
 
     const gatewayContext = await createHttpTestContext({
-        metadata: createMetadata(GatewayModule, http),
+        metadata: createMetadata(GatewayModule, gateway),
         brokers,
         configureApp: configureGateway
     })

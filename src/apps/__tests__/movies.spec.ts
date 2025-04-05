@@ -24,7 +24,7 @@ describe('Movie Integration Tests', () => {
 
             const { body } = await fix.httpClient
                 .post('/movies')
-                .attachs([{ name: 'files', file: './test/fixtures/image.png' }])
+                .attachs([{ name: 'files', file: fix.files.image.path }])
                 .fields(objectToFields(createDto))
                 .created()
 

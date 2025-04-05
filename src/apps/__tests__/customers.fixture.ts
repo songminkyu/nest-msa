@@ -48,7 +48,7 @@ export interface Fixture {
 
 export async function createFixture() {
     const testContext = await createAllTestContexts({
-        http: { ignoreGuards: [CustomerJwtAuthGuard] }
+        gateway: { ignoreGuards: [CustomerJwtAuthGuard] }
     })
 
     const teardown = async () => {

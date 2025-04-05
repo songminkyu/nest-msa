@@ -1,7 +1,7 @@
 import { MovieGenre, MovieRating } from 'apps/cores'
 import { padNumber } from 'common'
 import { HttpTestClient } from 'testlib'
-import { AllTestContexts, createAllTestContexts, TestFiles } from './utils'
+import { AllTestContexts, createAllTestContexts, TestFile, TestFiles } from './utils'
 import { AllProviders } from './utils/clients'
 
 export const createMovieDto = (overrides = {}) => {
@@ -22,13 +22,9 @@ export const createMovieDto = (overrides = {}) => {
 }
 
 export const createMovie = async ({ providers }: AllTestContexts, override = {}) => {
-    const { createDto: movieCreateDto } = createMovieDto(override)
+    const { createDto } = createMovieDto(override)
 
-    const fileCreateDtos = [
-        { originalname: 'image.png', mimetype: 'image/png', ...TestFiles.image }
-    ]
-
-    const movie = await providers.moviesClient.createMovie(movieCreateDto, fileCreateDtos)
+    const movie = await providers.moviesClient.createMovie(createDto, [TestFiles.image])
     return movie
 }
 
@@ -61,6 +57,7 @@ export interface Fixture extends AllProviders {
     testContext: AllTestContexts
     teardown: () => Promise<void>
     httpClient: HttpTestClient
+    files: { image: TestFile }
 }
 
 export async function createFixture() {
@@ -74,6 +71,7 @@ export async function createFixture() {
         ...testContext.providers,
         testContext,
         teardown,
-        httpClient: testContext.gatewayContext.httpClient
+        httpClient: testContext.gatewayContext.httpClient,
+        files: { image: TestFiles.image }
     }
 }
