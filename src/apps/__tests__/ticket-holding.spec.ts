@@ -18,10 +18,6 @@ describe('TicketHolding Module', () => {
         await fix?.teardown()
     })
 
-    it('test', async () => {
-        console.log('------A')
-    })
-
     describe('holdTickets', () => {
         it('티켓을 정해진 시간 동안 선점해야 한다', async () => {
             const firstResult = await fix.ticketHoldingClient.holdTickets({

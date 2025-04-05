@@ -6,11 +6,14 @@ const config: Config = {
     testRegex: '.*\\.spec\\.(ts|js)$',
     testEnvironment: 'node',
     transform: { '^.+\\.ts$': 'ts-jest' },
-    // 테스트 간 격리를 위해 모의 함수/모듈 상태를 완전히 초기화
-    clearMocks: true, // 각 테스트 후 mock 호출 기록 제거
-    resetMocks: true, // 각 테스트 후 mock 구현 초기화
-    restoreMocks: true, // 각 테스트 후 원본 구현 복원(spyOn)
-    resetModules: true, // 모듈 캐시 리셋(테스트 간 모듈 상태 격리)
+    /* 각 테스트 후 mock 호출 기록 제거 */
+    clearMocks: true,
+    /* 각 테스트 후 mock 구현 초기화 */
+    resetMocks: true,
+    /* 각 테스트 후 원본 구현 복원(spyOn) */
+    restoreMocks: true,
+    /* 모듈 캐시 리셋(테스트 간 모듈 상태 격리) */
+    resetModules: true,
     rootDir: '.',
     roots: ['<rootDir>/src'],
     moduleNameMapper: {
@@ -34,9 +37,11 @@ const config: Config = {
         '/libs/testlib/'
     ],
     coverageDirectory: '<rootDir>/_output/coverage',
-    testTimeout: 10000,
-    // CPU 코어 수가 메모리에 비해 많다면 maxWorkers 값을 (RAM / 4)로 조정하는 것을 권장합니다.
-    // (예: 8GB RAM 환경이면 2 workers 설정)
+    testTimeout: 30 * 1000
+    /*
+    CPU 코어 수가 메모리에 비해 많다면 maxWorkers 값을 (RAM / 4)로 조정하는 것을 권장합니다.
+    (예: 8GB RAM 환경이면 2 workers 설정)
+     */
     // maxWorkers: 2
 }
 
