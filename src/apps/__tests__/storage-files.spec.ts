@@ -39,9 +39,7 @@ describe('File Upload Tests', () => {
             ]).created()
 
             expect(body.storageFiles[0].checksum).toEqual(await getChecksum(fix.files.small.path))
-            expect(body.storageFiles[1].checksum).toEqual(
-                await getChecksum(fix.files.large.path)
-            )
+            expect(body.storageFiles[1].checksum).toEqual(await getChecksum(fix.files.large.path))
         })
 
         it('파일을 첨부하지 않아도 업로드가 성공해야 한다', async () => {
@@ -49,9 +47,9 @@ describe('File Upload Tests', () => {
         })
 
         it('허용된 크기를 초과하는 파일을 업로드하면 PAYLOAD_TOO_LARGE(413)를 반환해야 한다', async () => {
-            await uploadFile([
-                { name: 'files', file: fix.files.oversized.path }
-            ]).payloadTooLarge(expect.objectContaining(Errors.FileUpload.MaxSizeExceeded))
+            await uploadFile([{ name: 'files', file: fix.files.oversized.path }]).payloadTooLarge(
+                expect.objectContaining(Errors.FileUpload.MaxSizeExceeded)
+            )
         })
 
         it('허용된 파일 개수를 초과하여 업로드하면 BAD_REQUEST(400)를 반환해야 한다', async () => {
