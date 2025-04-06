@@ -1,7 +1,12 @@
 import { expect } from '@jest/globals'
 import { CustomerDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
-import { createCustomer, biuldCustomerCreateDto, createCustomers, Fixture } from './customers.fixture'
+import {
+    createCustomer,
+    biuldCustomerCreateDto,
+    createCustomers,
+    Fixture
+} from './customers.fixture'
 import { Errors } from './utils'
 
 /* 고객 통합 테스트 */
