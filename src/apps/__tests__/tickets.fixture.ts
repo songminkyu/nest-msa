@@ -39,7 +39,7 @@ export async function createTickets(fix: CommonFixture, createDtos: TicketCreate
     return tickets
 }
 
-export interface Fixture extends CommonFixture {
+export class Fixture extends CommonFixture {
     teardown: () => Promise<void>
 }
 

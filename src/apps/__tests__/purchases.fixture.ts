@@ -1,6 +1,6 @@
 import { CommonFixture, createCommonFixture } from './utils'
 
-export interface Fixture extends CommonFixture {
+export class Fixture extends CommonFixture {
     teardown: () => Promise<void>
 }
 

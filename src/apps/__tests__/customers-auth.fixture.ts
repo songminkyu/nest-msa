@@ -15,7 +15,7 @@ export async function createCustomerAndLogin(fix: CommonFixture) {
     return { customer, accessToken }
 }
 
-export interface Fixture extends CommonFixture {
+export class Fixture extends CommonFixture {
     teardown: () => Promise<void>
 }
 

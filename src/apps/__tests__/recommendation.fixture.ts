@@ -44,7 +44,7 @@ export const createShowingMovies = async (fix: CommonFixture, dtos: Partial<Movi
     return showingMovies
 }
 
-export interface Fixture extends CommonFixture {
+export class Fixture extends CommonFixture {
     teardown: () => Promise<void>
     customer: CustomerDto
     accessToken: string

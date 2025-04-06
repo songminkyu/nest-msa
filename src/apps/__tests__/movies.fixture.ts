@@ -51,7 +51,7 @@ export const createMovies = async (fix: CommonFixture, overrides = {}) => {
     return Promise.all(createDtos.map((createDto) => createMovie(fix, createDto)))
 }
 
-export interface Fixture extends CommonFixture {
+export class Fixture extends CommonFixture {
     teardown: () => Promise<void>
     files: { image: TestFile }
 }

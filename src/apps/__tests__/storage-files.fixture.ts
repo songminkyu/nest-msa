@@ -6,7 +6,7 @@ export async function saveFile(fixture: CommonFixture, file: TestFile) {
     return files[0]
 }
 
-export interface Fixture extends CommonFixture {
+export class Fixture extends CommonFixture {
     teardown: () => Promise<void>
     uploadDir: string
     maxFileSizeBytes: number

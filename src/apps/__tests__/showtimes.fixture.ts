@@ -42,7 +42,7 @@ export async function createShowtimes(fix: CommonFixture, createDtos: ShowtimeCr
     return showtimes
 }
 
-export interface Fixture extends CommonFixture {
+export class Fixture extends CommonFixture {
     teardown: () => Promise<void>
 }
 

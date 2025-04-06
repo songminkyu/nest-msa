@@ -42,7 +42,7 @@ export const monitorEvents = (client: HttpTestClient, waitStatuses: string[]) =>
     })
 }
 
-export interface Fixture extends CommonFixture {
+export class Fixture extends CommonFixture {
     teardown: () => Promise<void>
     movie: MovieDto
     theater: TheaterDto
