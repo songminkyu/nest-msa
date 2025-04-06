@@ -3,7 +3,7 @@ import { omit, uniq } from 'lodash'
 import { nullObjectId } from 'testlib'
 import { CommonFixture, createCommonFixture } from './utils'
 
-export const createTicketDto = (overrides = {}) => ({
+export const buildCreateTicketDto = (overrides = {}) => ({
     batchId: nullObjectId,
     movieId: nullObjectId,
     theaterId: nullObjectId,
@@ -13,12 +13,12 @@ export const createTicketDto = (overrides = {}) => ({
     ...overrides
 })
 
-export const createTicketDtos = (overrides = {}, length: number = 100) => {
+export const buildCreateTicketDtos = (overrides = {}, length: number = 100) => {
     const createDtos: TicketCreateDto[] = []
     const expectedDtos: TicketDto[] = []
 
     for (let i = 0; i < length; i++) {
-        const createDto = createTicketDto(overrides)
+        const createDto = buildCreateTicketDto(overrides)
 
         const expectedDto = { id: expect.any(String), ...omit(createDto, 'batchId') }
 

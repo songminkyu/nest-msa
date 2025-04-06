@@ -3,7 +3,7 @@ import { omit, uniq } from 'lodash'
 import { nullObjectId } from 'testlib'
 import { CommonFixture, createCommonFixture } from './utils'
 
-export const createShowtimeDto = (overrides = {}) => ({
+export const buildShowtimeCreateDto = (overrides = {}) => ({
     batchId: nullObjectId,
     movieId: nullObjectId,
     theaterId: nullObjectId,
@@ -12,12 +12,12 @@ export const createShowtimeDto = (overrides = {}) => ({
     ...overrides
 })
 
-export const createShowtimeDtos = (overrides = {}, length: number = 100) => {
+export const buildShowtimeCreateDtos = (overrides = {}, length: number = 100) => {
     const createDtos: ShowtimeCreateDto[] = []
     const expectedDtos: ShowtimeDto[] = []
 
     for (let i = 0; i < length; i++) {
-        const createDto = createShowtimeDto({
+        const createDto = buildShowtimeCreateDto({
             startTime: new Date(2000, 0, 1, i, 0),
             endTime: new Date(2000, 0, 1, i, 90),
             ...overrides

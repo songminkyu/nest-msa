@@ -13,9 +13,9 @@ import { DateUtil, pickIds } from 'common'
 import { nullObjectId } from 'testlib'
 import { createCustomer } from './customers.fixture'
 import { createMovie } from './movies.fixture'
-import { createShowtimeDto, createShowtimes } from './showtimes.fixture'
+import { buildShowtimeCreateDto, createShowtimes } from './showtimes.fixture'
 import { createTheater } from './theaters.fixture'
-import { createTicketDto, createTickets } from './tickets.fixture'
+import { buildCreateTicketDto, createTickets } from './tickets.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 
 export const createShowtime = async (
@@ -24,7 +24,7 @@ export const createShowtime = async (
     theater: TheaterDto,
     startTime: Date
 ) => {
-    const createDto = createShowtimeDto({
+    const createDto = buildShowtimeCreateDto({
         movieId: movie.id,
         theaterId: theater.id,
         startTime,
@@ -40,7 +40,7 @@ export const createAllTickets = async (
     showtime: ShowtimeDto
 ) => {
     const createDtos = Seatmap.getAllSeats(theater.seatmap).map((seat) =>
-        createTicketDto({
+        buildCreateTicketDto({
             movieId: showtime.movieId,
             theaterId: showtime.theaterId,
             showtimeId: showtime.id,

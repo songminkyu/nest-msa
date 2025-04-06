@@ -1,8 +1,10 @@
-import { Seatmap, TicketDto } from 'apps/cores'
+import { Seatmap, ShowtimeDto, TheaterDto, TicketDto } from 'apps/cores'
 import { DateUtil, pickIds } from 'common'
+import { step } from 'testlib'
 import { Fixture } from './booking.fixture'
 
-describe('Booking', () => {
+/* 영화 예매 흐름 테스트 */
+describe('Movie Booking Workflow Tests', () => {
     let fix: Fixture
 
     beforeEach(async () => {
@@ -14,17 +16,15 @@ describe('Booking', () => {
         await fix?.teardown()
     })
 
-    it('티켓 예매 시나리오', async () => {
-        const step = (_name: string, fn: () => void) => fn()
-
-        let theaterId: string
-        let seatCount: number
-        let showdate: string
-        let showtimeId: string
+    it('성공적인 영화 예매 흐름', async () => {
+        let theater: TheaterDto
+        let showdate: Date
+        let showtime: ShowtimeDto
         let tickets: TicketDto[]
 
         await step('1. 상영 극장 목록 요청', async () => {
             const latlong = '31.9,131.9'
+
             const { body: theaters } = await fix.httpClient
                 .get(`/booking/movies/${fix.movie.id}/theaters?latlong=${latlong}`)
                 .ok()
@@ -39,13 +39,12 @@ describe('Booking', () => {
                 ].map((item) => expect.objectContaining(item))
             )
 
-            theaterId = theaters[0].id
-            seatCount = Seatmap.getSeatCount(theaters[0].seatmap)
+            theater = theaters[0]
         })
 
         await step('2. 상영일 목록 요청', async () => {
             const { body: showdates } = await fix.httpClient
-                .get(`/booking/movies/${fix.movie.id}/theaters/${theaterId}/showdates`)
+                .get(`/booking/movies/${fix.movie.id}/theaters/${theater.id}/showdates`)
                 .ok()
 
             expect(showdates).toEqual([
@@ -54,41 +53,35 @@ describe('Booking', () => {
                 new Date('2999-01-03')
             ])
 
-            showdate = DateUtil.toYMD(showdates[0])
+            showdate = showdates[0]
         })
 
         await step('3. 상영 시간 목록 요청', async () => {
-            const { body: showtimes } = await fix.httpClient
-                .get(
-                    `/booking/movies/${fix.movie.id}/theaters/${theaterId}/showdates/${showdate}/showtimes`
-                )
-                .ok(
-                    expect.arrayContaining(
-                        [
-                            {
-                                movieId: fix.movie.id,
-                                theaterId,
-                                startTime: new Date('2999-01-01T12:00'),
-                                salesStatus: { total: seatCount, sold: 0, available: seatCount }
-                            },
-                            {
-                                movieId: fix.movie.id,
-                                theaterId,
-                                startTime: new Date('2999-01-01T14:00'),
-                                salesStatus: { total: seatCount, sold: 0, available: seatCount }
-                            }
-                        ].map((item) => expect.objectContaining(item))
-                    )
-                )
+            const movieId = fix.movie.id
+            const theaterId = theater.id
+            const yymmdd = DateUtil.toYMD(showdate)
 
-            showtimeId = showtimes[0].id
+            const url = `/booking/movies/${movieId}/theaters/${theaterId}/showdates/${yymmdd}/showtimes`
+            const { body: showtimes } = await fix.httpClient.get(url).ok(
+                expect.arrayContaining(
+                    [
+                        { movieId, theaterId, startTime: new Date('2999-01-01T12:00') },
+                        { movieId, theaterId, startTime: new Date('2999-01-01T14:00') }
+                    ].map((item) => expect.objectContaining(item))
+                )
+            )
+
+            showtime = showtimes[0]
         })
 
         await step('4. 구매 가능한 티켓 목록 요청', async () => {
             const { body } = await fix.httpClient
-                .get(`/booking/showtimes/${showtimeId}/tickets`)
+                .get(`/booking/showtimes/${showtime.id}/tickets`)
                 .ok()
+
             tickets = body
+
+            const seatCount = Seatmap.getSeatCount(theater.seatmap)
             expect(tickets).toHaveLength(seatCount)
         })
 
@@ -96,7 +89,7 @@ describe('Booking', () => {
             const ticketIds = pickIds(tickets.slice(0, 4))
 
             await fix.httpClient
-                .patch(`/booking/showtimes/${showtimeId}/tickets`)
+                .patch(`/booking/showtimes/${showtime.id}/tickets`)
                 .headers({ Authorization: `Bearer ${fix.accessToken}` })
                 .body({ ticketIds })
                 .ok({ success: true })

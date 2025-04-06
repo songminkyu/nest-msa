@@ -2,8 +2,8 @@ import { ShowtimeDto } from 'apps/cores'
 import { DateUtil, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, testObjectId } from 'testlib'
 import {
-    createShowtimeDto,
-    createShowtimeDtos,
+    buildShowtimeCreateDto,
+    buildShowtimeCreateDtos,
     createShowtimes,
     Fixture
 } from './showtimes.fixture'
@@ -21,7 +21,7 @@ describe('Showtimes Module', () => {
     })
 
     it('createShowtimes', async () => {
-        const { createDtos, expectedDtos } = createShowtimeDtos()
+        const { createDtos, expectedDtos } = buildShowtimeCreateDtos()
 
         const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
@@ -35,13 +35,13 @@ describe('Showtimes Module', () => {
 
     describe('findAllShowtimes', () => {
         beforeEach(async () => {
-            const { createDtos } = createShowtimeDtos()
+            const { createDtos } = buildShowtimeCreateDtos()
             const { success } = await fix.showtimesClient.createShowtimes(createDtos)
             expect(success).toBeTruthy()
         })
 
         const createAndFindShowtimes = async (overrides = {}, findFilter = {}) => {
-            const { createDtos, expectedDtos } = createShowtimeDtos(overrides)
+            const { createDtos, expectedDtos } = buildShowtimeCreateDtos(overrides)
             const { success } = await fix.showtimesClient.createShowtimes(createDtos)
             expect(success).toBeTruthy()
 
@@ -84,7 +84,7 @@ describe('Showtimes Module', () => {
         let showtimes: ShowtimeDto[]
 
         beforeEach(async () => {
-            const { createDtos } = createShowtimeDtos()
+            const { createDtos } = buildShowtimeCreateDtos()
             showtimes = await createShowtimes(fix, createDtos)
         })
 
@@ -103,16 +103,16 @@ describe('Showtimes Module', () => {
         const movieIds = [testObjectId('a1'), testObjectId('a2')]
         const now = new Date()
         const createDtos = [
-            createShowtimeDto({
+            buildShowtimeCreateDto({
                 startTime: DateUtil.addMinutes(now, -90),
                 endTime: DateUtil.addMinutes(now, -30)
             }),
-            createShowtimeDto({
+            buildShowtimeCreateDto({
                 movieId: movieIds[0],
                 startTime: DateUtil.addMinutes(now, 30),
                 endTime: DateUtil.addMinutes(now, 90)
             }),
-            createShowtimeDto({
+            buildShowtimeCreateDto({
                 movieId: movieIds[1],
                 startTime: DateUtil.addMinutes(now, 120),
                 endTime: DateUtil.addMinutes(now, 150)
@@ -129,15 +129,15 @@ describe('Showtimes Module', () => {
     it('findTheaterIds', async () => {
         const movieId = testObjectId('a1')
         const createDtos = [
-            createShowtimeDto({
+            buildShowtimeCreateDto({
                 movieId: testObjectId('a2'),
                 theaterId: testObjectId('b1')
             }),
-            createShowtimeDto({
+            buildShowtimeCreateDto({
                 movieId,
                 theaterId: testObjectId('b2')
             }),
-            createShowtimeDto({
+            buildShowtimeCreateDto({
                 movieId,
                 theaterId: testObjectId('b3')
             })
@@ -154,19 +154,19 @@ describe('Showtimes Module', () => {
         const movieId = testObjectId('a1')
         const theaterId = testObjectId('b1')
         const createDtos = [
-            createShowtimeDto({
+            buildShowtimeCreateDto({
                 movieId,
                 theaterId,
                 startTime: new Date('2000-01-02'),
                 endTime: new Date('2000-01-03')
             }),
-            createShowtimeDto({
+            buildShowtimeCreateDto({
                 movieId,
                 theaterId,
                 startTime: new Date('2000-01-04'),
                 endTime: new Date('2000-01-04')
             }),
-            createShowtimeDto({
+            buildShowtimeCreateDto({
                 movieId,
                 theaterId: testObjectId('A1'),
                 startTime: new Date('2000-01-05'),

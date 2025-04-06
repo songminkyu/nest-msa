@@ -103,3 +103,5 @@ export class EnvVars {
         return parsed
     }
 }
+
+export const step = (_name: string, fn: () => Promise<void> | void) => fn()
