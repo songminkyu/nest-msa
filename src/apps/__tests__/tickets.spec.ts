@@ -1,7 +1,7 @@
 import { TicketStatus } from 'apps/cores'
 import { pickIds } from 'common'
 import { expectEqualUnsorted, testObjectId } from 'testlib'
-import { buildCreateTicketDtos, createTickets, Fixture } from './tickets.fixture'
+import { buildTicketCreateDtos, createTickets, Fixture } from './tickets.fixture'
 
 describe('Tickets Module', () => {
     let fix: Fixture
@@ -16,7 +16,7 @@ describe('Tickets Module', () => {
     })
 
     it('createTickets', async () => {
-        const { createDtos, expectedDtos } = buildCreateTicketDtos()
+        const { createDtos, expectedDtos } = buildTicketCreateDtos()
 
         const tickets = await createTickets(fix, createDtos)
         expectEqualUnsorted(tickets, expectedDtos)
@@ -24,12 +24,12 @@ describe('Tickets Module', () => {
 
     describe('findAllTickets', () => {
         beforeEach(async () => {
-            const { createDtos } = buildCreateTicketDtos()
+            const { createDtos } = buildTicketCreateDtos()
             await createTickets(fix, createDtos)
         })
 
         const createAndFindTickets = async (overrides = {}, findFilter = {}) => {
-            const { createDtos, expectedDtos } = buildCreateTicketDtos(overrides)
+            const { createDtos, expectedDtos } = buildTicketCreateDtos(overrides)
             await fix.ticketsClient.createTickets(createDtos)
 
             const tickets = await fix.ticketsClient.findAllTickets(findFilter)
@@ -63,7 +63,7 @@ describe('Tickets Module', () => {
     })
 
     it('updateTicketStatus', async () => {
-        const { createDtos } = buildCreateTicketDtos({})
+        const { createDtos } = buildTicketCreateDtos({})
         const tickets = await createTickets(fix, createDtos)
         const ticket = tickets[0]
         expect(ticket.status).toEqual(TicketStatus.available)
@@ -81,7 +81,7 @@ describe('Tickets Module', () => {
         const ticketCount = 50
         const soldCount = 5
 
-        const { createDtos } = buildCreateTicketDtos({ showtimeId }, ticketCount)
+        const { createDtos } = buildTicketCreateDtos({ showtimeId }, ticketCount)
         const tickets = await createTickets(fix, createDtos)
         const ticketIds = pickIds(tickets.slice(0, soldCount))
         await fix.ticketsClient.updateTicketStatus(ticketIds, TicketStatus.sold)

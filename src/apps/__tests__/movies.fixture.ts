@@ -2,8 +2,7 @@ import { MovieGenre, MovieRating } from 'apps/cores'
 import { padNumber } from 'common'
 import { CommonFixture, createCommonFixture, TestFile, TestFiles } from './utils'
 
-// todo buildMovieCreateDto
-export const createMovieDto = (overrides = {}) => {
+export const buildMovieCreateDto = (overrides = {}) => {
     const createDto = {
         title: `MovieTitle`,
         genre: [MovieGenre.Action],
@@ -21,7 +20,7 @@ export const createMovieDto = (overrides = {}) => {
 }
 
 export const createMovie = async (fix: CommonFixture, override = {}) => {
-    const { createDto } = createMovieDto(override)
+    const { createDto } = buildMovieCreateDto(override)
 
     const movie = await fix.moviesClient.createMovie(createDto, [TestFiles.image])
     return movie

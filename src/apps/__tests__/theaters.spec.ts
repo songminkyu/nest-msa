@@ -1,7 +1,7 @@
 import { expect } from '@jest/globals'
 import { TheaterDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
-import { createTheater, createTheaterDto, createTheaters, Fixture } from './theaters.fixture'
+import { createTheater, buildTheaterCreateDto, createTheaters, Fixture } from './theaters.fixture'
 import { Errors } from './utils'
 
 /* 극장 통합 테스트 */
@@ -19,7 +19,7 @@ describe('Theater Integration Tests', () => {
 
     describe('POST /theaters', () => {
         it('극장을 생성해야 한다', async () => {
-            const { createDto, expectedDto } = createTheaterDto()
+            const { createDto, expectedDto } = buildTheaterCreateDto()
 
             await fix.httpClient.post('/theaters').body(createDto).created(expectedDto)
         })

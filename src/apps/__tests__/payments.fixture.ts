@@ -1,7 +1,7 @@
 import { nullObjectId } from 'testlib'
 import { CommonFixture, createCommonFixture } from './utils'
 
-export const createPaymentDto = (overrides = {}) => {
+export const buildPaymentCreateDto = (overrides = {}) => {
     const createDto = { customerId: nullObjectId, amount: 1, ...overrides }
 
     const expectedDto = {

@@ -1,7 +1,7 @@
 import { padNumber } from 'common'
 import { CommonFixture, createCommonFixture } from './utils'
 
-export const createTheaterDto = (overrides = {}) => {
+export const buildTheaterCreateDto = (overrides = {}) => {
     const createDto = {
         name: `theater name`,
         latlong: { latitude: 38.123, longitude: 138.678 },
@@ -15,7 +15,7 @@ export const createTheaterDto = (overrides = {}) => {
 }
 
 export const createTheater = async (fix: CommonFixture, override = {}) => {
-    const { createDto } = createTheaterDto(override)
+    const { createDto } = buildTheaterCreateDto(override)
 
     const theater = await fix.theatersClient.createTheater(createDto)
     return theater

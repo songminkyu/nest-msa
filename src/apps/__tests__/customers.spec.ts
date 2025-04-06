@@ -1,7 +1,7 @@
 import { expect } from '@jest/globals'
 import { CustomerDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
-import { createCustomer, createCustomerDto, createCustomers, Fixture } from './customers.fixture'
+import { createCustomer, biuldCustomerCreateDto, createCustomers, Fixture } from './customers.fixture'
 import { Errors } from './utils'
 
 /* 고객 통합 테스트 */
@@ -19,13 +19,13 @@ describe('Customer Integration Tests', () => {
 
     describe('POST /customers', () => {
         it('고객을 생성해야 한다', async () => {
-            const { createDto, expectedDto } = createCustomerDto()
+            const { createDto, expectedDto } = biuldCustomerCreateDto()
 
             await fix.httpClient.post('/customers').body(createDto).created(expectedDto)
         })
 
         it('이메일이 이미 존재하면 CONFLICT(409)를 반환해야 한다', async () => {
-            const { createDto } = createCustomerDto()
+            const { createDto } = biuldCustomerCreateDto()
 
             await fix.httpClient.post('/customers').body(createDto).created()
             await fix.httpClient

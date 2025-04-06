@@ -5,7 +5,7 @@ import { createCustomerAndLogin } from './customers-auth.fixture'
 import { createMovie } from './movies.fixture'
 import { buildShowtimeCreateDto, createShowtimes } from './showtimes.fixture'
 import { createTheater } from './theaters.fixture'
-import { buildCreateTicketDto, createTickets } from './tickets.fixture'
+import { buildTicketCreateDto, createTickets } from './tickets.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 
 const createTheaters = async (fix: CommonFixture) => {
@@ -53,7 +53,7 @@ const createAllTickets = async (
         const theater = theatersById.get(theaterId)!
 
         return Seatmap.getAllSeats(theater.seatmap).map((seat) =>
-            buildCreateTicketDto({ movieId, theaterId, showtimeId, seat })
+            buildTicketCreateDto({ movieId, theaterId, showtimeId, seat })
         )
     })
 

@@ -2,7 +2,7 @@ import { omit } from 'lodash'
 import { CommonFixture, createCommonFixture } from './utils'
 import { CustomerJwtAuthGuard } from 'apps/gateway'
 
-export const createCustomerDto = (overrides = {}) => {
+export const biuldCustomerCreateDto = (overrides = {}) => {
     const createDto = {
         name: 'name',
         email: 'name@mail.com',
@@ -17,7 +17,7 @@ export const createCustomerDto = (overrides = {}) => {
 }
 
 export const createCustomer = async (fix: CommonFixture, override = {}) => {
-    const { createDto } = createCustomerDto(override)
+    const { createDto } = biuldCustomerCreateDto(override)
 
     const customer = await fix.customersClient.createCustomer(createDto)
     return customer

@@ -2,7 +2,7 @@ import { expect } from '@jest/globals'
 import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
 import { Path, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, objectToFields } from 'testlib'
-import { createMovie, createMovieDto, createMovies, Fixture } from './movies.fixture'
+import { createMovie, buildMovieCreateDto, createMovies, Fixture } from './movies.fixture'
 import { Errors } from './utils'
 
 /* 영화 통합 테스트 */
@@ -20,7 +20,7 @@ describe('Movie Integration Tests', () => {
 
     describe('POST /movies', () => {
         it('영화를 생성해야 한다', async () => {
-            const { createDto, expectedDto } = createMovieDto()
+            const { createDto, expectedDto } = buildMovieCreateDto()
 
             const { body } = await fix.httpClient
                 .post('/movies')

@@ -15,7 +15,7 @@ import { createCustomer } from './customers.fixture'
 import { createMovie } from './movies.fixture'
 import { buildShowtimeCreateDto, createShowtimes } from './showtimes.fixture'
 import { createTheater } from './theaters.fixture'
-import { buildCreateTicketDto, createTickets } from './tickets.fixture'
+import { buildTicketCreateDto, createTickets } from './tickets.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 
 export const createShowtime = async (
@@ -40,7 +40,7 @@ export const createAllTickets = async (
     showtime: ShowtimeDto
 ) => {
     const createDtos = Seatmap.getAllSeats(theater.seatmap).map((seat) =>
-        buildCreateTicketDto({
+        buildTicketCreateDto({
             movieId: showtime.movieId,
             theaterId: showtime.theaterId,
             showtimeId: showtime.id,
