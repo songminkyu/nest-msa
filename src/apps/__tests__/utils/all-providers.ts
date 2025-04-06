@@ -34,7 +34,7 @@ import {
 } from 'apps/infrastructures'
 import { HttpTestContext, TestContext } from 'testlib'
 
-export class AllProviders {
+export interface AllProviders {
     customersClient: CustomersClient
     storageFilesClient: StorageFilesClient
     moviesClient: MoviesClient

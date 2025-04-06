@@ -29,7 +29,7 @@ export const createTheaters = async (fix: CommonFixture, length: number = 20, ov
     )
 }
 
-export class Fixture extends CommonFixture {
+export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>
 }
 

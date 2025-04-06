@@ -60,7 +60,7 @@ const createAllTickets = async (
     await createTickets(fix, createTicketDtos)
 }
 
-export class Fixture extends CommonFixture {
+export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>
     movie: MovieDto
     accessToken: string

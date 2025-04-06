@@ -35,7 +35,7 @@ export const createCustomers = async (fix: CommonFixture, length: number = 20, o
     )
 }
 
-export class Fixture extends CommonFixture {
+export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>
 }
 

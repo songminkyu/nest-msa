@@ -14,7 +14,7 @@ export const buildPaymentCreateDto = (overrides = {}) => {
     return { createDto, expectedDto }
 }
 
-export class Fixture extends CommonFixture {
+export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>
 }
 

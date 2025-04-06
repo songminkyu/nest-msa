@@ -37,7 +37,7 @@ export const createWatchRecords = async (fix: CommonFixture, overrides = {}) => 
     )
 }
 
-export class Fixture extends CommonFixture {
+export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>
 }
 

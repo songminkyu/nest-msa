@@ -43,7 +43,7 @@ function createMetadata(module: Type<any>, metadata: TestContextOpts = {}): Modu
     }
 }
 
-export class CommonFixture extends AllProviders {
+export interface CommonFixture extends AllProviders {
     gatewayContext: HttpTestContext
     appsContext: TestContext
     coresContext: TestContext

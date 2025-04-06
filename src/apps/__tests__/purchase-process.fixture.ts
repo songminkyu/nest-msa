@@ -72,7 +72,7 @@ export const holdTickets = async (fixture: Fixture, showtimeId: string, tickets:
     })
 }
 
-export class Fixture extends CommonFixture {
+export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>
     customer: CustomerDto
     movie: MovieDto
