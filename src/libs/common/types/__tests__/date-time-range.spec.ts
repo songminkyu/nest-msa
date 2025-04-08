@@ -51,5 +51,11 @@ describe('DateTimeRange', () => {
             start: new Date('2023-01-01T12:00'),
             end: new Date('2023-01-01T12:30')
         })
+
+        const throwException = () => {
+            DateTimeRange.create({})
+        }
+
+        expect(throwException).toThrow('Invalid options provided.')
     })
 })
