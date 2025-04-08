@@ -1,8 +1,8 @@
 import { plainToInstance } from 'class-transformer'
 import { validateSync } from 'class-validator'
-import { DateRange } from 'common'
+import { DateTimeRange } from 'common'
 
-describe('DateRange', () => {
+describe('DateTimeRange', () => {
     /* 문자열 날짜를 Date 객체로 변환하고 유효성 검사를 통과해야 함 */
     it('should convert string dates to Date objects and pass validation', () => {
         const plainData = {
@@ -10,7 +10,7 @@ describe('DateRange', () => {
             end: '2023-01-02T00:00:00Z'
         }
 
-        const instance = plainToInstance(DateRange, plainData)
+        const instance = plainToInstance(DateTimeRange, plainData)
 
         expect(instance.start).toBeInstanceOf(Date)
         expect(instance.end).toBeInstanceOf(Date)
@@ -26,7 +26,7 @@ describe('DateRange', () => {
             end: '2023-01-02T00:00:00Z'
         }
 
-        const instance = plainToInstance(DateRange, plainData)
+        const instance = plainToInstance(DateTimeRange, plainData)
 
         expect(instance.start).toBeInstanceOf(Date)
         expect(isNaN(instance.start!.getTime())).toBe(true)

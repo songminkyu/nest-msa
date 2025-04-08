@@ -1,5 +1,5 @@
 import { ShowtimeDto } from 'apps/cores'
-import { DateUtil, pickIds } from 'common'
+import { DateTimeRange, DateUtil, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, testObjectId } from 'testlib'
 import {
     buildShowtimeCreateDto,
@@ -27,7 +27,7 @@ describe('Showtimes Module', () => {
         expect(success).toBeTruthy()
 
         const showtimes = await fix.showtimesClient.findAllShowtimes({
-            startTimeRange: { start: new Date(0), end: new Date('9999') }
+            startTimeRange: { start: new Date(0) }
         })
 
         expect(showtimes).toEqual(expectedDtos)
@@ -67,11 +67,11 @@ describe('Showtimes Module', () => {
         it('startTimeRange', async () => {
             const startTimeRange = {
                 start: new Date(2000, 0, 1, 0, 0),
-                end: new Date(2000, 0, 1, 49, 0)
+                end: new Date(2000, 0, 1, 12, 0)
             }
 
             const showtimes = await fix.showtimesClient.findAllShowtimes({ startTimeRange })
-            expect(showtimes).toHaveLength(50)
+            expect(showtimes).toHaveLength(13)
         })
 
         it('1개 이상의 필터를 설정하지 않으면 BAD_REQUEST(400)를 반환해야 한다', async () => {
@@ -102,20 +102,27 @@ describe('Showtimes Module', () => {
     it('findShowingMovieIds', async () => {
         const movieIds = [testObjectId('a1'), testObjectId('a2')]
         const now = new Date()
+
         const createDtos = [
             buildShowtimeCreateDto({
-                startTime: DateUtil.addMinutes(now, -90),
-                endTime: DateUtil.addMinutes(now, -30)
+                timeRange: DateTimeRange.create({
+                    start: DateUtil.addMinutes(now, -90),
+                    minutes: 1
+                })
             }),
             buildShowtimeCreateDto({
                 movieId: movieIds[0],
-                startTime: DateUtil.addMinutes(now, 30),
-                endTime: DateUtil.addMinutes(now, 90)
+                timeRange: DateTimeRange.create({
+                    start: DateUtil.addMinutes(now, 30),
+                    minutes: 1
+                })
             }),
             buildShowtimeCreateDto({
                 movieId: movieIds[1],
-                startTime: DateUtil.addMinutes(now, 120),
-                endTime: DateUtil.addMinutes(now, 150)
+                timeRange: DateTimeRange.create({
+                    start: DateUtil.addMinutes(now, 120),
+                    minutes: 1
+                })
             })
         ]
 
@@ -128,26 +135,19 @@ describe('Showtimes Module', () => {
 
     it('findTheaterIds', async () => {
         const movieId = testObjectId('a1')
+        const theaterIds = [testObjectId('b1'), testObjectId('b2')]
+
         const createDtos = [
-            buildShowtimeCreateDto({
-                movieId: testObjectId('a2'),
-                theaterId: testObjectId('b1')
-            }),
-            buildShowtimeCreateDto({
-                movieId,
-                theaterId: testObjectId('b2')
-            }),
-            buildShowtimeCreateDto({
-                movieId,
-                theaterId: testObjectId('b3')
-            })
+            buildShowtimeCreateDto({ movieId, theaterId: theaterIds[0] }),
+            buildShowtimeCreateDto({ movieId, theaterId: theaterIds[1] }),
+            buildShowtimeCreateDto({ movieId: testObjectId('0'), theaterId: testObjectId('1') })
         ]
 
         const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const theaterIds = await fix.showtimesClient.findTheaterIds({ movieIds: [movieId] })
-        expect(theaterIds).toEqual([testObjectId('b2'), testObjectId('b3')])
+        const findTheaterIds = await fix.showtimesClient.findTheaterIds({ movieIds: [movieId] })
+        expect(findTheaterIds).toEqual(theaterIds)
     })
 
     it('findShowdates', async () => {
@@ -157,20 +157,17 @@ describe('Showtimes Module', () => {
             buildShowtimeCreateDto({
                 movieId,
                 theaterId,
-                startTime: new Date('2000-01-02'),
-                endTime: new Date('2000-01-03')
+                timeRange: { start: new Date('2000-01-02'), end: new Date('2000-01-03') }
             }),
             buildShowtimeCreateDto({
                 movieId,
                 theaterId,
-                startTime: new Date('2000-01-04'),
-                endTime: new Date('2000-01-04')
+                timeRange: { start: new Date('2000-01-04'), end: new Date('2000-01-04') }
             }),
             buildShowtimeCreateDto({
                 movieId,
                 theaterId: testObjectId('A1'),
-                startTime: new Date('2000-01-05'),
-                endTime: new Date('2000-01-06')
+                timeRange: { start: new Date('2000-01-05'), end: new Date('2000-01-06') }
             })
         ]
 

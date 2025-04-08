@@ -13,29 +13,23 @@ export interface QueryBuilderOptions {
 }
 
 export class QueryBuilder<T> {
-    private query: FilterQuery<T> = {}
+    private query: any = {}
 
-    addEqual(field: keyof T, value?: any): this {
+    addEqual(field: string, value?: any): this {
         if (value !== undefined && value !== null) {
             this.query[field] = value
         }
         return this
     }
 
-    addId<K extends keyof T>(
-        field: K & (T[K] extends Types.ObjectId ? K : never),
-        id?: string
-    ): this {
+    addId(field: string, id?: string): this {
         if (id) {
             this.query[field] = objectId(id)
         }
         return this
     }
 
-    addIn<K extends keyof T>(
-        field: K & (T[K] extends Types.ObjectId ? K : never),
-        ids?: string[] | undefined
-    ): this {
+    addIn(field: string, ids?: string[] | undefined): this {
         if (ids && ids.length > 0) {
             const uniqueIds = uniq(ids)
             Expect.equalLength(
@@ -48,20 +42,14 @@ export class QueryBuilder<T> {
         return this
     }
 
-    addRegex<K extends keyof T>(
-        field: K & (T[K] extends string ? K : never),
-        value?: string
-    ): this {
+    addRegex(field: string, value?: string): this {
         if (value) {
             this.query[field] = new RegExp(escapeRegExp(value), 'i')
         }
         return this
     }
 
-    addRange<K extends keyof T>(
-        field: K & (T[K] extends Date ? K : never),
-        range?: { start?: Date; end?: Date }
-    ): this {
+    addRange(field: string, range?: { start?: Date; end?: Date }): this {
         if (range) {
             const { start, end } = range
             if (start && end) {

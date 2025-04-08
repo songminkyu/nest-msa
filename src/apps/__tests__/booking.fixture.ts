@@ -1,6 +1,6 @@
 // TODO function은 모두 arrow로 변경한다
 import { MovieDto, Seatmap, ShowtimeDto, TheaterDto } from 'apps/cores'
-import { DateUtil } from 'common'
+import { DateTimeRange } from 'common'
 import { createCustomerAndLogin } from './customers-auth.fixture'
 import { createMovie } from './movies.fixture'
 import { buildShowtimeCreateDto, createShowtimes } from './showtimes.fixture'
@@ -29,12 +29,11 @@ const createAllShowtimes = async (fix: CommonFixture, theaters: TheaterDto[], mo
     ]
 
     const showtimeCreateDtos = theaters.flatMap((theater) =>
-        startTimes.map((startTime) => {
+        startTimes.map((start) => {
             const movieId = movie.id
             const theaterId = theater.id
-            const endTime = DateUtil.addMinutes(startTime, 90)
-
-            return buildShowtimeCreateDto({ movieId, theaterId, startTime, endTime })
+            const timeRange = DateTimeRange.create({ start, minutes: 90 })
+            return buildShowtimeCreateDto({ movieId, theaterId, timeRange })
         })
     )
 

@@ -1,5 +1,16 @@
-import { IsOptional } from 'class-validator'
-import { CommonQueryDto, DateRange } from 'common'
+import { Type } from 'class-transformer'
+import { IsDate, IsOptional } from 'class-validator'
+import { CommonQueryDto } from 'common'
+
+export class TimeRangeFilter {
+    @IsDate()
+    @Type(() => Date)
+    start?: Date
+
+    @IsDate()
+    @Type(() => Date)
+    end?: Date
+}
 
 export class ShowtimeQueryDto extends CommonQueryDto {
     @IsOptional()
@@ -12,8 +23,8 @@ export class ShowtimeQueryDto extends CommonQueryDto {
     theaterIds?: string[]
 
     @IsOptional()
-    startTimeRange?: DateRange
+    startTimeRange?: TimeRangeFilter
 
     @IsOptional()
-    endTimeRange?: DateRange
+    endTimeRange?: TimeRangeFilter
 }

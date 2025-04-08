@@ -2,13 +2,13 @@ import { ShowtimeCreateDto, ShowtimeDto } from 'apps/cores'
 import { omit, uniq } from 'lodash'
 import { nullObjectId } from 'testlib'
 import { CommonFixture, createCommonFixture } from './utils'
+import { DateTimeRange } from 'common'
 
-export const buildShowtimeCreateDto = (overrides = {}) => ({
+export const buildShowtimeCreateDto = (overrides: Partial<ShowtimeCreateDto> = {}) => ({
     batchId: nullObjectId,
     movieId: nullObjectId,
     theaterId: nullObjectId,
-    startTime: new Date('2000-01-01T12:00'),
-    endTime: new Date('2000-01-01T13:30'),
+    timeRange: DateTimeRange.create({ start: new Date('2000-01-01T12:00'), minutes: 90 }),
     ...overrides
 })
 
@@ -18,8 +18,7 @@ export const buildShowtimeCreateDtos = (overrides = {}, length: number = 100) =>
 
     for (let i = 0; i < length; i++) {
         const createDto = buildShowtimeCreateDto({
-            startTime: new Date(2000, 0, 1, i, 0),
-            endTime: new Date(2000, 0, 1, i, 90),
+            timeRange: DateTimeRange.create({ start: new Date(2000, 0, 1, i, 0), minutes: 90 }),
             ...overrides
         })
 

@@ -185,7 +185,7 @@ describe('/showtime-creation', () => {
                     new Date('2013-01-31T12:00').getTime(),
                     new Date('2013-01-31T16:30').getTime(),
                     new Date('2013-01-31T18:30').getTime()
-                ].includes(showtime.startTime.getTime())
+                ].includes(showtime.timeRange.start.getTime())
             )
             const { conflictingShowtimes, ...result } = (await monitorPromise) as any
             expect(result).toEqual({ batchId, status: 'fail' })

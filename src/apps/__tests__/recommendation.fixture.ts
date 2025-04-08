@@ -4,6 +4,7 @@ import { createCustomerAndLogin } from './customers-auth.fixture'
 import { createMovie } from './movies.fixture'
 import { createShowtimes } from './showtimes.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
+import { DateTimeRange } from 'common'
 
 export const createWatchedMovies = async (
     fix: CommonFixture,
@@ -35,8 +36,7 @@ export const createShowingMovies = async (fix: CommonFixture, dtos: Partial<Movi
         movieId: movie.id,
         batchId: nullObjectId,
         theaterId: nullObjectId,
-        startTime: new Date('2999-01-01'),
-        endTime: new Date('2999-01-02')
+        timeRange: DateTimeRange.create({ start: new Date('2999-01-01'), days: 1 })
     }))
 
     await createShowtimes(fix, showtimesCreateDtos)

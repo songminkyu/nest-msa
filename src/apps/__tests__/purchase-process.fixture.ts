@@ -9,7 +9,7 @@ import {
     TicketDto,
     TicketStatus
 } from 'apps/cores'
-import { DateUtil, pickIds } from 'common'
+import { DateTimeRange, pickIds } from 'common'
 import { nullObjectId } from 'testlib'
 import { createCustomer } from './customers.fixture'
 import { createMovie } from './movies.fixture'
@@ -27,8 +27,7 @@ export const createShowtime = async (
     const createDto = buildShowtimeCreateDto({
         movieId: movie.id,
         theaterId: theater.id,
-        startTime,
-        endTime: DateUtil.addMinutes(startTime, 90)
+        timeRange: DateTimeRange.create({ start: startTime, minutes: 90 })
     })
     const showtimes = await createShowtimes(fix, [createDto])
     return showtimes[0]

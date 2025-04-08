@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { MoviesClient, ShowtimeDto, ShowtimesClient, TheatersClient } from 'apps/cores'
-import { Assert, DateUtil, Time } from 'common'
+import { Assert, DateTimeRange, DateUtil, Time } from 'common'
 import { ShowtimeBatchCreateJobData } from './types'
 
 type TimeslotMap = Map<number, ShowtimeDto>
@@ -45,10 +45,10 @@ export class ShowtimeCreationValidatorService {
 
             Assert.defined(timeslots, `Timeslots must be defined for theater ID: ${theaterId}`)
 
-            for (const startTime of startTimes) {
-                const endTime = DateUtil.addMinutes(startTime, durationMinutes)
+            for (const start of startTimes) {
+                const timeRange = DateTimeRange.create({ start, minutes: durationMinutes })
 
-                iterateEvery10Mins(startTime, endTime, (time) => {
+                iterateEvery10Mins(timeRange, (time) => {
                     const showtime = timeslots.get(time)
 
                     if (showtime) {
@@ -82,7 +82,7 @@ export class ShowtimeCreationValidatorService {
             const timeslots = new Map<number, ShowtimeDto>()
 
             for (const showtime of fetchedShowtimes) {
-                iterateEvery10Mins(showtime.startTime, showtime.endTime, (time) => {
+                iterateEvery10Mins(showtime.timeRange, (time) => {
                     timeslots.set(time, showtime)
                 })
             }
@@ -114,8 +114,15 @@ export class ShowtimeCreationValidatorService {
     }
 }
 
-const iterateEvery10Mins = (start: Date, end: Date, callback: (time: number) => boolean | void) => {
-    for (let time = start.getTime(); time <= end.getTime(); time = time + Time.toMs('10m')) {
+const iterateEvery10Mins = (
+    timeRange: DateTimeRange,
+    callback: (time: number) => boolean | void
+) => {
+    for (
+        let time = timeRange.start.getTime();
+        time <= timeRange.end.getTime();
+        time = time + Time.toMs('10m')
+    ) {
         if (false === callback(time)) {
             break
         }

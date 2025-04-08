@@ -1,5 +1,5 @@
 import { MovieDto, ShowtimeCreateDto, TheaterDto } from 'apps/cores'
-import { DateUtil, jsonToObject } from 'common'
+import { DateTimeRange, jsonToObject } from 'common'
 import { HttpTestClient, nullObjectId } from 'testlib'
 import { createMovie } from './movies.fixture'
 import { createTheater } from './theaters.fixture'
@@ -13,8 +13,7 @@ export const createShowtimeDtos = (startTimes: Date[], overrides = {}) => {
             batchId: nullObjectId,
             movieId: nullObjectId,
             theaterId: nullObjectId,
-            startTime,
-            endTime: DateUtil.addMinutes(startTime, 90),
+            timeRange: DateTimeRange.create({ start: startTime, minutes: 90 }),
             ...overrides
         }
 

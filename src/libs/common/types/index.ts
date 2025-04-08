@@ -1,2 +1,2 @@
-export * from './date-range'
+export * from './date-time-range'
 export * from './lat-long'

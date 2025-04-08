@@ -14,11 +14,10 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
     async createShowtimes(createDtos: ShowtimeCreateDto[]) {
         const showtimes = createDtos.map((dto) => {
             const doc = this.newDocument()
+            doc.batchId = objectId(dto.batchId)
             doc.movieId = objectId(dto.movieId)
             doc.theaterId = objectId(dto.theaterId)
-            doc.startTime = dto.startTime
-            doc.endTime = dto.endTime
-            doc.batchId = objectId(dto.batchId)
+            doc.timeRange = dto.timeRange
 
             return doc
         })
@@ -29,7 +28,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
     async findAllShowtimes(queryDto: ShowtimeQueryDto) {
         const query = this.buildQuery(queryDto)
 
-        const showtimes = await this.model.find(query).sort({ startTime: 1 }).exec()
+        const showtimes = await this.model.find(query).sort({ timeRange: 1 }).exec()
         return showtimes
     }
 
@@ -52,7 +51,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
 
         const showdates = await this.model.aggregate([
             { $match: query },
-            { $project: { date: { $dateToString: { format: '%Y-%m-%d', date: '$startTime' } } } },
+            { $project: { date: { $dateToString: { format: '%Y-%m-%d', date: '$timeRange.start' } } } },
             { $group: { _id: '$date' } },
             { $sort: { _id: 1 } }
         ])
@@ -67,8 +66,8 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         builder.addIn('batchId', batchIds)
         builder.addIn('movieId', movieIds)
         builder.addIn('theaterId', theaterIds)
-        builder.addRange('startTime', startTimeRange)
-        builder.addRange('endTime', endTimeRange)
+        builder.addRange('timeRange.start', startTimeRange)
+        builder.addRange('timeRange.end', endTimeRange)
 
         const query = builder.build(options)
         return query

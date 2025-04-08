@@ -1,5 +1,5 @@
 import { Seatmap, ShowtimeDto, TheaterDto, TicketDto } from 'apps/cores'
-import { DateUtil, pickIds } from 'common'
+import { DateTimeRange, DateUtil, pickIds } from 'common'
 import { step } from 'testlib'
 import { Fixture } from './booking.fixture'
 
@@ -65,8 +65,22 @@ describe('Movie Booking Workflow Tests', () => {
             const { body: showtimes } = await fix.httpClient.get(url).ok(
                 expect.arrayContaining(
                     [
-                        { movieId, theaterId, startTime: new Date('2999-01-01T12:00') },
-                        { movieId, theaterId, startTime: new Date('2999-01-01T14:00') }
+                        {
+                            movieId,
+                            theaterId,
+                            timeRange: DateTimeRange.create({
+                                start: new Date('2999-01-01T12:00'),
+                                minutes: 90
+                            })
+                        },
+                        {
+                            movieId,
+                            theaterId,
+                            timeRange: DateTimeRange.create({
+                                start: new Date('2999-01-01T14:00'),
+                                minutes: 90
+                            })
+                        }
                     ].map((item) => expect.objectContaining(item))
                 )
             )

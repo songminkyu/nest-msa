@@ -41,7 +41,7 @@ export class ShowtimesService {
     }
 
     private toDto = (showtime: ShowtimeDocument) =>
-        mapDocToDto(showtime, ShowtimeDto, ['id', 'theaterId', 'movieId', 'startTime', 'endTime'])
+        mapDocToDto(showtime, ShowtimeDto, ['id', 'theaterId', 'movieId', 'timeRange'])
 
     private toDtos = (showtimes: ShowtimeDocument[]) =>
         showtimes.map((showtime) => this.toDto(showtime))

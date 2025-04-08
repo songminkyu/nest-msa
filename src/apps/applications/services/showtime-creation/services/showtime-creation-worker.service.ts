@@ -10,7 +10,7 @@ import {
     TicketStatus
 } from 'apps/cores'
 import { Job, Queue } from 'bullmq'
-import { Assert, DateUtil, jsonToObject, MethodLog } from 'common'
+import { Assert, DateTimeRange, jsonToObject, MethodLog } from 'common'
 import { ShowtimeCreationClient } from '../showtime-creation.client'
 import { ShowtimeCreationValidatorService } from './showtime-creation-validator.service'
 import { ShowtimeBatchCreateJobData, ShowtimeBatchCreateStatus } from './types'
@@ -97,12 +97,11 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         const { batchId, movieId, theaterIds, durationMinutes, startTimes } = data
 
         const createDtos = theaterIds.flatMap((theaterId) =>
-            startTimes.map((startTime) => ({
+            startTimes.map((start) => ({
                 batchId,
                 movieId,
                 theaterId,
-                startTime,
-                endTime: DateUtil.addMinutes(startTime, durationMinutes)
+                timeRange: DateTimeRange.create({ start, minutes: durationMinutes })
             }))
         )
 
