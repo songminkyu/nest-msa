@@ -51,7 +51,11 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
 
         const showdates = await this.model.aggregate([
             { $match: query },
-            { $project: { date: { $dateToString: { format: '%Y-%m-%d', date: '$timeRange.start' } } } },
+            {
+                $project: {
+                    date: { $dateToString: { format: '%Y-%m-%d', date: '$timeRange.start' } }
+                }
+            },
             { $group: { _id: '$date' } },
             { $sort: { _id: 1 } }
         ])

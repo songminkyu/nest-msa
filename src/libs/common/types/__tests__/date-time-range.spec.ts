@@ -36,4 +36,20 @@ describe('DateTimeRange', () => {
         expect(errors[0].property).toBe('start')
         expect(errors[0].constraints?.isDate).toBeDefined()
     })
+
+    it('create', () => {
+        expect(
+            DateTimeRange.create({ start: new Date('2023-01-01'), end: new Date('2023-01-02') })
+        ).toEqual({ start: new Date('2023-01-01'), end: new Date('2023-01-02') })
+
+        expect(DateTimeRange.create({ start: new Date('2023-01-01'), days: 2 })).toEqual({
+            start: new Date('2023-01-01'),
+            end: new Date('2023-01-03')
+        })
+
+        expect(DateTimeRange.create({ start: new Date('2023-01-01T12:00'), minutes: 30 })).toEqual({
+            start: new Date('2023-01-01T12:00'),
+            end: new Date('2023-01-01T12:30')
+        })
+    })
 })
