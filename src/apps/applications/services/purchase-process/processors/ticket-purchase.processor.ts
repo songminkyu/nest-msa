@@ -39,7 +39,7 @@ export class TicketPurchaseProcessor {
     ) {}
 
     async validatePurchase(createDto: PurchaseCreateDto) {
-        const ticketItems = createDto.items.filter((item) => item.type === PurchaseItemType.ticket)
+        const ticketItems = createDto.purchaseItems.filter((item) => item.type === PurchaseItemType.ticket)
         const showtimes = await this.getShowtimes(ticketItems)
 
         this.validateTicketCount(ticketItems)
@@ -108,7 +108,7 @@ export class TicketPurchaseProcessor {
     }
 
     async completePurchase(createDto: PurchaseCreateDto) {
-        const ticketItems = createDto.items.filter((item) => item.type === PurchaseItemType.ticket)
+        const ticketItems = createDto.purchaseItems.filter((item) => item.type === PurchaseItemType.ticket)
         const ticketIds = ticketItems.map((item) => item.ticketId)
 
         await this.ticketsService.updateTicketStatus(ticketIds, TicketStatus.sold)
@@ -119,7 +119,7 @@ export class TicketPurchaseProcessor {
     }
 
     async rollbackPurchase(createDto: PurchaseCreateDto) {
-        const ticketItems = createDto.items.filter((item) => item.type === PurchaseItemType.ticket)
+        const ticketItems = createDto.purchaseItems.filter((item) => item.type === PurchaseItemType.ticket)
         const ticketIds = ticketItems.map((item) => item.ticketId)
 
         await this.ticketsService.updateTicketStatus(ticketIds, TicketStatus.available)

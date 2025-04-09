@@ -3,8 +3,8 @@ import { DateTimeRange, DateUtil, pickIds } from 'common'
 import { step } from 'testlib'
 import { Fixture } from './booking.fixture'
 
-/* 영화 예매 흐름 테스트 */
-describe('Movie Booking Workflow Tests', () => {
+/* 예매 흐름 테스트 */
+describe('Booking Workflow Tests', () => {
     let fix: Fixture
 
     beforeEach(async () => {

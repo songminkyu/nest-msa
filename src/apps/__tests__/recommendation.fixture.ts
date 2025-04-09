@@ -1,10 +1,10 @@
 import { CustomerDto, MovieDto } from 'apps/cores'
+import { DateTimeRange } from 'common'
 import { nullObjectId } from 'testlib'
-import { createCustomerAndLogin } from './customers-auth.fixture'
+import { createCustomerAndLogin } from './customer-auth.fixture'
 import { createMovie } from './movies.fixture'
 import { createShowtimes } from './showtimes.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
-import { DateTimeRange } from 'common'
 
 export const createWatchedMovies = async (
     fix: CommonFixture,

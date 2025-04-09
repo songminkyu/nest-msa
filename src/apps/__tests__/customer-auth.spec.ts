@@ -1,6 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose'
 import { Customer, CustomerDto } from 'apps/cores'
-import { Fixture } from './customers-auth.fixture'
+import { Fixture } from './customer-auth.fixture'
 import { createCustomer } from './customers.fixture'
 import { Errors } from './utils'
 
@@ -12,7 +12,7 @@ describe('Customer Authentication Tests', () => {
     const password = 'password'
 
     beforeEach(async () => {
-        const { createFixture } = await import('./customers-auth.fixture')
+        const { createFixture } = await import('./customer-auth.fixture')
         fix = await createFixture()
 
         customer = await createCustomer(fix, { email, password })

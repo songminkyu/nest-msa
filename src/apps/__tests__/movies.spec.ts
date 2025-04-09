@@ -6,7 +6,7 @@ import { createMovie, buildMovieCreateDto, createMovies, Fixture } from './movie
 import { Errors } from './utils'
 
 /* 영화 통합 테스트 */
-describe('Movie Integration Tests', () => {
+describe('Movies Integration Tests', () => {
     let fix: Fixture
 
     beforeEach(async () => {

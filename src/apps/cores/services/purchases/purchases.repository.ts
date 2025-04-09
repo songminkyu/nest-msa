@@ -16,7 +16,7 @@ export class PurchasesRepository extends MongooseRepository<Purchase> {
         purchase.customerId = objectId(createDto.customerId)
         purchase.paymentId = objectId(createDto.paymentId)
         purchase.totalPrice = createDto.totalPrice
-        purchase.items = createDto.items.map((item) => ({
+        purchase.purchaseItems = createDto.purchaseItems.map((item) => ({
             ...item,
             ticketId: objectId(item.ticketId)
         }))

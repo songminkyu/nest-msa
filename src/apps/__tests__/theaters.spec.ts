@@ -5,7 +5,7 @@ import { createTheater, buildTheaterCreateDto, createTheaters, Fixture } from '.
 import { Errors } from './utils'
 
 /* 극장 통합 테스트 */
-describe('Theater Integration Tests', () => {
+describe('Theaters Integration Tests', () => {
     let fix: Fixture
 
     beforeEach(async () => {

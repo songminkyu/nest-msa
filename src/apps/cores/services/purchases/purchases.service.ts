@@ -38,7 +38,7 @@ export class PurchasesService {
             'customerId',
             'paymentId',
             'totalPrice',
-            'items',
+            'purchaseItems',
             'createdAt',
             'updatedAt'
         ])

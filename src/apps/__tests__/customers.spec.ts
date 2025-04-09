@@ -10,7 +10,7 @@ import {
 import { Errors } from './utils'
 
 /* 고객 통합 테스트 */
-describe('Customer Integration Tests', () => {
+describe('Customers Integration Tests', () => {
     let fix: Fixture
 
     beforeEach(async () => {

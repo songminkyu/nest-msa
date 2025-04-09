@@ -29,7 +29,7 @@ export class Purchase extends MongooseSchema {
     totalPrice: number
 
     @Prop({ type: [Object], required: true })
-    items: PurchaseItem[]
+    purchaseItems: PurchaseItem[]
 }
 export type PurchaseDocument = HydratedDocument<Purchase>
 export const PurchaseSchema = createMongooseSchema(Purchase)
