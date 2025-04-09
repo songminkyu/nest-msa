@@ -70,7 +70,7 @@ describe('Movie Booking Workflow Tests', () => {
                             theaterId,
                             timeRange: DateTimeRange.create({
                                 start: new Date('2999-01-01T12:00'),
-                                minutes: 90
+                                minutes: 1
                             })
                         },
                         {
@@ -78,7 +78,7 @@ describe('Movie Booking Workflow Tests', () => {
                             theaterId,
                             timeRange: DateTimeRange.create({
                                 start: new Date('2999-01-01T14:00'),
-                                minutes: 90
+                                minutes: 1
                             })
                         }
                     ].map((item) => expect.objectContaining(item))

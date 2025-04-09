@@ -8,7 +8,7 @@ export const buildShowtimeCreateDto = (overrides: Partial<ShowtimeCreateDto> = {
     batchId: nullObjectId,
     movieId: nullObjectId,
     theaterId: nullObjectId,
-    timeRange: DateTimeRange.create({ start: new Date('2000-01-01T12:00'), minutes: 90 }),
+    timeRange: DateTimeRange.create({ start: new Date('2000-01-01T12:00'), minutes: 1 }),
     ...overrides
 })
 
@@ -18,7 +18,7 @@ export const buildShowtimeCreateDtos = (overrides = {}, length: number = 100) =>
 
     for (let i = 0; i < length; i++) {
         const createDto = buildShowtimeCreateDto({
-            timeRange: DateTimeRange.create({ start: new Date(2000, 0, 1, i, 0), minutes: 90 }),
+            timeRange: DateTimeRange.create({ start: new Date(2000, 0, 1, i, 0), minutes: 1 }),
             ...overrides
         })
 

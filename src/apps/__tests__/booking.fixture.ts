@@ -32,7 +32,7 @@ const createAllShowtimes = async (fix: CommonFixture, theaters: TheaterDto[], mo
         startTimes.map((start) => {
             const movieId = movie.id
             const theaterId = theater.id
-            const timeRange = DateTimeRange.create({ start, minutes: 90 })
+            const timeRange = DateTimeRange.create({ start, minutes: 1 })
             return buildShowtimeCreateDto({ movieId, theaterId, timeRange })
         })
     )
