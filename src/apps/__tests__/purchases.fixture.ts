@@ -9,13 +9,13 @@ import {
     TicketStatus
 } from 'apps/cores'
 import { DateTimeRange, DateUtil, pickIds } from 'common'
+import { Rules } from 'shared'
 import { createCustomer } from './customers.fixture'
 import { createMovie } from './movies.fixture'
 import { buildShowtimeCreateDto, createShowtimes } from './showtimes.fixture'
 import { createTheater } from './theaters.fixture'
 import { buildTicketCreateDto, createTickets } from './tickets.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
-import { Rules } from 'shared'
 
 const createShowtime = async (fix: Fixture, startTime: Date) => {
     const showtimeCreateDto = buildShowtimeCreateDto({
@@ -65,6 +65,7 @@ export const setupPurchaseData = async (
     const tickets = await createAllTickets(fix, showtime)
 
     const heldTickets = tickets.slice(0, itemCount)
+    const availableTickets = tickets.slice(itemCount)
 
     await holdTickets(fix, showtime.id, heldTickets)
 
@@ -73,7 +74,7 @@ export const setupPurchaseData = async (
         ticketId: ticket.id
     }))
 
-    return { showtime, tickets, purchaseItems }
+    return { showtime, purchaseItems, availableTickets }
 }
 
 export interface Fixture extends CommonFixture {

@@ -20,12 +20,12 @@ describe('Purchases Integration Tests', () => {
 
     describe('POST /purchases', () => {
         let purchase: PurchaseDto
-        let tickets: TicketDto[]
+        let availableTickets: TicketDto[]
         let purchaseItems: PurchaseItemDto[]
 
         beforeEach(async () => {
             const data = await setupPurchaseData(fix)
-            tickets = data.tickets
+            availableTickets = data.availableTickets
             purchaseItems = data.purchaseItems
 
             const { body } = await fix.httpClient
@@ -55,14 +55,14 @@ describe('Purchases Integration Tests', () => {
 
         it('구매한 티켓은 sold 상태여야 한다', async () => {
             const ticketIds = purchaseItems.map((item) => item.ticketId)
-            const gotTickets = await fix.ticketsService.getTickets(ticketIds)
-            gotTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.sold))
+            const retrievedTickets = await fix.ticketsService.getTickets(ticketIds)
+            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.sold))
         })
 
         it('구매하지 않은 티켓은 available 상태여야 한다', async () => {
-            const ticketIds = tickets.slice(4).map((ticket) => ticket.id)
-            const gotTickets = await fix.ticketsService.getTickets(ticketIds)
-            gotTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.available))
+            const ticketIds = availableTickets.map((ticket) => ticket.id)
+            const retrievedTickets = await fix.ticketsService.getTickets(ticketIds)
+            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.available))
         })
     })
 
