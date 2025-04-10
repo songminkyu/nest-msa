@@ -32,7 +32,6 @@ class SendTestController {
 
 @Controller()
 class EmitTestController {
-    // TODO console.log 삭제
     /*
     ReplaySubject is configured with a buffer size of 1 to store the last event.
     If the event is emitted before the httpClient’s SSE request is established,
@@ -46,16 +45,12 @@ class EmitTestController {
 
     @EventPattern(withTestId('emitEvent'))
     async handleEvent(data: any) {
-        console.log('Emit Controller #1')
-        const r1 = this.eventSubject.next({ data })
-        console.log('Emit Controller #2', r1)
-        const r2 = this.eventSubject.complete()
-        console.log('Emit Controller #3', r2)
+        this.eventSubject.next({ data })
+        this.eventSubject.complete()
     }
 
     @Sse('handle-event')
     observeEvent(): Observable<MessageEvent> {
-        console.log('Emit Controller #4')
         return this.eventSubject.asObservable()
     }
 }
