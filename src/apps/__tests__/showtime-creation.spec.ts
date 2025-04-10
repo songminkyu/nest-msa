@@ -3,7 +3,8 @@ import { expectEqualUnsorted, nullObjectId } from 'testlib'
 import { createShowtimeDtos, Fixture, monitorEvents } from './showtime-creation.fixture'
 import { createShowtimes } from './showtimes.fixture'
 
-describe('/showtime-creation', () => {
+/* 상영시간 생성 통합 테스트 */
+describe('Showtime Creation Integration Tests', () => {
     let fix: Fixture
 
     beforeEach(async () => {
@@ -67,12 +68,11 @@ describe('/showtime-creation', () => {
         const createBatchShowtimes = async (
             movieId: string,
             theaterIds: string[],
-            startTimes: Date[],
-            durationMinutes: number
+            startTimes: Date[]
         ) => {
             const { body } = await fix.httpClient
                 .post('/showtime-creation/showtimes')
-                .body({ movieId, theaterIds, startTimes, durationMinutes })
+                .body({ movieId, theaterIds, startTimes, durationMinutes: 1 })
                 .accepted()
 
             return body
@@ -88,19 +88,19 @@ describe('/showtime-creation', () => {
                 new Date('2100-01-01T13:00')
             ]
 
-            const { batchId } = await createBatchShowtimes(fix.movie.id, theaterIds, startTimes, 90)
+            const { batchId } = await createBatchShowtimes(fix.movie.id, theaterIds, startTimes)
 
             expect(batchId).toBeDefined()
 
             const seatCount = Seatmap.getSeatCount(fix.theater.seatmap)
-            const showtimeCreatedCount = theaterIds.length * startTimes.length
-            const ticketCreatedCount = showtimeCreatedCount * seatCount
+            const createdShowtimeCount = theaterIds.length * startTimes.length
+            const createdTicketCount = createdShowtimeCount * seatCount
 
             await expect(monitorPromise).resolves.toEqual({
                 batchId,
                 status: 'complete',
-                showtimeCreatedCount,
-                ticketCreatedCount
+                createdShowtimeCount,
+                createdTicketCount
             })
         })
 
@@ -110,8 +110,7 @@ describe('/showtime-creation', () => {
             const { batchId } = await createBatchShowtimes(
                 nullObjectId,
                 [fix.theater.id],
-                [new Date(0)],
-                90
+                [new Date(0)]
             )
 
             expect(batchId).toBeDefined()
@@ -129,8 +128,7 @@ describe('/showtime-creation', () => {
             const { batchId } = await createBatchShowtimes(
                 fix.movie.id,
                 [nullObjectId],
-                [new Date(0)],
-                90
+                [new Date(0)]
             )
 
             expect(batchId).toBeDefined()

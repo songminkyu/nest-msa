@@ -82,13 +82,13 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
             })
         } else {
             const createdShowtimes = await this.createShowtimes(data)
-            const ticketCreatedCount = await this.createTickets(createdShowtimes, data.batchId)
+            const createdTicketCount = await this.createTickets(createdShowtimes, data.batchId)
 
             this.client.emitStatusChanged({
                 status: ShowtimeBatchCreateStatus.complete,
                 batchId: data.batchId,
-                showtimeCreatedCount: createdShowtimes.length,
-                ticketCreatedCount
+                createdShowtimeCount: createdShowtimes.length,
+                createdTicketCount
             })
         }
     }
