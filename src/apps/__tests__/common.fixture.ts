@@ -1,7 +1,13 @@
-import { MovieGenre, MovieRating, ShowtimeCreateDto } from 'apps/cores'
+import {
+    MovieGenre,
+    MovieRating,
+    ShowtimeCreateDto,
+    TicketCreateDto,
+    TicketStatus
+} from 'apps/cores'
 import { DateTimeRange } from 'common'
 import { omit, uniq } from 'lodash'
-import { nullObjectId } from 'testlib'
+import { nullDate, nullObjectId } from 'testlib'
 import { CommonFixture, TestFiles } from './utils'
 
 export async function createCustomerAndLogin(fix: CommonFixture) {
@@ -98,22 +104,44 @@ export async function createShowtimes(fix: CommonFixture, createDtos: ShowtimeCr
     return showtimes
 }
 
-export const createWatchRecordDto = (overrides = {}) => {
+export const buildTicketCreateDto = (overrides = {}) => {
+    const createDto = {
+        batchId: nullObjectId,
+        movieId: nullObjectId,
+        theaterId: nullObjectId,
+        showtimeId: nullObjectId,
+        status: TicketStatus.available,
+        seat: { block: '1b', row: '1r', seatnum: 1 },
+        ...overrides
+    }
+    const expectedDto = { id: expect.any(String), ...omit(createDto, 'batchId') }
+    return { createDto, expectedDto }
+}
+
+export async function createTickets(fix: CommonFixture, createDtos: TicketCreateDto[]) {
+    const { success } = await fix.ticketsClient.createTickets(createDtos)
+    expect(success).toBeTruthy()
+
+    const batchIds = uniq(createDtos.map((dto) => dto.batchId))
+
+    const tickets = await fix.ticketsClient.findAllTickets({ batchIds })
+    return tickets
+}
+
+export const buildWatchRecordCreateDto = (overrides = {}) => {
     const createDto = {
         customerId: nullObjectId,
         movieId: nullObjectId,
         purchaseId: nullObjectId,
-        watchDate: new Date(0),
+        watchDate: nullDate,
         ...overrides
     }
-
     const expectedDto = { id: expect.any(String), ...createDto }
-
     return { createDto, expectedDto }
 }
 
 export const createWatchRecord = async (fix: CommonFixture, override = {}) => {
-    const { createDto } = createWatchRecordDto(override)
+    const { createDto } = buildWatchRecordCreateDto(override)
 
     const watchRecord = await fix.watchRecordsClient.createWatchRecord(createDto)
     return watchRecord

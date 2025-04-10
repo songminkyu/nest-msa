@@ -3,6 +3,7 @@ import net from 'net'
 
 export const nullObjectId = '000000000000000000000000'
 export const testObjectId = (num: number) => num.toString(16).padStart(24, '0')
+export const nullDate = new Date(0)
 
 export async function createDummyFile(filePath: string, sizeInBytes: number) {
     const file = await fs.open(filePath, 'w')

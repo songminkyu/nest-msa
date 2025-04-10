@@ -1,4 +1,4 @@
-import { HttpTestClient } from 'testlib'
+import { HttpTestClient, nullDate } from 'testlib'
 
 describe('AppValidationPipe', () => {
     let teardown = () => {}
@@ -20,16 +20,16 @@ describe('AppValidationPipe', () => {
     it('should validate each field in the array', async () => {
         await client
             .post('/array')
-            .body([{ sampleId: 'id', date: new Date(0) }])
-            .created([{ sampleId: 'id', date: new Date(0) }])
+            .body([{ sampleId: 'id', date: nullDate }])
+            .created([{ sampleId: 'id', date: nullDate }])
     })
 
     /* 필드가 올바른지 검증해야 한다 */
     it('should validate the fields', async () => {
         await client
             .post('/')
-            .body({ sampleId: 'id', date: new Date(0) })
-            .created({ sampleId: 'id', date: new Date(0) })
+            .body({ sampleId: 'id', date: nullDate })
+            .created({ sampleId: 'id', date: nullDate })
     })
 
     /* 잘못된 필드를 전송하면 Bad Request를 반환해야 한다 */
@@ -47,7 +47,7 @@ describe('AppValidationPipe', () => {
 
     /* 중첩된 배열의 각 필드가 올바른지 검증해야 한다 */
     it('should validate each field in the nested array', async () => {
-        const sample = { sampleId: 'id', date: new Date(0) }
+        const sample = { sampleId: 'id', date: nullDate }
         await client
             .post('/nested')
             .body({ samples: [sample] })

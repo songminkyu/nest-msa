@@ -4,7 +4,7 @@ import { CommonFixture, createCommonFixture } from './utils'
 import { createWatchRecord } from './common.fixture'
 
 export const createWatchRecords = async (fix: CommonFixture, overrides = {}) => {
-    const baseDate = new Date(0)
+    const baseDate = new Date(1)
 
     return Promise.all(
         Array.from({ length: 10 }, async (_, index) =>

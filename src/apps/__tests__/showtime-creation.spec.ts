@@ -1,5 +1,5 @@
 import { Seatmap, ShowtimeDto } from 'apps/cores'
-import { expectEqualUnsorted, nullObjectId } from 'testlib'
+import { expectEqualUnsorted, nullDate, nullObjectId } from 'testlib'
 import { createShowtimes } from './common.fixture'
 import { createShowtimeDtos, Fixture, monitorEvents } from './showtime-creation.fixture'
 
@@ -109,7 +109,7 @@ describe('Showtime Creation', () => {
             const { batchId } = await createBatchShowtimes(
                 nullObjectId,
                 [fix.theater.id],
-                [new Date(0)]
+                [nullDate]
             )
 
             expect(batchId).toBeDefined()
@@ -124,11 +124,7 @@ describe('Showtime Creation', () => {
         it('theater가 존재하지 않으면 작업 요청이 실패해야 한다', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['error'])
 
-            const { batchId } = await createBatchShowtimes(
-                fix.movie.id,
-                [nullObjectId],
-                [new Date(0)]
-            )
+            const { batchId } = await createBatchShowtimes(fix.movie.id, [nullObjectId], [nullDate])
 
             expect(batchId).toBeDefined()
 

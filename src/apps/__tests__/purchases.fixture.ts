@@ -5,19 +5,19 @@ import {
     Seatmap,
     ShowtimeDto,
     TheaterDto,
-    TicketDto,
-    TicketStatus
+    TicketDto
 } from 'apps/cores'
 import { DateTimeRange, DateUtil, pickIds } from 'common'
 import { Rules } from 'shared'
 import {
     buildShowtimeCreateDto,
+    buildTicketCreateDto,
     createCustomer,
     createMovie,
     createShowtimes,
-    createTheater
+    createTheater,
+    createTickets
 } from './common.fixture'
-import { buildTicketCreateDto, createTickets } from './tickets.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 
 const createShowtime = async (fix: Fixture, startTime: Date) => {
@@ -32,15 +32,15 @@ const createShowtime = async (fix: Fixture, startTime: Date) => {
 }
 
 const createAllTickets = async (fix: Fixture, showtime: ShowtimeDto) => {
-    const ticketCreateDtos = Seatmap.getAllSeats(fix.theater.seatmap).map((seat) =>
-        buildTicketCreateDto({
+    const ticketCreateDtos = Seatmap.getAllSeats(fix.theater.seatmap).map((seat) => {
+        const { createDto } = buildTicketCreateDto({
             movieId: showtime.movieId,
             theaterId: showtime.theaterId,
             showtimeId: showtime.id,
-            status: TicketStatus.available,
             seat
         })
-    )
+        return createDto
+    })
 
     const tickets = await createTickets(fix, ticketCreateDtos)
     return tickets

@@ -3,9 +3,9 @@ import { WatchRecordDto } from 'apps/cores'
 import { OrderDirection } from 'common'
 import { expectEqualUnsorted, testObjectId } from 'testlib'
 import { createWatchRecords, Fixture } from './watch-records.fixture'
-import { createWatchRecordDto } from './common.fixture'
+import { buildWatchRecordCreateDto } from './common.fixture'
 
-describe('WatchRecords Module', () => {
+describe('WatchRecords', () => {
     let fix: Fixture
 
     beforeEach(async () => {
@@ -19,7 +19,7 @@ describe('WatchRecords Module', () => {
 
     describe('createWatchRecords', () => {
         it('관람 기록을 생성해야 한다', async () => {
-            const { createDto, expectedDto } = createWatchRecordDto()
+            const { createDto, expectedDto } = buildWatchRecordCreateDto()
 
             const watchRecord = await fix.watchRecordsClient.createWatchRecord(createDto)
             expect(watchRecord).toEqual(expectedDto)
@@ -41,11 +41,7 @@ describe('WatchRecords Module', () => {
                 orderby: { name: 'watchDate', direction: OrderDirection.desc }
             })
 
-            expect(paginated).toEqual({
-                skip: 0,
-                take: 100,
-                total: records.length
-            })
+            expect(paginated).toEqual({ skip: 0, take: 100, total: records.length })
             expectEqualUnsorted(items, records)
         })
     })

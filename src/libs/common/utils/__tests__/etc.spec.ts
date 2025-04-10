@@ -13,6 +13,7 @@ import {
     validateEmail
 } from 'common'
 import fs from 'fs/promises'
+import { nullDate } from 'testlib'
 
 describe('common/utils/etc', () => {
     describe('sleep', () => {
@@ -107,7 +108,7 @@ describe('common/utils/etc', () => {
                     date: '2023-06-18T12:00:00.000Z',
                     level2: {
                         date: ['2023-06-19T12:00:00.000Z'],
-                        date2: new Date(0),
+                        date2: nullDate,
                         null: null
                     }
                 }
