@@ -2,7 +2,8 @@ import { expect } from '@jest/globals'
 import { WatchRecordDto } from 'apps/cores'
 import { OrderDirection } from 'common'
 import { expectEqualUnsorted, testObjectId } from 'testlib'
-import { createWatchRecordDto, createWatchRecords, Fixture } from './watch-records.fixture'
+import { createWatchRecords, Fixture } from './watch-records.fixture'
+import { createWatchRecordDto } from './common.fixture'
 
 describe('WatchRecords Module', () => {
     let fix: Fixture

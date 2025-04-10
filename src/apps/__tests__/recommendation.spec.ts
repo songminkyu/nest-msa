@@ -1,8 +1,7 @@
 import { MovieDto, MovieGenre } from 'apps/cores'
 import { createShowingMovies, createWatchedMovies, Fixture } from './recommendation.fixture'
 
-/* 추천 통합 테스트 */
-describe('Recommendation Integration Tests', () => {
+describe('Recommendation', () => {
     let fix: Fixture
 
     beforeEach(async () => {

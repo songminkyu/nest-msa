@@ -3,11 +3,10 @@ import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
 import { Path, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, objectToFields } from 'testlib'
 import { buildMovieCreateDto, createMovie } from './common.fixture'
-import { createMovies, Fixture } from './movies.fixture'
+import { Fixture } from './movies.fixture'
 import { Errors } from './utils'
 
-/* 영화 통합 테스트 */
-describe('Movies Integration Tests', () => {
+describe('Movies', () => {
     let fix: Fixture
 
     beforeEach(async () => {
@@ -25,7 +24,7 @@ describe('Movies Integration Tests', () => {
 
             const { body } = await fix.httpClient
                 .post('/movies')
-                .attachs([{ name: 'files', file: fix.files.image.path }])
+                .attachs([{ name: 'files', file: fix.image.path }])
                 .fields(objectToFields(createDto))
                 .created()
 
@@ -126,7 +125,40 @@ describe('Movies Integration Tests', () => {
         let movies: MovieDto[]
 
         beforeEach(async () => {
-            movies = await createMovies(fix)
+            movies = await Promise.all([
+                createMovie(fix, {
+                    title: 'title-a1',
+                    plot: 'plot-a1',
+                    director: 'James Cameron',
+                    releaseDate: new Date('2000-01-01'),
+                    rating: MovieRating.NC17,
+                    genre: [MovieGenre.Action, MovieGenre.Comedy]
+                }),
+                createMovie(fix, {
+                    title: 'title-a2',
+                    plot: 'plot-a2',
+                    director: 'Steven Spielberg',
+                    releaseDate: new Date('2000-01-02'),
+                    rating: MovieRating.NC17,
+                    genre: [MovieGenre.Romance, MovieGenre.Drama]
+                }),
+                createMovie(fix, {
+                    title: 'title-b1',
+                    plot: 'plot-b1',
+                    director: 'James Cameron',
+                    releaseDate: new Date('2000-01-02'),
+                    rating: MovieRating.PG,
+                    genre: [MovieGenre.Drama, MovieGenre.Comedy]
+                }),
+                createMovie(fix, {
+                    title: 'title-b2',
+                    plot: 'plot-b2',
+                    director: 'Steven Spielberg',
+                    releaseDate: new Date('2000-01-03'),
+                    rating: MovieRating.R,
+                    genre: [MovieGenre.Thriller, MovieGenre.Western]
+                })
+            ])
         })
 
         it('기본 페이지네이션 설정으로 영화를 가져와야 한다', async () => {
@@ -145,56 +177,48 @@ describe('Movies Integration Tests', () => {
         })
 
         it('제목의 일부로 영화를 검색할 수 있어야 한다', async () => {
-            const partialTitle = 'Movie-1'
-            const { body } = await fix.httpClient.get('/movies').query({ title: partialTitle }).ok()
+            const { body } = await fix.httpClient.get('/movies').query({ title: 'title-a' }).ok()
 
-            const expected = movies.filter((movie) => movie.title.startsWith(partialTitle))
-            expectEqualUnsorted(body.items, expected)
+            expectEqualUnsorted(body.items, [movies[0], movies[1]])
         })
 
         it('장르로 영화를 검색할 수 있어야 한다', async () => {
-            const genre = MovieGenre.Drama
-            const { body } = await fix.httpClient.get('/movies').query({ genre }).ok()
+            const { body } = await fix.httpClient
+                .get('/movies')
+                .query({ genre: MovieGenre.Drama })
+                .ok()
 
-            const expected = movies.filter((movie) => movie.genre.includes(genre))
-            expectEqualUnsorted(body.items, expected)
+            expectEqualUnsorted(body.items, [movies[1], movies[2]])
         })
 
         it('개봉일로 영화를 검색할 수 있어야 한다', async () => {
-            const releaseDate = movies[0].releaseDate
-            const { body } = await fix.httpClient.get('/movies').query({ releaseDate }).ok()
+            const { body } = await fix.httpClient
+                .get('/movies')
+                .query({ releaseDate: new Date('2000-01-02') })
+                .ok()
 
-            const expected = movies.filter(
-                (movie) => movie.releaseDate.getTime() === releaseDate.getTime()
-            )
-            expectEqualUnsorted(body.items, expected)
+            expectEqualUnsorted(body.items, [movies[1], movies[2]])
         })
 
         it('줄거리의 일부로 영화를 검색할 수 있어야 한다', async () => {
-            const partialPlot = 'plot-01'
-            const { body } = await fix.httpClient.get('/movies').query({ plot: partialPlot }).ok()
+            const { body } = await fix.httpClient.get('/movies').query({ plot: 'plot-b' }).ok()
 
-            const expected = movies.filter((movie) => movie.plot.startsWith(partialPlot))
-            expectEqualUnsorted(body.items, expected)
+            expectEqualUnsorted(body.items, [movies[2], movies[3]])
         })
 
         it('감독의 일부로 영화를 검색할 수 있어야 한다', async () => {
-            const partialDirector = 'James'
-            const { body } = await fix.httpClient
-                .get('/movies')
-                .query({ director: partialDirector })
-                .ok()
+            const { body } = await fix.httpClient.get('/movies').query({ director: 'James' }).ok()
 
-            const expected = movies.filter((movie) => movie.director.startsWith(partialDirector))
-            expectEqualUnsorted(body.items, expected)
+            expectEqualUnsorted(body.items, [movies[0], movies[2]])
         })
 
         it('등급으로 영화를 검색할 수 있어야 한다', async () => {
-            const rating = MovieRating.NC17
-            const { body } = await fix.httpClient.get('/movies').query({ rating }).ok()
+            const { body } = await fix.httpClient
+                .get('/movies')
+                .query({ rating: MovieRating.NC17 })
+                .ok()
 
-            const expected = movies.filter((movie) => movie.rating === rating)
-            expectEqualUnsorted(body.items, expected)
+            expectEqualUnsorted(body.items, [movies[0], movies[1]])
         })
     })
 
@@ -202,11 +226,17 @@ describe('Movies Integration Tests', () => {
         let movies: MovieDto[]
 
         beforeEach(async () => {
-            movies = await createMovies(fix)
+            movies = await Promise.all([
+                createMovie(fix),
+                createMovie(fix),
+                createMovie(fix),
+                createMovie(fix),
+                createMovie(fix)
+            ])
         })
 
         it('movieIds로 영화를 검색할 수 있어야 한다', async () => {
-            const expectedMovies = movies.slice(0, 5)
+            const expectedMovies = movies.slice(0, 3)
             const movieIds = pickIds(expectedMovies)
 
             const gotMovies = await fix.moviesClient.getMoviesByIds(movieIds)

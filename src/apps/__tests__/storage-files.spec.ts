@@ -4,8 +4,7 @@ import { nullObjectId } from 'testlib'
 import { Fixture, saveFile } from './storage-files.fixture'
 import { Errors } from './utils'
 
-/* 파일 업로드 테스트 */
-describe('File Upload Tests', () => {
+describe('File Upload', () => {
     let fix: Fixture
 
     beforeEach(async () => {

@@ -1,4 +1,31 @@
+import { HoldTicketsDto } from 'apps/cores'
 import { CommonFixture, createCommonFixture } from './utils'
+import { nullObjectId, testObjectId } from 'testlib'
+
+export const holdTickets = async (fix: CommonFixture, holdDto: Partial<HoldTicketsDto>) => {
+    return fix.ticketHoldingClient.holdTickets({
+        customerId: nullObjectId,
+        showtimeId: nullObjectId,
+        ticketIds: [testObjectId('30'), testObjectId('31')],
+        ...holdDto
+    })
+}
+
+export const findHeldTicketIds = async (
+    fix: CommonFixture,
+    showtimeId: string,
+    customerId: string
+) => {
+    return fix.ticketHoldingClient.findHeldTicketIds(showtimeId, customerId)
+}
+
+export const releaseTickets = async (
+    fix: CommonFixture,
+    showtimeId: string,
+    customerId: string
+) => {
+    return fix.ticketHoldingClient.releaseTickets(showtimeId, customerId)
+}
 
 export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>

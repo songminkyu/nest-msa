@@ -2,11 +2,10 @@ import { expect } from '@jest/globals'
 import { TheaterDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
 import { buildTheaterCreateDto, createTheater } from './common.fixture'
-import { createTheaters, Fixture } from './theaters.fixture'
+import { Fixture } from './theaters.fixture'
 import { Errors } from './utils'
 
-/* 극장 통합 테스트 */
-describe('Theaters Integration Tests', () => {
+describe('Theaters', () => {
     let fix: Fixture
 
     beforeEach(async () => {
@@ -106,7 +105,13 @@ describe('Theaters Integration Tests', () => {
         let theaters: TheaterDto[]
 
         beforeEach(async () => {
-            theaters = await createTheaters(fix)
+            theaters = await Promise.all([
+                createTheater(fix, { name: 'Theater-a1' }),
+                createTheater(fix, { name: 'Theater-a2' }),
+                createTheater(fix, { name: 'Theater-b1' }),
+                createTheater(fix, { name: 'Theater-b2' }),
+                createTheater(fix, { name: 'Theater-c1' })
+            ])
         })
 
         it('기본 페이지네이션 설정으로 극장을 가져와야 한다', async () => {
@@ -125,11 +130,10 @@ describe('Theaters Integration Tests', () => {
         })
 
         it('이름의 일부로 극장을 검색할 수 있어야 한다', async () => {
-            const partialName = 'Theater-1'
+            const partialName = 'Theater-a'
             const { body } = await fix.httpClient.get('/theaters').query({ name: partialName }).ok()
 
-            const expected = theaters.filter((theater) => theater.name.startsWith(partialName))
-            expectEqualUnsorted(body.items, expected)
+            expectEqualUnsorted(body.items, [theaters[0], theaters[1]])
         })
     })
 })

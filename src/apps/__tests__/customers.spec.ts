@@ -2,11 +2,10 @@ import { expect } from '@jest/globals'
 import { CustomerDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
 import { biuldCustomerCreateDto, createCustomer } from './common.fixture'
-import { createCustomers, Fixture } from './customers.fixture'
+import { Fixture } from './customers.fixture'
 import { Errors } from './utils'
 
-/* 고객 통합 테스트 */
-describe('Customers Integration Tests', () => {
+describe('Customers', () => {
     let fix: Fixture
 
     beforeEach(async () => {
@@ -116,7 +115,13 @@ describe('Customers Integration Tests', () => {
         let customers: CustomerDto[]
 
         beforeEach(async () => {
-            customers = await createCustomers(fix)
+            customers = await Promise.all([
+                createCustomer(fix, { name: 'customer-a1', email: 'user-a1@mail.com' }),
+                createCustomer(fix, { name: 'customer-a2', email: 'user-a2@mail.com' }),
+                createCustomer(fix, { name: 'customer-b1', email: 'user-b1@mail.com' }),
+                createCustomer(fix, { name: 'customer-b2', email: 'user-b2@mail.com' }),
+                createCustomer(fix, { name: 'customer-c1', email: 'user-c1@mail.com' })
+            ])
         })
 
         it('기본 페이지네이션 설정으로 고객을 가져와야 한다', async () => {
@@ -139,25 +144,23 @@ describe('Customers Integration Tests', () => {
         })
 
         it('이름의 일부로 고객을 검색할 수 있어야 한다', async () => {
-            const partialName = 'Customer-1'
+            const partialName = 'customer-a'
             const { body } = await fix.httpClient
                 .get('/customers')
                 .query({ name: partialName })
                 .ok()
 
-            const expected = customers.filter((customer) => customer.name.startsWith(partialName))
-            expectEqualUnsorted(body.items, expected)
+            expectEqualUnsorted(body.items, [customers[0], customers[1]])
         })
 
         it('이메일의 일부로 고객을 검색할 수 있어야 한다', async () => {
-            const partialEmail = 'user-1'
+            const partialEmail = 'user-b'
             const { body } = await fix.httpClient
                 .get('/customers')
                 .query({ email: partialEmail })
                 .ok()
 
-            const expected = customers.filter((customer) => customer.email.startsWith(partialEmail))
-            expectEqualUnsorted(body.items, expected)
+            expectEqualUnsorted(body.items, [customers[2], customers[3]])
         })
     })
 })

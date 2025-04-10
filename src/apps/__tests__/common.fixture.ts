@@ -97,3 +97,24 @@ export async function createShowtimes(fix: CommonFixture, createDtos: ShowtimeCr
     const showtimes = await fix.showtimesClient.findAllShowtimes({ batchIds })
     return showtimes
 }
+
+export const createWatchRecordDto = (overrides = {}) => {
+    const createDto = {
+        customerId: nullObjectId,
+        movieId: nullObjectId,
+        purchaseId: nullObjectId,
+        watchDate: new Date(0),
+        ...overrides
+    }
+
+    const expectedDto = { id: expect.any(String), ...createDto }
+
+    return { createDto, expectedDto }
+}
+
+export const createWatchRecord = async (fix: CommonFixture, override = {}) => {
+    const { createDto } = createWatchRecordDto(override)
+
+    const watchRecord = await fix.watchRecordsClient.createWatchRecord(createDto)
+    return watchRecord
+}

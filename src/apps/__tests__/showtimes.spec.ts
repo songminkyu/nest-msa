@@ -4,8 +4,7 @@ import { expectEqualUnsorted, nullObjectId, testObjectId } from 'testlib'
 import { buildShowtimeCreateDto, createShowtimes } from './common.fixture'
 import { buildShowtimeCreateDtos, Fixture } from './showtimes.fixture'
 
-/* 상영시간 통합 테스트 */
-describe('Showtime  Integration Tests', () => {
+describe('Showtimes', () => {
     let fix: Fixture
 
     beforeEach(async () => {

@@ -1,7 +1,6 @@
 import { buildPaymentCreateDto, Fixture } from './payments.fixture'
 
-/* 결제 통합 테스트 */
-describe('Payments Integration Tests', () => {
+describe('Payments', () => {
     let fix: Fixture
 
     beforeEach(async () => {

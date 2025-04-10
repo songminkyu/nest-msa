@@ -1,21 +1,19 @@
 import { CustomerDto, MovieDto } from 'apps/cores'
 import { DateTimeRange } from 'common'
 import { nullObjectId } from 'testlib'
-import { createCustomerAndLogin, createMovie, createShowtimes } from './common.fixture'
+import {
+    createCustomerAndLogin,
+    createMovie,
+    createShowtimes,
+    createWatchRecord
+} from './common.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 
 export const createWatchedMovies = async (fix: Fixture, dtos: Partial<MovieDto>[]) => {
     const watchedMovies = await Promise.all(
         dtos.map(async (dto) => {
             const movie = await createMovie(fix, dto)
-
-            fix.watchRecordsService.createWatchRecord({
-                customerId: fix.customer.id,
-                purchaseId: nullObjectId,
-                watchDate: new Date(0),
-                movieId: movie.id
-            })
-
+            createWatchRecord(fix, { customerId: fix.customer.id, movieId: movie.id })
             return movie
         })
     )

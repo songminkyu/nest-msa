@@ -4,8 +4,7 @@ import { createCustomer } from './common.fixture'
 import { Fixture } from './customer-auth.fixture'
 import { Errors } from './utils'
 
-/* 고객 인증 테스트 */
-describe('Customer Authentication Tests', () => {
+describe('Customer Authentication', () => {
     let fix: Fixture
     let customer: CustomerDto
     const email = 'user@mail.com'

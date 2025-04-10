@@ -4,8 +4,7 @@ import { nullObjectId } from 'testlib'
 import { Fixture, setupPurchaseData } from './purchases.fixture'
 import { Errors } from './utils'
 
-/* 구매 통합 테스트 */
-describe('Purchases Integration Tests', () => {
+describe('Purchases', () => {
     let fix: Fixture
 
     beforeEach(async () => {

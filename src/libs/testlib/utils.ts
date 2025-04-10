@@ -2,6 +2,8 @@ import fs from 'fs/promises'
 import net from 'net'
 
 export const nullObjectId = '000000000000000000000000'
+// TODO number로 받아서 16진수로 변환
+// let hexStr = num.toString(16);  // "ff"
 export const testObjectId = (hex: string) => hex.padStart(24, '0')
 
 export async function createDummyFile(filePath: string, sizeInBytes: number) {
