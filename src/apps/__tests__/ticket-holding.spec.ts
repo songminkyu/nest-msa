@@ -1,12 +1,10 @@
 import { generateShortId, sleep } from 'common'
 import { testObjectId } from 'testlib'
 import { findHeldTicketIds, Fixture, holdTickets, releaseTickets } from './ticket-holding.fixture'
+import { isEqual, sortBy } from 'lodash'
 
 describe('Ticket Holding', () => {
     let fix: Fixture
-
-    const customerId = testObjectId(0x1)
-    const customerB = testObjectId(0x2)
 
     beforeEach(async () => {
         const { createFixture } = await import('./ticket-holding.fixture')
@@ -18,52 +16,65 @@ describe('Ticket Holding', () => {
     })
 
     describe('holdTickets', () => {
-        it('티켓을 정해진 시간 동안 선점해야 한다', async () => {
-            const firstResult = await holdTickets(fix, { customerId })
-            expect(firstResult).toBeTruthy()
+        describe('티켓 선점 테스트', () => {
+            it('티켓을 정해진 시간 동안 선점해야 한다', async () => {
+                const firstCustomerHold = await holdTickets(fix, { customerId: testObjectId(0x1) })
+                expect(firstCustomerHold).toBeTruthy()
 
-            const secondResult = await holdTickets(fix, { customerId: customerB })
-            expect(secondResult).toBeFalsy()
-        })
+                const secondCustomerHold = await holdTickets(fix, { customerId: testObjectId(0x2) })
+                expect(secondCustomerHold).toBeFalsy()
+            })
 
-        it('고객은 자신이 선점한 티켓을 다시 선점할 수 있다', async () => {
-            const firstResult = await holdTickets(fix, { customerId })
-            expect(firstResult).toBeTruthy()
+            it('고객은 자신이 선점한 티켓을 다시 선점할 수 있다', async () => {
+                const firstHold = await holdTickets(fix)
+                expect(firstHold).toBeTruthy()
 
-            const secondResult = await holdTickets(fix, { customerId })
-            expect(secondResult).toBeTruthy()
-        })
+                const secondHold = await holdTickets(fix)
+                expect(secondHold).toBeTruthy()
+            })
 
-        it('시간이 만료되면 티켓을 다시 선점할 수 있어야 한다', async () => {
-            const { Rules } = await import('shared')
-            const holdDuration = 1000
-            Rules.Ticket.holdExpirationTime = holdDuration
+            it('시간이 만료되면 티켓을 다시 선점할 수 있어야 한다', async () => {
+                const { Rules } = await import('shared')
+                Rules.Ticket.holdExpirationTime = 1000
 
-            const initialResult = await holdTickets(fix, { customerId })
-            expect(initialResult).toBeTruthy()
+                const initialHold = await holdTickets(fix, { customerId: testObjectId(0x1) })
+                expect(initialHold).toBeTruthy()
 
-            await sleep(holdDuration + 500)
+                const holdBeforeExpiry = await holdTickets(fix, { customerId: testObjectId(0x2) })
+                expect(holdBeforeExpiry).toBeFalsy()
 
-            const postExpiryResult = await holdTickets(fix, { customerId: customerB })
-            expect(postExpiryResult).toBeTruthy()
-        })
+                await sleep(Rules.Ticket.holdExpirationTime + 500)
 
-        it('동일한 고객이 새로운 티켓을 선점할 때 기존 티켓은 해제되어야 한다', async () => {
-            const firstTickets = [testObjectId(0x30), testObjectId(0x31)]
-            const newTickets = [testObjectId(0x40), testObjectId(0x41)]
+                const holdAfterExpiry = await holdTickets(fix, { customerId: testObjectId(0x2) })
+                expect(holdAfterExpiry).toBeTruthy()
+            })
 
-            const holdA1 = await holdTickets(fix, { customerId, ticketIds: firstTickets })
-            expect(holdA1).toBeTruthy()
+            it('동일 고객이 새로운 티켓을 선점하면 기존 티켓은 해제되어야 한다', async () => {
+                const oldTickets = [testObjectId(0x30), testObjectId(0x31)]
+                const newTickets = [testObjectId(0x40), testObjectId(0x41)]
 
-            const holdA2 = await holdTickets(fix, { customerId, ticketIds: newTickets })
-            expect(holdA2).toBeTruthy()
+                const firstHold = await holdTickets(fix, {
+                    customerId: testObjectId(0x1),
+                    ticketIds: oldTickets
+                })
+                expect(firstHold).toBeTruthy()
 
-            const holdB = await holdTickets(fix, { customerId: customerB, ticketIds: firstTickets })
-            expect(holdB).toBeTruthy()
+                const secondHold = await holdTickets(fix, {
+                    customerId: testObjectId(0x1),
+                    ticketIds: newTickets
+                })
+                expect(secondHold).toBeTruthy()
+
+                const competitorHold = await holdTickets(fix, {
+                    customerId: testObjectId(0x2),
+                    ticketIds: oldTickets
+                })
+                expect(competitorHold).toBeTruthy()
+            })
         })
 
         it(
-            '티켓이 중복 선점되면 안 된다',
+            '서로 다른 고객이 동시에 선점 요청을 해도 중복 선점되면 안 된다',
             async () => {
                 const results = await Promise.all(
                     Array.from({ length: 100 }, async () => {
@@ -77,66 +88,77 @@ describe('Ticket Holding', () => {
                             )
                         )
 
-                        const findResults = await Promise.all(
+                        const heldTicketIds = await Promise.all(
                             customers.map((customer) =>
-                                fix.ticketHoldingClient.findHeldTicketIds(showtimeId, customer)
+                                findHeldTicketIds(fix, showtimeId, customer)
                             )
                         )
 
-                        return findResults.flat().length === ticketIds.length
+                        return isEqual(sortBy(heldTicketIds.flat()), sortBy(ticketIds))
                     })
                 )
 
                 const allTrue = results.every((value) => value === true)
                 expect(allTrue).toBeTruthy()
             },
-            30 * 1000
+            60 * 1000
         )
     })
 
     describe('findHeldTicketIds', () => {
+        const customerId = testObjectId(0x10)
         const ticketIds = [testObjectId(0x30), testObjectId(0x31)]
-        const showtimeId = testObjectId(0x1)
+        const showtimeId = testObjectId(0x40)
 
         it('선점한 티켓을 반환해야 한다', async () => {
             await holdTickets(fix, { showtimeId, customerId, ticketIds })
+
             const heldTickets = await findHeldTicketIds(fix, showtimeId, customerId)
+
             expect(heldTickets).toEqual(ticketIds)
         })
 
         it('만료된 티켓은 반환되지 않아야 한다', async () => {
             const { Rules } = await import('shared')
-            const holdDuration = 1000
-            Rules.Ticket.holdExpirationTime = holdDuration
+            Rules.Ticket.holdExpirationTime = 1000
 
-            await holdTickets(fix, { customerId, ticketIds })
+            await holdTickets(fix, { showtimeId, customerId, ticketIds })
 
-            await sleep(holdDuration + 500)
+            const beforeExpiry = await findHeldTicketIds(fix, showtimeId, customerId)
+            expect(beforeExpiry).toEqual(ticketIds)
 
-            const heldTickets = await findHeldTicketIds(fix, showtimeId, customerId)
-            expect(heldTickets).toEqual([])
+            await sleep(Rules.Ticket.holdExpirationTime + 500)
+
+            const afterExpiry = await findHeldTicketIds(fix, showtimeId, customerId)
+            expect(afterExpiry).toEqual([])
         })
     })
 
     describe('releaseTickets', () => {
+        const customerId = testObjectId(0x1)
+        const customerB = testObjectId(0x2)
         const ticketIds = [testObjectId(0x30), testObjectId(0x31)]
         const showtimeId = testObjectId(0x1)
 
         it('고객이 선점한 티켓을 해제해야 한다', async () => {
-            await holdTickets(fix, {
-                customerId,
+            const firstHold = await holdTickets(fix, { customerId, showtimeId, ticketIds })
+            expect(firstHold).toBeTruthy()
+
+            const beforeRelease = await findHeldTicketIds(fix, showtimeId, customerId)
+            expect(beforeRelease).toEqual(ticketIds)
+
+            const releaseResult = await releaseTickets(fix, showtimeId, customerId)
+            expect(releaseResult).toBeTruthy()
+
+            const afterRelease = await findHeldTicketIds(fix, showtimeId, customerId)
+            expect(afterRelease).toEqual([])
+
+            const secondHold = await holdTickets(fix, {
+                customerId: customerB,
                 showtimeId,
                 ticketIds
             })
-
-            const releaseRes = await releaseTickets(fix, showtimeId, customerId)
-            expect(releaseRes).toBeTruthy()
-
-            const heldTickets = await findHeldTicketIds(fix, showtimeId, customerId)
-            expect(heldTickets).toEqual([])
-
-            const secondResult = await holdTickets(fix, { customerId: customerB, ticketIds })
-            expect(secondResult).toBeTruthy()
+            expect(secondHold).toBeTruthy()
         })
     })
 })
