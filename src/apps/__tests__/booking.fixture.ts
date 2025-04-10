@@ -1,8 +1,13 @@
 // TODO function은 모두 arrow로 변경한다
 import { MovieDto, Seatmap, ShowtimeDto, TheaterDto } from 'apps/cores'
 import { DateTimeRange } from 'common'
-import { createCustomerAndLogin, createMovie, createTheater } from './common.fixture'
-import { buildShowtimeCreateDto, createShowtimes } from './showtimes.fixture'
+import {
+    buildShowtimeCreateDto,
+    createCustomerAndLogin,
+    createMovie,
+    createShowtimes,
+    createTheater
+} from './common.fixture'
 import { buildTicketCreateDto, createTickets } from './tickets.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 
@@ -31,7 +36,8 @@ const createAllShowtimes = async (fix: CommonFixture, theaters: TheaterDto[], mo
             const movieId = movie.id
             const theaterId = theater.id
             const timeRange = DateTimeRange.create({ start, minutes: 1 })
-            return buildShowtimeCreateDto({ movieId, theaterId, timeRange })
+            const { createDto } = buildShowtimeCreateDto({ movieId, theaterId, timeRange })
+            return createDto
         })
     )
 

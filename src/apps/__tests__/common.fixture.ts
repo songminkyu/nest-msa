@@ -1,5 +1,7 @@
-import { MovieGenre, MovieRating } from 'apps/cores'
-import { omit } from 'lodash'
+import { MovieGenre, MovieRating, ShowtimeCreateDto } from 'apps/cores'
+import { DateTimeRange } from 'common'
+import { omit, uniq } from 'lodash'
+import { nullObjectId } from 'testlib'
 import { CommonFixture, TestFiles } from './utils'
 
 export async function createCustomerAndLogin(fix: CommonFixture) {
@@ -72,4 +74,26 @@ export const createTheater = async (fix: CommonFixture, override = {}) => {
 
     const theater = await fix.theatersClient.createTheater(createDto)
     return theater
+}
+
+export const buildShowtimeCreateDto = (overrides: Partial<ShowtimeCreateDto> = {}) => {
+    const createDto = {
+        batchId: nullObjectId,
+        movieId: nullObjectId,
+        theaterId: nullObjectId,
+        timeRange: DateTimeRange.create({ start: new Date('2000-01-01T12:00'), minutes: 1 }),
+        ...overrides
+    }
+    const expectedDto = { id: expect.any(String), ...omit(createDto, 'batchId') }
+    return { createDto, expectedDto }
+}
+
+export async function createShowtimes(fix: CommonFixture, createDtos: ShowtimeCreateDto[]) {
+    const { success } = await fix.showtimesClient.createShowtimes(createDtos)
+    expect(success).toBeTruthy()
+
+    const batchIds = uniq(createDtos.map((dto) => dto.batchId))
+
+    const showtimes = await fix.showtimesClient.findAllShowtimes({ batchIds })
+    return showtimes
 }

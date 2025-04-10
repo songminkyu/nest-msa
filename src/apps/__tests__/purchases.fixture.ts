@@ -10,19 +10,24 @@ import {
 } from 'apps/cores'
 import { DateTimeRange, DateUtil, pickIds } from 'common'
 import { Rules } from 'shared'
-import { createCustomer, createMovie, createTheater } from './common.fixture'
-import { buildShowtimeCreateDto, createShowtimes } from './showtimes.fixture'
+import {
+    buildShowtimeCreateDto,
+    createCustomer,
+    createMovie,
+    createShowtimes,
+    createTheater
+} from './common.fixture'
 import { buildTicketCreateDto, createTickets } from './tickets.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 
 const createShowtime = async (fix: Fixture, startTime: Date) => {
-    const showtimeCreateDto = buildShowtimeCreateDto({
+    const { createDto } = buildShowtimeCreateDto({
         movieId: fix.movie.id,
         theaterId: fix.theater.id,
         timeRange: DateTimeRange.create({ start: startTime, minutes: 1 })
     })
 
-    const showtimes = await createShowtimes(fix, [showtimeCreateDto])
+    const showtimes = await createShowtimes(fix, [createDto])
     return showtimes[0]
 }
 

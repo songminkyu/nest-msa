@@ -50,7 +50,7 @@ src
 │   │       ├── booking             # 영화 티켓 예매 프로세스
 │   │       ├── purchase-process    # 티켓 구매 프로세스
 │   │       ├── recommendation      # 영화 추천
-│   │       └── showtime-creation   # 상영 시간 등록
+│   │       └── showtime-creation   # 상영 시간 생성
 │   ├── cores    # 핵심 기능 서비스를 모은 프로젝트
 │   │   └── services
 │   │       ├── customers         # 고객 인증 및 관리. password 숨김. 서비스 분리.

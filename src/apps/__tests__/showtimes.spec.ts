@@ -1,14 +1,11 @@
 import { ShowtimeDto } from 'apps/cores'
 import { DateTimeRange, DateUtil, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, testObjectId } from 'testlib'
-import {
-    buildShowtimeCreateDto,
-    buildShowtimeCreateDtos,
-    createShowtimes,
-    Fixture
-} from './showtimes.fixture'
+import { buildShowtimeCreateDto, createShowtimes } from './common.fixture'
+import { buildShowtimeCreateDtos, Fixture } from './showtimes.fixture'
 
-describe('Showtimes Module', () => {
+/* 상영시간 통합 테스트 */
+describe('Showtime  Integration Tests', () => {
     let fix: Fixture
 
     beforeEach(async () => {
@@ -21,61 +18,69 @@ describe('Showtimes Module', () => {
     })
 
     it('createShowtimes', async () => {
-        const { createDtos, expectedDtos } = buildShowtimeCreateDtos()
+        const { createDto, expectedDto } = buildShowtimeCreateDto({ batchId: testObjectId('1') })
 
-        const { success } = await fix.showtimesClient.createShowtimes(createDtos)
+        const { success } = await fix.showtimesClient.createShowtimes([createDto])
         expect(success).toBeTruthy()
 
         const showtimes = await fix.showtimesClient.findAllShowtimes({
-            startTimeRange: { start: new Date(0) }
+            batchIds: [testObjectId('1')]
         })
 
-        expect(showtimes).toEqual(expectedDtos)
+        expect(showtimes).toEqual([expectedDto])
     })
 
     describe('findAllShowtimes', () => {
+        const batchId = testObjectId('1')
+        const movieId = testObjectId('2')
+        const theaterId = testObjectId('3')
+        const startTimes = [
+            new Date('2000-01-01T12:00'),
+            new Date('2000-01-01T14:00'),
+            new Date('2000-01-02T14:00'),
+            new Date('2000-01-03T12:00')
+        ]
+
+        let expectedDtos: ShowtimeDto[]
+
         beforeEach(async () => {
-            const { createDtos } = buildShowtimeCreateDtos()
-            const { success } = await fix.showtimesClient.createShowtimes(createDtos)
+            const result = buildShowtimeCreateDtos(startTimes, { batchId, movieId, theaterId })
+
+            const { success } = await fix.showtimesClient.createShowtimes(result.createDtos)
             expect(success).toBeTruthy()
+            expectedDtos = result.expectedDtos
         })
 
-        const createAndFindShowtimes = async (overrides = {}, findFilter = {}) => {
-            const { createDtos, expectedDtos } = buildShowtimeCreateDtos(overrides)
-            const { success } = await fix.showtimesClient.createShowtimes(createDtos)
-            expect(success).toBeTruthy()
-
-            const showtimes = await fix.showtimesClient.findAllShowtimes(findFilter)
-            expectEqualUnsorted(showtimes, expectedDtos)
-        }
-
         it('batchIds', async () => {
-            const batchId = testObjectId('a1')
-            await createAndFindShowtimes({ batchId }, { batchIds: [batchId] })
+            const showtimes = await fix.showtimesClient.findAllShowtimes({ batchIds: [batchId] })
+            expectEqualUnsorted(showtimes, expectedDtos)
         })
 
         it('movieIds', async () => {
-            const movieId = testObjectId('a1')
-            await createAndFindShowtimes({ movieId }, { movieIds: [movieId] })
+            const showtimes = await fix.showtimesClient.findAllShowtimes({ movieIds: [movieId] })
+            expectEqualUnsorted(showtimes, expectedDtos)
         })
 
         it('theaterIds', async () => {
-            const theaterId = testObjectId('a1')
-            await createAndFindShowtimes({ theaterId }, { theaterIds: [theaterId] })
+            const showtimes = await fix.showtimesClient.findAllShowtimes({
+                theaterIds: [theaterId]
+            })
+            expectEqualUnsorted(showtimes, expectedDtos)
         })
 
         it('startTimeRange', async () => {
             const startTimeRange = {
-                start: new Date(2000, 0, 1, 0, 0),
-                end: new Date(2000, 0, 1, 12, 0)
+                start: new Date('2000-01-01T00:00'),
+                end: new Date('2000-01-02T12:00')
             }
 
             const showtimes = await fix.showtimesClient.findAllShowtimes({ startTimeRange })
-            expect(showtimes).toHaveLength(13)
+            expect(showtimes).toHaveLength(2)
         })
 
         it('1개 이상의 필터를 설정하지 않으면 BAD_REQUEST(400)를 반환해야 한다', async () => {
-            const promise = createAndFindShowtimes({})
+            const promise = fix.showtimesClient.findAllShowtimes({})
+
             await expect(promise).rejects.toThrow('At least one filter condition must be provided')
         })
     })
@@ -84,7 +89,13 @@ describe('Showtimes Module', () => {
         let showtimes: ShowtimeDto[]
 
         beforeEach(async () => {
-            const { createDtos } = buildShowtimeCreateDtos()
+            const { createDtos } = buildShowtimeCreateDtos([
+                new Date('2000-01-01T12:00'),
+                new Date('2000-01-01T14:00'),
+                new Date('2000-01-02T14:00'),
+                new Date('2000-01-03T12:00')
+            ])
+
             showtimes = await createShowtimes(fix, createDtos)
         })
 
@@ -100,75 +111,58 @@ describe('Showtimes Module', () => {
     })
 
     it('findShowingMovieIds', async () => {
-        const movieIds = [testObjectId('a1'), testObjectId('a2')]
         const now = new Date()
 
+        const buildCreateDto = (movieId: string, start: Date) =>
+            buildShowtimeCreateDto({
+                movieId,
+                timeRange: DateTimeRange.create({ start, minutes: 1 })
+            }).createDto
+
         const createDtos = [
-            buildShowtimeCreateDto({
-                timeRange: DateTimeRange.create({
-                    start: DateUtil.addMinutes(now, -90),
-                    minutes: 1
-                })
-            }),
-            buildShowtimeCreateDto({
-                movieId: movieIds[0],
-                timeRange: DateTimeRange.create({
-                    start: DateUtil.addMinutes(now, 30),
-                    minutes: 1
-                })
-            }),
-            buildShowtimeCreateDto({
-                movieId: movieIds[1],
-                timeRange: DateTimeRange.create({
-                    start: DateUtil.addMinutes(now, 120),
-                    minutes: 1
-                })
-            })
+            buildCreateDto(testObjectId('1'), DateUtil.addMinutes(now, -90)),
+            buildCreateDto(testObjectId('2'), DateUtil.addMinutes(now, 30)),
+            buildCreateDto(testObjectId('3'), DateUtil.addMinutes(now, 120))
         ]
 
         const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const foundIds = await fix.showtimesClient.findShowingMovieIds()
-        expect(foundIds).toEqual(movieIds)
+        const foundMovieIds = await fix.showtimesClient.findShowingMovieIds()
+        expect(foundMovieIds).toEqual([testObjectId('2'), testObjectId('3')])
     })
 
     it('findTheaterIds', async () => {
-        const movieId = testObjectId('a1')
-        const theaterIds = [testObjectId('b1'), testObjectId('b2')]
+        const movieId = testObjectId('10')
+
+        const buildCreateDto = (movieId: string, theaterId: string) =>
+            buildShowtimeCreateDto({ movieId, theaterId }).createDto
 
         const createDtos = [
-            buildShowtimeCreateDto({ movieId, theaterId: theaterIds[0] }),
-            buildShowtimeCreateDto({ movieId, theaterId: theaterIds[1] }),
-            buildShowtimeCreateDto({ movieId: testObjectId('0'), theaterId: testObjectId('1') })
+            buildCreateDto(movieId, testObjectId('1')),
+            buildCreateDto(movieId, testObjectId('2')),
+            buildCreateDto(nullObjectId, testObjectId('3'))
         ]
 
         const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const findTheaterIds = await fix.showtimesClient.findTheaterIds({ movieIds: [movieId] })
-        expect(findTheaterIds).toEqual(theaterIds)
+        const foundTheaterIds = await fix.showtimesClient.findTheaterIds({ movieIds: [movieId] })
+        expect(foundTheaterIds).toEqual([testObjectId('1'), testObjectId('2')])
     })
 
     it('findShowdates', async () => {
-        const movieId = testObjectId('a1')
-        const theaterId = testObjectId('b1')
+        const movieId = testObjectId('1')
+        const theaterId = testObjectId('2')
+
+        const buildCreateDto = (theaterId: string, start: Date) =>
+            buildShowtimeCreateDto({ movieId, theaterId, timeRange: { start, end: start } })
+                .createDto
+
         const createDtos = [
-            buildShowtimeCreateDto({
-                movieId,
-                theaterId,
-                timeRange: { start: new Date('2000-01-02'), end: new Date('2000-01-03') }
-            }),
-            buildShowtimeCreateDto({
-                movieId,
-                theaterId,
-                timeRange: { start: new Date('2000-01-04'), end: new Date('2000-01-04') }
-            }),
-            buildShowtimeCreateDto({
-                movieId,
-                theaterId: testObjectId('A1'),
-                timeRange: { start: new Date('2000-01-05'), end: new Date('2000-01-06') }
-            })
+            buildCreateDto(theaterId, new Date('2000-01-01')),
+            buildCreateDto(theaterId, new Date('2000-01-02')),
+            buildCreateDto(nullObjectId, new Date('2000-01-03'))
         ]
 
         const { success } = await fix.showtimesClient.createShowtimes(createDtos)
@@ -179,8 +173,8 @@ describe('Showtimes Module', () => {
             theaterIds: [theaterId]
         })
         expect(showdates.map((showdate) => showdate.getTime())).toEqual([
-            new Date('2000-01-02').getTime(),
-            new Date('2000-01-04').getTime()
+            new Date('2000-01-01').getTime(),
+            new Date('2000-01-02').getTime()
         ])
     })
 })

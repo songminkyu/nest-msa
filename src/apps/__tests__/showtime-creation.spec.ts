@@ -1,7 +1,7 @@
 import { Seatmap, ShowtimeDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
+import { createShowtimes } from './common.fixture'
 import { createShowtimeDtos, Fixture, monitorEvents } from './showtime-creation.fixture'
-import { createShowtimes } from './showtimes.fixture'
 
 /* 상영시간 생성 통합 테스트 */
 describe('Showtime Creation Integration Tests', () => {
@@ -64,7 +64,7 @@ describe('Showtime Creation Integration Tests', () => {
         })
     })
 
-    describe('상영시간 등록 요청', () => {
+    describe('상영시간 생성 요청', () => {
         const createBatchShowtimes = async (
             movieId: string,
             theaterIds: string[],
@@ -78,7 +78,7 @@ describe('Showtime Creation Integration Tests', () => {
             return body
         }
 
-        it('상영시간 등록 요청이 성공해야 한다', async () => {
+        it('상영시간 생성 요청이 성공해야 한다', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['complete'])
 
             const theaterIds = [fix.theater.id]

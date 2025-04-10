@@ -1,6 +1,6 @@
 # Showtime Creation
 
-## 1. 상영시간 등록 유스케이스 명세서
+## 1. 상영시간 생성 유스케이스 명세서
 
 **목표**: 하나의 영화를 여러 극장에 상영시간 등록하기
 
@@ -13,7 +13,7 @@
 
 **트리거**:
 
--   관리자가 영화 상영시간 등록 페이지를 방문합니다.
+-   관리자가 영화 상영시간 생성 페이지를 방문합니다.
 
 **기본 흐름**:
 
@@ -37,12 +37,12 @@
 -   선택한 극장에서 선택한 영화의 상영시간이 성공적으로 등록되어야 합니다.
 -   상영시간에 해당하는 티켓이 생성되어야 한다.
 
-## 2. 상영시간 등록 시퀀스 다이어그램
+## 2. 상영시간 생성 시퀀스 다이어그램
 
 ```plantuml
 @startuml
 actor Admin
-Admin -> Frontend: 상영시간 등록 페이지를 방문
+Admin -> Frontend: 상영시간 생성 페이지를 방문
     Frontend -> Backend:영화 목록 요청\nGET /showtime-creation/movies
         Backend -> ShowtimeCreation: findMovies()
             ShowtimeCreation -> Movies: findMovies()
@@ -79,7 +79,7 @@ Admin <-- Frontend: 상영시간 목록 제공
 Admin -> Frontend: 상영시간 선택
 
 Admin -> Frontend: 상영시간 등록버튼 클릭
-    Frontend -> Backend: 상영시간 등록 요청\nPOST /showtime-creation/showtimes
+    Frontend -> Backend: 상영시간 생성 요청\nPOST /showtime-creation/showtimes
         Backend -> ShowtimeCreation: createBatchShowtimes(request)
         Backend <-- ShowtimeCreation: ShowtimeBatchCreateResponse(success)
     Frontend <-- Backend: OK(201)
