@@ -1,7 +1,8 @@
 import { MovieDto, MovieGenre } from 'apps/cores'
 import { createShowingMovies, createWatchedMovies, Fixture } from './recommendation.fixture'
 
-describe('Recommendation Module', () => {
+/* 추천 통합 테스트 */
+describe('Recommendation Integration Tests', () => {
     let fix: Fixture
 
     beforeEach(async () => {
@@ -17,7 +18,7 @@ describe('Recommendation Module', () => {
         let showingMovies: MovieDto[]
 
         beforeEach(async () => {
-            await createWatchedMovies(fix, fix.customer, [
+            await createWatchedMovies(fix, [
                 { title: 'Action1', genre: [MovieGenre.Action] },
                 { title: 'Action2', genre: [MovieGenre.Action] },
                 { title: 'Action3', genre: [MovieGenre.Action] },
@@ -55,7 +56,7 @@ describe('Recommendation Module', () => {
             ])
         })
 
-        it('고객이 가장 많이 관람한 genre, 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다', async () => {
+        it('고객이 가장 많이 관람한 genre와 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다', async () => {
             const { body } = await fix.httpClient
                 .get('/movies/recommended')
                 .headers({ Authorization: `Bearer ${fix.accessToken}` })

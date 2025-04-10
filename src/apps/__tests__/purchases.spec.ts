@@ -6,7 +6,6 @@ import { Errors } from './utils'
 
 /* 구매 통합 테스트 */
 describe('Purchases Integration Tests', () => {
-    const totalPrice = 1
     let fix: Fixture
 
     beforeEach(async () => {
@@ -30,7 +29,7 @@ describe('Purchases Integration Tests', () => {
 
             const { body } = await fix.httpClient
                 .post('/purchases')
-                .body({ customerId: fix.customer.id, totalPrice, purchaseItems })
+                .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
                 .created()
 
             purchase = body
@@ -43,7 +42,7 @@ describe('Purchases Integration Tests', () => {
                 updatedAt: expect.any(Date),
                 paymentId: expect.any(String),
                 customerId: fix.customer.id,
-                totalPrice,
+                totalPrice: 1,
                 purchaseItems
             })
         })
@@ -72,7 +71,7 @@ describe('Purchases Integration Tests', () => {
         beforeEach(async () => {
             purchase = await fix.purchasesService.createPurchase({
                 customerId: fix.customer.id,
-                totalPrice,
+                totalPrice: 1,
                 purchaseItems: [{ type: PurchaseItemType.ticket, ticketId: nullObjectId }]
             })
         })
@@ -90,7 +89,7 @@ describe('Purchases Integration Tests', () => {
 
             await fix.httpClient
                 .post('/purchases')
-                .body({ customerId: fix.customer.id, totalPrice, purchaseItems })
+                .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
                 .badRequest({ ...Errors.Purchase.MaxTicketsExceeded, maxCount: expect.any(Number) })
         })
 
@@ -101,7 +100,7 @@ describe('Purchases Integration Tests', () => {
 
             await fix.httpClient
                 .post('/purchases')
-                .body({ customerId: fix.customer.id, totalPrice, purchaseItems })
+                .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
                 .badRequest({
                     ...Errors.Purchase.DeadlineExceeded,
                     deadlineMinutes: expect.any(Number),
@@ -116,7 +115,7 @@ describe('Purchases Integration Tests', () => {
 
             await fix.httpClient
                 .post('/purchases')
-                .body({ customerId: fix.customer.id, totalPrice, purchaseItems })
+                .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
                 .badRequest(Errors.Purchase.TicketNotHeld)
         })
     })
@@ -133,7 +132,7 @@ describe('Purchases Integration Tests', () => {
 
             await fix.httpClient
                 .post('/purchases')
-                .body({ customerId: fix.customer.id, totalPrice, purchaseItems })
+                .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
                 .internalServerError()
 
             expect(spyRollback).toHaveBeenCalledTimes(1)
