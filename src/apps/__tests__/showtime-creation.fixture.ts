@@ -1,8 +1,7 @@
 import { MovieDto, ShowtimeCreateDto, TheaterDto } from 'apps/cores'
 import { DateTimeRange, jsonToObject } from 'common'
 import { HttpTestClient, nullObjectId } from 'testlib'
-import { createMovie } from './movies.fixture'
-import { createTheater } from './theaters.fixture'
+import { createMovie, createTheater } from './common.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 
 export const createShowtimeDtos = (startTimes: Date[], overrides = {}) => {

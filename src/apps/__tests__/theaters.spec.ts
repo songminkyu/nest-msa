@@ -1,7 +1,8 @@
 import { expect } from '@jest/globals'
 import { TheaterDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
-import { createTheater, buildTheaterCreateDto, createTheaters, Fixture } from './theaters.fixture'
+import { buildTheaterCreateDto, createTheater } from './common.fixture'
+import { createTheaters, Fixture } from './theaters.fixture'
 import { Errors } from './utils'
 
 /* 극장 통합 테스트 */

@@ -1,7 +1,7 @@
 import { getModelToken } from '@nestjs/mongoose'
 import { Customer, CustomerDto } from 'apps/cores'
+import { createCustomer } from './common.fixture'
 import { Fixture } from './customer-auth.fixture'
-import { createCustomer } from './customers.fixture'
 import { Errors } from './utils'
 
 /* 고객 인증 테스트 */

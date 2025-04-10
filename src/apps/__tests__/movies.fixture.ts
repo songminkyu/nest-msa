@@ -1,30 +1,7 @@
-import { MovieGenre, MovieRating } from 'apps/cores'
+import { MovieGenre } from 'apps/cores'
 import { padNumber } from 'common'
 import { CommonFixture, createCommonFixture, TestFile, TestFiles } from './utils'
-
-export const buildMovieCreateDto = (overrides = {}) => {
-    const createDto = {
-        title: `MovieTitle`,
-        genre: [MovieGenre.Action],
-        releaseDate: new Date('1900-01-01'),
-        plot: `MoviePlot`,
-        durationMinutes: 90,
-        director: 'James Cameron',
-        rating: MovieRating.PG,
-        ...overrides
-    }
-
-    const expectedDto = { id: expect.any(String), images: expect.any(Array), ...createDto }
-
-    return { createDto, expectedDto }
-}
-
-export const createMovie = async (fix: CommonFixture, override = {}) => {
-    const { createDto } = buildMovieCreateDto(override)
-
-    const movie = await fix.moviesClient.createMovie(createDto, [TestFiles.image])
-    return movie
-}
+import { createMovie } from './common.fixture'
 
 export const createMovies = async (fix: CommonFixture, overrides = {}) => {
     const createDtos: object[] = []

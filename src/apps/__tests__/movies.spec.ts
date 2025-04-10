@@ -2,7 +2,8 @@ import { expect } from '@jest/globals'
 import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
 import { Path, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, objectToFields } from 'testlib'
-import { createMovie, buildMovieCreateDto, createMovies, Fixture } from './movies.fixture'
+import { buildMovieCreateDto, createMovie } from './common.fixture'
+import { createMovies, Fixture } from './movies.fixture'
 import { Errors } from './utils'
 
 /* 영화 통합 테스트 */

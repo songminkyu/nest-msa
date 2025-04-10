@@ -1,10 +1,8 @@
 // TODO function은 모두 arrow로 변경한다
 import { MovieDto, Seatmap, ShowtimeDto, TheaterDto } from 'apps/cores'
 import { DateTimeRange } from 'common'
-import { createCustomerAndLogin } from './common.fixture'
-import { createMovie } from './movies.fixture'
+import { createCustomerAndLogin, createMovie, createTheater } from './common.fixture'
 import { buildShowtimeCreateDto, createShowtimes } from './showtimes.fixture'
-import { createTheater } from './theaters.fixture'
 import { buildTicketCreateDto, createTickets } from './tickets.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 

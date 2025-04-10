@@ -10,10 +10,8 @@ import {
 } from 'apps/cores'
 import { DateTimeRange, DateUtil, pickIds } from 'common'
 import { Rules } from 'shared'
-import { createCustomer } from './customers.fixture'
-import { createMovie } from './movies.fixture'
+import { createCustomer, createMovie, createTheater } from './common.fixture'
 import { buildShowtimeCreateDto, createShowtimes } from './showtimes.fixture'
-import { createTheater } from './theaters.fixture'
 import { buildTicketCreateDto, createTickets } from './tickets.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 
