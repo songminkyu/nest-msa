@@ -17,22 +17,22 @@ describe('Showtimes', () => {
     })
 
     it('createShowtimes', async () => {
-        const { createDto, expectedDto } = buildShowtimeCreateDto({ batchId: testObjectId('1') })
+        const { createDto, expectedDto } = buildShowtimeCreateDto({ batchId: testObjectId(0x1) })
 
         const { success } = await fix.showtimesClient.createShowtimes([createDto])
         expect(success).toBeTruthy()
 
         const showtimes = await fix.showtimesClient.findAllShowtimes({
-            batchIds: [testObjectId('1')]
+            batchIds: [testObjectId(0x1)]
         })
 
         expect(showtimes).toEqual([expectedDto])
     })
 
     describe('findAllShowtimes', () => {
-        const batchId = testObjectId('1')
-        const movieId = testObjectId('2')
-        const theaterId = testObjectId('3')
+        const batchId = testObjectId(0x1)
+        const movieId = testObjectId(0x2)
+        const theaterId = testObjectId(0x3)
         const startTimes = [
             new Date('2000-01-01T12:00'),
             new Date('2000-01-01T14:00'),
@@ -119,40 +119,40 @@ describe('Showtimes', () => {
             }).createDto
 
         const createDtos = [
-            buildCreateDto(testObjectId('1'), DateUtil.addMinutes(now, -90)),
-            buildCreateDto(testObjectId('2'), DateUtil.addMinutes(now, 30)),
-            buildCreateDto(testObjectId('3'), DateUtil.addMinutes(now, 120))
+            buildCreateDto(testObjectId(0x1), DateUtil.addMinutes(now, -90)),
+            buildCreateDto(testObjectId(0x2), DateUtil.addMinutes(now, 30)),
+            buildCreateDto(testObjectId(0x3), DateUtil.addMinutes(now, 120))
         ]
 
         const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
         const foundMovieIds = await fix.showtimesClient.findShowingMovieIds()
-        expect(foundMovieIds).toEqual([testObjectId('2'), testObjectId('3')])
+        expect(foundMovieIds).toEqual([testObjectId(0x2), testObjectId(0x3)])
     })
 
     it('findTheaterIds', async () => {
-        const movieId = testObjectId('10')
+        const movieId = testObjectId(0x10)
 
         const buildCreateDto = (movieId: string, theaterId: string) =>
             buildShowtimeCreateDto({ movieId, theaterId }).createDto
 
         const createDtos = [
-            buildCreateDto(movieId, testObjectId('1')),
-            buildCreateDto(movieId, testObjectId('2')),
-            buildCreateDto(nullObjectId, testObjectId('3'))
+            buildCreateDto(movieId, testObjectId(0x1)),
+            buildCreateDto(movieId, testObjectId(0x2)),
+            buildCreateDto(nullObjectId, testObjectId(0x3))
         ]
 
         const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
         const foundTheaterIds = await fix.showtimesClient.findTheaterIds({ movieIds: [movieId] })
-        expect(foundTheaterIds).toEqual([testObjectId('1'), testObjectId('2')])
+        expect(foundTheaterIds).toEqual([testObjectId(0x1), testObjectId(0x2)])
     })
 
     it('findShowdates', async () => {
-        const movieId = testObjectId('1')
-        const theaterId = testObjectId('2')
+        const movieId = testObjectId(0x1)
+        const theaterId = testObjectId(0x2)
 
         const buildCreateDto = (theaterId: string, start: Date) =>
             buildShowtimeCreateDto({ movieId, theaterId, timeRange: { start, end: start } })

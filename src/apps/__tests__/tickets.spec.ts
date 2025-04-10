@@ -37,22 +37,22 @@ describe('Tickets Module', () => {
         }
 
         it('batchIds', async () => {
-            const batchId = testObjectId('a1')
+            const batchId = testObjectId(0xa1)
             await createAndFindTickets({ batchId }, { batchIds: [batchId] })
         })
 
         it('movieIds', async () => {
-            const movieId = testObjectId('a1')
+            const movieId = testObjectId(0xa1)
             await createAndFindTickets({ movieId }, { movieIds: [movieId] })
         })
 
         it('theaterIds', async () => {
-            const theaterId = testObjectId('a1')
+            const theaterId = testObjectId(0xa1)
             await createAndFindTickets({ theaterId }, { theaterIds: [theaterId] })
         })
 
         it('showtimeIds', async () => {
-            const showtimeId = testObjectId('a1')
+            const showtimeId = testObjectId(0xa1)
             await createAndFindTickets({ showtimeId }, { showtimeIds: [showtimeId] })
         })
 
@@ -77,7 +77,7 @@ describe('Tickets Module', () => {
     })
 
     it('getSalesStatuses', async () => {
-        const showtimeId = testObjectId('a1')
+        const showtimeId = testObjectId(0xa1)
         const ticketCount = 50
         const soldCount = 5
 

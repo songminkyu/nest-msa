@@ -9,7 +9,7 @@ export const createWatchRecords = async (fix: CommonFixture, overrides = {}) => 
     return Promise.all(
         Array.from({ length: 10 }, async (_, index) =>
             createWatchRecord(fix, {
-                movieId: testObjectId(`${index}`),
+                movieId: testObjectId(index),
                 watchDate: DateUtil.addDays(baseDate, index),
                 ...overrides
             })

@@ -28,7 +28,7 @@ describe('WatchRecords Module', () => {
 
     describe('findWatchRecords', () => {
         let records: WatchRecordDto[]
-        const customerId = testObjectId('A1')
+        const customerId = testObjectId(0xA1)
 
         beforeEach(async () => {
             records = await createWatchRecords(fix, { customerId })

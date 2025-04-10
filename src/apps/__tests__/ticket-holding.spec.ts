@@ -5,8 +5,8 @@ import { findHeldTicketIds, Fixture, holdTickets, releaseTickets } from './ticke
 describe('Ticket Holding', () => {
     let fix: Fixture
 
-    const customerId = testObjectId('1')
-    const customerB = testObjectId('2')
+    const customerId = testObjectId(0x1)
+    const customerB = testObjectId(0x2)
 
     beforeEach(async () => {
         const { createFixture } = await import('./ticket-holding.fixture')
@@ -49,8 +49,8 @@ describe('Ticket Holding', () => {
         })
 
         it('동일한 고객이 새로운 티켓을 선점할 때 기존 티켓은 해제되어야 한다', async () => {
-            const firstTickets = [testObjectId('30'), testObjectId('31')]
-            const newTickets = [testObjectId('40'), testObjectId('41')]
+            const firstTickets = [testObjectId(0x30), testObjectId(0x31)]
+            const newTickets = [testObjectId(0x40), testObjectId(0x41)]
 
             const holdA1 = await holdTickets(fix, { customerId, ticketIds: firstTickets })
             expect(holdA1).toBeTruthy()
@@ -95,8 +95,8 @@ describe('Ticket Holding', () => {
     })
 
     describe('findHeldTicketIds', () => {
-        const ticketIds = [testObjectId('30'), testObjectId('31')]
-        const showtimeId = testObjectId('1')
+        const ticketIds = [testObjectId(0x30), testObjectId(0x31)]
+        const showtimeId = testObjectId(0x1)
 
         it('선점한 티켓을 반환해야 한다', async () => {
             await holdTickets(fix, { showtimeId, customerId, ticketIds })
@@ -119,8 +119,8 @@ describe('Ticket Holding', () => {
     })
 
     describe('releaseTickets', () => {
-        const ticketIds = [testObjectId('30'), testObjectId('31')]
-        const showtimeId = testObjectId('1')
+        const ticketIds = [testObjectId(0x30), testObjectId(0x31)]
+        const showtimeId = testObjectId(0x1)
 
         it('고객이 선점한 티켓을 해제해야 한다', async () => {
             await holdTickets(fix, {

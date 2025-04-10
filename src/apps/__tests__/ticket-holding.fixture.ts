@@ -6,7 +6,7 @@ export const holdTickets = async (fix: CommonFixture, holdDto: Partial<HoldTicke
     return fix.ticketHoldingClient.holdTickets({
         customerId: nullObjectId,
         showtimeId: nullObjectId,
-        ticketIds: [testObjectId('30'), testObjectId('31')],
+        ticketIds: [testObjectId(0x30), testObjectId(0x31)],
         ...holdDto
     })
 }
