@@ -11,6 +11,7 @@
         "lint": "prettier --write 'src/**/*.ts' && eslint src"
     },
     "comments": [
+        "ESM modules such as chalk and nanoid are supported in Node.js, but jest does not fully support ESM yet. Re-evaluate jest compatibility with Node.js 24.",
         "chalk,nanoid 등 esm은 node에서 사용 가능하나 jest는 아직이다. node 24에서 jest 다시 점검해라"
     ],
     "dependencies": {

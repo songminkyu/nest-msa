@@ -6,14 +6,12 @@ const config: Config = {
     testRegex: '.*\\.spec\\.(ts|js)$',
     testEnvironment: 'node',
     transform: { '^.+\\.ts$': 'ts-jest' },
-    /* 각 테스트 후 mock 호출 기록 제거 */
+    // Start of test environment reset configuration
     clearMocks: true,
-    /* 각 테스트 후 mock 구현 초기화 */
     resetMocks: true,
-    /* 각 테스트 후 원본 구현 복원(spyOn) */
     restoreMocks: true,
-    /* 모듈 캐시 리셋(테스트 간 모듈 상태 격리) */
     resetModules: true,
+    // End of test environment reset configuration
     rootDir: '.',
     roots: ['<rootDir>/src'],
     moduleNameMapper: {
@@ -39,8 +37,9 @@ const config: Config = {
     coverageDirectory: '<rootDir>/_output/coverage',
     testTimeout: 30 * 1000
     /*
-    CPU 코어 수가 메모리에 비해 많다면 maxWorkers 값을 (RAM / 4)로 조정하는 것을 권장합니다.
-    (예: 8GB RAM 환경이면 2 workers 설정)
+     * If the number of CPU cores is high relative to available memory,
+     * it is recommended to set maxWorkers to roughly (RAM / 4).
+     * For example: 8GB RAM → maxWorkers: 2
      */
     // maxWorkers: 2
 }
