@@ -14,12 +14,12 @@ describe('createTestContext', () => {
     })
 
     /* RPC 메시지를 전송하면 응답해야 한다 */
-    it('should respond when an RPC message is sent', async () => {
+    it('Should respond when an RPC message is sent', async () => {
         await fix.rpcClient.expect(withTestId('getRpcMessage'), { arg: 'value' }, { id: 'value' })
     })
 
     /* Http 메시지를 전송하면 응답해야 한다 */
-    it('should respond when an HTTP message is sent', async () => {
+    it('Should respond when an HTTP message is sent', async () => {
         await fix.httpClient.get('/message/value').ok({ received: 'value' })
     })
 })

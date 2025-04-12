@@ -15,17 +15,17 @@ describe('ClientProxyService', () => {
 
     describe('send', () => {
         /* HttpController는 Observable로 응답해야 한다 */
-        it('should respond with an Observable in the HttpController', async () => {
+        it('Should respond with an Observable in the HttpController', async () => {
             await fix.httpClient.get('/observable').ok({ result: 'success' })
         })
 
         /* HttpController는 Observable의 값을 반환해야 한다 */
-        it('should return the value of the Observable in the HttpController', async () => {
+        it('Should return the value of the Observable in the HttpController', async () => {
             await fix.httpClient.get('/value').ok({ result: 'success' })
         })
 
         /* null payload를 보내야 한다 */
-        it('should send a null payload', async () => {
+        it('Should send a null payload', async () => {
             const response = await fix.rpcClient.getJson(withTestId('method'), null)
             expect(response).toEqual({ result: 'success' })
         })
@@ -33,7 +33,7 @@ describe('ClientProxyService', () => {
 
     describe('emit', () => {
         /* Microservice에 이벤트를 전송해야 한다 */
-        it('should send an event to the microservice', async () => {
+        it('Should send an event to the microservice', async () => {
             const promise = new Promise((resolve, reject) => {
                 fix.httpClient.get('/handle-event').sse((value) => resolve(value), reject)
             })
@@ -44,7 +44,7 @@ describe('ClientProxyService', () => {
         })
 
         /* null payload를 보내야 한다 */
-        it('should send a null payload', async () => {
+        it('Should send a null payload', async () => {
             await fix.rpcClient.emit(withTestId('emitEvent'), null)
         })
     })

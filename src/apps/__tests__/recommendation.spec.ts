@@ -13,7 +13,7 @@ describe('Recommendation', () => {
         await fix?.teardown()
     })
 
-    describe('/movies/recommended', () => {
+    describe('GET /movies/recommended', () => {
         let showingMovies: MovieDto[]
 
         beforeEach(async () => {
@@ -55,7 +55,8 @@ describe('Recommendation', () => {
             ])
         })
 
-        it('고객이 가장 많이 관람한 genre와 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다', async () => {
+        /* 고객이 가장 많이 관람한 genre와 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다 */
+        it('Should return a list of recommended movies sorted by the most watched genre and the latest release date', async () => {
             const { body } = await fix.httpClient
                 .get('/movies/recommended')
                 .headers({ Authorization: `Bearer ${fix.accessToken}` })
@@ -70,7 +71,8 @@ describe('Recommendation', () => {
             ])
         })
 
-        it('로그인을 하지 않으면 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다', async () => {
+        /* 로그인을 하지 않으면 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다 */
+        it('Should return a list of recommended movies by the latest release date if the user is not logged in', async () => {
             const { body } = await fix.httpClient.get('/movies/recommended').ok()
 
             expect(body).toEqual([

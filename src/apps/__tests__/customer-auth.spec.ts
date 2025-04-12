@@ -22,7 +22,8 @@ describe('Customer Authentication', () => {
     })
 
     describe('POST /login', () => {
-        it('로그인에 성공하면 인증 토큰을 반환해야 한다', async () => {
+        /* 로그인에 성공하면 인증 토큰을 반환해야 한다 */
+        it('Should return an authentication token upon successful login', async () => {
             await fix.httpClient
                 .post('/customers/login')
                 .body({ email, password })
@@ -32,22 +33,26 @@ describe('Customer Authentication', () => {
                 })
         })
 
-        it('비밀번호가 틀리면 UNAUTHORIZED(401)를 반환해야 한다', async () => {
+        /* 비밀번호가 틀리면 UNAUTHORIZED(401)를 반환해야 한다 */
+        it('Should return UNAUTHORIZED(401) if the password is incorrect', async () => {
             await fix.httpClient
                 .post('/customers/login')
                 .body({ email, password: 'wrong password' })
                 .unauthorized(Errors.Auth.Unauthorized)
         })
 
-        it('이메일이 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다', async () => {
+        /* 이메일이 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다 */
+        it('Should return UNAUTHORIZED(401) if the email does not exist', async () => {
             await fix.httpClient
                 .post('/customers/login')
                 .body({ email: 'unknown@mail.com', password: '.' })
                 .unauthorized(Errors.Auth.Unauthorized)
         })
 
-        it('customer가 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다', async () => {
+        /* customer가 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다 */
+        it('Should return UNAUTHORIZED(401) if the customer does not exist', async () => {
             /*
+            Mocking the following code in CustomersRepository. This test is for code coverage.
             CustomersRepository의 아래 코드를 모의하는 것이다. 코드 커버리지를 위해 작성한 테스트다.
 
             this.model.findById(customerId).select('+password').exec()
@@ -81,7 +86,8 @@ describe('Customer Authentication', () => {
             refreshToken = body.refreshToken
         })
 
-        it('유효한 refreshToken을 제공하면 새로운 인증 토큰을 반환해야 한다', async () => {
+        /* 유효한 refreshToken을 제공하면 새로운 인증 토큰을 반환해야 한다 */
+        it('Should return a new authentication token if a valid refreshToken is provided', async () => {
             const { body } = await fix.httpClient
                 .post('/customers/refresh')
                 .body({ refreshToken })
@@ -91,7 +97,8 @@ describe('Customer Authentication', () => {
             expect(body.refreshToken).not.toEqual(refreshToken)
         })
 
-        it('잘못된 refreshToken을 제공하면 UNAUTHORIZED(401)를 반환해야 한다', async () => {
+        /* 잘못된 refreshToken을 제공하면 UNAUTHORIZED(401)를 반환해야 한다 */
+        it('Should return UNAUTHORIZED(401) if an invalid refreshToken is provided', async () => {
             await fix.httpClient
                 .post('/customers/refresh')
                 .body({ refreshToken: 'invalid-token' })
@@ -114,14 +121,16 @@ describe('Customer Authentication', () => {
             accessToken = body.accessToken
         })
 
-        it('유효한 accessToken을 제공하면 접근이 허용되어야 한다', async () => {
+        /* 유효한 accessToken을 제공하면 접근이 허용되어야 한다 */
+        it('Should allow access if a valid accessToken is provided', async () => {
             await fix.httpClient
                 .get(`/customers/${customer.id}`)
                 .headers({ Authorization: `Bearer ${accessToken}` })
                 .ok()
         })
 
-        it('잘못된 accessToken을 제공하면 UNAUTHORIZED(401)를 반환해야 한다', async () => {
+        /* 잘못된 accessToken을 제공하면 UNAUTHORIZED(401)를 반환해야 한다 */
+        it('Should return UNAUTHORIZED(401) if the accessToken is invalid', async () => {
             await fix.httpClient
                 .get(`/customers/${customer.id}`)
                 .headers({ Authorization: 'Bearer Invalid-Token' })

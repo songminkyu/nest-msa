@@ -65,12 +65,12 @@ export interface AllProviders {
     showtimesClient: ShowtimesClient
 }
 
-export async function getAllProviders(
+export const getAllProviders = async (
     gatewayContext: HttpTestContext,
     appsContext: TestContext,
     coresContext: TestContext,
     infrasContext: TestContext
-) {
+) => {
     const { module: gatewayModule } = gatewayContext
     const customersClient = gatewayModule.get(CustomersClient)
     const storageFilesClient = gatewayModule.get(StorageFilesClient)

@@ -5,7 +5,7 @@ export interface Fixture extends CommonFixture {
     image: TestFile
 }
 
-export async function createFixture() {
+export const createFixture = async () => {
     const commonFixture = await createCommonFixture()
 
     const teardown = async () => {

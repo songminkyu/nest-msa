@@ -68,7 +68,8 @@ describe('Tickets', () => {
             expectEqualUnsorted(tickets, [expectedDtos[6], expectedDtos[7]])
         })
 
-        it('1개 이상의 필터를 설정하지 않으면 BAD_REQUEST(400)를 반환해야 한다', async () => {
+        /* 1개 이상의 필터를 설정하지 않으면 BAD_REQUEST(400)를 반환해야 한다 */
+        it('Should return BAD_REQUEST(400) if no filter is provided', async () => {
             const promise = fix.ticketsClient.findAllTickets({})
             await expect(promise).rejects.toThrow('At least one filter condition must be provided')
         })
@@ -94,7 +95,8 @@ describe('Tickets', () => {
             tickets = await fix.ticketsClient.findAllTickets({ batchIds: [batchId] })
         })
 
-        it('티켓의 상태를 변경해야 한다', async () => {
+        /* 티켓의 상태를 변경해야 한다 */
+        it('Should change the status of the ticket', async () => {
             expect(await getStatus()).toEqual([TicketStatus.available, TicketStatus.available])
 
             const updatedTickets = await fix.ticketsClient.updateTicketStatus(

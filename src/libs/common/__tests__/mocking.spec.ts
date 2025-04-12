@@ -52,7 +52,7 @@ describe('jest.mock examples', () => {
     })
 
     /* clearMocks가 모킹 호출 기록을 올바르게 초기화하는지 확인한다 */
-    it('checks whether clearMocks properly resets the mock call records', () => {
+    it('Checks whether clearMocks properly resets the mock call records', () => {
         expect(Logger.verbose).not.toHaveBeenCalledWith('arg1', 'arg2')
     })
 })

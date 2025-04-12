@@ -10,7 +10,7 @@ import { omit, uniq } from 'lodash'
 import { nullDate, nullObjectId } from 'testlib'
 import { CommonFixture, TestFiles } from './utils'
 
-export async function createCustomerAndLogin(fix: CommonFixture) {
+export const createCustomerAndLogin = async (fix: CommonFixture) => {
     const email = 'user@mail.com'
     const password = 'password'
     const customer = await createCustomer(fix, { email, password })
@@ -94,7 +94,7 @@ export const buildShowtimeCreateDto = (overrides: Partial<ShowtimeCreateDto> = {
     return { createDto, expectedDto }
 }
 
-export async function createShowtimes(fix: CommonFixture, createDtos: ShowtimeCreateDto[]) {
+export const createShowtimes = async (fix: CommonFixture, createDtos: ShowtimeCreateDto[]) => {
     const { success } = await fix.showtimesClient.createShowtimes(createDtos)
     expect(success).toBeTruthy()
 
@@ -118,7 +118,7 @@ export const buildTicketCreateDto = (overrides = {}) => {
     return { createDto, expectedDto }
 }
 
-export async function createTickets(fix: CommonFixture, createDtos: TicketCreateDto[]) {
+export const createTickets = async (fix: CommonFixture, createDtos: TicketCreateDto[]) => {
     const { success } = await fix.ticketsClient.createTickets(createDtos)
     expect(success).toBeTruthy()
 

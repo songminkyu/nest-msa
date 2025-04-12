@@ -14,7 +14,7 @@ describe('JwtAuthService', () => {
     })
 
     /* 인증 토큰을 생성해야 한다 */
-    it('should create an authentication token', async () => {
+    it('Should create an authentication token', async () => {
         const payload = { userId: 'userId', email: 'email' }
         const tokens = await fix.jwtService.generateAuthTokens(payload)
 
@@ -36,7 +36,7 @@ describe('JwtAuthService', () => {
         })
 
         /* 유효한 refreshToken을 제공하면 새로운 인증 토큰을 반환해야 한다 */
-        it('should return new auth tokens if a valid refreshToken is provided', async () => {
+        it('Should return new auth tokens if a valid refreshToken is provided', async () => {
             const tokens = await fix.jwtService.refreshAuthTokens(refreshToken)
 
             expect(tokens!.accessToken).not.toEqual(accessToken)
@@ -44,13 +44,13 @@ describe('JwtAuthService', () => {
         })
 
         /* 잘못된 refreshToken을 제공하면 예외를 던져야 한다 */
-        it('should throw an exception if an invalid refreshToken is provided', async () => {
+        it('Should throw an exception if an invalid refreshToken is provided', async () => {
             const promise = fix.jwtService.refreshAuthTokens('invalid-token')
             await expect(promise).rejects.toThrow('jwt malformed')
         })
 
         /* 만료된 refreshToken을 제공하면 예외를 던져야 한다 */
-        it('should throw an exception if the refreshToken is expired', async () => {
+        it('Should throw an exception if the refreshToken is expired', async () => {
             await sleep(3500)
 
             const promise = fix.jwtService.refreshAuthTokens(refreshToken)
@@ -58,7 +58,7 @@ describe('JwtAuthService', () => {
         })
 
         /* 저장된 refreshToken과 다르면 예외를 던져야 한다 */
-        it('should throw an exception if the stored refreshToken is different', async () => {
+        it('Should throw an exception if the stored refreshToken is different', async () => {
             jest.spyOn(fix.redis, 'get').mockResolvedValueOnce('unknown token')
 
             const promise = fix.jwtService.refreshAuthTokens(refreshToken)

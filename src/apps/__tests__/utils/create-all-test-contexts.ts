@@ -16,7 +16,7 @@ import {
 } from 'testlib'
 import { AllProviders, getAllProviders } from './all-providers'
 
-function createConfigServiceMock(mockValues: Record<string, any>) {
+const createConfigServiceMock = (mockValues: Record<string, any>) => {
     const realConfigService = new ConfigService()
 
     return {
@@ -31,7 +31,7 @@ function createConfigServiceMock(mockValues: Record<string, any>) {
 
 type TestContextOpts = ModuleMetadataEx & { config?: Record<string, any> }
 
-function createMetadata(module: Type<any>, metadata: TestContextOpts = {}): ModuleMetadataEx {
+const createMetadata = (module: Type<any>, metadata: TestContextOpts = {}): ModuleMetadataEx => {
     const { ignoreGuards, ignoreProviders, overrideProviders, config } = metadata
     const configMock = createConfigServiceMock({ ...config })
 
@@ -52,17 +52,19 @@ export interface CommonFixture extends AllProviders {
     close: () => Promise<void>
 }
 
-export async function createCommonFixture({
-    gateway,
-    apps,
-    cores,
-    infras
-}: {
+type CreateCommonFixtureOptions = {
     gateway?: TestContextOpts
     apps?: TestContextOpts
     cores?: TestContextOpts
     infras?: TestContextOpts
-} = {}): Promise<CommonFixture> {
+}
+
+export const createCommonFixture = async ({
+    gateway,
+    apps,
+    cores,
+    infras
+}: CreateCommonFixtureOptions = {}): Promise<CommonFixture> => {
     const { servers: brokers } = await getNatsTestConnection()
 
     const infrasContext = await createTestContext({

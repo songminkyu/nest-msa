@@ -77,9 +77,9 @@ describe('Showtimes', () => {
             expect(showtimes).toHaveLength(2)
         })
 
-        it('1개 이상의 필터를 설정하지 않으면 BAD_REQUEST(400)를 반환해야 한다', async () => {
+        /* 1개 이상의 필터를 설정하지 않으면 BAD_REQUEST(400)를 반환해야 한다 */
+        it('Should return BAD_REQUEST(400) if no filter is provided', async () => {
             const promise = fix.showtimesClient.findAllShowtimes({})
-
             await expect(promise).rejects.toThrow('At least one filter condition must be provided')
         })
     })
@@ -98,14 +98,16 @@ describe('Showtimes', () => {
             showtimes = await createShowtimes(fix, createDtos)
         })
 
-        it('상영시간 정보를 가져와야 한다', async () => {
+        /* 상영시간 정보를 가져와야 한다 */
+        it('Should retrieve showtime information', async () => {
             const gotShowtime = await fix.showtimesClient.getShowtimes(pickIds(showtimes))
             expect(gotShowtime).toEqual(showtimes)
         })
 
-        it('상영시간이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
+        /* 상영시간이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        it('Should return NOT_FOUND(404) if the showtime does not exist', async () => {
             const promise = fix.showtimesClient.getShowtimes([nullObjectId])
-            await expect(promise).rejects.toThrow(`One or more documents not found`)
+            await expect(promise).rejects.toThrow('One or more documents not found')
         })
     })
 

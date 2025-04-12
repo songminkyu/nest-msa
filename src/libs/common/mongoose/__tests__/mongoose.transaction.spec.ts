@@ -13,7 +13,7 @@ describe('MongooseRepository.withTransaction', () => {
         await fix?.teardown()
     })
 
-    it('commit a transaction', async () => {
+    it('Commit a transaction', async () => {
         const newDoc = await fix.repository.withTransaction(async (session) => {
             const doc = fix.repository.newDocument()
             doc.name = 'name'
@@ -25,7 +25,7 @@ describe('MongooseRepository.withTransaction', () => {
     })
 
     /* 트랜잭션 중 오류가 발생하면 변경 사항을 롤백해야 한다 */
-    it('should roll back changes if an error occurs during the transaction', async () => {
+    it('Should roll back changes if an error occurs during the transaction', async () => {
         const promise = fix.repository.withTransaction(async (session) => {
             const doc = fix.repository.newDocument()
             doc.name = 'name'
@@ -40,7 +40,7 @@ describe('MongooseRepository.withTransaction', () => {
         expect(total).toEqual(0)
     })
 
-    it('rollback a transaction', async () => {
+    it('Rollback a transaction', async () => {
         const newDoc = fix.repository.newDocument()
         newDoc.name = 'name'
         await newDoc.save()

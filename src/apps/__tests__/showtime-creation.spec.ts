@@ -15,7 +15,8 @@ describe('Showtime Creation', () => {
         await fix?.teardown()
     })
 
-    it('영화 목록 요청', async () => {
+    /* 영화 목록 요청 */
+    it('Should request the list of movies', async () => {
         const { body } = await fix.httpClient
             .get('/showtime-creation/movies')
             .query({ skip: 0 })
@@ -26,7 +27,8 @@ describe('Showtime Creation', () => {
         expect(items).toEqual([fix.movie])
     })
 
-    it('극장 목록 요청', async () => {
+    /* 극장 목록 요청 */
+    it('Should request the list of theaters', async () => {
         const { body } = await fix.httpClient
             .get('/showtime-creation/theaters')
             .query({ skip: 0 })
@@ -37,7 +39,7 @@ describe('Showtime Creation', () => {
         expect(items).toEqual([fix.theater])
     })
 
-    describe('상영시간 목록 요청', () => {
+    describe('Requesting the list of showtimes', () => {
         let showtimes: ShowtimeDto[]
 
         beforeEach(async () => {
@@ -53,7 +55,8 @@ describe('Showtime Creation', () => {
             showtimes = await createShowtimes(fix, createDtos)
         })
 
-        it('예정된 상영시간 목록을 반환해야 한다', async () => {
+        /* 예정된 상영시간 목록을 반환해야 한다 */
+        it('Should return the list of scheduled showtimes', async () => {
             const { body } = await fix.httpClient
                 .post('/showtime-creation/showtimes/find')
                 .body({ theaterIds: [fix.theater.id] })
@@ -63,7 +66,7 @@ describe('Showtime Creation', () => {
         })
     })
 
-    describe('상영시간 생성 요청', () => {
+    describe('Creating showtimes', () => {
         const createBatchShowtimes = async (
             movieId: string,
             theaterIds: string[],
@@ -77,7 +80,8 @@ describe('Showtime Creation', () => {
             return body
         }
 
-        it('상영시간 생성 요청이 성공해야 한다', async () => {
+        /* 상영시간 생성 요청이 성공해야 한다 */
+        it('Should successfully process the showtime creation request', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['complete'])
 
             const theaterIds = [fix.theater.id]
@@ -103,7 +107,8 @@ describe('Showtime Creation', () => {
             })
         })
 
-        it('movie가 존재하지 않으면 작업 요청이 실패해야 한다', async () => {
+        /* movie가 존재하지 않으면 작업 요청이 실패해야 한다 */
+        it('Should fail if the specified movie does not exist', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['error'])
 
             const { batchId } = await createBatchShowtimes(
@@ -121,7 +126,8 @@ describe('Showtime Creation', () => {
             })
         })
 
-        it('theater가 존재하지 않으면 작업 요청이 실패해야 한다', async () => {
+        /* theater가 존재하지 않으면 작업 요청이 실패해야 한다 */
+        it('Should fail if one or more specified theaters do not exist', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['error'])
 
             const { batchId } = await createBatchShowtimes(fix.movie.id, [nullObjectId], [nullDate])
@@ -136,7 +142,8 @@ describe('Showtime Creation', () => {
         })
     })
 
-    describe('상영시간 충돌 점검', () => {
+    /* 상영시간 충돌 점검 */
+    describe('Checking for showtime conflicts', () => {
         let showtimes: ShowtimeDto[]
 
         beforeEach(async () => {
@@ -153,7 +160,8 @@ describe('Showtime Creation', () => {
             showtimes = await createShowtimes(fix, createDtos)
         })
 
-        it('생성 요청이 기존 상영시간 충돌할 때 충돌 정보를 반환해야 한다', async () => {
+        /* 상영시간 충돌 시 충돌 정보를 반환해야 한다 */
+        it('Should return conflict information when showtimes conflict.', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['fail'])
 
             const { body } = await fix.httpClient

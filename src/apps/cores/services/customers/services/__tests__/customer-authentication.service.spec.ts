@@ -10,7 +10,7 @@ describe('CustomerAuthenticationService', () => {
     })
 
     /* 비밀번호를 해싱해야 한다 */
-    it('should hash the password', async () => {
+    it('Should hash the password', async () => {
         const password = 'password'
         const hashedPassword = await service.hash(password)
 
@@ -18,7 +18,7 @@ describe('CustomerAuthenticationService', () => {
     })
 
     /* 같은 비밀번호에 대해서 서로 다른 해시 값을 생성해야 한다 */
-    it('should generate different hash values for the same password', async () => {
+    it('Should generate different hash values for the same password', async () => {
         const password = 'password'
         const firstHash = await service.hash(password)
         const secondHash = await service.hash(password)
@@ -27,7 +27,7 @@ describe('CustomerAuthenticationService', () => {
     })
 
     /* 비밀번호가 일치하면 true를 반환해야 한다 */
-    it('should return true if the password matches', async () => {
+    it('Should return true if the password matches', async () => {
         const password = 'password'
         const hashedPassword = await service.hash(password)
 
@@ -37,7 +37,7 @@ describe('CustomerAuthenticationService', () => {
     })
 
     /* 비밀번호가 일치하지 않으면 false를 반환해야 한다 */
-    it('should return false if the password does not match', async () => {
+    it('Should return false if the password does not match', async () => {
         const password = 'password'
         const hashedPassword = await service.hash(password)
 

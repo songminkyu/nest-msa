@@ -15,13 +15,15 @@ describe('Booking', () => {
         await fix?.teardown()
     })
 
-    it('성공적인 영화 예매 흐름', async () => {
+    /* 성공적인 영화 예매 흐름을 처리할 수 있어야 한다 */
+    it('Should handle a successful movie booking flow', async () => {
         let theater: TheaterDto
         let showdate: Date
         let showtime: ShowtimeDto
         let tickets: TicketDto[]
 
-        await step('1. 상영 극장 목록 요청', async () => {
+        /* 1. 상영 극장 목록 요청 */
+        await step('1. Request list of theaters screening the movie', async () => {
             const latlong = '31.9,131.9'
 
             const { body: theaters } = await fix.httpClient
@@ -41,7 +43,8 @@ describe('Booking', () => {
             theater = theaters[0]
         })
 
-        await step('2. 상영일 목록 요청', async () => {
+        /* 2. 상영일 목록 요청 */
+        await step('2. Request list of show dates', async () => {
             const { body: showdates } = await fix.httpClient
                 .get(`/booking/movies/${fix.movie.id}/theaters/${theater.id}/showdates`)
                 .ok()
@@ -55,7 +58,8 @@ describe('Booking', () => {
             showdate = showdates[0]
         })
 
-        await step('3. 상영 시간 목록 요청', async () => {
+        /* 3. 상영 시간 목록 요청 */
+        await step('3. Request list of showtimes', async () => {
             const movieId = fix.movie.id
             const theaterId = theater.id
             const yymmdd = DateUtil.toYMD(showdate)
@@ -87,7 +91,8 @@ describe('Booking', () => {
             showtime = showtimes[0]
         })
 
-        await step('4. 구매 가능한 티켓 목록 요청', async () => {
+        /* 4. 구매 가능한 티켓 목록 요청 */
+        await step('4. Request list of available tickets', async () => {
             const { body } = await fix.httpClient
                 .get(`/booking/showtimes/${showtime.id}/tickets`)
                 .ok()
@@ -98,7 +103,8 @@ describe('Booking', () => {
             expect(tickets).toHaveLength(seatCount)
         })
 
-        await step('5. 티켓 선점', async () => {
+        /* 5. 티켓 선점 */
+        await step('5. Hold tickets', async () => {
             const ticketIds = pickIds(tickets.slice(0, 4))
 
             await fix.httpClient

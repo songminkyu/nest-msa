@@ -34,7 +34,8 @@ describe('Purchases', () => {
             purchase = body
         })
 
-        it('구매 요청을 성공적으로 처리해야 한다', async () => {
+        /* 구매 요청을 성공적으로 처리해야 한다 */
+        it('Should successfully process a purchase request', async () => {
             expect(purchase).toEqual({
                 id: expect.any(String),
                 createdAt: expect.any(Date),
@@ -46,18 +47,21 @@ describe('Purchases', () => {
             })
         })
 
-        it('결제 정보를 조회할 수 있어야 한다', async () => {
+        /* 결제 정보를 조회할 수 있어야 한다 */
+        it('Should allow retrieving payment information', async () => {
             const payments = await fix.paymentsService.getPayments([purchase.paymentId])
             expect(payments[0].amount).toEqual(purchase.totalPrice)
         })
 
-        it('구매한 티켓은 sold 상태여야 한다', async () => {
+        /* 구매한 티켓은 sold 상태여야 한다 */
+        it('Should mark purchased tickets as sold', async () => {
             const ticketIds = purchaseItems.map((item) => item.ticketId)
             const retrievedTickets = await fix.ticketsService.getTickets(ticketIds)
             retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.sold))
         })
 
-        it('구매하지 않은 티켓은 available 상태여야 한다', async () => {
+        /* 구매하지 않은 티켓은 available 상태여야 한다 */
+        it('Should keep unpurchased tickets in available status', async () => {
             const ticketIds = availableTickets.map((ticket) => ticket.id)
             const retrievedTickets = await fix.ticketsService.getTickets(ticketIds)
             retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.available))
@@ -75,15 +79,17 @@ describe('Purchases', () => {
             })
         })
 
-        it('구매 정보를 조회해야 한다', async () => {
+        /* 구매 정보를 조회해야 한다 */
+        it('Should retrieve purchase information', async () => {
             await fix.httpClient.get(`/purchases/${purchase.id}`).ok(purchase)
         })
     })
 
-    describe('구매 가능 확인', () => {
-        it('최대 구매 수량을 초과하면 BAD_REQUEST(400)를 반환해야 한다', async () => {
+    describe('Verify purchase availability', () => {
+        /* 최대 구매 수량을 초과하면 BAD_REQUEST(400)를 반환해야 한다 */
+        it('Should return BAD_REQUEST(400) if the purchase exceeds the maximum quantity', async () => {
             const { purchaseItems } = await setupPurchaseData(fix, {
-                itemCount: Rules.Ticket.maxTicketsPerPurchase + 1
+                holdCount: Rules.Ticket.maxTicketsPerPurchase + 1
             })
 
             await fix.httpClient
@@ -92,7 +98,8 @@ describe('Purchases', () => {
                 .badRequest({ ...Errors.Purchase.MaxTicketsExceeded, maxCount: expect.any(Number) })
         })
 
-        it('구매 가능 시간을 초과하면 BAD_REQUEST(400)를 반환해야 한다', async () => {
+        /* 구매 가능 시간을 초과하면 BAD_REQUEST(400)를 반환해야 한다 */
+        it('Should return BAD_REQUEST(400) if the purchase deadline is exceeded', async () => {
             const { purchaseItems } = await setupPurchaseData(fix, {
                 minutesFromNow: Rules.Ticket.purchaseDeadlineMinutes
             })
@@ -108,7 +115,8 @@ describe('Purchases', () => {
                 })
         })
 
-        it('선점되지 않은 티켓을 구매하려하면 BAD_REQUEST(400)를 반환해야 한다', async () => {
+        /* 선점되지 않은 티켓을 구매하려하면 BAD_REQUEST(400)를 반환해야 한다 */
+        it('Should return BAD_REQUEST(400) if attempting to purchase unheld tickets', async () => {
             const { showtime, purchaseItems } = await setupPurchaseData(fix)
             await fix.ticketHoldingClient.releaseTickets(showtime.id, fix.customer.id)
 
@@ -120,7 +128,8 @@ describe('Purchases', () => {
     })
 
     describe('errors', () => {
-        it('구매 완료 단계에서 오류가 발생하면 InternalServerError(500)를 반환해야 한다', async () => {
+        /* 구매 완료 단계에서 오류가 발생하면 InternalServerError(500)를 반환해야 한다 */
+        it('Should return InternalServerError(500) if an error occurs in the purchase completion phase', async () => {
             const { purchaseItems } = await setupPurchaseData(fix)
 
             jest.spyOn(fix.ticketsService, 'updateTicketStatus').mockImplementationOnce(() => {

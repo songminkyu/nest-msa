@@ -15,12 +15,12 @@ describe('Mongoose Delete', () => {
         })
 
         /* deletedAt의 초기값은 null이다 */
-        it('initially, deletedAt should be null', async () => {
+        it('Initially, deletedAt should be null', async () => {
             expect(fix.doc).toMatchObject({ deletedAt: null })
         })
 
         /* deleteOne으로 삭제하면 삭제된 시간이 deletedAt에 기록되어야 한다 */
-        it('should record the deletion time in deletedAt when using deleteOne', async () => {
+        it('Should record the deletion time in deletedAt when using deleteOne', async () => {
             await fix.model.deleteOne({ _id: fix.doc._id })
 
             const found = await fix.model
@@ -32,7 +32,7 @@ describe('Mongoose Delete', () => {
         })
 
         /* deleteMany로 삭제하면 삭제된 시간이 deletedAt에 기록되어야 한다 */
-        it('should record the deletion time in deletedAt when using deleteMany', async () => {
+        it('Should record the deletion time in deletedAt when using deleteMany', async () => {
             const doc2 = new fix.model()
             doc2.name = 'name'
             await doc2.save()
@@ -45,7 +45,7 @@ describe('Mongoose Delete', () => {
         })
 
         /* 삭제된 문서는 aggregate에서 검색되지 않아야 한다' */
-        it('should not be returned from aggregate if the document is deleted', async () => {
+        it('Should not be returned from aggregate if the document is deleted', async () => {
             await fix.model.deleteOne({ _id: fix.doc._id })
 
             const got = await fix.model.aggregate([{ $match: { name: 'name' } }])
@@ -67,7 +67,7 @@ describe('Mongoose Delete', () => {
         })
 
         /* 데이터를 완전히 삭제해야 한다 */
-        it('should completely remove the document', async () => {
+        it('Should completely remove the document', async () => {
             expect(fix.doc).not.toHaveProperty('deletedAt')
         })
     })

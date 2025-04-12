@@ -1,7 +1,7 @@
 import { Path } from 'common'
 import { CommonFixture, createCommonFixture, TestFile, TestFiles } from './utils'
 
-export async function saveFile(fixture: CommonFixture, file: TestFile) {
+export const saveFile = async (fixture: CommonFixture, file: TestFile) => {
     const files = await fixture.storageFilesClient.saveFiles([file])
     return files[0]
 }
@@ -14,7 +14,7 @@ export interface Fixture extends CommonFixture {
     files: { notAllowed: TestFile; oversized: TestFile; large: TestFile; small: TestFile }
 }
 
-export async function createFixture() {
+export const createFixture = async () => {
     const files = {
         notAllowed: TestFiles.json,
         oversized: TestFiles.oversized,

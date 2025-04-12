@@ -1,4 +1,3 @@
-// TODO function은 모두 arrow로 변경한다
 import { MovieDto, Seatmap, ShowtimeDto, TheaterDto } from 'apps/cores'
 import { DateTimeRange } from 'common'
 import {

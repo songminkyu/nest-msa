@@ -56,10 +56,10 @@ const holdTickets = async (fix: Fixture, showtimeId: string, tickets: TicketDto[
 
 export const setupPurchaseData = async (
     fix: Fixture,
-    opts?: { itemCount?: number; minutesFromNow?: number }
+    opts?: { holdCount?: number; minutesFromNow?: number }
 ) => {
     const {
-        itemCount = Rules.Ticket.maxTicketsPerPurchase,
+        holdCount: itemCount = Rules.Ticket.maxTicketsPerPurchase,
         minutesFromNow = Rules.Ticket.purchaseDeadlineMinutes + 1
     } = opts || {}
 

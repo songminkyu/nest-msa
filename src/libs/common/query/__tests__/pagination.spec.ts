@@ -15,7 +15,7 @@ describe('Pagination', () => {
     })
 
     /* HttpController에서 PaginationOptionDto을 처리해야 한다 */
-    it('should handle PaginationOptionDto in HttpController', async () => {
+    it('Should handle PaginationOptionDto in HttpController', async () => {
         const skip = 2
         const take = 3
         await fix.httpClient
@@ -25,7 +25,7 @@ describe('Pagination', () => {
     })
 
     /* RpcController에서 PaginationOptionDto을 처리해야 한다 */
-    it('should handle PaginationOptionDto in RpcController', async () => {
+    it('Should handle PaginationOptionDto in RpcController', async () => {
         const skip = 2
         const take = 3
         const input = { orderby: { direction: 'asc', name: 'name' }, skip, take }
@@ -36,7 +36,7 @@ describe('Pagination', () => {
     })
 
     /* orderby 형식이 잘못되었을 때 BadRequest를 반환해야 한다 */
-    it('should return BadRequest when the orderby format is invalid', async () => {
+    it('Should return BadRequest when the orderby format is invalid', async () => {
         await fix.httpClient
             .get('/pagination')
             .query({ orderby: 'wrong' })
@@ -44,7 +44,7 @@ describe('Pagination', () => {
     })
 
     /* 정렬 방향이 잘못되었을 때 BadRequest를 반환해야 한다 */
-    it('should return BadRequest when the sort direction is invalid', async () => {
+    it('Should return BadRequest when the sort direction is invalid', async () => {
         await fix.httpClient
             .get('/pagination')
             .query({ orderby: 'name:wrong' })

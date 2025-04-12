@@ -24,7 +24,7 @@ describe('SuccessLoggingInterceptor', () => {
         })
 
         /* HTTP 요청이 성공하면 Logger.verbose()로 기록해야 한다 */
-        it('should log successful HTTP requests via Logger.verbose()', async () => {
+        it('Should log successful HTTP requests via Logger.verbose()', async () => {
             const body = { key: 'value' }
             await fix.httpClient.post('/success').body(body).created({ result: 'success' })
 
@@ -38,7 +38,7 @@ describe('SuccessLoggingInterceptor', () => {
         })
 
         /* RPC 요청이 성공하면 Logger.verbose()로 기록해야 한다 */
-        it('should log successful RPC requests via Logger.verbose()', async () => {
+        it('Should log successful RPC requests via Logger.verbose()', async () => {
             const subject = withTestId('success')
             const data = { key: 'value' }
             await fix.rpcClient.expect(subject, data, { result: 'success' })
@@ -53,7 +53,7 @@ describe('SuccessLoggingInterceptor', () => {
         })
 
         /* 알 수 없는 ContextType이면 Logger.error()로 기록해야 한다 */
-        it('should log an error via Logger.error() if the ContextType is unknown', async () => {
+        it('Should log an error via Logger.error() if the ContextType is unknown', async () => {
             const { ExecutionContextHost } = await import(
                 '@nestjs/core/helpers/execution-context-host'
             )
@@ -77,7 +77,7 @@ describe('SuccessLoggingInterceptor', () => {
         })
 
         /* 지정된 HTTP 경로는 무시해야 한다 */
-        it('should ignore specified HTTP paths', async () => {
+        it('Should ignore specified HTTP paths', async () => {
             await fix.httpClient.get('/exclude-path').ok({ result: 'success' })
 
             expect(fix.spyVerbose).toHaveBeenCalledTimes(0)
@@ -92,7 +92,7 @@ describe('SuccessLoggingInterceptor', () => {
         })
 
         /* 지정된 RPC 경로는 무시해야 한다 */
-        it('should ignore specified RPC paths', async () => {
+        it('Should ignore specified RPC paths', async () => {
             const subject = withTestId('exclude-path')
             const data = { key: 'value' }
             await fix.rpcClient.expect(subject, data, { result: 'success' })

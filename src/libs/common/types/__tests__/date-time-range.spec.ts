@@ -4,7 +4,7 @@ import { DateTimeRange } from 'common'
 
 describe('DateTimeRange', () => {
     /* 문자열 날짜를 Date 객체로 변환하고 유효성 검사를 통과해야 함 */
-    it('should convert string dates to Date objects and pass validation', () => {
+    it('Should convert string dates to Date objects and pass validation', () => {
         const plainData = {
             start: '2023-01-01T00:00:00Z',
             end: '2023-01-02T00:00:00Z'
@@ -20,7 +20,7 @@ describe('DateTimeRange', () => {
     })
 
     /* 유효하지 않은 날짜 문자열은 변환 후 유효성 검사 실패해야 함 */
-    it('should fail validation if the date string is invalid', () => {
+    it('Should fail validation if the date string is invalid', () => {
         const plainData = {
             start: 'invalid-date-string',
             end: '2023-01-02T00:00:00Z'
