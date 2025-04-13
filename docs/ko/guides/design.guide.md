@@ -60,21 +60,21 @@ end note
 ### 1.1. 단방향 의존 관계
 
 모든 서비스(모듈/클래스)는 **단방향 의존 관계**를 갖도록 설계하여 순환 참조(Circular Dependency) 문제가 발생하지 않도록 한다.
-만약 서로 참조해야 할 상황이라면, 해당 부분을 **별도의 서비스**로 떼어 내거나 두 서비스를 **하나로 합치는** 방식을 고려한다.
 
-또한, 같은 계층의 서비스들은 단방향 참조라 할지라도 허용하지 않는다. 구조가 복잡해지면서 결국 순환 참조가 되기 쉽다.
+또한, 같은 계층의 서비스 간에도 단방향 참조를 허용하지 않는다. 이는 구조가 복잡해질수록 순환 참조로 이어지기 쉬운 문제를 예방하기 위함이다.
 
 [이 프로젝트는 이런 지침을 반영해서 `index.ts`를 작성했다](./implementation.guide.md#5-import).
 
 ### 1.2. Controller의 분리
 
-이 프로젝트의 아키텍쳐는 순환 참조 문제를 피하기 위해서 일반적인 Nest 프로젝트와 다소 다른 부분이 있다.
+이 프로젝트의 아키텍처는 순환 참조 문제를 피하기 위해 일반적인 Nest 프로젝트와는 다소 다른 구조를 채택하고 있다.
 
-Nest에서는 일반적으로 Controller, Service, Repository가 같은 모듈에 위치하는 `Feature Module` 구조를 사용한다. 그런데 이 중에서 Controller는 다른 서비스를 참조하는 경우가 많아서 [순환 참조 문제](./problems-with-feature-modules.md)가 쉽게 일어난다.
+Nest에서는 일반적으로 `Controller`, `Service`, `Repository`가 같은 모듈에 위치하는 `Feature Module` 구조를 사용한다.
+그런데 이 중 `Controller`는 다른 서비스를 참조하는 경우가 많기 때문에 [순환 참조 문제](./problems-with-feature-modules.md)가 자주 발생한다.
 
-따라서 이 문제를 해결하기 위해서 전통적인 모놀리식 구조에서도 Controller를 Controllers 폴더에 두어서 Service에서 완전히 분리하는 구조를 선택했다.
+따라서 이 문제를 해결하기 위해, 전통적인 모놀리식 구조에서도 `Controller`를 `Controllers` 폴더에 분리하여 `Service`와 명확히 구분하는 방식을 채택했다.
 
-만약 모놀리식에서 MSA로 전환한다면 Controllers 폴더는 그대로 Gateway 모듈이 되기 때문에 확장성 측면에서도 장점이 있다.
+모놀리식에서 MSA로 전환할 경우, `Controllers` 폴더는 그대로 `Gateway` 모듈로 전환할 수 있어 **확장성 측면에서도 유리하다.**
 
 ## 2. 서비스 구조
 

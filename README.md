@@ -1,33 +1,35 @@
+> 🇺🇸 [View in Korean](docs/README.ko.md)
+
 # NEST-SEED
 
-NestJS로 구현한 영화 예매 시스템 백엔드 참조 프로젝트입니다. 주요 특징은 다음과 같습니다:
+An example backend project for a movie ticket reservation system implemented with NestJS. Key features include:
 
-- **Docker 기반 개발 환경**: 컨테이너를 활용해 일관된 개발 환경을 제공합니다.
-- **데이터베이스 통합**: MongoDB 및 Redis에 대한 사전 설정을 포함합니다.
-- **테스트 커버리지 확보**: Jest 기반의 단위 및 통합 테스트 코드를 제공합니다.
-- **고성능 테스트 실행**: Jest의 병렬 실행 기능으로 테스트 속도를 향상시켰습니다.
-- **계층화 아키텍처**: 관심사를 분리한 3-Layer 아키텍처를 적용했습니다.
-- **MSA 지원**: NATS 메시지 브로커 기반의 마이크로서비스 아키텍처를 지원합니다.
-- **E2E 테스트 자동화**: Bash 스크립트를 활용한 종단 간 테스트 환경을 구축했습니다.
-- **설계 문서 포함**: PlantUML로 작성된 아키텍처 다이어그램이 포함되어 있습니다.
+- **Docker-based Development Environment**: Provides a consistent development environment using containers.
+- **Database Integration**: Includes pre-configured settings for MongoDB and Redis.
+- **Test Coverage**: Offers unit and integration test code based on Jest.
+- **High-performance Test Execution**: Improves test speed by leveraging Jest’s parallel execution feature.
+- **Layered Architecture**: Adopts a 3-Layer architecture separating concerns.
+- **MSA Support**: Supports a microservice architecture based on the NATS message broker.
+- **E2E Test Automation**: Builds an end-to-end test environment using Bash scripts.
+- **Design Documents Included**: Contains architecture diagrams created with PlantUML.
 
-## 1. 시스템 요구 사항
+## 1. System Requirements
 
-이 프로젝트를 실행하려면 다음과 같은 호스트 환경이 필요합니다:
+To run this project, you need the following host environment:
 
-- **CPU**: 4코어 이상
-- **메모리**: 16GB 이상 권장
-    - 16GB 미만인 경우, Jest 실행 시 `--runInBand` 옵션 사용을 권장합니다.
-    - CPU 코어 수가 많은 경우, `jest.config.ts`에서 `maxWorkers`를 `(RAM / 4)`로 설정하는 것을 추천합니다. (예: 8GB RAM → 2 workers)
+- **CPU**: 4 cores or more
+- **Memory**: 16GB or more recommended
+    - If you have less than 16GB, it’s recommended to run Jest with the `--runInBand` option.
+    - If you have many CPU cores, configure `jest.config.ts` so that `maxWorkers` is `(RAM / 4)`. (e.g., 8GB RAM → 2 workers)
 - **Docker**
-- **VSCode 및 확장 프로그램**
+- **VSCode and Extensions**
     - Dev Containers (ms-vscode-remote.remote-containers)
 
-> Windows 환경은 호환성 이슈가 발생할 수 있으므로, VMware로 Ubuntu를 실행한 후 그 안에서 VSCode를 사용하는 방식을 권장합니다.
+> Using Windows may lead to compatibility issues. It’s recommended to run Ubuntu via VMware and use VSCode within that environment.
 
-## 2. 프로젝트 이름 변경
+## 2. Changing the Project Name
 
-원하는 프로젝트 이름으로 변경하려면 다음 파일의 설정을 수정하세요:
+To rename the project, edit the following files:
 
 - `.env.test`
 - `package.json`
@@ -35,20 +37,20 @@ NestJS로 구현한 영화 예매 시스템 백엔드 참조 프로젝트입니�
 - `src/apps/shared/config/etc.ts`
     - `ProjectName`
 
-## 3. 개발 환경 구성
+## 3. Setting up the Development Environment
 
-### 3.1 개발 환경 설정
+### 3.1 Development Environment Setup
 
-1. 호스트에서 [Git credentials](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)를 설정합니다.
-2. VSCode에서 "Reopen in Container" 명령을 실행해 환경을 자동으로 구성합니다.
+1. Configure [Git credentials](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials) on your host.
+2. In VSCode, run the **“Reopen in Container”** command to automatically set up the environment.
 
-### 3.2 환경 초기화
+### 3.2 Environment Initialization
 
-1. VSCode 메뉴 → "View" → "Command Palette" → `Dev Containers: Rebuild Container` 실행
+1. In VSCode, go to **View → Command Palette** → run **Dev Containers: Rebuild Container**.
 
-### 3.3 언어 설정
+### 3.3 Language Settings
 
-기본적으로 이 프로젝트는 한국어 환경으로 설정되어 있습니다. 다른 언어를 사용하려면 다음 내용을 수정하세요:
+By default, this project is configured for Korean. To switch to another language, modify:
 
 ```dockerfile
 # .devcontainer/Dockerfile
@@ -63,9 +65,9 @@ ENV LANG=ko_KR.UTF-8 \
     LC_ALL=ko_KR.UTF-8
 ```
 
-### 3.4 개발 인프라 구성
+3.4 Configuring the Development Infrastructure
 
-개발용 인프라 설정을 변경하려면 다음 파일들을 수정하세요:
+To modify development infrastructure settings, edit the following:
 
 - `.env.infra`
     ```env
@@ -86,32 +88,32 @@ ENV LANG=ko_KR.UTF-8 \
             container: node:22-bookworm
     ```
 
-### 3.5 테스트 인프라 구성
+### 3.5 Configuring the Test Infrastructure
 
-테스트 환경은 실제 운영 환경과 유사하게 Docker 기반의 MongoDB, Redis, NATS를 사용합니다. 이를 통해 얻는 장점은 다음과 같습니다:
+The test environment uses Docker-based MongoDB, Redis, and NATS, closely mirroring the production environment. Advantages include:
 
-- **운영 환경 유사성 확보**: 운영 시 발생 가능한 오류를 조기에 발견할 수 있습니다.
-- **간단한 설정**: 추가 라이브러리 학습 없이 테스트 환경 구성이 가능합니다.
+- **Production Environment Similarity**: Detect potential production issues early.
+- **Simplicity**: Easily configure the test environment without extra libraries.
 
-> 반복 테스트 시 MongoDB의 메모리 사용량 증가로 인해 간헐적인 실패 가능성이 있습니다. 그래서 전체 테스트 실행 전 인프라를 초기화 하도록 스크립트를 구성했습니다.
+> Repetitive testing can occasionally fail due to MongoDB’s increasing memory usage. Hence, the script is set to re-initialize infrastructure before running the entire test suite.
 >
-> 자세한 사항은 `scripts/run-test.sh` 파일을 참고하세요.
+> Refer to `scripts/run-test.sh` for more details.
 
-## 4. 통합 테스트 및 디버깅
+## 4. Integration Tests and Debugging
 
-통합 테스트는 MSA 및 TDD 기반 개발을 효율적으로 지원합니다. 모의(Mock)를 최소화하고 실제 서비스 조합을 테스트합니다.
+Integration tests efficiently support MSA and TDD-based development by minimizing mocks and testing actual service combinations.
 
-### 4.1 통합 테스트 실행 방법
+### 4.1 Running Integration Tests
 
-<img src="./docs/images/jest-run-debug-button.png" alt="Jest 실행 버튼" width="344"/>
+1. Install the Jest Runner extension in VSCode. You will see Run | Debug buttons at the top of each test file.
 
-1. VSCode에서 `Jest Runner` 확장을 설치합니다. 테스트 코드 상단에 `Run | Debug` 버튼이 나타납니다.
+    - **Run**: Executes tests (no log output)
+    - **Debug**: Attaches a debugger before test execution (logs can be viewed)
+    - If the buttons are not visible, enable Code Lens in your VSCode settings.
 
-    - **Run**: 테스트 실행 (로그 출력 없음)
-    - **Debug**: 디버거 연결 후 실행 (로그 출력 가능)
-    - 버튼이 보이지 않는 경우: Code Lens 옵션 활성화 필요
+    <img src="./docs/images/jest-run-debug-button.png" alt="Jest Button" width="344"/>
 
-2. CLI에서 `npm test` 실행:
+2. Run `npm test` in the CLI:
 
     ```sh
     npm test
@@ -126,9 +128,9 @@ ENV LANG=ko_KR.UTF-8 \
     Enter number of runs (default 1):
     ```
 
-### 4.2 테스트 실패 시 대처 방법
+### 4.2 What to Do If Tests Fail
 
-실행 환경에 따라서 테스트가 실패할 수 있습니다. 램과 CPU 코어 수가 영향을 미치기도 합니다. 만약 테스트 실패의 원인이 명확하지 않다면 다음과 같이 설정을 조정해 보세요.
+Tests may fail depending on RAM or CPU cores. If the cause is unclear, try adjusting:
 
 ```ts
 // jest.config.ts
@@ -136,84 +138,83 @@ testTimeout: 60 * 1000
 maxWorkers: 1
 ```
 
-> 32GB/8코어 환경에서 단독 실행 시 5초 내 완료되는 테스트가, 병렬 실행 시에는 `testTimeout` 값을 초과해 실패하는 경우가 있었습니다.
+> In a 32GB/8-core environment, a test that completes in under 5 seconds in a single run could exceed `testTimeout` when run in parallel.
 
-## 5. 서비스 실행 및 디버깅
+## 5. Running and Debugging Services
 
-이 프로젝트는 마이크로서비스 구조 특성상, 각 서비스를 따로 실행하기보다 통합 테스트를 활용해 검증하는 방식이 효율적입니다. 그럼에도 불구하고 특정 서비스를 단독으로 실행해 디버깅해야 한다면, 다음 설정을 참조하세요:
+Due to the microservice nature of this project, it’s typically more efficient to validate each service using integration tests rather than running them individually. However, if you need to run a specific service for debugging, refer to:
 
 - `/.vscode/launch.json`
 
-## 6. 빌드 및 E2E 테스트
+## 6. Build and E2E Testing
 
-다음 명령어로 전체 빌드 및 종단 간 테스트를 실행할 수 있습니다:
+Use the following command to perform a complete build and end-to-end test:
 
 ```sh
 npm run test:e2e
 ```
 
-사용되는 설정 파일:
+The configuration files used are:
 
 - `./Dockerfile`
 - `./docker-compose.yml`
 - `./scripts/run-apps.sh`
 
-## 7. 프로젝트 구조
+## 7. Project Structure
 
-현재는 소규모 팀(3~4인)을 기준으로 4개의 프로젝트(`gateway`, `applications`, `cores`, `infrastructures`)로 구성되어 있으며, 필요 시 각 서비스를 독립 프로젝트로 분리해 확장 가능합니다.
+Currently, the system is organized into four separate projects—`gateway`, `applications`, `cores`, and `infrastructures`—based on a small team structure (3 to 4 people). If necessary, each service can be split into an independent project for further scalability.
 
 ### 7.1 폴더 구성
 
 ```text
 src
-├── apps                  # 각종 서비스 애플리케이션
-│   ├── __tests__         # 통합 테스트
+├── apps                  # Various service applications
+│   ├── __tests__         # Integration tests
 │   ├── applications
 │   │   └── services
-│   │       ├── booking             # 티켓 예매
-│   │       ├── purchase-process    # 결제 처리
-│   │       ├── recommendation      # 추천 서비스
-│   │       └── showtime-creation   # 상영시간 생성
+│   │       ├── booking             # Ticket reservation
+│   │       ├── purchase-process    # Payment process
+│   │       ├── recommendation      # Recommendation service
+│   │       └── showtime-creation   # Creating showtimes
 │   ├── cores
 │   │   └── services
-│   │       ├── customers         # 고객 인증/관리 (Mock 기반 테스트, password 숨김, 서비스 분리)
-│   │       ├── movies            # 영화 관리 (파일 업로드 포함)
-│   │       ├── purchases         # 구매 관리
-│   │       ├── showtimes         # 상영 시간 관리 (다양한 쿼리)
-│   │       ├── theaters          # 극장 관리 ('name' 인덱스 적용)
-│   │       ├── ticket-holding    # 티켓 선점 관리
-│   │       ├── tickets           # 티켓 관리 (배열 유효성 검증 포함)
-│   │       └── watch-records     # 관람 기록 관리
-│   ├── gateway           # REST API 진입점
+│   │       ├── customers         # Customer auth/management (Mock-based tests, hidden passwords, split service)
+│   │       ├── movies            # Movie management (includes file uploads)
+│   │       ├── purchases         # Purchase management
+│   │       ├── showtimes         # Showtime management (various queries)
+│   │       ├── theaters          # Theater management (index on ‘name’)
+│   │       ├── ticket-holding    # Ticket holding management
+│   │       ├── tickets           # Ticket management (array validation, etc.)
+│   │       └── watch-records     # Viewing history management
+│   ├── gateway           # REST API entry point
 │   │   └── controllers
-│   ├── infrastructures   # 외부 서비스 연동
+│   ├── infrastructures   # External service integrations
 │   │   └── services
-│   │       ├── payments         # 결제 시스템 연동
-│   │       └── storage-files    # 파일 저장소 연동
-│   └── shared            # 공통 코드
+│   │       ├── payments         # Payment system integration
+│   │       └── storage-files    # File storage integration
+│   └── shared            # Shared code
 │       ├── config
 │       ├── modules
 │       └── pipes
-└── libs                  # 범용 공통 라이브러리
+└── libs                  # General-purpose common libraries
     ├── common
     └── testlib
 ```
 
-## 8. 설계 문서
+## 8. Design Documents
 
-설계 문서는 `PlantUML`을 사용해 작성되었으며, `./docs/designs` 경로에 있습니다.
+Design documents are written with PlantUML and located under ./docs/designs.
+• VSCode Extension: `PlantUML(jebbs.plantuml)`
+• Place the cursor between `@startuml` and `@enduml` to preview
+• If necessary, adjust security settings by clicking `…` → `Change Preview Security Settings`
 
-- VSCode 확장: `PlantUML (jebbs.plantuml)` 설치 필요
-- 미리보기 시 커서가 `@startuml` ~ `@enduml` 사이에 있어야 합니다
-- 보안 설정이 필요한 경우: 우측 상단 "..." → "미리보기 보안 설정 변경"
+Example:
 
-예시:
+<img src="./docs/images/design-sample.png" alt="Document written in PlantUML" width="1061"/>
 
-<img src="./docs/images/design-sample.png" alt="PlantUML로 작성한 문서" width="1061"/>
+## 9. Additional Documentation
 
-## 9. 추가 문서
-
-아래 문서에서 구현 및 설계에 대한 더 자세한 정보를 확인할 수 있습니다:
+You can find more detailed implementation and design information in:
 
 - [Design Guide](./docs/guides/design.guide.md)
 - [Implementation Guide](./docs/guides/implementation.guide.md)
