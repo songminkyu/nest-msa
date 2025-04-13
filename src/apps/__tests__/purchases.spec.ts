@@ -1,51 +1,149 @@
-import { PurchaseDto, PurchaseItemType, PurchasesService } from 'cores'
-import { PaymentsService } from 'infrastructures'
+import { PurchaseDto, PurchaseItemDto, PurchaseItemType, TicketDto, TicketStatus } from 'apps/cores'
+import { Rules } from 'shared'
 import { nullObjectId } from 'testlib'
-import { closeFixture, Fixture } from './purchases.fixture'
+import { Fixture, setupPurchaseData } from './purchases.fixture'
+import { Errors } from './utils'
 
-describe('Purchases Module', () => {
-    let fixture: Fixture
-    let purchasesService: PurchasesService
-    let paymentsService: PaymentsService
-
-    let purchase: PurchaseDto
-    const customerId = nullObjectId
-    const totalPrice = 1000
-    const items = [{ type: PurchaseItemType.ticket, ticketId: nullObjectId }]
+describe('Purchases', () => {
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./purchases.fixture')
-
-        fixture = await createFixture()
-        purchasesService = fixture.purchasesService
-        paymentsService = fixture.paymentsService
-
-        purchase = await purchasesService.createPurchase({ customerId, totalPrice, items })
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture(fixture)
+        await fix?.teardown()
     })
 
-    it('구매 요청을 성공적으로 처리해야 한다', async () => {
-        expect(purchase).toEqual({
-            id: expect.any(String),
-            paymentId: expect.any(String),
-            createdAt: expect.any(Date),
-            updatedAt: expect.any(Date),
-            customerId,
-            totalPrice,
-            items
+    describe('POST /purchases', () => {
+        let purchase: PurchaseDto
+        let availableTickets: TicketDto[]
+        let purchaseItems: PurchaseItemDto[]
+
+        beforeEach(async () => {
+            const data = await setupPurchaseData(fix)
+            availableTickets = data.availableTickets
+            purchaseItems = data.purchaseItems
+
+            const { body } = await fix.httpClient
+                .post('/purchases')
+                .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
+                .created()
+
+            purchase = body
+        })
+
+        /* 구매 요청을 성공적으로 처리해야 한다 */
+        it('Should successfully process a purchase request', async () => {
+            expect(purchase).toEqual({
+                id: expect.any(String),
+                createdAt: expect.any(Date),
+                updatedAt: expect.any(Date),
+                paymentId: expect.any(String),
+                customerId: fix.customer.id,
+                totalPrice: 1,
+                purchaseItems
+            })
+        })
+
+        /* 결제 정보를 조회할 수 있어야 한다 */
+        it('Should allow retrieving payment information', async () => {
+            const payments = await fix.paymentsService.getPayments([purchase.paymentId])
+            expect(payments[0].amount).toEqual(purchase.totalPrice)
+        })
+
+        /* 구매한 티켓은 sold 상태여야 한다 */
+        it('Should mark purchased tickets as sold', async () => {
+            const ticketIds = purchaseItems.map((item) => item.ticketId)
+            const retrievedTickets = await fix.ticketsService.getTickets(ticketIds)
+            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.sold))
+        })
+
+        /* 구매하지 않은 티켓은 available 상태여야 한다 */
+        it('Should keep unpurchased tickets in available status', async () => {
+            const ticketIds = availableTickets.map((ticket) => ticket.id)
+            const retrievedTickets = await fix.ticketsService.getTickets(ticketIds)
+            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.available))
         })
     })
 
-    it('구매 정보를 조회해야 한다', async () => {
-        const gotPurchase = await purchasesService.getPurchase(purchase.id)
-        expect(gotPurchase).toEqual(purchase)
+    describe('GET /purchases/:purchaseId', () => {
+        let purchase: PurchaseDto
+
+        beforeEach(async () => {
+            purchase = await fix.purchasesService.createPurchase({
+                customerId: fix.customer.id,
+                totalPrice: 1,
+                purchaseItems: [{ type: PurchaseItemType.ticket, ticketId: nullObjectId }]
+            })
+        })
+
+        /* 구매 정보를 조회해야 한다 */
+        it('Should retrieve purchase information', async () => {
+            await fix.httpClient.get(`/purchases/${purchase.id}`).ok(purchase)
+        })
     })
 
-    it('결제 정보가 조회돼야 한다', async () => {
-        const payment = await paymentsService.getPayment(purchase.paymentId)
-        expect(payment.amount).toEqual(purchase.totalPrice)
+    describe('Verify purchase availability', () => {
+        /* 최대 구매 수량을 초과하면 BAD_REQUEST(400)를 반환해야 한다 */
+        it('Should return BAD_REQUEST(400) if the purchase exceeds the maximum quantity', async () => {
+            const { purchaseItems } = await setupPurchaseData(fix, {
+                holdCount: Rules.Ticket.maxTicketsPerPurchase + 1
+            })
+
+            await fix.httpClient
+                .post('/purchases')
+                .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
+                .badRequest({ ...Errors.Purchase.MaxTicketsExceeded, maxCount: expect.any(Number) })
+        })
+
+        /* 구매 가능 시간을 초과하면 BAD_REQUEST(400)를 반환해야 한다 */
+        it('Should return BAD_REQUEST(400) if the purchase deadline is exceeded', async () => {
+            const { purchaseItems } = await setupPurchaseData(fix, {
+                minutesFromNow: Rules.Ticket.purchaseDeadlineMinutes
+            })
+
+            await fix.httpClient
+                .post('/purchases')
+                .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
+                .badRequest({
+                    ...Errors.Purchase.DeadlineExceeded,
+                    deadlineMinutes: expect.any(Number),
+                    cutoffTime: expect.any(String),
+                    startTime: expect.any(String)
+                })
+        })
+
+        /* 선점되지 않은 티켓을 구매하려하면 BAD_REQUEST(400)를 반환해야 한다 */
+        it('Should return BAD_REQUEST(400) if attempting to purchase unheld tickets', async () => {
+            const { showtime, purchaseItems } = await setupPurchaseData(fix)
+            await fix.ticketHoldingClient.releaseTickets(showtime.id, fix.customer.id)
+
+            await fix.httpClient
+                .post('/purchases')
+                .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
+                .badRequest(Errors.Purchase.TicketNotHeld)
+        })
+    })
+
+    describe('errors', () => {
+        /* 구매 완료 단계에서 오류가 발생하면 InternalServerError(500)를 반환해야 한다 */
+        it('Should return InternalServerError(500) if an error occurs in the purchase completion phase', async () => {
+            const { purchaseItems } = await setupPurchaseData(fix)
+
+            jest.spyOn(fix.ticketsService, 'updateTicketStatus').mockImplementationOnce(() => {
+                throw new Error('purchase error')
+            })
+
+            const spyRollback = jest.spyOn(fix.ticketPurchaseProcessor, 'rollbackPurchase')
+
+            await fix.httpClient
+                .post('/purchases')
+                .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
+                .internalServerError()
+
+            expect(spyRollback).toHaveBeenCalledTimes(1)
+        })
     })
 })

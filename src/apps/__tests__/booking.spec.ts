@@ -1,38 +1,33 @@
-import { DateUtil, pickIds } from 'common'
-import { Seatmap, TicketDto } from 'cores'
-import { HttpTestClient } from 'testlib'
-import { closeFixture, Fixture } from './booking.fixture'
+import { Seatmap, ShowtimeDto, TheaterDto, TicketDto } from 'apps/cores'
+import { DateTimeRange, DateUtil, pickIds } from 'common'
+import { step } from 'testlib'
+import { Fixture } from './booking.fixture'
 
 describe('Booking', () => {
-    let fixture: Fixture
-    let client: HttpTestClient
-    let movieId: string
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./booking.fixture')
-
-        fixture = await createFixture()
-        client = fixture.testContext.client
-        movieId = fixture.movie.id
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture(fixture)
+        await fix?.teardown()
     })
 
-    it('티켓 예매 시나리오', async () => {
-        const step = (_name: string, fn: () => void) => fn()
-
-        let theaterId: string
-        let seatCount: number
-        let showdate: string
-        let showtimeId: string
+    /* 성공적인 영화 예매 흐름을 처리할 수 있어야 한다 */
+    it('Should handle a successful movie booking flow', async () => {
+        let theater: TheaterDto
+        let showdate: Date
+        let showtime: ShowtimeDto
         let tickets: TicketDto[]
 
-        await step('1. 상영 극장 목록 요청', async () => {
+        /* 1. 상영 극장 목록 요청 */
+        await step('1. Request list of theaters screening the movie', async () => {
             const latlong = '31.9,131.9'
-            const { body: theaters } = await client
-                .get(`/booking/movies/${movieId}/theaters?latlong=${latlong}`)
+
+            const { body: theaters } = await fix.httpClient
+                .get(`/booking/movies/${fix.movie.id}/theaters?latlong=${latlong}`)
                 .ok()
 
             expect(theaters).toEqual(
@@ -45,13 +40,13 @@ describe('Booking', () => {
                 ].map((item) => expect.objectContaining(item))
             )
 
-            theaterId = theaters[0].id
-            seatCount = Seatmap.getSeatCount(theaters[0].seatmap)
+            theater = theaters[0]
         })
 
-        await step('2. 상영일 목록 요청', async () => {
-            const { body: showdates } = await client
-                .get(`/booking/movies/${movieId}/theaters/${theaterId}/showdates`)
+        /* 2. 상영일 목록 요청 */
+        await step('2. Request list of show dates', async () => {
+            const { body: showdates } = await fix.httpClient
+                .get(`/booking/movies/${fix.movie.id}/theaters/${theater.id}/showdates`)
                 .ok()
 
             expect(showdates).toEqual([
@@ -60,52 +55,63 @@ describe('Booking', () => {
                 new Date('2999-01-03')
             ])
 
-            showdate = DateUtil.toYMD(showdates[0])
+            showdate = showdates[0]
         })
 
-        await step('3. 상영 시간 목록 요청', async () => {
-            const { body: showtimes } = await client
-                .get(
-                    `/booking/movies/${movieId}/theaters/${theaterId}/showdates/${showdate}/showtimes`
-                )
-                .ok()
+        /* 3. 상영 시간 목록 요청 */
+        await step('3. Request list of showtimes', async () => {
+            const movieId = fix.movie.id
+            const theaterId = theater.id
+            const yymmdd = DateUtil.toYMD(showdate)
 
-            expect(showtimes).toEqual(
+            const url = `/booking/movies/${movieId}/theaters/${theaterId}/showdates/${yymmdd}/showtimes`
+            const { body: showtimes } = await fix.httpClient.get(url).ok(
                 expect.arrayContaining(
                     [
                         {
                             movieId,
                             theaterId,
-                            startTime: new Date('2999-01-01T12:00'),
-                            salesStatus: { total: seatCount, sold: 0, available: seatCount }
+                            timeRange: DateTimeRange.create({
+                                start: new Date('2999-01-01T12:00'),
+                                minutes: 1
+                            })
                         },
                         {
                             movieId,
                             theaterId,
-                            startTime: new Date('2999-01-01T14:00'),
-                            salesStatus: { total: seatCount, sold: 0, available: seatCount }
+                            timeRange: DateTimeRange.create({
+                                start: new Date('2999-01-01T14:00'),
+                                minutes: 1
+                            })
                         }
                     ].map((item) => expect.objectContaining(item))
                 )
             )
 
-            showtimeId = showtimes[0].id
+            showtime = showtimes[0]
         })
 
-        await step('4. 구매 가능한 티켓 목록 요청', async () => {
-            const { body } = await client.get(`/booking/showtimes/${showtimeId}/tickets`).ok()
+        /* 4. 구매 가능한 티켓 목록 요청 */
+        await step('4. Request list of available tickets', async () => {
+            const { body } = await fix.httpClient
+                .get(`/booking/showtimes/${showtime.id}/tickets`)
+                .ok()
+
             tickets = body
+
+            const seatCount = Seatmap.getSeatCount(theater.seatmap)
             expect(tickets).toHaveLength(seatCount)
         })
 
-        await step('5. 티켓 선점', async () => {
+        /* 5. 티켓 선점 */
+        await step('5. Hold tickets', async () => {
             const ticketIds = pickIds(tickets.slice(0, 4))
 
-            await client
-                .patch(`/booking/showtimes/${showtimeId}/tickets`)
-                .headers({ Authorization: `Bearer ${fixture.accessToken}` })
+            await fix.httpClient
+                .patch(`/booking/showtimes/${showtime.id}/tickets`)
+                .headers({ Authorization: `Bearer ${fix.accessToken}` })
                 .body({ ticketIds })
-                .ok({ heldTicketIds: ticketIds })
+                .ok({ success: true })
         })
     })
 })

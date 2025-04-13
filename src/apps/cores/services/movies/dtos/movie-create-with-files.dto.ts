@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer'
 import { IsArray, ValidateNested } from 'class-validator'
-import { StorageFileCreateDto } from 'infrastructures'
+import { StorageFileCreateDto } from 'apps/infrastructures'
 import { MovieCreateDto } from './movie-create.dto'
 
 export class MovieCreateWithFilesDto {

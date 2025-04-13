@@ -1,18 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { addRegexQuery, MethodLog, MongooseRepository } from 'common'
-import { FilterQuery, Model } from 'mongoose'
-import { MongooseConfig } from 'shared/config'
+import { MongooseRepository, QueryBuilder, QueryBuilderOptions } from 'common'
+import { Model } from 'mongoose'
 import { TheaterCreateDto, TheaterQueryDto, TheaterUpdateDto } from './dtos'
 import { Theater } from './models'
 
 @Injectable()
 export class TheatersRepository extends MongooseRepository<Theater> {
-    constructor(@InjectModel(Theater.name, MongooseConfig.connName) model: Model<Theater>) {
+    constructor(@InjectModel(Theater.name) model: Model<Theater>) {
         super(model)
     }
 
-    @MethodLog()
     async createTheater(createDto: TheaterCreateDto) {
         const theater = this.newDocument()
         theater.name = createDto.name
@@ -22,7 +20,6 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return theater.save()
     }
 
-    @MethodLog()
     async updateTheater(theaterId: string, updateDto: TheaterUpdateDto) {
         const theater = await this.getById(theaterId)
 
@@ -33,20 +30,28 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return theater.save()
     }
 
-    @MethodLog({ level: 'verbose' })
     async findTheaters(queryDto: TheaterQueryDto) {
-        const { name, ...pagination } = queryDto
+        const { take, skip, orderby } = queryDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query: FilterQuery<Theater> = {}
-                addRegexQuery(query, 'name', name)
+                const query = this.buildQuery(queryDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
-            pagination
+            pagination: { take, skip, orderby }
         })
 
         return paginated
+    }
+
+    private buildQuery(queryDto: TheaterQueryDto, options: QueryBuilderOptions) {
+        const { name } = queryDto
+
+        const builder = new QueryBuilder<Theater>()
+        builder.addRegex('name', name)
+
+        const query = builder.build(options)
+        return query
     }
 }

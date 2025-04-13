@@ -1,33 +1,29 @@
-import { PaymentsService } from 'infrastructures'
-import { closeFixture, createPaymentDto, Fixture } from './payments.fixture'
+import { buildPaymentCreateDto, Fixture } from './payments.fixture'
 
-describe('Payments Module', () => {
-    let fixture: Fixture
-    let service: PaymentsService
+describe('Payments', () => {
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./payments.fixture')
-
-        fixture = await createFixture()
-        service = fixture.paymentsService
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture(fixture)
+        await fix?.teardown()
     })
 
     it('processPayment', async () => {
-        const { createDto, expectedDto } = createPaymentDto()
+        const { createDto, expectedDto } = buildPaymentCreateDto()
 
-        const payment = await service.processPayment(createDto)
+        const payment = await fix.paymentsClient.processPayment(createDto)
         expect(payment).toEqual(expectedDto)
     })
 
-    it('getPayment', async () => {
-        const { createDto } = createPaymentDto()
-        const createdPayment = await service.processPayment(createDto)
-        const gotPayment = await service.getPayment(createdPayment.id)
+    it('getPayments', async () => {
+        const { createDto } = buildPaymentCreateDto()
+        const createdPayment = await fix.paymentsClient.processPayment(createDto)
 
-        expect(gotPayment).toEqual(createdPayment)
+        const gotPayments = await fix.paymentsClient.getPayments([createdPayment.id])
+        expect(gotPayments).toEqual([createdPayment])
     })
 })

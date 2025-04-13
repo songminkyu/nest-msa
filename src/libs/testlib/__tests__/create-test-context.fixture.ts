@@ -6,15 +6,18 @@ import {
     Payload,
     Transport
 } from '@nestjs/microservices'
-import { createHttpTestContext } from '../create-test-context'
-import { MicroserviceTestClient } from '../microservice.test-client'
-import { getNatsTestConnection } from '../test-containers'
-import { withTestId } from '../utils'
+import {
+    createHttpTestContext,
+    getNatsTestConnection,
+    HttpTestClient,
+    RpcTestClient,
+    withTestId
+} from 'testlib'
 
 @Controller()
 class SampleController {
-    @MessagePattern(withTestId('subject.getMicroserviceMessage'))
-    getMicroserviceMessage(@Payload() request: { arg: string }) {
+    @MessagePattern(withTestId('getRpcMessage'))
+    getRpcMessage(@Payload() request: { arg: string }) {
         return { id: request.arg }
     }
 
@@ -24,12 +27,17 @@ class SampleController {
     }
 }
 
-export async function createFixture() {
-    const { servers } = await getNatsTestConnection()
+export interface Fixture {
+    teardown: () => Promise<void>
+    rpcClient: RpcTestClient
+    httpClient: HttpTestClient
+}
 
+export async function createFixture(): Promise<Fixture> {
+    const { servers } = await getNatsTestConnection()
     const brokerOpts = { transport: Transport.NATS, options: { servers } } as NatsOptions
 
-    const testContext = await createHttpTestContext({
+    const { httpClient, ...testContext } = await createHttpTestContext({
         metadata: { controllers: [SampleController] },
         configureApp: async (app) => {
             app.connectMicroservice<MicroserviceOptions>(brokerOpts, { inheritAppConfig: true })
@@ -37,12 +45,12 @@ export async function createFixture() {
         }
     })
 
-    const microClient = MicroserviceTestClient.create(brokerOpts)
+    const rpcClient = RpcTestClient.create(brokerOpts)
 
-    const closeFixture = async () => {
-        await microClient?.close()
-        await testContext?.close()
+    const teardown = async () => {
+        await rpcClient.close()
+        await testContext.close()
     }
 
-    return { closeFixture, microClient, httpClient: testContext.httpClient }
+    return { teardown, rpcClient, httpClient }
 }

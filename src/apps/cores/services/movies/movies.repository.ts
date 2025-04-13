@@ -1,18 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { addEqualQuery, addRegexQuery, MethodLog, MongooseRepository, objectIds } from 'common'
-import { FilterQuery, Model } from 'mongoose'
-import { MongooseConfig } from 'shared/config'
+import { MongooseRepository, objectIds, QueryBuilder, QueryBuilderOptions } from 'common'
+import { Model } from 'mongoose'
 import { MovieCreateDto, MovieQueryDto, MovieUpdateDto } from './dtos'
 import { Movie } from './models'
 
 @Injectable()
 export class MoviesRepository extends MongooseRepository<Movie> {
-    constructor(@InjectModel(Movie.name, MongooseConfig.connName) model: Model<Movie>) {
+    constructor(@InjectModel(Movie.name) model: Model<Movie>) {
         super(model)
     }
 
-    @MethodLog()
     async createMovie(createDto: MovieCreateDto, storageFileIds: string[]) {
         const movie = this.newDocument()
         movie.title = createDto.title
@@ -27,7 +25,6 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         return movie.save()
     }
 
-    @MethodLog()
     async updateMovie(movieId: string, updateDto: MovieUpdateDto) {
         const movie = await this.getById(movieId)
 
@@ -42,25 +39,33 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         return movie.save()
     }
 
-    @MethodLog({ level: 'verbose' })
     async findMovies(queryDto: MovieQueryDto) {
-        const { title, genre, releaseDate, plot, director, rating, ...pagination } = queryDto
+        const { take, skip, orderby } = queryDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query: FilterQuery<Movie> = {}
-                addRegexQuery(query, 'title', title)
-                addEqualQuery(query, 'genre', genre)
-                addEqualQuery(query, 'releaseDate', releaseDate)
-                addRegexQuery(query, 'plot', plot)
-                addRegexQuery(query, 'director', director)
-                addEqualQuery(query, 'rating', rating)
+                const query = this.buildQuery(queryDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
-            pagination
+            pagination: { take, skip, orderby }
         })
 
         return paginated
+    }
+
+    private buildQuery(queryDto: MovieQueryDto, options: QueryBuilderOptions) {
+        const { title, genre, releaseDate, plot, director, rating } = queryDto
+
+        const builder = new QueryBuilder<Movie>()
+        builder.addRegex('title', title)
+        builder.addEqual('genre', genre)
+        builder.addEqual('releaseDate', releaseDate)
+        builder.addRegex('plot', plot)
+        builder.addRegex('director', director)
+        builder.addEqual('rating', rating)
+
+        const query = builder.build(options)
+        return query
     }
 }

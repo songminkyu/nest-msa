@@ -1,15 +1,20 @@
 import { HttpStatus } from '@nestjs/common'
-import { jsonToObject, Byte } from 'common'
+import { Byte, jsonToObject } from 'common'
 import { createWriteStream } from 'fs'
 import { reject } from 'lodash'
 import superagent from 'superagent'
-import { parseEventMessage } from './utils'
+
+interface EventMessage {
+    event: string
+    id: number
+    data: string
+}
 
 export class HttpTestClient {
     private agent: superagent.Request
     private serverUrl: string
 
-    constructor(private port: number) {
+    constructor(port: number) {
         this.serverUrl = `http://localhost:${port}`
     }
 
@@ -78,7 +83,7 @@ export class HttpTestClient {
     download(downloadFilePath: string) {
         const writeStream = createWriteStream(downloadFilePath)
 
-        // 기본값인 200MB 제한을 해제함
+        // Remove the default 200MB limit
         this.agent.maxResponseSize(Byte.fromString('1TB'))
 
         this.agent.buffer().parse((res, callback) => {
@@ -117,7 +122,7 @@ export class HttpTestClient {
                          * id: 1
                          * data: {"batchId":"6712d234a78adbff65ae552d","status":"processing"}
                          */
-                        const message = parseEventMessage(data)
+                        const message = this.parseEventMessage(data)
 
                         if (message.event !== 'error' && message.data) {
                             messageHandler(message.data)
@@ -142,8 +147,35 @@ export class HttpTestClient {
         return this
     }
 
+    private parseEventMessage(input: string): EventMessage {
+        const lines = input.split('\n')
+        const result: Partial<EventMessage> = {}
+
+        lines.forEach((line) => {
+            const [key, value] = line.split(': ')
+            if (key && value) {
+                switch (key) {
+                    case 'event':
+                        result.event = value
+                        break
+                    case 'id':
+                        result.id = parseInt(value, 10)
+                        break
+                    case 'data':
+                        result.data = value
+                        break
+                }
+            }
+        })
+
+        return result as EventMessage
+    }
+
     async send(status: number, expected?: any): Promise<superagent.Response> {
-        // ok(() => true)를 하지 않으면 400 이상 상태 코드는 예외를 던진다.
+        /*
+        Without ok(() => true), status codes 400 and above will throw an exception.
+        ok(() => true)를 하지 않으면 400 이상 상태 코드는 예외를 던진다.
+        */
         const res = await this.agent.ok(() => true)
 
         if (res.status !== status) {
@@ -169,5 +201,7 @@ export class HttpTestClient {
     conflict = (expected?: any) => this.send(HttpStatus.CONFLICT, expected)
     notFound = (expected?: any) => this.send(HttpStatus.NOT_FOUND, expected)
     payloadTooLarge = (expected?: any) => this.send(HttpStatus.PAYLOAD_TOO_LARGE, expected)
+    unsupportedMediaTypeException = (expected?: any) =>
+        this.send(HttpStatus.UNSUPPORTED_MEDIA_TYPE, expected)
     internalServerError = (expected?: any) => this.send(HttpStatus.INTERNAL_SERVER_ERROR, expected)
 }

@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common'
-import { MethodLog, OrderDirection } from 'common'
-import { MovieDto, MoviesProxy, ShowtimesProxy, WatchRecordsProxy } from 'cores'
-import { generateRecommendedMovies } from './recommendation.utils'
+import { OrderDirection } from 'common'
+import { MovieDto, MoviesClient, ShowtimesClient, WatchRecordsClient } from 'apps/cores'
+import { MovieRecommender } from './domain'
 
 @Injectable()
 export class RecommendationService {
     constructor(
-        private showtimesService: ShowtimesProxy,
-        private moviesService: MoviesProxy,
-        private watchRecordsService: WatchRecordsProxy
+        private showtimesService: ShowtimesClient,
+        private moviesService: MoviesClient,
+        private watchRecordsService: WatchRecordsClient
     ) {}
 
-    @MethodLog({ level: 'verbose' })
     async findRecommendedMovies(customerId: string | null) {
         const showingMovieIds = await this.showtimesService.findShowingMovieIds()
 
@@ -28,7 +27,7 @@ export class RecommendationService {
             watchedMovies = await this.moviesService.getMoviesByIds(movieIds)
         }
 
-        const recommendedMovies = generateRecommendedMovies(showingMovies, watchedMovies)
+        const recommendedMovies = MovieRecommender.getRecommendations(showingMovies, watchedMovies)
         return recommendedMovies
     }
 }

@@ -1,16 +1,30 @@
-import { IsOptional } from 'class-validator'
-import { PaginationOptionDto } from 'common'
+import { Type } from 'class-transformer'
+import { IsDate, IsOptional } from 'class-validator'
+import { CommonQueryDto } from 'common'
 
-export class ShowtimeQueryDto extends PaginationOptionDto {
+export class TimeRangeFilter {
+    @IsDate()
+    @Type(() => Date)
+    start?: Date
+
+    @IsDate()
+    @Type(() => Date)
+    end?: Date
+}
+
+export class ShowtimeQueryDto extends CommonQueryDto {
     @IsOptional()
-    movieId?: string
+    batchIds?: string[]
 
     @IsOptional()
-    theaterId?: string
+    movieIds?: string[]
 
     @IsOptional()
-    batchId?: string
+    theaterIds?: string[]
 
     @IsOptional()
-    showtimeIds?: string[]
+    startTimeRange?: TimeRangeFilter
+
+    @IsOptional()
+    endTimeRange?: TimeRangeFilter
 }

@@ -1,33 +1,30 @@
 import { expect } from '@jest/globals'
-import { Model, Types } from 'mongoose'
-import { CloseFixture } from 'testlib'
-import { SchemaTypeSample } from './mongoose.schema.fixture'
+import { Types } from 'mongoose'
+import type { Fixture } from './mongoose.schema.fixture'
 
-describe('Mongoose Schema examples', () => {
-    let closeFixture: CloseFixture
-    let model: Model<SchemaTypeSample>
+describe('Mongoose Schema Examples', () => {
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./mongoose.schema.fixture')
-
-        const fixture = await createFixture()
-        closeFixture = fixture.closeFixture
-        model = fixture.model
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await fix?.teardown()
     })
 
-    it('Mongoose의 모든 기본 데이터 타입 저장 및 조회 검증', async () => {
-        const doc = new model()
+    /* Mongoose의 모든 기본 데이터 타입 저장 및 조회 검증 */
+    it('Validate storing and retrieving all default Mongoose data types', async () => {
+        const doc = new fix.model()
+        doc.sn = 1234567
         doc.name = 'Statue of Liberty'
         doc.binary = Buffer.alloc(0)
         doc.living = false
         doc.updated = new Date()
         doc.age = 65
         doc.mixed = { any: { thing: 'i want' } }
-        doc._someId = new Types.ObjectId()
+        doc.someId = new Types.ObjectId()
         doc.decimal = '123.45' as unknown as Types.Decimal128
         doc.array = [1, 'two', { three: 3 }]
         doc.ofString = ['strings!', 'more strings']
@@ -42,7 +39,7 @@ describe('Mongoose Schema examples', () => {
         ])
         await doc.save()
 
-        const found = await model.findOne({ _id: doc._id }).exec()
+        const found = await fix.model.findOne({ _id: doc._id }).exec()
         expect(found?.toJSON()).toEqual(doc.toJSON())
     })
 })

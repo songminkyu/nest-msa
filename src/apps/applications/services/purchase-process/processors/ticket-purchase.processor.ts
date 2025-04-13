@@ -1,35 +1,51 @@
-import { Injectable } from '@nestjs/common'
-import { MethodLog, pickItems } from 'common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import {
     PurchaseCreateDto,
     PurchaseItemDto,
     PurchaseItemType,
     ShowtimeDto,
-    ShowtimesProxy,
-    TicketHoldingProxy,
-    TicketsProxy,
+    ShowtimesClient,
+    TicketHoldingClient,
+    TicketsClient,
     TicketStatus
-} from 'cores'
+} from 'apps/cores'
+import { DateUtil, pickItems } from 'common'
 import { uniq } from 'lodash'
-import { checkHeldTickets, checkMaxTicketsForPurchase, checkPurchaseDeadline } from '../domain'
-import { PurchaseProcessProxy } from '../purchase-process.proxy'
+import { Rules } from 'shared'
+import { PurchaseProcessClient } from '../purchase-process.client'
+
+export const PurchaseErrors = {
+    MaxTicketsExceeded: {
+        code: 'ERR_PURCHASE_MAX_TICKETS_EXCEEDED',
+        message: 'You have exceeded the maximum number of tickets allowed for purchase.'
+    },
+    DeadlineExceeded: {
+        code: 'ERR_PURCHASE_DEADLINE_EXCEEDED',
+        message: 'The purchase deadline has passed.'
+    },
+    TicketNotHeld: {
+        code: 'ERR_PURCHASE_TICKET_NOT_HELD',
+        message: 'Only held tickets can be purchased.'
+    }
+}
 
 @Injectable()
 export class TicketPurchaseProcessor {
     constructor(
-        private ticketsService: TicketsProxy,
-        private showtimesService: ShowtimesProxy,
-        private ticketHoldingService: TicketHoldingProxy,
-        private purchaseProcessProxy: PurchaseProcessProxy
+        private ticketsService: TicketsClient,
+        private showtimesService: ShowtimesClient,
+        private ticketHoldingService: TicketHoldingClient,
+        private purchaseProcessProxy: PurchaseProcessClient
     ) {}
 
-    @MethodLog()
     async validatePurchase(createDto: PurchaseCreateDto) {
-        const ticketItems = createDto.items.filter((item) => item.type === PurchaseItemType.ticket)
+        const ticketItems = createDto.purchaseItems.filter(
+            (item) => item.type === PurchaseItemType.ticket
+        )
         const showtimes = await this.getShowtimes(ticketItems)
 
-        checkMaxTicketsForPurchase(ticketItems.length)
-        await this.validatePurchaseTime(showtimes)
+        this.validateTicketCount(ticketItems)
+        this.validatePurchaseTime(showtimes)
         await this.validateHeldTickets(createDto.customerId, showtimes, ticketItems)
 
         return true
@@ -45,9 +61,27 @@ export class TicketPurchaseProcessor {
         return showtimes
     }
 
-    private async validatePurchaseTime(showtimes: ShowtimeDto[]) {
-        for (const showtime of showtimes) {
-            await checkPurchaseDeadline(showtime.startTime)
+    private validateTicketCount(ticketItems: PurchaseItemDto[]) {
+        if (Rules.Ticket.maxTicketsPerPurchase < ticketItems.length) {
+            throw new BadRequestException({
+                ...PurchaseErrors.MaxTicketsExceeded,
+                maxCount: Rules.Ticket.maxTicketsPerPurchase
+            })
+        }
+    }
+
+    private validatePurchaseTime(showtimes: ShowtimeDto[]) {
+        for (const { timeRange } of showtimes) {
+            const cutoffTime = DateUtil.addMinutes(new Date(), Rules.Ticket.purchaseDeadlineMinutes)
+
+            if (timeRange.start.getTime() < cutoffTime.getTime()) {
+                throw new BadRequestException({
+                    ...PurchaseErrors.DeadlineExceeded,
+                    deadlineMinutes: Rules.Ticket.purchaseDeadlineMinutes,
+                    startTime: timeRange.start.toString(),
+                    cutoffTime: cutoffTime.toString()
+                })
+            }
         }
     }
 
@@ -68,12 +102,17 @@ export class TicketPurchaseProcessor {
 
         const purchaseTicketIds = pickItems(ticketItems, 'ticketId')
 
-        checkHeldTickets(heldTicketIds, purchaseTicketIds)
+        const isAllExist = purchaseTicketIds.every((ticketId) => heldTicketIds.includes(ticketId))
+
+        if (!isAllExist) {
+            throw new BadRequestException(PurchaseErrors.TicketNotHeld)
+        }
     }
 
-    @MethodLog()
     async completePurchase(createDto: PurchaseCreateDto) {
-        const ticketItems = createDto.items.filter((item) => item.type === PurchaseItemType.ticket)
+        const ticketItems = createDto.purchaseItems.filter(
+            (item) => item.type === PurchaseItemType.ticket
+        )
         const ticketIds = ticketItems.map((item) => item.ticketId)
 
         await this.ticketsService.updateTicketStatus(ticketIds, TicketStatus.sold)
@@ -83,9 +122,10 @@ export class TicketPurchaseProcessor {
         return true
     }
 
-    @MethodLog()
     async rollbackPurchase(createDto: PurchaseCreateDto) {
-        const ticketItems = createDto.items.filter((item) => item.type === PurchaseItemType.ticket)
+        const ticketItems = createDto.purchaseItems.filter(
+            (item) => item.type === PurchaseItemType.ticket
+        )
         const ticketIds = ticketItems.map((item) => item.ticketId)
 
         await this.ticketsService.updateTicketStatus(ticketIds, TicketStatus.available)

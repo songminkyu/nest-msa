@@ -1,43 +1,13 @@
-import { TicketCreateDto, TicketDto, TicketsService, TicketStatus } from 'cores'
-import { omit, uniq } from 'lodash'
-import { nullObjectId } from 'testlib'
-import { createAllTestContexts, AllTestContexts } from './utils'
+import { TicketCreateDto, TicketDto } from 'apps/cores'
+import { buildTicketCreateDto } from './common.fixture'
+import { CommonFixture, createCommonFixture } from './utils'
 
-export interface Fixture {
-    testContext: AllTestContexts
-    ticketsService: TicketsService
-}
-
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-    const ticketsService = module.get(TicketsService)
-
-    return { testContext, ticketsService }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
-
-export const createTicketDto = (overrides = {}) => ({
-    batchId: nullObjectId,
-    movieId: nullObjectId,
-    theaterId: nullObjectId,
-    showtimeId: nullObjectId,
-    status: TicketStatus.available,
-    seat: { block: '1b', row: '1r', seatnum: 1 },
-    ...overrides
-})
-
-export const createTicketDtos = (overrides = {}, length: number = 100) => {
+export const buildTicketCreateDtos = (overrides = {}, length: number) => {
     const createDtos: TicketCreateDto[] = []
     const expectedDtos: TicketDto[] = []
 
     for (let i = 0; i < length; i++) {
-        const createDto = createTicketDto(overrides)
-
-        const expectedDto = { id: expect.any(String), ...omit(createDto, 'batchId') }
+        const { createDto, expectedDto } = buildTicketCreateDto(overrides)
 
         createDtos.push(createDto)
         expectedDtos.push(expectedDto)
@@ -46,12 +16,16 @@ export const createTicketDtos = (overrides = {}, length: number = 100) => {
     return { createDtos, expectedDtos }
 }
 
-export async function createTickets(service: TicketsService, createDtos: TicketCreateDto[]) {
-    const { success } = await service.createTickets(createDtos)
-    expect(success).toBeTruthy()
+export interface Fixture extends CommonFixture {
+    teardown: () => Promise<void>
+}
 
-    const batchIds = uniq(createDtos.map((dto) => dto.batchId))
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture()
 
-    const tickets = await service.findAllTickets({ batchIds })
-    return tickets
+    const teardown = async () => {
+        await commonFixture?.close()
+    }
+
+    return { ...commonFixture, teardown }
 }

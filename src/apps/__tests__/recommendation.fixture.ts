@@ -1,62 +1,19 @@
-import {
-    CustomerDto,
-    CustomersService,
-    MovieDto,
-    MoviesService,
-    ShowtimesService,
-    WatchRecordsService
-} from 'cores'
+import { CustomerDto, MovieDto } from 'apps/cores'
+import { DateTimeRange } from 'common'
 import { nullObjectId } from 'testlib'
-import { createCustomerAndLogin } from './customers-auth.fixture'
-import { createMovie } from './movies.fixture'
-import { createShowtimes } from './showtimes.fixture'
-import { createAllTestContexts, AllTestContexts } from './utils'
+import {
+    createCustomerAndLogin,
+    createMovie,
+    createShowtimes,
+    createWatchRecord
+} from './common.fixture'
+import { CommonFixture, createCommonFixture } from './utils'
 
-export interface Fixture {
-    testContext: AllTestContexts
-    moviesService: MoviesService
-    watchRecordsService: WatchRecordsService
-    showtimesService: ShowtimesService
-    customer: CustomerDto
-    accessToken: string
-}
-
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-
-    const moviesService = module.get(MoviesService)
-    const watchRecordsService = module.get(WatchRecordsService)
-    const showtimesService = module.get(ShowtimesService)
-    const customersService = module.get(CustomersService)
-    const { customer, accessToken } = await createCustomerAndLogin(customersService)
-
-    return {
-        testContext,
-        moviesService,
-        watchRecordsService,
-        showtimesService,
-        customer,
-        accessToken
-    }
-}
-
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
-}
-
-export const createWatchedMovies = async (fixture: Fixture, dtos: Partial<MovieDto>[]) => {
+export const createWatchedMovies = async (fix: Fixture, dtos: Partial<MovieDto>[]) => {
     const watchedMovies = await Promise.all(
         dtos.map(async (dto) => {
-            const movie = await createMovie(fixture.moviesService, dto)
-
-            fixture.watchRecordsService.createWatchRecord({
-                customerId: fixture.customer.id,
-                purchaseId: nullObjectId,
-                watchDate: new Date(0),
-                movieId: movie.id
-            })
-
+            const movie = await createMovie(fix, dto)
+            createWatchRecord(fix, { customerId: fix.customer.id, movieId: movie.id })
             return movie
         })
     )
@@ -64,20 +21,35 @@ export const createWatchedMovies = async (fixture: Fixture, dtos: Partial<MovieD
     return watchedMovies
 }
 
-export const createShowingMovies = async (fixture: Fixture, dtos: Partial<MovieDto>[]) => {
-    const showingMovies = await Promise.all(
-        dtos.map((dto) => createMovie(fixture.moviesService, dto))
-    )
+export const createShowingMovies = async (fix: CommonFixture, dtos: Partial<MovieDto>[]) => {
+    const showingMovies = await Promise.all(dtos.map((dto) => createMovie(fix, dto)))
 
     const showtimesCreateDtos = showingMovies.map((movie) => ({
         movieId: movie.id,
         batchId: nullObjectId,
         theaterId: nullObjectId,
-        startTime: new Date('2999-01-01'),
-        endTime: new Date('2999-01-02')
+        timeRange: DateTimeRange.create({ start: new Date('2999-01-01'), days: 1 })
     }))
 
-    await createShowtimes(fixture.showtimesService, showtimesCreateDtos)
+    await createShowtimes(fix, showtimesCreateDtos)
 
     return showingMovies
+}
+
+export interface Fixture extends CommonFixture {
+    teardown: () => Promise<void>
+    customer: CustomerDto
+    accessToken: string
+}
+
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture()
+
+    const { customer, accessToken } = await createCustomerAndLogin(commonFixture)
+
+    const teardown = async () => {
+        await commonFixture?.close()
+    }
+
+    return { ...commonFixture, teardown, customer, accessToken }
 }

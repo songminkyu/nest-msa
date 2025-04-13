@@ -1,29 +1,26 @@
 import { Injectable } from '@nestjs/common'
-import { MethodLog, newObjectId, PaginationOptionDto } from 'common'
-import { MoviesProxy, ShowtimesProxy, TheatersProxy } from 'cores'
+import { newObjectId, CommonQueryDto } from 'common'
+import { MoviesClient, ShowtimesClient, TheatersClient } from 'apps/cores'
 import { ShowtimeBatchCreateDto, ShowtimeBatchCreateResponse } from './dtos'
 import { ShowtimeCreationWorkerService } from './services'
 
 @Injectable()
 export class ShowtimeCreationService {
     constructor(
-        private theatersService: TheatersProxy,
-        private moviesService: MoviesProxy,
-        private showtimesService: ShowtimesProxy,
+        private theatersService: TheatersClient,
+        private moviesService: MoviesClient,
+        private showtimesService: ShowtimesClient,
         private batchCreationService: ShowtimeCreationWorkerService
     ) {}
 
-    @MethodLog({ level: 'verbose' })
-    async findMovies(queryDto: PaginationOptionDto) {
+    async findMovies(queryDto: CommonQueryDto) {
         return this.moviesService.findMovies(queryDto)
     }
 
-    @MethodLog({ level: 'verbose' })
-    async findTheaters(queryDto: PaginationOptionDto) {
+    async findTheaters(queryDto: CommonQueryDto) {
         return this.theatersService.findTheaters(queryDto)
     }
 
-    @MethodLog({ level: 'verbose' })
     async findShowtimes(theaterIds: string[]) {
         return this.showtimesService.findAllShowtimes({
             theaterIds,
@@ -31,7 +28,6 @@ export class ShowtimeCreationService {
         })
     }
 
-    @MethodLog()
     async createBatchShowtimes(createDto: ShowtimeBatchCreateDto) {
         const batchId = newObjectId()
 

@@ -11,15 +11,3 @@ export class MovieDto {
     rating: MovieRating
     images: string[]
 }
-
-export const nullMovieDto = {
-    id: '',
-    title: '',
-    genre: [],
-    releaseDate: new Date(0),
-    plot: '',
-    durationMinutes: 0,
-    director: '',
-    rating: MovieRating.G,
-    images: []
-}

@@ -1,25 +1,16 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { Messages } from 'shared/config'
+import { Messages } from 'shared'
 import { TicketHoldingService } from './ticket-holding.service'
+import { HoldTicketsDto } from './dtos'
 
 @Controller()
 export class TicketHoldingController {
     constructor(private service: TicketHoldingService) {}
 
     @MessagePattern(Messages.TicketHolding.holdTickets)
-    holdTickets(
-        @Payload('customerId') customerId: string,
-        @Payload('showtimeId') showtimeId: string,
-        @Payload('ticketIds') ticketIds: string[],
-        @Payload('ttlMs') ttlMs: number
-    ) {
-        return this.service.holdTickets({
-            customerId,
-            showtimeId,
-            ticketIds,
-            ttlMs
-        })
+    holdTickets(@Payload() holdDto: HoldTicketsDto) {
+        return this.service.holdTickets(holdDto)
     }
 
     @MessagePattern(Messages.TicketHolding.findHeldTicketIds)

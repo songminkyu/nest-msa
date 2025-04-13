@@ -1,7 +1,12 @@
 import { Type } from 'class-transformer'
-import { IsDate, IsNotEmpty, IsString } from 'class-validator'
+import { IsNotEmpty, IsString, ValidateNested } from 'class-validator'
+import { DateTimeRange } from 'common'
 
 export class ShowtimeCreateDto {
+    @IsString()
+    @IsNotEmpty()
+    batchId: string
+
     @IsString()
     @IsNotEmpty()
     movieId: string
@@ -10,15 +15,8 @@ export class ShowtimeCreateDto {
     @IsNotEmpty()
     theaterId: string
 
-    @IsDate()
-    @Type(() => Date)
-    startTime: Date
-
-    @IsDate()
-    @Type(() => Date)
-    endTime: Date
-
-    @IsString()
     @IsNotEmpty()
-    batchId: string
+    @ValidateNested()
+    @Type(() => DateTimeRange)
+    timeRange: DateTimeRange
 }

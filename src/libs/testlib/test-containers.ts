@@ -32,8 +32,8 @@ export const getMongoTestConnection = (): MongoConnectionContext => {
     const username = EnvVars.getString('MONGO_USERNAME')
     const password = EnvVars.getString('MONGO_PASSWORD')
     const nodes = hosts.map((host) => `${host}:${port}`).join(',')
-
     const uri = `mongodb://${username}:${password}@${nodes}/?replicaSet=${replicaName}`
+
     return { uri }
 }
 
@@ -45,5 +45,6 @@ export const getNatsTestConnection = (): NatsConnectionContext => {
     const hosts = ['NATS_HOST1', 'NATS_HOST2', 'NATS_HOST3'].map((key) => EnvVars.getString(key))
     const port = EnvVars.getNumber('NATS_PORT')
     const servers = hosts.map((host) => `nats://${host}:${port}`)
+
     return { servers }
 }

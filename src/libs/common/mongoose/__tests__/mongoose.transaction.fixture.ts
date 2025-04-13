@@ -13,10 +13,15 @@ class Sample extends MongooseSchema {
 const SampleSchema = createMongooseSchema(Sample)
 
 @Injectable()
-export class SamplesRepository extends MongooseRepository<Sample> {
+class SamplesRepository extends MongooseRepository<Sample> {
     constructor(@InjectModel(Sample.name) model: Model<Sample>) {
         super(model)
     }
+}
+
+export interface Fixture {
+    teardown: () => Promise<void>
+    repository: SamplesRepository
 }
 
 export async function createFixture() {
@@ -36,9 +41,9 @@ export async function createFixture() {
 
     const repository = testContext.module.get(SamplesRepository)
 
-    const closeFixture = async () => {
+    const teardown = async () => {
         await testContext?.close()
     }
 
-    return { testContext, closeFixture, repository }
+    return { teardown, repository }
 }

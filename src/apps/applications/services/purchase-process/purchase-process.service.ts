@@ -1,16 +1,14 @@
 import { Injectable } from '@nestjs/common'
-import { MethodLog } from 'common'
-import { PurchaseCreateDto, PurchasesProxy } from 'cores'
+import { PurchaseCreateDto, PurchasesClient } from 'apps/cores'
 import { TicketPurchaseProcessor } from './processors'
 
 @Injectable()
 export class PurchaseProcessService {
     constructor(
-        private purchasesService: PurchasesProxy,
+        private purchasesService: PurchasesClient,
         private ticketProcessor: TicketPurchaseProcessor
     ) {}
 
-    @MethodLog()
     async processPurchase(createDto: PurchaseCreateDto) {
         await this.ticketProcessor.validatePurchase(createDto)
 

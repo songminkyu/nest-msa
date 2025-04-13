@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes } from '@nestjs/common'
-import { TheaterCreateDto, TheaterQueryDto, TheatersProxy, TheaterUpdateDto } from 'cores'
+import { TheaterCreateDto, TheaterQueryDto, TheatersClient, TheaterUpdateDto } from 'apps/cores'
 import { DefaultPaginationPipe } from './pipes'
 
 @Controller('theaters')
 export class TheatersController {
-    constructor(private service: TheatersProxy) {}
+    constructor(private theatersService: TheatersClient) {}
 
     @Post()
     async createTheater(@Body() createDto: TheaterCreateDto) {
-        return this.service.createTheater(createDto)
+        return this.theatersService.createTheater(createDto)
     }
 
     @Patch(':theaterId')
@@ -16,22 +16,23 @@ export class TheatersController {
         @Param('theaterId') theaterId: string,
         @Body() updateDto: TheaterUpdateDto
     ) {
-        return this.service.updateTheater(theaterId, updateDto)
+        return this.theatersService.updateTheater(theaterId, updateDto)
     }
 
     @Get(':theaterId')
     async getTheater(@Param('theaterId') theaterId: string) {
-        return this.service.getTheater(theaterId)
+        const theaters = await this.theatersService.getTheaters([theaterId])
+        return theaters[0]
     }
 
     @Delete(':theaterId')
     async deleteTheater(@Param('theaterId') theaterId: string) {
-        return this.service.deleteTheater(theaterId)
+        return this.theatersService.deleteTheaters([theaterId])
     }
 
     @UsePipes(DefaultPaginationPipe)
     @Get()
     async findTheaters(@Query() queryDto: TheaterQueryDto) {
-        return this.service.findTheaters(queryDto)
+        return this.theatersService.findTheaters(queryDto)
     }
 }

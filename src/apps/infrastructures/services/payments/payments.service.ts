@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { mapDocToDto, MethodLog } from 'common'
+import { mapDocToDto } from 'common'
 import { PaymentCreateDto, PaymentDto } from './dtos'
 import { PaymentDocument } from './models'
 import { PaymentsRepository } from './payments.repository'
@@ -8,20 +8,20 @@ import { PaymentsRepository } from './payments.repository'
 export class PaymentsService {
     constructor(private repository: PaymentsRepository) {}
 
-    @MethodLog()
     async processPayment(createDto: PaymentCreateDto) {
         const payment = await this.repository.createPayment(createDto)
 
         return this.toDto(payment)
     }
 
-    @MethodLog({ level: 'verbose' })
-    async getPayment(paymentId: string) {
-        const payment = await this.repository.getById(paymentId)
+    async getPayments(paymentIds: string[]) {
+        const payments = await this.repository.getByIds(paymentIds)
 
-        return this.toDto(payment)
+        return this.toDtos(payments)
     }
 
     private toDto = (payment: PaymentDocument) =>
         mapDocToDto(payment, PaymentDto, ['id', 'customerId', 'amount', 'createdAt', 'updatedAt'])
+
+    private toDtos = (payments: PaymentDocument[]) => payments.map((payment) => this.toDto(payment))
 }

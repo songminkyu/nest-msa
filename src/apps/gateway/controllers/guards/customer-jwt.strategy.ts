@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
-import { AuthTokenPayload } from 'common'
+import { CustomerAuthPayload } from 'apps/cores'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-import { AppConfigService } from 'shared/config'
+import { AppConfigService } from 'shared'
 
 @Injectable()
 export class CustomerJwtStrategy extends PassportStrategy(Strategy, 'customer-jwt') {
@@ -14,10 +14,10 @@ export class CustomerJwtStrategy extends PassportStrategy(Strategy, 'customer-jw
         })
     }
 
-    async validate(payload: AuthTokenPayload): Promise<AuthTokenPayload | null> {
+    validate(payload: CustomerAuthPayload): CustomerAuthPayload | null {
         /**
          * 아래처럼 중간에서 제어할 수 있다
-         * const exists = await this.service.customersExist([payload.userId])
+         * const exists = await this.service.customersExist([payload.customerId])
          * return exists ? payload : null
          */
         return payload

@@ -1,20 +1,42 @@
-import { TicketHoldingService } from 'cores'
-import { createAllTestContexts, AllTestContexts } from './utils'
+import { HoldTicketsDto } from 'apps/cores'
+import { CommonFixture, createCommonFixture } from './utils'
+import { nullObjectId, testObjectId } from 'testlib'
 
-export interface Fixture {
-    testContext: AllTestContexts
-    ticketHoldingService: TicketHoldingService
+export const holdTickets = async (fix: CommonFixture, holdDto?: Partial<HoldTicketsDto>) => {
+    return fix.ticketHoldingClient.holdTickets({
+        customerId: nullObjectId,
+        showtimeId: nullObjectId,
+        ticketIds: [testObjectId(0x30), testObjectId(0x31)],
+        ...holdDto
+    })
 }
 
-export async function createFixture() {
-    const testContext = await createAllTestContexts()
-    const module = testContext.coresContext.module
-
-    const ticketHoldingService = module.get(TicketHoldingService)
-
-    return { testContext, ticketHoldingService }
+export const findHeldTicketIds = async (
+    fix: CommonFixture,
+    showtimeId: string,
+    customerId: string
+) => {
+    return fix.ticketHoldingClient.findHeldTicketIds(showtimeId, customerId)
 }
 
-export async function closeFixture(fixture: Fixture) {
-    await fixture.testContext.close()
+export const releaseTickets = async (
+    fix: CommonFixture,
+    showtimeId: string,
+    customerId: string
+) => {
+    return fix.ticketHoldingClient.releaseTickets(showtimeId, customerId)
+}
+
+export interface Fixture extends CommonFixture {
+    teardown: () => Promise<void>
+}
+
+export const createFixture = async () => {
+    const commonFixture = await createCommonFixture()
+
+    const teardown = async () => {
+        await commonFixture?.close()
+    }
+
+    return { ...commonFixture, teardown }
 }

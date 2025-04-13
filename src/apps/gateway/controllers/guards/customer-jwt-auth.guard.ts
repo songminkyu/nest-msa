@@ -1,8 +1,10 @@
-import { ExecutionContext, Injectable } from '@nestjs/common'
+import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common'
+import { GUARDS_METADATA } from '@nestjs/common/constants'
 import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'
 import { Observable } from 'rxjs'
 import { CustomerLocalAuthGuard } from './customer-local-auth.guard'
+import { AuthErrors } from './errors'
 import { IS_PUBLIC_KEY } from './public.decorator'
 
 @Injectable()
@@ -35,8 +37,15 @@ export class CustomerJwtAuthGuard extends AuthGuard('customer-jwt') {
         return super.canActivate(context)
     }
 
+    handleRequest(err: any, user: any, _info: any, _context: any) {
+        if (err || !user) {
+            throw new UnauthorizedException(AuthErrors.Unauthorized)
+        }
+        return user
+    }
+
     private isUsingGuard(target: any, guardType: any): boolean {
-        const guards = this.reflector.get<any[]>('__guards__', target) || []
+        const guards = this.reflector.get<any[]>(GUARDS_METADATA, target) || []
         return guards.some((guard) => guard === guardType)
     }
 }

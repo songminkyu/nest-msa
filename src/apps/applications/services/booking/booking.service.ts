@@ -1,37 +1,42 @@
 import { Injectable } from '@nestjs/common'
-import { LatLong, MethodLog, pickIds } from 'common'
-import { ShowtimesProxy, TheatersProxy, TicketHoldingProxy, TicketsProxy } from 'cores'
+import {
+    HoldTicketsDto,
+    ShowtimesClient,
+    TheatersClient,
+    TicketHoldingClient,
+    TicketsClient
+} from 'apps/cores'
+import { pickIds } from 'common'
 import { generateShowtimesWithSalesStatus, sortTheatersByDistance } from './booking.utils'
-import { ShowtimeSalesStatusDto } from './dtos'
+import {
+    FindShowdatesDto,
+    FindShowingTheatersDto,
+    FindShowtimesDto,
+    ShowtimeSalesStatusDto
+} from './dtos'
 
 @Injectable()
 export class BookingService {
     constructor(
-        private showtimesService: ShowtimesProxy,
-        private theatersService: TheatersProxy,
-        private ticketHoldingService: TicketHoldingProxy,
-        private ticketsService: TicketsProxy
+        private showtimesService: ShowtimesClient,
+        private theatersService: TheatersClient,
+        private ticketHoldingService: TicketHoldingClient,
+        private ticketsService: TicketsClient
     ) {}
 
-    @MethodLog({ level: 'verbose' })
-    async findShowingTheaters(args: { movieId: string; latlong: LatLong }) {
-        const { movieId, latlong } = args
-        const theaterIds = await this.showtimesService.findTheaterIdsByMovieId(movieId)
-        const theaters = await this.theatersService.getTheatersByIds(theaterIds)
+    async findShowingTheaters({ movieId, latlong }: FindShowingTheatersDto) {
+        const theaterIds = await this.showtimesService.findTheaterIds({ movieIds: [movieId] })
+        const theaters = await this.theatersService.getTheaters(theaterIds)
         const showingTheaters = sortTheatersByDistance(theaters, latlong)
 
         return showingTheaters
     }
 
-    @MethodLog({ level: 'verbose' })
-    async findShowdates(args: { movieId: string; theaterId: string }) {
-        return this.showtimesService.findShowdates(args)
+    async findShowdates({ movieId, theaterId }: FindShowdatesDto) {
+        return this.showtimesService.findShowdates({ movieIds: [movieId], theaterIds: [theaterId] })
     }
 
-    @MethodLog({ level: 'verbose' })
-    async findShowtimes(args: { movieId: string; theaterId: string; showdate: Date }) {
-        const { movieId, theaterId, showdate } = args
-
+    async findShowtimes({ movieId, theaterId, showdate }: FindShowtimesDto) {
         const startOfDay = new Date(showdate)
         startOfDay.setHours(0, 0, 0, 0)
 
@@ -52,18 +57,13 @@ export class BookingService {
         return showtimesWithSalesStatus as ShowtimeSalesStatusDto[]
     }
 
-    @MethodLog({ level: 'verbose' })
     async getAvailableTickets(showtimeId: string) {
         const tickets = await this.ticketsService.findAllTickets({ showtimeIds: [showtimeId] })
         return tickets
     }
 
-    @MethodLog({ level: 'verbose' })
-    async holdTickets(args: { customerId: string; showtimeId: string; ticketIds: string[] }) {
-        const seatHoldExpirationTime = 10 * 60 * 1000
-
-        await this.ticketHoldingService.holdTickets({ ...args, ttlMs: seatHoldExpirationTime })
-
-        return { heldTicketIds: args.ticketIds }
+    async holdTickets(dto: HoldTicketsDto) {
+        const success = await this.ticketHoldingService.holdTickets(dto)
+        return { success }
     }
 }

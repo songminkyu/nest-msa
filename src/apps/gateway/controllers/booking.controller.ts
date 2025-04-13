@@ -1,23 +1,24 @@
 import { Body, Controller, Get, Param, Patch, Req, UseGuards } from '@nestjs/common'
-import { BookingProxy } from 'applications'
-import { AuthTokenPayload, DateUtil, LatLong, LatLongQuery } from 'common'
+import { BookingClient } from 'apps/applications'
+import { DateUtil, LatLong, LatLongQuery } from 'common'
 import { CustomerJwtAuthGuard } from './guards'
+import { CustomerAuthRequest } from './types'
 
 @Controller('booking')
 export class BookingController {
-    constructor(private service: BookingProxy) {}
+    constructor(private bookingService: BookingClient) {}
 
     @Get('movies/:movieId/theaters')
     async findShowingTheaters(
         @Param('movieId') movieId: string,
         @LatLongQuery('latlong') latlong: LatLong
     ) {
-        return this.service.findShowingTheaters({ movieId, latlong })
+        return this.bookingService.findShowingTheaters({ movieId, latlong })
     }
 
     @Get('movies/:movieId/theaters/:theaterId/showdates')
     async findShowdates(@Param('movieId') movieId: string, @Param('theaterId') theaterId: string) {
-        return this.service.findShowdates({ movieId, theaterId })
+        return this.bookingService.findShowdates({ movieId, theaterId })
     }
 
     @Get('movies/:movieId/theaters/:theaterId/showdates/:showdate/showtimes')
@@ -26,7 +27,7 @@ export class BookingController {
         @Param('theaterId') theaterId: string,
         @Param('showdate') showdate: string
     ) {
-        return this.service.findShowtimes({
+        return this.bookingService.findShowtimes({
             movieId,
             theaterId,
             showdate: DateUtil.fromYMD(showdate)
@@ -35,7 +36,7 @@ export class BookingController {
 
     @Get('showtimes/:showtimeId/tickets')
     async getTicketsForShowtime(@Param('showtimeId') showtimeId: string) {
-        return this.service.getAvailableTickets(showtimeId)
+        return this.bookingService.getAvailableTickets(showtimeId)
     }
 
     @UseGuards(CustomerJwtAuthGuard)
@@ -43,9 +44,9 @@ export class BookingController {
     async holdTickets(
         @Param('showtimeId') showtimeId: string,
         @Body('ticketIds') ticketIds: string[],
-        @Req() req: { user: AuthTokenPayload }
+        @Req() req: CustomerAuthRequest
     ) {
-        const customerId = req.user.userId
-        return this.service.holdTickets({ customerId, showtimeId, ticketIds })
+        const customerId = req.user.customerId
+        return this.bookingService.holdTickets({ customerId, showtimeId, ticketIds })
     }
 }

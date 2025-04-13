@@ -1,7 +1,7 @@
 import { IsOptional } from 'class-validator'
-import { PaginationOptionDto } from 'common'
+import { CommonQueryDto } from 'common'
 
-export class TheaterQueryDto extends PaginationOptionDto {
+export class TheaterQueryDto extends CommonQueryDto {
     @IsOptional()
     name?: string
 }

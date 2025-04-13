@@ -13,10 +13,12 @@ import {
     validateEmail
 } from 'common'
 import fs from 'fs/promises'
+import { nullDate } from 'testlib'
 
 describe('common/utils/etc', () => {
     describe('sleep', () => {
-        it('주어진 시간만큼 대기해야 한다', async () => {
+        /* 주어진 시간만큼 대기해야 한다 */
+        it('Should wait for the given amount of time', async () => {
             const start = Date.now()
             const timeout = 1000
 
@@ -32,14 +34,16 @@ describe('common/utils/etc', () => {
     })
 
     describe('generateUUID', () => {
-        it('UUID를 생성해야 한다', () => {
+        /* UUID를 생성해야 한다 */
+        it('Should generate a UUID', () => {
             const uuid = generateUUID()
             const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
 
             expect(uuid).toMatch(regex)
         })
 
-        it('생성될 때마다 UUID가 달라야 한다', () => {
+        /* 생성될 때마다 UUID가 달라야 한다 */
+        it('Should generate a different UUID each time', () => {
             const uuid1 = generateUUID()
             const uuid2 = generateUUID()
 
@@ -48,7 +52,8 @@ describe('common/utils/etc', () => {
     })
 
     describe('generateShortId', () => {
-        it('15자리의 짧은 ID를 생성해야 한다', () => {
+        /* 15자리의 짧은 ID를 생성해야 한다 */
+        it('Should generate a 15-character short ID', () => {
             const id = generateShortId()
             // nanoid는 일반적으로 A-Z, a-z, 0-9를 사용
             const regex = /^[A-Za-z0-9]{15}$/
@@ -56,7 +61,8 @@ describe('common/utils/etc', () => {
             expect(id).toMatch(regex)
         })
 
-        it('호출될 때마다 고유한 ID를 생성해야 한다', () => {
+        /* 호출될 때마다 고유한 ID를 생성해야 한다 */
+        it('Should generate a unique ID each time it is called', () => {
             const id1 = generateShortId()
             const id2 = generateShortId()
 
@@ -65,16 +71,18 @@ describe('common/utils/etc', () => {
     })
 
     describe('addQuotesToNumbers', () => {
-        it('JSON 문자열 내의 64비트 정수를 문자열로 변환해야 한다', () => {
-            const text = '[{"bit64":12345678901234567890}]'
+        /* JSON 문자열 내의 64비트 정수를 문자열로 변환해야 한다 */
+        it('Should convert 64-bit integers in the JSON string to strings', () => {
+            const text = '[{\"bit64\":12345678901234567890}]'
             const processedText = addQuotesToNumbers(text)
             const data = JSON.parse(processedText)
 
             expect(data[0].bit64).toEqual('12345678901234567890')
         })
 
-        it('JSON 문자열 내의 32비트 정수를 문자열로 변환해야 한다', () => {
-            const text = '[{"bit32":123456}]'
+        /* JSON 문자열 내의 32비트 정수를 문자열로 변환해야 한다 */
+        it('Should convert 32-bit integers in the JSON string to strings', () => {
+            const text = '[{\"bit32\":123456}]'
             const processedText = addQuotesToNumbers(text)
             const data = JSON.parse(processedText)
 
@@ -83,7 +91,8 @@ describe('common/utils/etc', () => {
     })
 
     describe('jsonToObject', () => {
-        it('ISO 8601 형식의 날짜 문자열을 Date 객체로 변환해야 한다', () => {
+        /* ISO 8601 형식의 날짜 문자열을 Date 객체로 변환해야 한다 */
+        it('Should convert ISO 8601 date strings to Date objects', () => {
             const obj = jsonToObject({
                 date: '2023-06-18T12:00:00.000Z'
             })
@@ -92,13 +101,14 @@ describe('common/utils/etc', () => {
             expect((obj.date as any).toISOString()).toEqual('2023-06-18T12:00:00.000Z')
         })
 
-        it('중첩된 객체 내의 날짜 문자열을 재귀적으로 변환해야 한다', () => {
+        /* 중첩된 객체 내의 날짜 문자열을 재귀적으로 변환해야 한다 */
+        it('Should recursively convert date strings in nested objects', () => {
             const obj = jsonToObject({
                 level1: {
                     date: '2023-06-18T12:00:00.000Z',
                     level2: {
                         date: ['2023-06-19T12:00:00.000Z'],
-                        date2: new Date(0),
+                        date2: nullDate,
                         null: null
                     }
                 }
@@ -108,14 +118,16 @@ describe('common/utils/etc', () => {
             expect(obj.level1.level2.date).toEqual([new Date('2023-06-19T12:00:00.000Z')])
         })
 
-        it('날짜 형식이 아닌 문자열은 무시해야 한다', () => {
+        /* 날짜 형식이 아닌 문자열은 무시해야 한다 */
+        it('Should ignore strings that are not in date format', () => {
             const obj = jsonToObject({
                 text: 'Hello, world!'
             })
             expect(obj.text).toEqual('Hello, world!')
         })
 
-        it('문자열이 아닌 타입은 변환하지 않아야 한다', () => {
+        /* 문자열이 아닌 타입은 변환하지 않아야 한다 */
+        it('Should not convert types that are not strings', () => {
             const obj = jsonToObject({
                 number: 123,
                 boolean: true
@@ -132,12 +144,14 @@ describe('common/utils/etc', () => {
             { id: '3', name: 'Bob', age: 40 }
         ]
 
-        it('객체 배열에서 단일 키를 추출해야 한다', () => {
+        /* 객체 배열에서 단일 키를 추출해야 한다 */
+        it('Should extract a single key from an array of objects', () => {
             const result = pickItems(items, 'name')
             expect(result).toEqual(['John', 'Jane', 'Bob'])
         })
 
-        it('객체 배열에서 여러 키를 추출해야 한다', () => {
+        /* 객체 배열에서 여러 키를 추출해야 한다 */
+        it('Should extract multiple keys from an array of objects', () => {
             const result = pickItems(items, ['id', 'name'])
             expect(result).toEqual([
                 { id: '1', name: 'John' },
@@ -146,12 +160,14 @@ describe('common/utils/etc', () => {
             ])
         })
 
-        it('입력 배열이 비어있으면 빈 배열을 반환해야 한다', () => {
+        /* 입력 배열이 비어있으면 빈 배열을 반환해야 한다 */
+        it('Should return an empty array if the input array is empty', () => {
             const result = pickItems([], 'name')
             expect(result).toEqual([])
         })
 
-        it('존재하지 않는 키를 처리할 때 에러 없이 undefined로 반환해야 한다', () => {
+        /* 존재하지 않는 키를 처리할 때 에러 없이 undefined로 반환해야 한다 */
+        it('Should return undefined without error for non-existent keys', () => {
             const result = pickItems(items, 'address' as any)
             expect(result).toEqual([undefined, undefined, undefined])
         })
@@ -164,12 +180,14 @@ describe('common/utils/etc', () => {
             { id: '3', name: 'Bob' }
         ]
 
-        it('객체 배열에서 id 값을 추출해야 한다', () => {
+        /* 객체 배열에서 id 값을 추출해야 한다 */
+        it('Should extract the id value from an array of objects', () => {
             const result = pickIds(items)
             expect(result).toEqual(['1', '2', '3'])
         })
 
-        it('입력 배열이 비어있으면 빈 배열을 반환해야 한다', () => {
+        /* 입력 배열이 비어있으면 빈 배열을 반환해야 한다 */
+        it('Should return an empty array if the input array is empty', () => {
             const result = pickIds([])
             expect(result).toEqual([])
         })
@@ -190,12 +208,14 @@ describe('common/utils/etc', () => {
             await Path.delete(tempDir)
         })
 
-        it('정확한 MD5 체크섬을 반환해야 한다', async () => {
+        /* MD5 체크섬을 반환해야 한다 */
+        it('Should return the MD5 checksum', async () => {
             const checksum = await getChecksum(helloWorld, 'md5')
             expect(checksum).toBe('65a8e27d8879283831b664bd8b7f0ad4')
         })
 
-        it('정확한 SHA256 체크섬을 반환해야 한다', async () => {
+        /* SHA256 체크섬을 반환해야 한다 */
+        it('Should return the SHA256 checksum', async () => {
             const checksum = await getChecksum(helloWorld)
             expect(checksum).toBe(
                 'dffd6021bb2bd5b0af676290809ec3a53191dd81c7f70a4b28688a362182986f'
@@ -204,12 +224,14 @@ describe('common/utils/etc', () => {
     })
 
     describe('validateEmail', () => {
-        it('유효한 이메일 주소에 대해 true를 반환해야 한다', () => {
+        /* 유효한 이메일 주소에 대해 true를 반환해야 한다 */
+        it('Should return true for a valid email address', () => {
             expect(validateEmail('test@example.com')).toBe(true)
             expect(validateEmail('user.name@domain.co')).toBe(true)
         })
 
-        it('유효하지 않은 이메일 주소에 대해 false를 반환해야 한다', () => {
+        /* 유효하지 않은 이메일 주소에 대해 false를 반환해야 한다 */
+        it('Should return false for an invalid email address', () => {
             expect(validateEmail('plainaddress')).toBe(false)
             expect(validateEmail('user@domain')).toBe(false)
         })

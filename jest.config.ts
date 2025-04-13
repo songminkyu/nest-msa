@@ -6,21 +6,19 @@ const config: Config = {
     testRegex: '.*\\.spec\\.(ts|js)$',
     testEnvironment: 'node',
     transform: { '^.+\\.ts$': 'ts-jest' },
-    // 테스트 간 격리를 위해 모의 함수/모듈 상태를 완전히 초기화
-    clearMocks: true, // 각 테스트 후 mock 호출 기록 제거
-    resetMocks: true, // 각 테스트 후 mock 구현 초기화
-    restoreMocks: true, // 각 테스트 후 원본 구현 복원(spyOn)
-    resetModules: true, // 모듈 캐시 리셋(테스트 간 모듈 상태 격리)
+    // Start of test environment reset configuration
+    clearMocks: true,
+    resetMocks: true,
+    restoreMocks: true,
+    resetModules: true,
+    // End of test environment reset configuration
     rootDir: '.',
     roots: ['<rootDir>/src'],
     moduleNameMapper: {
         '^common$': '<rootDir>/src/libs/common/index',
         '^testlib$': '<rootDir>/src/libs/testlib/index',
-        '^shared/(.*)$': '<rootDir>/src/apps/shared/$1',
-        '^gateway$': '<rootDir>/src/apps/gateway/index',
-        '^applications$': '<rootDir>/src/apps/applications/index',
-        '^cores$': '<rootDir>/src/apps/cores/index',
-        '^infrastructures$': '<rootDir>/src/apps/infrastructures/index'
+        '^shared$': '<rootDir>/src/apps/shared/index',
+        '^apps/(.*)$': '<rootDir>/src/apps/$1'
     },
     collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
     coverageThreshold: { global: { branches: 100, functions: 100, lines: 100, statements: 100 } },
@@ -34,10 +32,16 @@ const config: Config = {
         '/modules/',
         '/index\\.ts$',
         '\\.module\\.ts$',
-        '/libs/testlib/',
+        '/libs/testlib/'
     ],
     coverageDirectory: '<rootDir>/_output/coverage',
-    testTimeout: 10000
+    testTimeout: 30 * 1000
+    /*
+     * If the number of CPU cores is high relative to available memory,
+     * it is recommended to set maxWorkers to roughly (RAM / 4).
+     * For example: 8GB RAM → maxWorkers: 2
+     */
+    // maxWorkers: 2
 }
 
 export default config

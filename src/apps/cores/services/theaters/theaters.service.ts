@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { mapDocToDto, MethodLog } from 'common'
+import { mapDocToDto } from 'common'
 import { TheaterCreateDto, TheaterDto, TheaterQueryDto, TheaterUpdateDto } from './dtos'
 import { TheaterDocument } from './models'
 import { TheatersRepository } from './theaters.repository'
@@ -8,48 +8,32 @@ import { TheatersRepository } from './theaters.repository'
 export class TheatersService {
     constructor(private repository: TheatersRepository) {}
 
-    @MethodLog()
     async createTheater(createDto: TheaterCreateDto) {
         const theater = await this.repository.createTheater(createDto)
         return this.toDto(theater)
     }
 
-    @MethodLog()
     async updateTheater(theaterId: string, updateDto: TheaterUpdateDto) {
         const theater = await this.repository.updateTheater(theaterId, updateDto)
         return this.toDto(theater)
     }
 
-    @MethodLog({ level: 'verbose' })
-    async getTheater(theaterId: string) {
-        const theater = await this.repository.getById(theaterId)
-        return this.toDto(theater)
-    }
-
-    @MethodLog()
-    async deleteTheater(theaterId: string) {
-        await this.repository.deleteById(theaterId)
-        return true
-    }
-
-    @MethodLog({ level: 'verbose' })
-    async findTheaters(queryDto: TheaterQueryDto) {
-        const { items, ...paginated } = await this.repository.findTheaters(queryDto)
-
-        return {
-            ...paginated,
-            items: this.toDtos(items)
-        }
-    }
-
-    @MethodLog({ level: 'verbose' })
-    async getTheatersByIds(theaterIds: string[]) {
+    async getTheaters(theaterIds: string[]) {
         const theaters = await this.repository.getByIds(theaterIds)
-
         return this.toDtos(theaters)
     }
 
-    @MethodLog({ level: 'verbose' })
+    async deleteTheaters(theaterIds: string[]) {
+        const deleteResult = await this.repository.deleteByIds(theaterIds)
+        return deleteResult
+    }
+
+    async findTheaters(queryDto: TheaterQueryDto) {
+        const { items, ...paginated } = await this.repository.findTheaters(queryDto)
+
+        return { ...paginated, items: this.toDtos(items) }
+    }
+
     async theatersExist(theaterIds: string[]) {
         return this.repository.existByIds(theaterIds)
     }

@@ -1,5 +1,5 @@
 export * from './dtos'
 export * from './models'
 export * from './tickets.module'
-export * from './tickets.proxy'
+export * from './tickets.client'
 export * from './tickets.service'

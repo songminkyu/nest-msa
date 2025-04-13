@@ -1,44 +1,41 @@
 import { BadRequestException, NotFoundException, OnModuleInit } from '@nestjs/common'
-import {
-    Assert,
-    Expect,
-    MethodLog,
-    objectId,
-    objectIds,
-    PaginationOptionDto,
-    PaginationResult
-} from 'common'
 import { differenceWith, uniq } from 'lodash'
 import { ClientSession, HydratedDocument, Model, QueryWithHelpers } from 'mongoose'
+import { CommonQueryDto, PaginationResult } from '../query'
+import { Assert, Expect } from '../validator'
+import { MongooseErrors } from './errors'
+import { objectId, objectIds } from './mongoose.util'
 
-export class MongooseUpdateResult {
-    modifiedCount: number
-    matchedCount: number
+export class DeleteResult {
+    deletedCount: number
 }
 
-type SeesionArg = ClientSession | undefined
+type SessionArg = ClientSession | undefined
 
 export abstract class MongooseRepository<Doc> implements OnModuleInit {
     constructor(protected model: Model<Doc>) {}
 
     async onModuleInit() {
-        /**
-         * Issue   : document.save() internally calls createCollection
-         * Symptom : Concurrent save() calls can cause "Collection namespace is already in use" errors.
-         *         (more frequent in transactions)
-         * Solution: "await this.model.createCollection()"
-         * Note    : This problem mainly occurs in unit test environments with frequent initializations
-         * Ref     : https://mongoosejs.com/docs/api/model.html#Model.createCollection()
-         */
+        /*
+        Since document.save() internally calls createCollection(),
+        calling save() at the same time can cause a "Collection namespace is already in use" error.
+        This issue often occurs in unit test environments due to frequent re-initialization.
+
+        document.save()가 내부적으로 createCollection()을 호출한다.
+        동시에 save()를 호출하면 "Collection namespace is already in use" 오류가 발생할 수 있다.
+        이 문제는 주로 단위 테스트 환경에서 빈번한 초기화로 인해 발생한다.
+
+        https://mongoosejs.com/docs/api/model.html#Model.createCollection()
+        */
         await this.model.createCollection()
+        await this.model.createIndexes()
     }
 
     newDocument(): HydratedDocument<Doc> {
         return new this.model()
     }
 
-    @MethodLog({ excludeArgs: ['session'] })
-    async saveMany(docs: HydratedDocument<Doc>[], session: SeesionArg = undefined) {
+    async saveMany(docs: HydratedDocument<Doc>[], session: SessionArg = undefined) {
         const { insertedCount, matchedCount, deletedCount } = await this.model.bulkSave(docs, {
             session
         })
@@ -52,32 +49,25 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         return true
     }
 
-    @MethodLog({ level: 'verbose', excludeArgs: ['session'] })
-    async findById(id: string, session: SeesionArg = undefined) {
+    async findById(id: string, session: SessionArg = undefined) {
         return this.model.findById(objectId(id), null, { session })
     }
 
-    @MethodLog({ level: 'verbose', excludeArgs: ['session'] })
-    async findByIds(ids: string[], session: SeesionArg = undefined) {
+    async findByIds(ids: string[], session: SessionArg = undefined) {
         return this.model.find({ _id: { $in: objectIds(ids) } as any }, null, { session })
     }
 
-    @MethodLog({ level: 'verbose', excludeArgs: ['session'] })
-    async getById(id: string, session: SeesionArg = undefined) {
+    async getById(id: string, session: SessionArg = undefined) {
         const doc = await this.findById(id, session)
 
-        if (!doc)
-            throw new NotFoundException({
-                code: 'ERR_DOCUMENT_NOT_FOUND',
-                message: `Document not found`,
-                notFoundId: id
-            })
+        if (!doc) {
+            throw new NotFoundException({ ...MongooseErrors.DocumentNotFound, notFoundId: id })
+        }
 
         return doc
     }
 
-    @MethodLog({ level: 'verbose', excludeArgs: ['session'] })
-    async getByIds(ids: string[], session: SeesionArg = undefined) {
+    async getByIds(ids: string[], session: SessionArg = undefined) {
         const uniqueIds = uniq(ids)
 
         Expect.equalLength(uniqueIds, ids, `Duplicate IDs detected and removed:${ids}`)
@@ -88,8 +78,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
 
         if (notFoundIds.length > 0) {
             throw new NotFoundException({
-                code: 'ERR_DOCUMENT_NOT_FOUND',
-                message: `One or more Documents with IDs not found`,
+                ...MongooseErrors.MultipleDocumentsNotFound,
                 notFoundIds: notFoundIds
             })
         }
@@ -97,42 +86,37 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         return docs
     }
 
-    @MethodLog({ excludeArgs: ['session'] })
-    async deleteById(id: string, session: SeesionArg = undefined) {
+    async deleteById(id: string, session: SessionArg = undefined) {
         const doc = await this.getById(id, session)
         await doc.deleteOne({ session })
     }
 
-    @MethodLog({ excludeArgs: ['session'] })
-    async deleteByIds(ids: string[], session: SeesionArg = undefined) {
+    async deleteByIds(ids: string[], session: SessionArg = undefined): Promise<DeleteResult> {
+        await this.getByIds(ids)
+
         const result = await this.model.deleteMany(
             { _id: { $in: objectIds(ids) } as any },
             { session }
         )
-        return result.deletedCount
+        return result
     }
 
-    @MethodLog({ level: 'verbose', excludeArgs: ['session'] })
-    async existByIds(ids: string[], session: SeesionArg = undefined) {
+    async existByIds(ids: string[], session: SessionArg = undefined) {
         const count = await this.model.countDocuments({ _id: { $in: objectIds(ids) } } as any, {
             session
         })
         return count === ids.length
     }
 
-    @MethodLog({ level: 'verbose', excludeArgs: ['session', 'callback'] })
     async findWithPagination(args: {
         callback?: (helpers: QueryWithHelpers<Array<Doc>, Doc>) => void
-        pagination: PaginationOptionDto
-        session?: SeesionArg
+        pagination: CommonQueryDto
+        session?: SessionArg
     }) {
         const { callback, pagination, session } = args
 
         if (!pagination.take) {
-            throw new BadRequestException({
-                code: 'ERR_INVALID_PAGINATION',
-                message: `'take' must be specified.`
-            })
+            throw new BadRequestException(MongooseErrors.TakeMissing)
         }
 
         const helpers = this.model.find({}, null, { session })
@@ -143,11 +127,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         if (pagination.take) {
             take = pagination.take
             if (take <= 0) {
-                throw new BadRequestException({
-                    code: 'ERR_INVALID_PAGINATION',
-                    message: `'take' must be a positive number`,
-                    take
-                })
+                throw new BadRequestException({ ...MongooseErrors.TakeInvalid, take })
             }
             helpers.limit(take)
         }
@@ -172,7 +152,6 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         return { skip, take, total, items } as PaginationResult<HydratedDocument<Doc>>
     }
 
-    @MethodLog({ level: 'verbose', excludeArgs: ['callback'] })
     async withTransaction<T>(
         callback: (session: ClientSession, rollback: () => void) => Promise<T>
     ) {

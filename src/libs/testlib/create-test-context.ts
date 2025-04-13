@@ -1,3 +1,4 @@
+import { Server } from 'http'
 import express from 'express'
 import { INestApplication } from '@nestjs/common'
 import { TestingModule } from '@nestjs/testing'
@@ -5,7 +6,7 @@ import { ModuleMetadataEx, createTestingModule } from './create-testing-module'
 import { getAvailablePort } from './utils'
 import { HttpTestClient } from './http.test-client'
 
-async function listenOnAvailablePort(server: any): Promise<number> {
+async function listenOnAvailablePort(server: Server): Promise<number> {
     const maxAttempts = 3
     let attemptCount = 0
 
@@ -23,7 +24,7 @@ async function listenOnAvailablePort(server: any): Promise<number> {
 
 export interface TestContext {
     module: TestingModule
-    app: INestApplication<any>
+    app: INestApplication<Server>
     close: () => Promise<void>
 }
 
@@ -34,7 +35,7 @@ export interface HttpTestContext extends TestContext {
 export interface TestContextOptions {
     metadata: ModuleMetadataEx
     brokers?: string[]
-    configureApp?: (app: INestApplication<any>, brokers: string[] | undefined) => Promise<void>
+    configureApp?: (app: INestApplication<Server>, brokers: string[] | undefined) => Promise<void>
 }
 
 export async function createTestContext({
@@ -45,14 +46,17 @@ export async function createTestContext({
     const module = await createTestingModule(metadata)
     const app = module.createNestApplication()
 
-    await configureApp?.(app, brokers)
+    if (configureApp) await configureApp(app, brokers)
 
-    const isDebuggingEnabled = process.env.NODE_OPTIONS !== undefined
+    // Code specific to VSCode
+    const isDebuggingEnabled = process.env.VSCODE_INSPECTOR_OPTIONS !== undefined
     app.useLogger(isDebuggingEnabled ? console : false)
 
     await app.init()
 
-    const close = () => app.close()
+    const close = async () => {
+        await app.close()
+    }
 
     return { module, app, close }
 }

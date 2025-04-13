@@ -1,32 +1,23 @@
-import { MovieDto, MovieGenre } from 'cores'
-import { HttpTestClient } from 'testlib'
-import {
-    closeFixture,
-    createShowingMovies,
-    createWatchedMovies,
-    Fixture
-} from './recommendation.fixture'
+import { MovieDto, MovieGenre } from 'apps/cores'
+import { createShowingMovies, createWatchedMovies, Fixture } from './recommendation.fixture'
 
-describe('Recommendation Module', () => {
-    let fixture: Fixture
-    let client: HttpTestClient
+describe('Recommendation', () => {
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./recommendation.fixture')
-
-        fixture = await createFixture()
-        client = fixture.testContext.client
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture(fixture)
+        await fix?.teardown()
     })
 
-    describe('/movies/recommended', () => {
+    describe('GET /movies/recommended', () => {
         let showingMovies: MovieDto[]
 
         beforeEach(async () => {
-            await createWatchedMovies(fixture, [
+            await createWatchedMovies(fix, [
                 { title: 'Action1', genre: [MovieGenre.Action] },
                 { title: 'Action2', genre: [MovieGenre.Action] },
                 { title: 'Action3', genre: [MovieGenre.Action] },
@@ -35,7 +26,7 @@ describe('Recommendation Module', () => {
                 { title: 'Drama1', genre: [MovieGenre.Drama] }
             ])
 
-            showingMovies = await createShowingMovies(fixture, [
+            showingMovies = await createShowingMovies(fix, [
                 {
                     title: 'Fantasy',
                     genre: [MovieGenre.Fantasy],
@@ -64,10 +55,11 @@ describe('Recommendation Module', () => {
             ])
         })
 
-        it('고객이 가장 많이 관람한 genre, 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다', async () => {
-            const { body } = await client
+        /* 고객이 가장 많이 관람한 genre와 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다 */
+        it('Should return a list of recommended movies sorted by the most watched genre and the latest release date', async () => {
+            const { body } = await fix.httpClient
                 .get('/movies/recommended')
-                .headers({ Authorization: `Bearer ${fixture.accessToken}` })
+                .headers({ Authorization: `Bearer ${fix.accessToken}` })
                 .ok()
 
             expect(body).toEqual([
@@ -79,8 +71,9 @@ describe('Recommendation Module', () => {
             ])
         })
 
-        it('로그인을 하지 않으면 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다', async () => {
-            const { body } = await client.get('/movies/recommended').ok()
+        /* 로그인을 하지 않으면 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다 */
+        it('Should return a list of recommended movies by the latest release date if the user is not logged in', async () => {
+            const { body } = await fix.httpClient.get('/movies/recommended').ok()
 
             expect(body).toEqual([
                 showingMovies[4], // 2900-05-01

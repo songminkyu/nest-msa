@@ -1,22 +1,29 @@
-import { getModelToken, MongooseModule, Prop, Schema } from '@nestjs/mongoose'
+import { getModelToken, MongooseModule, Prop, Schema as NestSchema } from '@nestjs/mongoose'
 import { createMongooseSchema, MongooseSchema } from 'common'
-import * as mongoose from 'mongoose'
+import { Schema, Types, mongo } from 'mongoose'
 import { Model } from 'mongoose'
 import { createTestContext, getMongoTestConnection, withTestId } from 'testlib'
 
-@Schema({
+@NestSchema({
     toJSON: {
         transform: function (doc, ret) {
-            // Buffer로 저장해도 로드하면 mongoose.mongo.Binary 타입이다.
-            ret.ofBuffer = ret.ofBuffer?.map((b: any) =>
-                b instanceof mongoose.mongo.Binary ? b.buffer : b
-            )
+            /*
+            Even if stored as Buffer, it is recognized as mongo.Binary when loaded.
+            Buffer로 저장해도 로드하면 mongo.Binary 타입이다.
+            */
+            ret.ofBuffer = ret.ofBuffer?.map((b: any) => (b instanceof mongo.Binary ? b.buffer : b))
             return ret
         }
     }
 })
 export class SchemaTypeSample extends MongooseSchema {
-    @Prop()
+    @Prop({ index: true, required: true })
+    sn: number
+
+    @Prop({
+        // https://mongoosejs.com/docs/guide.html#collation
+        collation: { locale: 'en_US', strength: 1 }
+    })
     name: string
 
     @Prop({ min: 18, max: 65 })
@@ -31,13 +38,13 @@ export class SchemaTypeSample extends MongooseSchema {
     @Prop()
     living: boolean
 
-    @Prop({ type: mongoose.Schema.Types.Mixed })
+    @Prop({ type: Schema.Types.Mixed })
     mixed: any
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId })
-    _someId: mongoose.Types.ObjectId
+    @Prop({ type: Schema.Types.ObjectId })
+    someId: Types.ObjectId
 
-    @Prop({ type: [mongoose.Schema.Types.Mixed] })
+    @Prop({ type: [Schema.Types.Mixed] })
     array: any[]
 
     @Prop()
@@ -52,7 +59,7 @@ export class SchemaTypeSample extends MongooseSchema {
     @Prop()
     ofBuffer: Buffer[]
 
-    @Prop({ type: [mongoose.Schema.Types.Mixed] })
+    @Prop({ type: [Schema.Types.Mixed] })
     ofMixed: any[]
 
     @Prop({ type: { stuff: { type: String, lowercase: true, trim: true } } })
@@ -61,8 +68,13 @@ export class SchemaTypeSample extends MongooseSchema {
     @Prop({ type: Map })
     map: Map<string, any>
 
-    @Prop({ type: mongoose.Schema.Types.Decimal128 })
-    decimal: mongoose.Types.Decimal128
+    @Prop({ type: Schema.Types.Decimal128 })
+    decimal: Types.Decimal128
+}
+
+export interface Fixture {
+    teardown: () => Promise<void>
+    model: Model<SchemaTypeSample>
 }
 
 export async function createFixture() {
@@ -83,9 +95,9 @@ export async function createFixture() {
 
     const model = testContext.module.get<Model<SchemaTypeSample>>(getModelToken('schema'))
 
-    const closeFixture = async () => {
+    const teardown = async () => {
         await testContext?.close()
     }
 
-    return { testContext, closeFixture, model }
+    return { teardown, model }
 }

@@ -1,17 +1,20 @@
 {
-    "name": "nest-seed",
+    "name": "nest-msa",
     "version": "0.0.1",
     "private": true,
     "scripts": {
         "start": "node _output/dist/${TARGET_APP}/index.js",
         "build": "nest build ${TARGET_APP} -b webpack",
         "debug": "nest start ${TARGET_APP} --watch",
-        "lint": "prettier --write 'src/**/*.ts' && eslint src",
         "test": "bash scripts/run-test.sh",
-        "test:e2e": "bash test/e2e/run.sh"
+        "test:e2e": "bash test/e2e/run.sh",
+        "lint": "prettier --write 'src/**/*.ts' && eslint src"
     },
     "comments": [
-        "chalk,nanoid 등 esm은 node에서 사용 가능하나 jest는 아직이다. node 24에서 jest 다시 점검해라"
+        {
+            "en": "ESM modules such as chalk and nanoid are supported in Node.js, but jest does not fully support ESM yet. Re-evaluate jest compatibility with Node.js 24.",
+            "ko": "chalk,nanoid 등 esm은 node에서 사용 가능하나 jest는 아직이다. node 24에서 jest 다시 점검해라"
+        }
     ],
     "dependencies": {
         "@nestjs-modules/ioredis": "^2.0.2",

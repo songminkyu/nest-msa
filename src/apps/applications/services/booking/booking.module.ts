@@ -1,10 +1,16 @@
 import { Module } from '@nestjs/common'
-import { ShowtimesProxy, TheatersProxy, TicketHoldingProxy, TicketsProxy } from 'cores'
+import { ShowtimesClient, TheatersClient, TicketHoldingClient, TicketsClient } from 'apps/cores'
 import { BookingController } from './booking.controller'
 import { BookingService } from './booking.service'
 
 @Module({
-    providers: [BookingService, ShowtimesProxy, TheatersProxy, TicketHoldingProxy, TicketsProxy],
+    providers: [
+        BookingService,
+        ShowtimesClient,
+        TheatersClient,
+        TicketHoldingClient,
+        TicketsClient
+    ],
     controllers: [BookingController]
 })
 export class BookingModule {}

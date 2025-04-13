@@ -55,8 +55,8 @@ export const configSchema = Joi.object({
 
 @Injectable()
 export class AppConfigService extends BaseConfigService {
-    constructor(configService: ConfigService<object, true>) {
-        super(configService, configSchema)
+    constructor(configService: ConfigService) {
+        super(configService)
     }
 
     get log() {

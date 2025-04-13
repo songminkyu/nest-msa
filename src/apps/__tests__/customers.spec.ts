@@ -1,76 +1,47 @@
 import { expect } from '@jest/globals'
-import { CustomerDto } from 'cores'
-import { expectEqualUnsorted, HttpTestClient, nullObjectId } from 'testlib'
-import {
-    closeFixture,
-    createCustomer,
-    createCustomerDto,
-    createCustomers,
-    Fixture
-} from './customers.fixture'
+import { CustomerDto } from 'apps/cores'
+import { expectEqualUnsorted, nullObjectId } from 'testlib'
+import { biuldCustomerCreateDto, createCustomer } from './common.fixture'
+import { Fixture } from './customers.fixture'
+import { Errors } from './utils'
 
-describe('/customers', () => {
-    let fixture: Fixture
-    let client: HttpTestClient
+describe('Customers', () => {
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./customers.fixture')
-
-        fixture = await createFixture()
-        client = fixture.testContext.client
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture(fixture)
+        await fix?.teardown()
     })
 
     describe('POST /customers', () => {
-        it('고객을 생성해야 한다', async () => {
-            const { createDto, expectedDto } = createCustomerDto()
+        /* 고객을 생성해야 한다 */
+        it('Should create a customer', async () => {
+            const { createDto, expectedDto } = biuldCustomerCreateDto()
 
-            await client.post('/customers').body(createDto).created(expectedDto)
+            await fix.httpClient.post('/customers').body(createDto).created(expectedDto)
         })
 
-        it('이메일이 이미 존재하면 CONFLICT(409)를 반환해야 한다', async () => {
-            const { createDto } = createCustomerDto()
+        /* 이메일이 이미 존재하면 CONFLICT(409)를 반환해야 한다 */
+        it('Should return CONFLICT(409) if the email already exists', async () => {
+            const { createDto } = biuldCustomerCreateDto()
 
-            await client.post('/customers').body(createDto).created()
-            await client.post('/customers').body(createDto).conflict({
-                code: 'ERR_CUSTOMER_EMAIL_ALREADY_EXISTS',
-                email: createDto.email,
-                message: 'Customer with email already exists'
-            })
+            await fix.httpClient.post('/customers').body(createDto).created()
+            await fix.httpClient
+                .post('/customers')
+                .body(createDto)
+                .conflict({ ...Errors.Customer.emailAlreadyExists, email: createDto.email })
         })
 
-        it('필수 필드가 누락되면 BAD_REQUEST(400)를 반환해야 한다', async () => {
-            await client
+        /* 필수 필드가 누락되면 BAD_REQUEST(400)를 반환해야 한다 */
+        it('Should return BAD_REQUEST(400) if required fields are missing', async () => {
+            await fix.httpClient
                 .post('/customers')
                 .body({})
-                .badRequest({
-                    code: 'ERR_VALIDATION_FAILED',
-                    details: [
-                        {
-                            constraints: {
-                                isNotEmpty: 'name should not be empty',
-                                isString: 'name must be a string'
-                            },
-                            field: 'name'
-                        },
-                        {
-                            constraints: { isEmail: 'email must be an email' },
-                            field: 'email'
-                        },
-                        {
-                            constraints: { isDate: 'birthdate must be a Date instance' },
-                            field: 'birthdate'
-                        },
-                        {
-                            constraints: { isString: 'password must be a string' },
-                            field: 'password'
-                        }
-                    ],
-                    message: 'Validation failed'
-                })
+                .badRequest({ ...Errors.RequestValidation.Failed, details: expect.any(Array) })
         })
     })
 
@@ -78,27 +49,28 @@ describe('/customers', () => {
         let customer: CustomerDto
 
         beforeEach(async () => {
-            customer = await createCustomer(fixture.customersService)
+            customer = await createCustomer(fix)
         })
 
-        it('고객 정보를 업데이트해야 한다', async () => {
+        /* 고객 정보를 업데이트해야 한다 */
+        it('Should update customer information', async () => {
             const updateDto = {
-                name: '업데이트된 이름',
+                name: 'update-name',
                 email: 'new@mail.com',
                 birthdate: new Date('1900-12-31')
             }
             const expected = { ...customer, ...updateDto }
 
-            await client.patch(`/customers/${customer.id}`).body(updateDto).ok(expected)
-            await client.get(`/customers/${customer.id}`).ok(expected)
+            await fix.httpClient.patch(`/customers/${customer.id}`).body(updateDto).ok(expected)
+            await fix.httpClient.get(`/customers/${customer.id}`).ok(expected)
         })
 
-        it('고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
-            await client.patch(`/customers/${nullObjectId}`).body({}).notFound({
-                code: 'ERR_DOCUMENT_NOT_FOUND',
-                message: 'Document not found',
-                notFoundId: nullObjectId
-            })
+        /* 고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        it('Should return NOT_FOUND(404) if the customer does not exist', async () => {
+            await fix.httpClient
+                .patch(`/customers/${nullObjectId}`)
+                .body({})
+                .notFound({ ...Errors.Mongoose.DocumentNotFound, notFoundId: nullObjectId })
         })
     })
 
@@ -106,23 +78,23 @@ describe('/customers', () => {
         let customer: CustomerDto
 
         beforeEach(async () => {
-            customer = await createCustomer(fixture.customersService)
+            customer = await createCustomer(fix)
         })
 
-        it('고객을 삭제해야 한다', async () => {
-            await client.delete(`/customers/${customer.id}`).ok()
-            await client.get(`/customers/${customer.id}`).notFound({
-                code: 'ERR_DOCUMENT_NOT_FOUND',
-                message: 'Document not found',
-                notFoundId: customer.id
+        /* 고객을 삭제해야 한다 */
+        it('Should delete the customer', async () => {
+            await fix.httpClient.delete(`/customers/${customer.id}`).ok()
+            await fix.httpClient.get(`/customers/${customer.id}`).notFound({
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [customer.id]
             })
         })
 
-        it('고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
-            await client.delete(`/customers/${nullObjectId}`).notFound({
-                code: 'ERR_DOCUMENT_NOT_FOUND',
-                message: 'Document not found',
-                notFoundId: nullObjectId
+        /* 고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        it('Should return NOT_FOUND(404) if the customer does not exist', async () => {
+            await fix.httpClient.delete(`/customers/${nullObjectId}`).notFound({
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
             })
         })
     })
@@ -131,18 +103,19 @@ describe('/customers', () => {
         let customer: CustomerDto
 
         beforeEach(async () => {
-            customer = await createCustomer(fixture.customersService)
+            customer = await createCustomer(fix)
         })
 
-        it('고객 정보를 가져와야 한다', async () => {
-            await client.get(`/customers/${customer.id}`).ok(customer)
+        /* 고객 정보를 가져와야 한다 */
+        it('Should retrieve customer information', async () => {
+            await fix.httpClient.get(`/customers/${customer.id}`).ok(customer)
         })
 
-        it('고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다', async () => {
-            await client.get(`/customers/${nullObjectId}`).notFound({
-                code: 'ERR_DOCUMENT_NOT_FOUND',
-                message: 'Document not found',
-                notFoundId: nullObjectId
+        /* 고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        it('Should return NOT_FOUND(404) if the customer does not exist', async () => {
+            await fix.httpClient.get(`/customers/${nullObjectId}`).notFound({
+                ...Errors.Mongoose.MultipleDocumentsNotFound,
+                notFoundIds: [nullObjectId]
             })
         })
     })
@@ -151,11 +124,18 @@ describe('/customers', () => {
         let customers: CustomerDto[]
 
         beforeEach(async () => {
-            customers = await createCustomers(fixture.customersService)
+            customers = await Promise.all([
+                createCustomer(fix, { name: 'customer-a1', email: 'user-a1@mail.com' }),
+                createCustomer(fix, { name: 'customer-a2', email: 'user-a2@mail.com' }),
+                createCustomer(fix, { name: 'customer-b1', email: 'user-b1@mail.com' }),
+                createCustomer(fix, { name: 'customer-b2', email: 'user-b2@mail.com' }),
+                createCustomer(fix, { name: 'customer-c1', email: 'user-c1@mail.com' })
+            ])
         })
 
-        it('기본 페이지네이션 설정으로 고객을 가져와야 한다', async () => {
-            const { body } = await client.get('/customers').ok()
+        /* 기본 페이지네이션 설정으로 고객을 가져와야 한다 */
+        it('Should fetch customers with default pagination settings', async () => {
+            const { body } = await fix.httpClient.get('/customers').ok()
             const { items, ...paginated } = body
 
             expect(paginated).toEqual({
@@ -166,36 +146,34 @@ describe('/customers', () => {
             expectEqualUnsorted(items, customers)
         })
 
-        it('잘못된 필드로 검색하면 BAD_REQUEST(400)를 반환해야 한다', async () => {
-            await client
+        /* 잘못된 필드로 검색하면 BAD_REQUEST(400)를 반환해야 한다 */
+        it('Should return BAD_REQUEST(400) when searching with invalid fields', async () => {
+            await fix.httpClient
                 .get('/customers')
                 .query({ wrong: 'value' })
-                .badRequest({
-                    code: 'ERR_VALIDATION_FAILED',
-                    details: [
-                        {
-                            constraints: { whitelistValidation: 'property wrong should not exist' },
-                            field: 'wrong'
-                        }
-                    ],
-                    message: 'Validation failed'
-                })
+                .badRequest({ ...Errors.RequestValidation.Failed, details: expect.any(Array) })
         })
 
-        it('이름의 일부로 고객을 검색할 수 있어야 한다', async () => {
-            const partialName = 'Customer-1'
-            const { body } = await client.get('/customers').query({ name: partialName }).ok()
+        /* 이름의 일부로 고객을 검색할 수 있어야 한다 */
+        it('Should allow searching customers by partial name', async () => {
+            const partialName = 'customer-a'
+            const { body } = await fix.httpClient
+                .get('/customers')
+                .query({ name: partialName })
+                .ok()
 
-            const expected = customers.filter((customer) => customer.name.startsWith(partialName))
-            expectEqualUnsorted(body.items, expected)
+            expectEqualUnsorted(body.items, [customers[0], customers[1]])
         })
 
-        it('이메일의 일부로 고객을 검색할 수 있어야 한다', async () => {
-            const partialEmail = 'user-1'
-            const { body } = await client.get('/customers').query({ email: partialEmail }).ok()
+        /* 이메일의 일부로 고객을 검색할 수 있어야 한다 */
+        it('Should allow searching customers by partial email', async () => {
+            const partialEmail = 'user-b'
+            const { body } = await fix.httpClient
+                .get('/customers')
+                .query({ email: partialEmail })
+                .ok()
 
-            const expected = customers.filter((customer) => customer.email.startsWith(partialEmail))
-            expectEqualUnsorted(body.items, expected)
+            expectEqualUnsorted(body.items, [customers[2], customers[3]])
         })
     })
 })

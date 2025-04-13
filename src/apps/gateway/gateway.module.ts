@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common'
-import { MulterModule } from '@nestjs/platform-express'
 import {
-    BookingProxy,
-    PurchaseProcessProxy,
-    RecommendationProxy,
-    ShowtimeCreationProxy
-} from 'applications'
-import { CustomersProxy, MoviesProxy, PurchasesProxy, TheatersProxy } from 'cores'
-import { StorageFilesProxy } from 'infrastructures'
-import { SharedModules } from 'shared/modules'
+    BookingClient,
+    PurchaseProcessClient,
+    RecommendationClient,
+    ShowtimeCreationClient
+} from 'apps/applications'
+import { CustomersClient, MoviesClient, PurchasesClient, TheatersClient } from 'apps/cores'
+import { StorageFilesClient } from 'apps/infrastructures'
+import { CommonModule } from 'shared'
 import {
     BookingController,
     CustomerJwtStrategy,
@@ -20,27 +19,22 @@ import {
     StorageFilesController,
     TheatersController
 } from './controllers'
-import { HealthModule, MulterConfigService, PipesModule } from './modules'
+import { HealthModule, MulterConfigModule } from './modules'
 
 @Module({
-    imports: [
-        SharedModules,
-        HealthModule,
-        PipesModule,
-        MulterModule.registerAsync({ useClass: MulterConfigService })
-    ],
+    imports: [CommonModule, HealthModule, MulterConfigModule],
     providers: [
         CustomerLocalStrategy,
         CustomerJwtStrategy,
-        CustomersProxy,
-        StorageFilesProxy,
-        MoviesProxy,
-        TheatersProxy,
-        ShowtimeCreationProxy,
-        BookingProxy,
-        PurchasesProxy,
-        RecommendationProxy,
-        PurchaseProcessProxy
+        CustomersClient,
+        StorageFilesClient,
+        MoviesClient,
+        TheatersClient,
+        ShowtimeCreationClient,
+        BookingClient,
+        PurchasesClient,
+        RecommendationClient,
+        PurchaseProcessClient
     ],
     controllers: [
         CustomersController,

@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common'
-import { getChecksum, mapDocToDto, MethodLog, Path } from 'common'
+import { getChecksum, mapDocToDto, Path } from 'common'
 import { HydratedDocument } from 'mongoose'
-import { AppConfigService } from 'shared/config'
+import { AppConfigService } from 'shared'
 import { StorageFileCreateDto, StorageFileDto } from './dtos'
 import { StorageFile, StorageFileDocument } from './models'
 import { StorageFilesRepository } from './storage-files.repository'
 
+/**
+ * StorageFilesService는 로컬에 저장하도록 구현되어있다.
+ * AWS나 GCP등 사용하는 인프라에 맞게 변경되어야 한다.
+ */
 @Injectable()
 export class StorageFilesService {
     constructor(
@@ -13,19 +17,27 @@ export class StorageFilesService {
         private config: AppConfigService
     ) {}
 
-    @MethodLog()
     async saveFiles(createDtos: StorageFileCreateDto[]) {
+        const checksumByPath = new Map<string, string>()
+
+        for (const createDto of createDtos) {
+            const checksum = await getChecksum(createDto.path)
+            checksumByPath.set(createDto.path, checksum)
+        }
+
         const storageFiles = await this.repository.withTransaction(async (session) => {
             const storageFiles: HydratedDocument<StorageFile>[] = []
 
             for (const createDto of createDtos) {
-                const checksum = await getChecksum(createDto.path)
                 const storageFile = await this.repository.createStorageFile(
                     createDto,
-                    checksum,
+                    checksumByPath.get(createDto.path)!,
                     session
                 )
-                // move가 아니라 copy하기 때문에 성능 영향이 있다
+
+                /**
+                 * 대부분 원본과 저장 위치의 파일 시스템이 달라서 move를 할 수 없다.
+                 */
                 await Path.copy(createDto.path, this.getStoragePath(storageFile.id))
 
                 storageFiles.push(storageFile)
@@ -37,20 +49,20 @@ export class StorageFilesService {
         return this.toDtos(storageFiles)
     }
 
-    @MethodLog({ level: 'verbose' })
-    async getStorageFile(fileId: string) {
-        const file = await this.repository.getById(fileId)
-        return this.toDto(file)
+    async getFiles(fileIds: string[]) {
+        const files = await this.repository.getByIds(fileIds)
+        return this.toDtos(files)
     }
 
-    @MethodLog()
-    async deleteStorageFile(fileId: string) {
-        await this.repository.deleteById(fileId)
+    async deleteFiles(fileIds: string[]) {
+        const deleteResult = await this.repository.deleteByIds(fileIds)
 
-        const targetPath = this.getStoragePath(fileId)
-        await Path.delete(targetPath)
+        for (const fileId of fileIds) {
+            const targetPath = this.getStoragePath(fileId)
+            await Path.delete(targetPath)
+        }
 
-        return true
+        return deleteResult
     }
 
     private getStoragePath(fileId: string) {

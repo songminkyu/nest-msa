@@ -1,23 +1,26 @@
-import { createRouteMap } from 'common'
-import { ProjectName, uniqueWhenTesting } from './etc'
+import { ProjectName } from './etc'
+import { createRouteMap, uniqueWhenTesting } from './utils'
 
-const Http = {
-    // MoviesService에서 경로를 참조한다.
-    StorageFiles: '/storage-files'
+export const Routes = {
+    Http: {
+        /*
+        Refer to the path in the MoviesService.
+        MoviesService에서 경로를 참조한다.
+        */
+        StorageFiles: '/storage-files'
+    }
 }
-
-export const Routes = { Http }
 
 export const Messages = createRouteMap(
     {
         StorageFiles: {
             saveFiles: null,
-            getStorageFile: null,
-            deleteStorageFile: null
+            getFiles: null,
+            deleteFiles: null
         },
         Payments: {
             processPayment: null,
-            getPayment: null
+            getPayments: null
         },
         WatchRecords: {
             createWatchRecord: null,
@@ -38,10 +41,9 @@ export const Messages = createRouteMap(
         Theaters: {
             createTheater: null,
             updateTheater: null,
-            getTheater: null,
-            deleteTheater: null,
+            getTheaters: null,
+            deleteTheaters: null,
             findTheaters: null,
-            getTheatersByIds: null,
             theatersExist: null
         },
         Showtimes: {
@@ -49,18 +51,18 @@ export const Messages = createRouteMap(
             getShowtimes: null,
             findAllShowtimes: null,
             findShowingMovieIds: null,
-            findTheaterIdsByMovieId: null,
+            findTheaterIds: null,
             findShowdates: null
         },
         Purchases: {
             createPurchase: null,
-            getPurchase: null
+            getPurchases: null
         },
         Movies: {
             createMovie: null,
             updateMovie: null,
-            getMovie: null,
-            deleteMovie: null,
+            getMovies: null,
+            deleteMovies: null,
             findMovies: null,
             getMoviesByIds: null,
             moviesExist: null
@@ -68,8 +70,8 @@ export const Messages = createRouteMap(
         Customers: {
             createCustomer: null,
             updateCustomer: null,
-            getCustomer: null,
-            deleteCustomer: null,
+            getCustomers: null,
+            deleteCustomers: null,
             findCustomers: null,
             login: null,
             refreshAuthTokens: null,
@@ -85,9 +87,7 @@ export const Messages = createRouteMap(
             findRecommendedMovies: null
         },
         PurchaseProcess: {
-            processPurchase: null,
-            TicketPurchased: null,
-            TicketPurchaseCanceled: null
+            processPurchase: null
         },
         Booking: {
             findShowingTheaters: null,
@@ -104,6 +104,10 @@ export const Events = createRouteMap(
     {
         ShowtimeCreation: {
             statusChanged: null
+        },
+        PurchaseProcess: {
+            TicketPurchased: null,
+            TicketPurchaseCanceled: null
         }
     },
     uniqueWhenTesting(`${ProjectName}.event`)

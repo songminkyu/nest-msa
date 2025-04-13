@@ -1,8 +1,8 @@
-import { MethodLog } from '../method-log'
+import { MethodLog } from 'common'
 import { Observable, of, throwError } from 'rxjs'
 
 function CustomMetadataDecorator(value: string): MethodDecorator {
-    return (target, propertyKey, descriptor) => {
+    return (_target, _propertyKey, descriptor) => {
         Reflect.defineMetadata('CUSTOM_KEY', value, descriptor.value!)
     }
 }
@@ -41,6 +41,11 @@ export class TestService {
     @MethodLog({ level: 'debug' })
     debugLog() {
         return 'value'
+    }
+
+    @MethodLog({ excludeArgs: ['arg2'] })
+    excludeArgs(arg1: string, arg2: string) {
+        return arg1 + '+' + arg2
     }
 
     @MethodLog()

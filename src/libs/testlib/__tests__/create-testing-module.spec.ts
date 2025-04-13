@@ -1,24 +1,20 @@
-import { SampleService } from './create-testing-module.fixture'
+import type { Fixture } from './create-testing-module.fixture'
 
 describe('createTestingModule', () => {
-    let closeFixture: () => void
-    let sampleService: SampleService
+    let fix: Fixture
 
     beforeEach(async () => {
         const { createFixture } = await import('./create-testing-module.fixture')
-
-        const fixture = await createFixture()
-        closeFixture = fixture.closeFixture
-        sampleService = fixture.sampleService
+        fix = await createFixture()
     })
 
     afterEach(async () => {
-        await closeFixture?.()
+        await fix?.teardown()
     })
 
-    it('overrideProviders에 설정한 mock 서비스가 응답해야 한다', async () => {
-        const message = await sampleService.getMessage()
-
+    /* overrideProviders에 설정한 모의 서비스가 응답해야 한다 */
+    it('Should respond with the mock service set in overrideProviders', async () => {
+        const message = fix.sampleService.getMessage()
         expect(message).toEqual({ message: 'This is Mock' })
     })
 })

@@ -13,7 +13,7 @@
         "strictBindCallApply": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
-        "target": "ES2021",
+        "target": "es2024",
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "sourceMap": true,
@@ -26,21 +26,12 @@
             "testlib": [
                 "src/libs/testlib/index"
             ],
-            "shared/*": [
-                "src/apps/shared/*"
+            "shared": [
+                "src/apps/shared/index"
             ],
-            "gateway": [
-                "src/apps/gateway/index"
-            ],
-            "applications": [
-                "src/apps/applications/index"
-            ],
-            "cores": [
-                "src/apps/cores/index"
-            ],
-            "infrastructures": [
-                "src/apps/infrastructures/index"
-            ],
+            "apps/*": [
+                "src/apps/*"
+            ]
         }
     },
     "include": [

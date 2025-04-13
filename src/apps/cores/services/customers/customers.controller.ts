@@ -1,8 +1,8 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { Messages } from 'shared/config'
+import { Messages } from 'shared'
 import { CustomersService } from './customers.service'
-import { CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
+import { CustomerAuthPayload, CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
 
 @Controller()
 export class CustomersController {
@@ -21,14 +21,14 @@ export class CustomersController {
         return this.service.updateCustomer(customerId, updateDto)
     }
 
-    @MessagePattern(Messages.Customers.getCustomer)
-    getCustomer(@Payload() customerId: string) {
-        return this.service.getCustomer(customerId)
+    @MessagePattern(Messages.Customers.getCustomers)
+    getCustomers(@Payload() customerIds: string[]) {
+        return this.service.getCustomers(customerIds)
     }
 
-    @MessagePattern(Messages.Customers.deleteCustomer)
-    deleteCustomer(@Payload() customerId: string) {
-        return this.service.deleteCustomer(customerId)
+    @MessagePattern(Messages.Customers.deleteCustomers)
+    deleteCustomers(@Payload() customerIds: string[]) {
+        return this.service.deleteCustomers(customerIds)
     }
 
     @MessagePattern(Messages.Customers.findCustomers)
@@ -37,8 +37,8 @@ export class CustomersController {
     }
 
     @MessagePattern(Messages.Customers.login)
-    login(@Payload('userId') userId: string, @Payload('email') email: string) {
-        return this.service.login(userId, email)
+    generateAuthTokens(@Payload() payload: CustomerAuthPayload) {
+        return this.service.generateAuthTokens(payload)
     }
 
     @MessagePattern(Messages.Customers.refreshAuthTokens)

@@ -3,19 +3,20 @@ import {
     Controller,
     Delete,
     Get,
-    Logger,
     Param,
     Post,
     StreamableFile,
     UploadedFiles,
+    UseFilters,
     UseInterceptors
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
+import { StorageFilesClient } from 'apps/infrastructures'
 import { IsString } from 'class-validator'
 import { createReadStream } from 'fs'
-import { StorageFilesProxy } from 'infrastructures'
 import { pick } from 'lodash'
-import { Routes } from 'shared/config'
+import { Routes } from 'shared'
+import { MulterExceptionFilter } from './filters'
 
 class UploadFileDto {
     @IsString()
@@ -24,12 +25,9 @@ class UploadFileDto {
 
 @Controller(Routes.Http.StorageFiles)
 export class StorageFilesController {
-    private logger: Logger
+    constructor(private storageFilesService: StorageFilesClient) {}
 
-    constructor(private service: StorageFilesProxy) {
-        this.logger = new Logger(StorageFilesController.name)
-    }
-
+    @UseFilters(new MulterExceptionFilter())
     @UseInterceptors(FilesInterceptor('files'))
     @Post()
     async saveFiles(@UploadedFiles() files: Express.Multer.File[], @Body() _body: UploadFileDto) {
@@ -37,13 +35,14 @@ export class StorageFilesController {
             pick(file, 'originalname', 'mimetype', 'size', 'path')
         )
 
-        const storageFiles = await this.service.saveFiles(createDtos)
+        const storageFiles = await this.storageFilesService.saveFiles(createDtos)
         return { storageFiles }
     }
 
     @Get(':fileId')
     async downloadFile(@Param('fileId') fileId: string) {
-        const file = await this.service.getStorageFile(fileId)
+        const files = await this.storageFilesService.getFiles([fileId])
+        const file = files[0]
 
         const readStream = createReadStream(file.storedPath)
 
@@ -57,7 +56,7 @@ export class StorageFilesController {
     }
 
     @Delete(':fileId')
-    async deleteStorageFile(@Param('fileId') fileId: string) {
-        return this.service.deleteStorageFile(fileId)
+    async deleteFile(@Param('fileId') fileId: string) {
+        return this.storageFilesService.deleteFiles([fileId])
     }
 }

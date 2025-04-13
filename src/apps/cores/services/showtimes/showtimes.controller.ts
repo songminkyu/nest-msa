@@ -1,8 +1,9 @@
 import { Controller, ParseArrayPipe } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { Messages } from 'shared/config'
-import { ShowtimeCreateDto, ShowtimeFilterDto } from './dtos'
+import { Messages } from 'shared'
+import { ShowtimeCreateDto, ShowtimeQueryDto } from './dtos'
 import { ShowtimesService } from './showtimes.service'
+import { CreateShowtimesResult } from './types'
 
 @Controller()
 export class ShowtimesController {
@@ -11,7 +12,7 @@ export class ShowtimesController {
     @MessagePattern(Messages.Showtimes.createShowtimes)
     createShowtimes(
         @Payload(new ParseArrayPipe({ items: ShowtimeCreateDto })) createDtos: ShowtimeCreateDto[]
-    ) {
+    ): Promise<CreateShowtimesResult> {
         return this.service.createShowtimes(createDtos)
     }
 
@@ -21,8 +22,8 @@ export class ShowtimesController {
     }
 
     @MessagePattern(Messages.Showtimes.findAllShowtimes)
-    findAllShowtimes(@Payload() filterDto: ShowtimeFilterDto) {
-        return this.service.findAllShowtimes(filterDto)
+    findAllShowtimes(@Payload() queryDto: ShowtimeQueryDto) {
+        return this.service.findAllShowtimes(queryDto)
     }
 
     @MessagePattern(Messages.Showtimes.findShowingMovieIds)
@@ -30,13 +31,13 @@ export class ShowtimesController {
         return this.service.findShowingMovieIds()
     }
 
-    @MessagePattern(Messages.Showtimes.findTheaterIdsByMovieId)
-    findTheaterIdsByMovieId(@Payload() movieId: string) {
-        return this.service.findTheaterIdsByMovieId(movieId)
+    @MessagePattern(Messages.Showtimes.findTheaterIds)
+    findTheaterIds(@Payload() queryDto: ShowtimeQueryDto) {
+        return this.service.findTheaterIds(queryDto)
     }
 
     @MessagePattern(Messages.Showtimes.findShowdates)
-    findShowdates(@Payload('movieId') movieId: string, @Payload('theaterId') theaterId: string) {
-        return this.service.findShowdates({ movieId, theaterId })
+    findShowdates(queryDto: ShowtimeQueryDto) {
+        return this.service.findShowdates(queryDto)
     }
 }

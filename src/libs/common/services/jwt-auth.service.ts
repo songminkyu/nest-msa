@@ -1,12 +1,18 @@
 import { getRedisConnectionToken } from '@nestjs-modules/ioredis'
 import { DynamicModule, Inject, Injectable, Module, UnauthorizedException } from '@nestjs/common'
 import { JwtModule, JwtService } from '@nestjs/jwt'
-import { DateUtil, generateShortId, notUsed } from 'common'
 import Redis from 'ioredis'
+import { generateShortId, notUsed, Time } from '../utils'
 
-export interface AuthTokenPayload {
-    userId: string
-    email: string
+export const JwtAuthServiceErrors = {
+    RefreshTokenInvalid: {
+        code: 'ERR_JWT_AUTH_REFRESH_TOKEN_INVALID',
+        message: 'The provided refresh token is invalid'
+    },
+    RefreshTokenVerificationFailed: {
+        code: 'ERR_JWT_AUTH_REFRESH_TOKEN_VERIFICATION_FAILED',
+        message: 'Refresh token verification failed'
+    }
 }
 
 export class JwtAuthTokens {
@@ -30,7 +36,7 @@ export class JwtAuthService {
         public readonly prefix: string
     ) {}
 
-    static getToken(name: string) {
+    static getToken(name?: string) {
         return `JwtAuthService_${name}`
     }
 
@@ -38,35 +44,32 @@ export class JwtAuthService {
         return `${this.prefix}:${key}`
     }
 
-    async generateAuthTokens(userId: string, email: string): Promise<JwtAuthTokens> {
-        const commonPayload = { userId, email }
+    async generateAuthTokens(payload: object): Promise<JwtAuthTokens> {
         const accessToken = await this.createToken(
-            commonPayload,
+            payload,
             this.config.accessSecret,
             this.config.accessTokenTtlMs
         )
+        const refreshTokenId = generateShortId(30)
         const refreshToken = await this.createToken(
-            commonPayload,
+            { ...payload, refreshTokenId },
             this.config.refreshSecret,
             this.config.refreshTokenTtlMs
         )
-        await this.storeRefreshToken(userId, refreshToken)
+        await this.storeRefreshToken(refreshTokenId, refreshToken)
         return { accessToken, refreshToken }
     }
 
     async refreshAuthTokens(refreshToken: string) {
         const payload = await this.getAuthTokenPayload(refreshToken)
 
-        const storedRefreshToken = await this.getStoredRefreshToken(payload.userId)
+        const storedRefreshToken = await this.getStoredRefreshToken(payload.refreshTokenId)
 
         if (storedRefreshToken !== refreshToken) {
-            throw new UnauthorizedException({
-                code: 'ERR_REFRESH_TOKEN_INVALID',
-                message: 'The provided refresh token is invalid.'
-            })
+            throw new UnauthorizedException(JwtAuthServiceErrors.RefreshTokenInvalid)
         }
 
-        return this.generateAuthTokens(payload.userId, payload.email)
+        return this.generateAuthTokens(payload)
     }
 
     private async getAuthTokenPayload(token: string) {
@@ -79,14 +82,14 @@ export class JwtAuthService {
             return payload
         } catch (error) {
             throw new UnauthorizedException({
-                code: 'ERR_REFRESH_TOKEN_VERIFICATION_FAILED',
+                ...JwtAuthServiceErrors.RefreshTokenVerificationFailed,
                 message: error.message
             })
         }
     }
 
-    private async createToken(payload: AuthTokenPayload, secret: string, ttlMs: number) {
-        const expiresIn = DateUtil.fromMs(ttlMs)
+    private async createToken(payload: object, secret: string, ttlMs: number) {
+        const expiresIn = Time.fromMs(ttlMs)
 
         const token = await this.jwtService.signAsync(
             { ...payload, jti: generateShortId() },
@@ -95,31 +98,38 @@ export class JwtAuthService {
         return token
     }
 
-    private async storeRefreshToken(userId: string, refreshToken: string) {
-        await this.redis.set(this.getKey(userId), refreshToken, 'PX', this.config.refreshTokenTtlMs)
+    private async storeRefreshToken(refreshTokenId: string, refreshToken: string) {
+        await this.redis.set(
+            this.getKey(refreshTokenId),
+            refreshToken,
+            'PX',
+            this.config.refreshTokenTtlMs
+        )
     }
 
-    private async getStoredRefreshToken(userId: string) {
-        const value = await this.redis.get(this.getKey(userId))
+    private async getStoredRefreshToken(refreshTokenId: string) {
+        const value = await this.redis.get(this.getKey(refreshTokenId))
         return value
     }
 }
 
-export function InjectJwtAuth(name: string): ParameterDecorator {
+export function InjectJwtAuth(name?: string): ParameterDecorator {
     return Inject(JwtAuthService.getToken(name))
 }
 
 type JwtAuthFactory = { auth: AuthConfig }
 
+export interface JwtAuthModuleOptions {
+    name?: string
+    redisName?: string
+    prefix: string
+    useFactory: (...args: any[]) => Promise<JwtAuthFactory> | JwtAuthFactory
+    inject?: any[]
+}
+
 @Module({})
 export class JwtAuthModule {
-    static register(options: {
-        name: string
-        redisName: string
-        prefix: string
-        useFactory: (...args: any[]) => Promise<JwtAuthFactory> | JwtAuthFactory
-        inject?: any[]
-    }): DynamicModule {
+    static register(options: JwtAuthModuleOptions): DynamicModule {
         const { name, redisName, prefix, useFactory, inject } = options
 
         const cacheProvider = {

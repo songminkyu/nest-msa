@@ -1,82 +1,79 @@
 import { ConflictException, Injectable } from '@nestjs/common'
-import { InjectJwtAuth, JwtAuthService, mapDocToDto, MethodLog, Password } from 'common'
-import { CustomerCreateDto, CustomerDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
+import { mapDocToDto } from 'common'
 import { CustomersRepository } from './customers.repository'
+import {
+    CustomerAuthPayload,
+    CustomerCreateDto,
+    CustomerDto,
+    CustomerQueryDto,
+    CustomerUpdateDto
+} from './dtos'
+import { CustomerErrors } from './errors'
 import { CustomerDocument } from './models'
+import { CustomerAuthenticationService } from './services'
 
+/*
+The `login` and `refreshAuthTokens` methods simply re-invoke methods from `CustomerAuthenticationService`,  which may seem like an anti-pattern.
+However, the more important principle is that all externally exposed functionalities should go through `CustomersService`.
+Therefore, `CustomersController` should only reference `CustomersService` and must not directly call `CustomerAuthenticationService`.
+
+login, refreshAuthTokens는 단순히 CustomerAuthenticationService의 메소드를 재호출 하고 있어서 안티 패턴으로 보인다.
+그러나 더 중요한 원칙은 외부에 노출되는 모든 기능은 CustomersService을 통해서 이뤄져야 한다는 것이다.
+따라서 CustomersController는 CustomersService만 참조해야 하고 CustomerAuthenticationService를 직접 호출하면 안 된다.
+*/
 @Injectable()
 export class CustomersService {
     constructor(
         private repository: CustomersRepository,
-        @InjectJwtAuth('customer') private jwtAuthService: JwtAuthService
+        private authenticationService: CustomerAuthenticationService
     ) {}
-    @MethodLog()
-    async createCustomer(createDto: CustomerCreateDto) {
-        const foundEmail = await this.repository.findByEmail(createDto.email)
 
-        if (foundEmail) {
+    async createCustomer(createDto: CustomerCreateDto) {
+        const existingCustomer = await this.repository.findByEmail(createDto.email)
+
+        if (existingCustomer) {
             throw new ConflictException({
-                code: 'ERR_CUSTOMER_EMAIL_ALREADY_EXISTS',
-                message: 'Customer with email already exists',
+                ...CustomerErrors.emailAlreadyExists,
                 email: createDto.email
             })
         }
 
-        const customer = await this.repository.createCustomer({
-            ...createDto,
-            password: await Password.hash(createDto.password)
-        })
+        const password = await this.authenticationService.hash(createDto.password)
+        const newCustomer = await this.repository.createCustomer({ ...createDto, password })
 
-        return this.toDto(customer)
+        return this.toDto(newCustomer)
     }
 
-    @MethodLog()
     async updateCustomer(customerId: string, updateDto: CustomerUpdateDto) {
         const customer = await this.repository.updateCustomer(customerId, updateDto)
         return this.toDto(customer)
     }
 
-    @MethodLog({ level: 'verbose' })
-    async getCustomer(customerId: string) {
-        const customer = await this.repository.getById(customerId)
-        return this.toDto(customer)
+    async getCustomers(customerIds: string[]) {
+        const customers = await this.repository.getByIds(customerIds)
+        return this.toDtos(customers)
     }
 
-    @MethodLog()
-    async deleteCustomer(customerId: string) {
-        await this.repository.deleteById(customerId)
-        return true
+    async deleteCustomers(customerIds: string[]) {
+        const deleteResult = await this.repository.deleteByIds(customerIds)
+        return deleteResult
     }
 
-    @MethodLog({ level: 'verbose' })
     async findCustomers(queryDto: CustomerQueryDto) {
         const { items, ...paginated } = await this.repository.findCustomers(queryDto)
         return { ...paginated, items: this.toDtos(items) }
     }
 
-    @MethodLog()
-    async login(userId: string, email: string) {
-        return this.jwtAuthService.generateAuthTokens(userId, email)
+    async generateAuthTokens(payload: CustomerAuthPayload) {
+        return this.authenticationService.generateAuthTokens(payload)
     }
 
-    @MethodLog()
     async refreshAuthTokens(refreshToken: string) {
-        return this.jwtAuthService.refreshAuthTokens(refreshToken)
+        return this.authenticationService.refreshAuthTokens(refreshToken)
     }
 
-    @MethodLog({ level: 'verbose' })
     async authenticateCustomer(email: string, password: string) {
-        const customer = await this.repository.findByEmail(email)
-
-        if (!customer) return null
-
-        const gotPassword = await this.repository.getPassword(customer.id)
-
-        if (await Password.validate(password, gotPassword)) {
-            return customer.id
-        }
-
-        return null
+        return this.authenticationService.authenticateCustomer(email, password)
     }
 
     private toDto = (customer: CustomerDocument) =>

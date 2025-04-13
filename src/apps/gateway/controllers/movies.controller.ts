@@ -9,25 +9,28 @@ import {
     Query,
     Req,
     UploadedFiles,
+    UseFilters,
     UseGuards,
     UseInterceptors,
     UsePipes
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
-import { RecommendationProxy } from 'applications'
-import { AuthTokenPayload } from 'common'
-import { MovieCreateDto, MovieQueryDto, MoviesProxy, MovieUpdateDto } from 'cores'
+import { RecommendationClient } from 'apps/applications'
+import { MovieCreateDto, MovieQueryDto, MoviesClient, MovieUpdateDto } from 'apps/cores'
 import { pick } from 'lodash'
+import { MulterExceptionFilter } from './filters'
 import { CustomerOptionalJwtAuthGuard } from './guards'
 import { DefaultPaginationPipe } from './pipes'
+import { CustomerAuthRequest } from './types'
 
 @Controller('movies')
 export class MoviesController {
     constructor(
-        private moviesService: MoviesProxy,
-        private recommendationService: RecommendationProxy
+        private moviesService: MoviesClient,
+        private recommendationService: RecommendationClient
     ) {}
 
+    @UseFilters(new MulterExceptionFilter())
     @UseInterceptors(FilesInterceptor('files'))
     @Post()
     async createMovie(
@@ -48,19 +51,20 @@ export class MoviesController {
 
     @UseGuards(CustomerOptionalJwtAuthGuard)
     @Get('recommended')
-    async findRecommendedMovies(@Req() req: { user: AuthTokenPayload }) {
-        const customerId = req.user.userId
+    async findRecommendedMovies(@Req() req: CustomerAuthRequest) {
+        const customerId = req.user.customerId
         return this.recommendationService.findRecommendedMovies(customerId)
     }
 
     @Get(':movieId')
     async getMovie(@Param('movieId') movieId: string) {
-        return this.moviesService.getMovie(movieId)
+        const movies = await this.moviesService.getMovies([movieId])
+        return movies[0]
     }
 
     @Delete(':movieId')
     async deleteMovie(@Param('movieId') movieId: string) {
-        return this.moviesService.deleteMovie(movieId)
+        return this.moviesService.deleteMovies([movieId])
     }
 
     @UsePipes(DefaultPaginationPipe)

@@ -13,56 +13,61 @@ import {
     UseGuards,
     UsePipes
 } from '@nestjs/common'
-import { Assert, AuthTokenPayload } from 'common'
-import { CustomerCreateDto, CustomerQueryDto, CustomersProxy, CustomerUpdateDto } from 'cores'
+import { CustomerCreateDto, CustomerQueryDto, CustomersClient, CustomerUpdateDto } from 'apps/cores'
+import { Assert } from 'common'
 import { CustomerJwtAuthGuard, CustomerLocalAuthGuard, Public } from './guards'
 import { DefaultPaginationPipe } from './pipes'
+import { CustomerAuthRequest } from './types'
 
 @Controller('customers')
 @UseGuards(CustomerJwtAuthGuard)
 export class CustomersController {
-    constructor(private service: CustomersProxy) {}
+    constructor(private customersService: CustomersClient) {}
 
     @Public()
     @Post()
-    createCustomer(@Body() createDto: CustomerCreateDto) {
-        return this.service.createCustomer(createDto)
+    async createCustomer(@Body() createDto: CustomerCreateDto) {
+        return this.customersService.createCustomer(createDto)
     }
 
     @Patch(':customerId')
-    updateCustomer(@Param('customerId') customerId: string, @Body() updateDto: CustomerUpdateDto) {
-        return this.service.updateCustomer(customerId, updateDto)
+    async updateCustomer(
+        @Param('customerId') customerId: string,
+        @Body() updateDto: CustomerUpdateDto
+    ) {
+        return this.customersService.updateCustomer(customerId, updateDto)
     }
 
     @Get(':customerId')
-    getCustomer(@Param('customerId') customerId: string) {
-        return this.service.getCustomer(customerId)
+    async getCustomer(@Param('customerId') customerId: string) {
+        const customers = await this.customersService.getCustomers([customerId])
+        return customers[0]
     }
 
     @Delete(':customerId')
-    deleteCustomer(@Param('customerId') customerId: string) {
-        return this.service.deleteCustomer(customerId)
+    async deleteCustomer(@Param('customerId') customerId: string) {
+        return this.customersService.deleteCustomers([customerId])
     }
 
     @UsePipes(DefaultPaginationPipe)
     @Get()
-    findCustomers(@Query() queryDto: CustomerQueryDto) {
-        return this.service.findCustomers(queryDto)
+    async findCustomers(@Query() queryDto: CustomerQueryDto) {
+        return this.customersService.findCustomers(queryDto)
     }
 
     @UseGuards(CustomerLocalAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    login(@Req() req: { user: AuthTokenPayload }) {
+    async login(@Req() req: CustomerAuthRequest) {
         Assert.defined(req.user, 'req.user must be returned in LocalStrategy.validate')
 
-        return this.service.login(req.user.userId, req.user.email)
+        return this.customersService.generateAuthTokens(req.user)
     }
 
     @Public()
     @HttpCode(HttpStatus.OK)
     @Post('refresh')
-    refreshToken(@Body('refreshToken') refreshToken: string) {
-        return this.service.refreshAuthTokens(refreshToken)
+    async refreshToken(@Body('refreshToken') refreshToken: string) {
+        return this.customersService.refreshAuthTokens(refreshToken)
     }
 }

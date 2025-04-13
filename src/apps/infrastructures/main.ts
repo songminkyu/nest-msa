@@ -1,29 +1,23 @@
 import { INestApplication } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
-import { AppLoggerService, HttpToRpcExceptionFilter } from 'common'
-import { existsSync } from 'fs'
+import { AppLoggerService, Path } from 'common'
 import { exit } from 'process'
-import { AppConfigService } from 'shared/config'
+import { AppConfigService } from 'shared'
 import { InfrastructuresModule } from './infrastructures.module'
 
 export async function configureInfrastructures(app: INestApplication<any>, servers: string[]) {
     const config = app.get(AppConfigService)
 
-    for (const dir of [
-        { name: 'FileUpload', path: config.fileUpload.directory },
-        { name: 'Log', path: config.log.directory }
-    ]) {
-        if (!existsSync(dir.path)) {
-            console.error(`${dir.name} directory does not exist: ${dir.path}`)
+    for (const directory of [config.fileUpload.directory, config.log.directory]) {
+        if (!(await Path.isWritable(directory))) {
+            console.error(`Error: Directory is not writable: '${directory}'`)
             exit(1)
         }
     }
 
-    app.useGlobalFilters(new HttpToRpcExceptionFilter())
-
     app.connectMicroservice<MicroserviceOptions>(
-        { transport: Transport.NATS, options: { servers, queue: 'infrastructures' } },
+        { transport: Transport.NATS, options: { servers, queue: 'apps/infrastructures' } },
         { inheritAppConfig: true }
     )
 

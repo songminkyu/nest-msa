@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { mapDocToDto, MethodLog, pickIds } from 'common'
-import { StorageFileCreateDto, StorageFilesProxy } from 'infrastructures'
-import { Routes } from 'shared/config'
+import { mapDocToDto, pickIds } from 'common'
+import { StorageFileCreateDto, StorageFilesClient } from 'apps/infrastructures'
+import { Routes } from 'shared'
 import { MovieCreateDto, MovieDto, MovieQueryDto, MovieUpdateDto } from './dtos'
 import { MovieDocument } from './models'
 import { MoviesRepository } from './movies.repository'
@@ -10,10 +10,9 @@ import { MoviesRepository } from './movies.repository'
 export class MoviesService {
     constructor(
         private repository: MoviesRepository,
-        private storageFilesService: StorageFilesProxy
+        private storageFilesService: StorageFilesClient
     ) {}
 
-    @MethodLog()
     async createMovie(movieCreateDto: MovieCreateDto, fileCreateDtos: StorageFileCreateDto[]) {
         const storageFiles = await this.storageFilesService.saveFiles(fileCreateDtos)
 
@@ -21,39 +20,45 @@ export class MoviesService {
         return this.toDto(movie)
     }
 
-    @MethodLog()
     async updateMovie(movieId: string, updateDto: MovieUpdateDto) {
         const movie = await this.repository.updateMovie(movieId, updateDto)
         return this.toDto(movie)
     }
 
-    @MethodLog({ level: 'verbose' })
-    async getMovie(movieId: string) {
-        const movie = await this.repository.getById(movieId)
-        return this.toDto(movie)
+    async getMovies(movieIds: string[]) {
+        const movies = await this.repository.getByIds(movieIds)
+        return this.toDtos(movies)
     }
 
-    @MethodLog()
-    async deleteMovie(movieId: string) {
-        await this.repository.deleteById(movieId)
-        return true
+    async deleteMovies(movieIds: string[]) {
+        const success = await this.repository.withTransaction(async (session) => {
+            const movies = await this.repository.getByIds(movieIds)
+
+            for (const movie of movies) {
+                await movie.deleteOne({ session })
+
+                const fileIds = movie.imageFileIds.map((id) => id.toString())
+                await this.storageFilesService.deleteFiles(fileIds)
+            }
+
+            return true
+        })
+
+        return success
     }
 
-    @MethodLog({ level: 'verbose' })
     async findMovies(queryDto: MovieQueryDto) {
         const { items, ...paginated } = await this.repository.findMovies(queryDto)
 
         return { ...paginated, items: this.toDtos(items) }
     }
 
-    @MethodLog({ level: 'verbose' })
     async getMoviesByIds(movieIds: string[]) {
         const movies = await this.repository.getByIds(movieIds)
 
         return this.toDtos(movies)
     }
 
-    @MethodLog({ level: 'verbose' })
     async moviesExist(movieIds: string[]): Promise<boolean> {
         return this.repository.existByIds(movieIds)
     }

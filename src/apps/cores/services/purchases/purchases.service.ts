@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { mapDocToDto, MethodLog } from 'common'
-import { PaymentsProxy } from 'infrastructures'
+import { mapDocToDto } from 'common'
+import { PaymentsClient } from 'apps/infrastructures'
 import { PurchaseCreateDto, PurchaseDto } from './dtos'
 import { PurchaseDocument } from './models'
 import { PurchasesRepository } from './purchases.repository'
@@ -9,10 +9,9 @@ import { PurchasesRepository } from './purchases.repository'
 export class PurchasesService {
     constructor(
         private repository: PurchasesRepository,
-        private paymentsService: PaymentsProxy
+        private paymentsService: PaymentsClient
     ) {}
 
-    @MethodLog()
     async createPurchase(createDto: PurchaseCreateDto) {
         const payment = await this.paymentsService.processPayment({
             customerId: createDto.customerId,
@@ -27,11 +26,10 @@ export class PurchasesService {
         return this.toDto(purchase)
     }
 
-    @MethodLog({ level: 'verbose' })
-    async getPurchase(purchaseId: string) {
-        const purchase = await this.repository.getById(purchaseId)
+    async getPurchases(purchaseIds: string[]) {
+        const purchases = await this.repository.getByIds(purchaseIds)
 
-        return this.toDto(purchase)
+        return this.toDtos(purchases)
     }
 
     private toDto = (purchase: PurchaseDocument) =>
@@ -40,8 +38,11 @@ export class PurchasesService {
             'customerId',
             'paymentId',
             'totalPrice',
-            'items',
+            'purchaseItems',
             'createdAt',
             'updatedAt'
         ])
+
+    private toDtos = (purchases: PurchaseDocument[]) =>
+        purchases.map((purchase) => this.toDto(purchase))
 }
