@@ -1,6 +1,6 @@
 > 🇺🇸 [View in Korean](docs/README.ko.md)
 
-# NEST-SEED
+# NEST-MSA
 
 An example backend project for a movie ticket reservation system implemented with NestJS. Key features include:
 
@@ -118,7 +118,7 @@ Integration tests efficiently support MSA and TDD-based development by minimizin
     ```sh
     npm test
 
-    > nest-seed@0.0.1 test
+    > nest-msa@0.0.1 test
     > bash scripts/run-test.sh
 
     Select Test Suites
