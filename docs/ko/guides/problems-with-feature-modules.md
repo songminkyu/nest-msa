@@ -1,33 +1,32 @@
 # Problems with Feature Modules
 
-Nest에서 Controller, Service, 그리고 Repository가 모두 같은 모듈에 위치하는 구조를 "Feature Module" 구조라고 한다.
-공식 문서의 설명이다.
+Nest에서는 Controller, Service, Repository를 하나의 모듈 안에 배치하는 구조를 `Feature Module`이라고 합니다. [Nest 공식 문서](https://docs.nestjs.com/modules#feature-modules)에서는 이 구조에 대해 다음과 같이 설명합니다.
 
-> CatsController와 CatsService는 동일한 애플리케이션 도메인에 속합니다.
-> 서로 밀접하게 연관되어 있으므로 기능 모듈로 이동하는 것이 좋습니다.
-> 기능 모듈은 특정 기능과 관련된 코드를 간단히 정리하여 코드를 체계적으로 유지하고 명확한 경계를 설정합니다.
+> CatsController와 CatsService는 동일한 애플리케이션 도메인에 속합니다.\
+> 서로 밀접하게 연관되어 있으므로 기능 모듈로 이동하는 것이 좋습니다.\
+> 기능 모듈은 특정 기능과 관련된 코드를 간단히 정리하여 코드를 체계적으로 유지하고 명확한 경계를 설정합니다.\
 > 이는 특히 애플리케이션 및/또는 팀의 규모가 커짐에 따라 복잡성을 관리하고 SOLID 원칙에 따라 개발하는 데 도움이 됩니다.
 
-그러나 Feature Module은 순환 참조 문제가 쉽게 발생할 수 있다.
+그러나 Feature Module 구조는 `순환 참조 문제`가 비교적 쉽게 발생할 수 있다는 단점이 있습니다.
 
-## 모듈 간 순환 참조
+## 1. 모듈 간 순환 참조 예시
 
-다음과 같이 일반적인 영화 엔티티를 관리하기 위한 MoviesController가 있다고 가정하자.
+가령 일반적인 영화 엔티티를 관리하기 위해 다음과 같은 MoviesController가 있다고 가정합니다.
 
 ```
 GET /movies
 GET /movies/{movieId}
 ```
 
-여기에 고객에게 영화를 추천하는 REST API를 추가한다.
+그런데 고객에게 영화를 추천하는 REST API를 추가하려면 다음과 같은 경로가 필요합니다.
 
 ```
 GET /movies/recommended
 ```
 
-고객에게 영화를 추천하려면 고객이 관람한 영화 목록과 연령, 성별 등 다양한 정보를 알아야 한다. 이것을 MoviesService에서 처리하기 어렵기 때문에 RecommendationService를 만든다.
+추천 기능을 구현하려면 관람 이력, 연령, 성별 등 다양한 고객 정보를 알아야 합니다. 이것을 MoviesService에서 처리하기 어렵다고 판단하여 별도의 RecommendationService를 만듭니다.
 
-그러면 MoviesController는 두 개의 서비스를 참조하게 된다.
+그러면 MoviesController는 아래처럼 두 서비스를 모두 참조하게 됩니다.
 
 ```ts
 export class MoviesController {
@@ -38,9 +37,10 @@ export class MoviesController {
 }
 ```
 
-그런데 RecommendationService는 [MoviesService, CustomersService, WatchRecordsService]를 참조한다. 이 서비스를 모두 MoviesModule에서 참조하는 것은 부담스럽기 때문에 RecommendationService를 RecommendationModule로 옮긴다.
+하지만 RecommendationService는 MoviesService, CustomersService, WatchRecordsService 등을 참조합니다.\
+이 모든 서비스를 하나의 MoviesModule 안에 넣기에는 부담스러우므로, RecommendationService를 RecommendationModule으로 분리합니다.
 
-이런 상황에서 MoviesModule에 MovicesController와 MoviesService를 함께 정의하면 어떻게 될까?
+문제는 이때 MoviesModule에 MoviesController와 MoviesService가 함께 정의되어 있으면, 모듈 단에서 순환 참조가 생길 수 있다는 점입니다. 아래 그림을 예로 들어봅시다.
 
 ```plantuml
 @startuml
@@ -66,15 +66,17 @@ RecommendationService --> CustomersModule
 RecommendationService --> WatchRecordsModule
 
 note top of MoviesController
-MoviesController가 MoviesModule에 소속되면 순환 참조가 발생한다.
+MoviesController가 MoviesModule에 속해 있으면
+모듈 레벨에서 순환 참조 문제가 발생합니다.
 end note
 @enduml
 ```
 
-RecommendationService와 MoviesService가 단방향 관계를 가지지만 MovieController와 MovieService가 MoviesModule로 묶여있기 때문에 모듈 레벨에서 순환 참조가 발생한다.
+RecommendationService와 MoviesService가 단방향 관계를 갖더라도, MoviesController가 같은 모듈(MoviesModule)에 묶여 있으면 모듈 차원에서 순환 참조가 발생하게 됩니다.
 
-그래서 MoviesController를 포함한 모든 Controller들을 ControllersModule이라는 독립된 모듈로 정의한 것이다.
+## 2. Controller 분리로 해결
 
+이 문제를 해결하기 위해, MoviesController를 비롯한 모든 Controller를 ControllersModule이라는 독립된 모듈로 분리할 수 있습니다. 이렇게 하면 모듈 간 순환 참조가 상당 부분 해소됩니다.
 
 ```plantuml
 @startuml
@@ -97,18 +99,24 @@ MoviesController --> RecommendationService
 RecommendationService --> MoviesService
 
 note top of MoviesController
-MoviesController가 독립 모듈에 소속되면 순환 참조 발생하지 않음
+MoviesController가 별도 모듈에 소속되면
+순환 참조 문제가 사라집니다.
 end note
 @enduml
 ```
 
-만약, Feature Modules를 고수하면서 순환 참조 문제를 피하고 싶다면 다음과 같이 별도의 REST API를 정의하고 해당 컨트롤러를 만들어야 한다.
+만약 Feature Modules 방식을 고수하고 싶다면, REST API 경로를 분리해서 다음과 같은 컨트롤러를 따로 만드는 방법이 있습니다.
 
 ```ts
 // GET /recommendation/movies
 export class RecommendationController {}
 ```
 
-혹시 forwardRef를 사용하면 문제를 해결할 수 있다고 생각할지 모르겠다.
+그러나 이 역시 기능 단위(영화 관리 vs. 추천 기능)를 정확히 나누지 않으면, 구조가 복잡해질 위험이 여전히 존재합니다.
 
-forwardRef는 설계 단계의 문제를 구현 단계에서 해결하는 방법에 지나지 않는다. 근본 문제를 해결하는 것이 아니기 때문에 forwardRef를 사용하면 결국 더 큰 문제를 일으키게 될 것이다.
+## 3. forwardRef의 문제점
+
+간혹 forwardRef를 사용하면 순환 참조 문제를 해결할 수 있다고 생각할 수 있습니다.\
+하지만 forwardRef는 단지 **설계 문제를 구현 단계에서 임시로 우회**하는 방편일 뿐, 근본적인 해결책이 되지 못합니다. 오히려 프로젝트 규모가 커지면서 더 복잡한 참조 문제를 일으킬 가능성이 큽니다.
+
+따라서 **Controller를 별도 모듈로 분리**하거나, **모듈 간의 참조 구조를 명확히 설계**하여 순환 참조가 발생하지 않도록 하는 편이 훨씬 안정적입니다.
