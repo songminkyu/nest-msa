@@ -2,7 +2,7 @@
 
 # NEST-MSA
 
-NestJS 기반의 MSA(Microservices Architecture) 예제 프로젝트로 주요 특징은 다음과 같습니다:
+Nest(NestJS) 기반의 MSA(Microservices Architecture) 예제 프로젝트로 주요 특징은 다음과 같습니다:
 
 - **Docker 기반 개발 환경**: 컨테이너를 활용해 일관된 개발 환경을 제공합니다.
 - **데이터베이스 통합**: MongoDB 및 Redis에 대한 사전 설정을 포함합니다.

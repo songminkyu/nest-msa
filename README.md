@@ -2,7 +2,7 @@
 
 # NEST-MSA
 
-This project is a NestJS-based example that follows the Microservices Architecture (MSA), featuring the following characteristics:
+This project is a Nest(NestJS)-based example that follows the Microservices Architecture (MSA), featuring the following characteristics:
 
 - **Docker-based Development Environment**: Provides a consistent development environment using containers.
 - **Database Integration**: Includes pre-configured settings for MongoDB and Redis.

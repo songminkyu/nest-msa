@@ -114,12 +114,6 @@ src
 
 ## 4. testlib와 common의 순환 참조
 
-src/libs에 testlib와 common가 있다. 이 두 라이브러리는 순환 참조 하는 것처럼 보인다.
-
-기본적으로 `testlib`가 `common`를 참조한다. 그리고 `common`도 `testlib`를 참조하는 것처럼 보이는데, `common`에 `__tests__`가 존재하고 `__tests__`는 보통 `testlib`를 `import`하기 때문이다.
-
-## 비록 `__tests__`가 각 모듈 마다 존재하지만 `__tests__`는 다른 모듈에서 참조하는 코드가 아니기 때문에 순환 참조 문제가 발생하지 않는다.
-
 `src/libs` 폴더에는 `testlib`와 `common`이 있습니다. 언뜻 보면 서로를 참조하는 순환 구조처럼 보일 수 있습니다.
 
 - 기본적으로 `testlib`는 `common`을 `import`합니다.
@@ -227,12 +221,9 @@ export class AllProviders {
 
 export async function getProviders(coresContext: TestContext) {
     const { module: coresModule } = coresContext
-    const customersService = coresModule.get(CustomersService)
-    const moviesService = coresModule.get(MoviesService)
+    const customersClient = coresModule.get(CustomersClient)
+    const moviesClient = coresModule.get(MoviesClient)
 
-    return {
-        customersClient,
-        moviesClient
-    }
+    return { customersClient, moviesClient }
 }
 ```

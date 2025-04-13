@@ -71,7 +71,7 @@ end note
 
 > 모놀리식 구조인 [nest-mono](https://github.com/mannercode/nest-mono) 프로젝트에 해당하는 설명입니다.
 
-`nest-mono` 프로젝트는 순환 참조 문제를 방지하기 위해, 일반적인 NestJS 구조와는 다른 아키텍처 방식을 채택합니다.
+`nest-mono` 프로젝트는 순환 참조 문제를 방지하기 위해, 일반적인 Nest(NestJS) 구조와는 다른 아키텍처 방식을 채택합니다.
 
 Nest에서는 보통 `Controller`, `Service`, `Repository`를 하나의 모듈로 묶는 `Feature Module` 방식을 사용합니다.
 그러나 이 방식은 `Controller`가 여러 서비스를 참조하는 경우가 많아, [순환 참조 문제](./problems-with-feature-modules.md)가 쉽게 발생할 수 있습니다.
@@ -305,7 +305,7 @@ async deleteTheater(@Param('theaterId') theaterId: string) {
 
 ### 6.1 NATS를 선택한 이유
 
-NestJS가 지원하는 메시지 브로커 중 몇 가지를 검토한 결과, NATS를 선택했습니다.
+Nest(NestJS)가 지원하는 메시지 브로커 중 몇 가지를 검토한 결과, NATS를 선택했습니다.
 
 - NATS는 현재까지 활발하게 개발·지원되고 있습니다.
 - NATS의 JetStream을 사용하면 로깅 시스템 구축 시 Kafka를 대체할 가능성이 있습니다.
