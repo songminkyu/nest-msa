@@ -219,10 +219,10 @@ Example:
 For more details on the implementation and design, see the documents below.
 
 - Guides
-    - [Design Guide](./docs/en/guides/design.guide.md)
-    - [Implementation Guide](./docs/en/guides/implementation.guide.md)
+    - [Design Guide](docs/en/guides/design.guide.md)
+    - [Implementation Guide](docs/en/guides/implementation.guide.md)
 - Designs
-    - [Use Cases](./docs/en/designs/use-cases.md)
-    - [Entities](./docs/en/designs/entities.md)
-    - [Showtime Creation](./docs/en/designs/showtime-creation.md)
-    - [Tickets Purchase](./docs/en/designs/tickets-purchase.md)
+    - [Use Cases](docs/en/designs/use-cases.md)
+    - [Entities](docs/en/designs/entities.md)
+    - [Showtime Creation](docs/en/designs/showtime-creation.md)
+    - [Tickets Purchase](docs/en/designs/tickets-purchase.md)

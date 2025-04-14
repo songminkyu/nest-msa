@@ -1,6 +1,6 @@
 # Implementation Guide
 
-구현 단계에서 지켜야 할 규칙을 정리합니다.
+구현 과정에서 적용한 규칙을 정리했습니다.
 
 ## 1. Naming Rules
 

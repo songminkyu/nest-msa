@@ -1,6 +1,6 @@
 # Problems with Feature Modules
 
-Nest에서는 Controller, Service, Repository를 하나의 모듈 안에 배치하는 구조를 `Feature Module`이라고 합니다. [Nest 공식 문서](https://docs.Nest(NestJS).com/modules#feature-modules)에서는 이 구조에 대해 다음과 같이 설명합니다.
+Nest에서는 Controller, Service, Repository를 하나의 모듈 안에 배치하는 구조를 `Feature Module`이라고 합니다. [Nest 공식 문서](<https://docs.nestjs.com/modules#feature-modules>)에서는 이 구조에 대해 다음과 같이 설명합니다.
 
 > CatsController와 CatsService는 동일한 애플리케이션 도메인에 속합니다.\
 > 서로 밀접하게 연관되어 있으므로 기능 모듈로 이동하는 것이 좋습니다.\
@@ -111,8 +111,6 @@ end note
 // GET /recommendation/movies
 export class RecommendationController {}
 ```
-
-그러나 이 역시 기능 단위(영화 관리 vs. 추천 기능)를 정확히 나누지 않으면, 구조가 복잡해질 위험이 여전히 존재합니다.
 
 ## 3. forwardRef의 문제점
 
