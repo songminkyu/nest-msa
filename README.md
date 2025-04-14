@@ -219,6 +219,7 @@ Example:
 For more details on the implementation and design, see the documents below.
 
 - Guides
+    - [Essence-Based Interpretation](https://mannercode.com/2024/05/04/ebi-en.html)
     - [Design Guide](docs/en/guides/design.guide.md)
     - [Implementation Guide](docs/en/guides/implementation.guide.md)
 - Designs

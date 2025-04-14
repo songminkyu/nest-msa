@@ -220,6 +220,7 @@ src
 이 프로젝트의 구현 및 설계에 대한 자세한 사항은, 아래 문서를 참고하세요:
 
 - 가이드 문서
+    - [본질 기반 해석](https://mannercode.com/2024/05/04/ebi.html)
     - [설계 가이드](./ko/guides/design.guide.md)
     - [구현 가이드](./ko/guides/implementation.guide.md)
 - 설계 문서
