@@ -148,7 +148,7 @@ apps
 10,000명의 사용자 정보를 한 번에 조회하는 요청은 너무 길어서 GET 메서드로 전달하기 어렵습니다.
 
 ```sh
-GET /users?user-id=userid1, userid2, userid3 ...
+GET /users?user-id=userid1,userid2,userid3 ...
 ```
 
 이처럼 `GET`이나 `DELETE` 메서드인데 쿼리가 너무 길다면, 아래 예시처럼 `POST`로 요청합니다.
@@ -165,7 +165,6 @@ DELETE /movies?...
 POST /movies/delete
 ```
 
-POST 메서드는 일반적으로 `Create`를 의미하지만 `함수를 실행한다`는 의미로도 사용한다.
 POST 메서드는 보통 `Create`를 의미하지만, 경우에 따라 **함수를 실행**한다는 의미로도 사용합니다.
 
 GET과 POST를 선택할 때는 다음 사항을 고려합니다.

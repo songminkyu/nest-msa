@@ -65,7 +65,7 @@ This means only services in lower layers can be referenced, and any form of refe
 
 This prevents circular dependency problems that tend to arise as the structure becomes more complex.
 
-[This project reflects these guidelines in its `index.ts` implementation.](https://www.google.com/search?q=./implementation.guide.md%235-import)
+[This project reflects these guidelines in its `index.ts` implementation.](./implementation.guide.md#5-import)
 
 ### 1.2. Separation of Controllers
 
@@ -74,7 +74,7 @@ This prevents circular dependency problems that tend to arise as the structure b
 The `nest-mono` project adopts a different architectural approach compared to the standard Nest(NestJS) structure to prevent circular dependency issues.
 
 Nest typically uses the `Feature Module` approach, bundling `Controller`, `Service`, and `Repository` into a single module.
-However, this approach can easily lead to [circular dependency problems](https://www.google.com/search?q=./problems-with-feature-modules.md) because `Controller` often references multiple services.
+However, this approach can easily lead to [circular dependency problems](./problems-with-feature-modules.md) because `Controller` often references multiple services.
 
 To prevent this, `nest-mono` explicitly separates `Controller`s into a `Controllers` folder within the traditional monolithic structure, clearly distinguishing them from `Service`s.
 
@@ -145,10 +145,10 @@ Entity management services are named using plural nouns.
 
 ### 3.1. Choosing Between GET and POST
 
-A request to retrieve information for 10,000 users at once is too long to be passed using the GET method.
+A request to retrieve information for 10,000 users at once is too large to be passed using the GET method.
 
 ```sh
-GET /users?user-id=userid1, userid2, userid3 ...
+GET /users?user-id=userid1,userid2,userid3 ...
 ```
 
 In cases like this, where a `GET` or `DELETE` method results in an excessively long query, use `POST` as shown below:
