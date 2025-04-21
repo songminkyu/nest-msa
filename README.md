@@ -1,4 +1,4 @@
-> 🇺🇸 [View in Korean](docs/README.ko.md)
+> 🇰🇷 [View in Korean](docs/README.ko.md)
 
 # NEST-MSA
 
