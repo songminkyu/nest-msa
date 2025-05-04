@@ -19,7 +19,6 @@
 -   예매 booking
 -   구매 purchase
 -   환불 refund
--   상영관 room
 
 ## 영화 예매 시스템 유스케이스
 
