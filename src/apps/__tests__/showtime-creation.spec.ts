@@ -39,6 +39,7 @@ describe('Showtime Creation', () => {
         expect(items).toEqual([fix.theater])
     })
 
+    /* 상영시간 목록 요청 */
     describe('Requesting the list of showtimes', () => {
         let showtimes: ShowtimeDto[]
 
@@ -66,6 +67,7 @@ describe('Showtime Creation', () => {
         })
     })
 
+    /* 상영시간 생성 */
     describe('Creating showtimes', () => {
         const createBatchShowtimes = async (
             movieId: string,
