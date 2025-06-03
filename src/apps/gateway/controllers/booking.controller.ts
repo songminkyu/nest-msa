@@ -17,7 +17,10 @@ export class BookingController {
     }
 
     @Get('movies/:movieId/theaters/:theaterId/showdates')
-    async searchShowdates(@Param('movieId') movieId: string, @Param('theaterId') theaterId: string) {
+    async searchShowdates(
+        @Param('movieId') movieId: string,
+        @Param('theaterId') theaterId: string
+    ) {
         return this.bookingService.searchShowdates({ movieId, theaterId })
     }
 

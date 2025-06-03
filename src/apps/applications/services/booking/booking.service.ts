@@ -33,7 +33,10 @@ export class BookingService {
     }
 
     async searchShowdates({ movieId, theaterId }: FindShowdatesDto) {
-        return this.showtimesService.searchShowdates({ movieIds: [movieId], theaterIds: [theaterId] })
+        return this.showtimesService.searchShowdates({
+            movieIds: [movieId],
+            theaterIds: [theaterId]
+        })
     }
 
     async searchShowtimes({ movieId, theaterId, showdate }: FindShowtimesDto) {
