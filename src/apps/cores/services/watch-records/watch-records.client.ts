@@ -11,7 +11,9 @@ export class WatchRecordsClient {
         return this.proxy.getJson(Messages.WatchRecords.createWatchRecord, createDto)
     }
 
-    searchWatchRecordsPage(queryDto: WatchRecordQueryDto): Promise<PaginationResult<WatchRecordDto>> {
+    searchWatchRecordsPage(
+        queryDto: WatchRecordQueryDto
+    ): Promise<PaginationResult<WatchRecordDto>> {
         return this.proxy.getJson(Messages.WatchRecords.searchWatchRecordsPage, queryDto)
     }
 }
