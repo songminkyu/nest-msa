@@ -13,8 +13,8 @@ export class WatchRecordsController {
         return this.service.createWatchRecord(createDto)
     }
 
-    @MessagePattern(Messages.WatchRecords.findWatchRecords)
-    findWatchRecords(@Payload() queryDto: WatchRecordQueryDto) {
-        return this.service.findWatchRecords(queryDto)
+    @MessagePattern(Messages.WatchRecords.searchWatchRecordsPage)
+    searchWatchRecordsPage(@Payload() queryDto: WatchRecordQueryDto) {
+        return this.service.searchWatchRecordsPage(queryDto)
     }
 }

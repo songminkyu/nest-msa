@@ -18,7 +18,7 @@ export class RecommendationService {
         let watchedMovies: MovieDto[] = []
 
         if (customerId) {
-            const { items } = await this.watchRecordsService.findWatchRecords({
+            const { items } = await this.watchRecordsService.searchWatchRecordsPage({
                 customerId,
                 take: 50,
                 orderby: { name: 'watchDate', direction: OrderDirection.desc }

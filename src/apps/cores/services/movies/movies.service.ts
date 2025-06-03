@@ -47,8 +47,8 @@ export class MoviesService {
         return success
     }
 
-    async findMovies(queryDto: MovieQueryDto) {
-        const { items, ...paginated } = await this.repository.findMovies(queryDto)
+    async searchMoviesPage(queryDto: MovieQueryDto) {
+        const { items, ...paginated } = await this.repository.searchMoviesPage(queryDto)
 
         return { ...paginated, items: this.toDtos(items) }
     }

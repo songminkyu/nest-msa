@@ -31,9 +31,9 @@ export class CustomersController {
         return this.service.deleteCustomers(customerIds)
     }
 
-    @MessagePattern(Messages.Customers.findCustomers)
-    findCustomers(@Payload() queryDto: CustomerQueryDto) {
-        return this.service.findCustomers(queryDto)
+    @MessagePattern(Messages.Customers.searchCustomersPage)
+    searchCustomersPage(@Payload() queryDto: CustomerQueryDto) {
+        return this.service.searchCustomersPage(queryDto)
     }
 
     @MessagePattern(Messages.Customers.login)

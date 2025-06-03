@@ -59,8 +59,8 @@ export class CustomersService {
         return deleteResult
     }
 
-    async findCustomers(queryDto: CustomerQueryDto) {
-        const { items, ...paginated } = await this.repository.findCustomers(queryDto)
+    async searchCustomersPage(queryDto: CustomerQueryDto) {
+        const { items, ...paginated } = await this.repository.searchCustomersPage(queryDto)
         return { ...paginated, items: this.toDtos(items) }
     }
 

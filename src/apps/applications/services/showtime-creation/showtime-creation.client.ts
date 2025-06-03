@@ -8,12 +8,12 @@ import { ShowtimeBatchCreateDto, ShowtimeBatchCreateResponse } from './dtos'
 export class ShowtimeCreationClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    findMovies(queryDto: CommonQueryDto): Promise<MovieDto[]> {
-        return this.proxy.getJson(Messages.ShowtimeCreation.findMovies, queryDto)
+    searchMoviesPage(queryDto: CommonQueryDto): Promise<MovieDto[]> {
+        return this.proxy.getJson(Messages.ShowtimeCreation.searchMoviesPage, queryDto)
     }
 
-    findTheaters(queryDto: CommonQueryDto): Promise<TheaterDto[]> {
-        return this.proxy.getJson(Messages.ShowtimeCreation.findTheaters, queryDto)
+    searchTheatersPage(queryDto: CommonQueryDto): Promise<TheaterDto[]> {
+        return this.proxy.getJson(Messages.ShowtimeCreation.searchTheatersPage, queryDto)
     }
 
     findShowtimes(theaterIds: string[]): Promise<ShowtimeDto[]> {

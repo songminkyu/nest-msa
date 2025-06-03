@@ -31,7 +31,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         return customer.save()
     }
 
-    async findCustomers(queryDto: CustomerQueryDto) {
+    async searchCustomersPage(queryDto: CustomerQueryDto) {
         const { take, skip, orderby } = queryDto
 
         const paginated = await this.findWithPagination({

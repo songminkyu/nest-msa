@@ -9,14 +9,14 @@ import { ShowtimeCreationService } from './showtime-creation.service'
 export class ShowtimeCreationController {
     constructor(private service: ShowtimeCreationService) {}
 
-    @MessagePattern(Messages.ShowtimeCreation.findMovies)
-    findMovies(@Payload() queryDto: CommonQueryDto) {
-        return this.service.findMovies(queryDto)
+    @MessagePattern(Messages.ShowtimeCreation.searchMoviesPage)
+    searchMoviesPage(@Payload() queryDto: CommonQueryDto) {
+        return this.service.searchMoviesPage(queryDto)
     }
 
-    @MessagePattern(Messages.ShowtimeCreation.findTheaters)
-    findTheaters(@Payload() queryDto: CommonQueryDto) {
-        return this.service.findTheaters(queryDto)
+    @MessagePattern(Messages.ShowtimeCreation.searchTheatersPage)
+    searchTheatersPage(@Payload() queryDto: CommonQueryDto) {
+        return this.service.searchTheatersPage(queryDto)
     }
 
     @MessagePattern(Messages.ShowtimeCreation.findShowtimes)

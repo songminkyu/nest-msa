@@ -24,7 +24,7 @@ export const Messages = createRouteMap(
         },
         WatchRecords: {
             createWatchRecord: null,
-            findWatchRecords: null
+            searchWatchRecordsPage: null
         },
         Tickets: {
             createTickets: null,
@@ -43,7 +43,7 @@ export const Messages = createRouteMap(
             updateTheater: null,
             getTheaters: null,
             deleteTheaters: null,
-            findTheaters: null,
+            searchTheatersPage: null,
             theatersExist: null
         },
         Showtimes: {
@@ -63,7 +63,7 @@ export const Messages = createRouteMap(
             updateMovie: null,
             getMovies: null,
             deleteMovies: null,
-            findMovies: null,
+            searchMoviesPage: null,
             getMoviesByIds: null,
             moviesExist: null
         },
@@ -72,14 +72,14 @@ export const Messages = createRouteMap(
             updateCustomer: null,
             getCustomers: null,
             deleteCustomers: null,
-            findCustomers: null,
+            searchCustomersPage: null,
             login: null,
             refreshAuthTokens: null,
             authenticateCustomer: null
         },
         ShowtimeCreation: {
-            findMovies: null,
-            findTheaters: null,
+            searchMoviesPage: null,
+            searchTheatersPage: null,
             findShowtimes: null,
             createBatchShowtimes: null
         },

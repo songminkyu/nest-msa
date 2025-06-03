@@ -39,7 +39,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         return movie.save()
     }
 
-    async findMovies(queryDto: MovieQueryDto) {
+    async searchMoviesPage(queryDto: MovieQueryDto) {
         const { take, skip, orderby } = queryDto
 
         const paginated = await this.findWithPagination({

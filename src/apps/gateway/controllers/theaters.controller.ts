@@ -32,7 +32,7 @@ export class TheatersController {
 
     @UsePipes(DefaultPaginationPipe)
     @Get()
-    async findTheaters(@Query() queryDto: TheaterQueryDto) {
-        return this.theatersService.findTheaters(queryDto)
+    async searchTheatersPage(@Query() queryDto: TheaterQueryDto) {
+        return this.theatersService.searchTheatersPage(queryDto)
     }
 }

@@ -30,7 +30,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return theater.save()
     }
 
-    async findTheaters(queryDto: TheaterQueryDto) {
+    async searchTheatersPage(queryDto: TheaterQueryDto) {
         const { take, skip, orderby } = queryDto
 
         const paginated = await this.findWithPagination({

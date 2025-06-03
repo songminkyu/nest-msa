@@ -3,9 +3,9 @@ import { createRouteMap } from '../utils'
 describe('createRoutes', () => {
     /* 2단계 경로를 생성해야 한다 */
     it('Should create a 2-level path', async () => {
-        const Messages = createRouteMap({ Movies: { findMovies: null, createMovies: null } })
+        const Messages = createRouteMap({ Movies: { searchMoviesPage: null, createMovies: null } })
 
-        expect(Messages.Movies.findMovies).toEqual('Movies.findMovies')
+        expect(Messages.Movies.searchMoviesPage).toEqual('Movies.searchMoviesPage')
     })
 
     /* 3단계 경로를 생성해야 한다 */
@@ -18,10 +18,10 @@ describe('createRoutes', () => {
     /* prefix를 설정해야 한다 */
     it('Should set a prefix', async () => {
         const Messages = createRouteMap(
-            { Movies: { findMovies: null, createMovies: null } },
+            { Movies: { searchMoviesPage: null, createMovies: null } },
             'Prefix'
         )
 
-        expect(Messages.Movies.findMovies).toEqual('Prefix.Movies.findMovies')
+        expect(Messages.Movies.searchMoviesPage).toEqual('Prefix.Movies.searchMoviesPage')
     })
 })

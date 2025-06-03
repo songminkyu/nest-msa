@@ -26,7 +26,7 @@ describe('WatchRecords', () => {
         })
     })
 
-    describe('findWatchRecords', () => {
+    describe('searchWatchRecordsPage', () => {
         let records: WatchRecordDto[]
         const customerId = testObjectId(0xa1)
 
@@ -41,7 +41,7 @@ describe('WatchRecords', () => {
 
         /* 기본 페이지네이션 설정으로 관람 기록을 가져와야 한다 */
         it('Should fetch watch records with default pagination settings', async () => {
-            const { items, ...paginated } = await fix.watchRecordsClient.findWatchRecords({
+            const { items, ...paginated } = await fix.watchRecordsClient.searchWatchRecordsPage({
                 customerId,
                 take: 100
             })

@@ -21,7 +21,7 @@ export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
         return watchRecord.save()
     }
 
-    async findWatchRecords(queryDto: WatchRecordQueryDto) {
+    async searchWatchRecordsPage(queryDto: WatchRecordQueryDto) {
         const { take, skip, orderby } = queryDto
 
         const paginated = await this.findWithPagination({

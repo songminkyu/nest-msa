@@ -30,14 +30,14 @@ export class ShowtimeCreationController implements OnModuleDestroy {
 
     @UsePipes(DefaultPaginationPipe)
     @Get('theaters')
-    async findTheaters(@Query() queryDto: CommonQueryDto) {
-        return this.showtimeCreationService.findTheaters(queryDto)
+    async searchTheatersPage(@Query() queryDto: CommonQueryDto) {
+        return this.showtimeCreationService.searchTheatersPage(queryDto)
     }
 
     @UsePipes(DefaultPaginationPipe)
     @Get('movies')
-    async findMovies(@Query() queryDto: CommonQueryDto) {
-        return this.showtimeCreationService.findMovies(queryDto)
+    async searchMoviesPage(@Query() queryDto: CommonQueryDto) {
+        return this.showtimeCreationService.searchMoviesPage(queryDto)
     }
 
     @HttpCode(HttpStatus.OK)

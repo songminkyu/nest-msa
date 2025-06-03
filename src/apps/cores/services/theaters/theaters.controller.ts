@@ -31,9 +31,9 @@ export class TheatersController {
         return this.service.deleteTheaters(theaterIds)
     }
 
-    @MessagePattern(Messages.Theaters.findTheaters)
-    findTheaters(@Payload() queryDto: TheaterQueryDto) {
-        return this.service.findTheaters(queryDto)
+    @MessagePattern(Messages.Theaters.searchTheatersPage)
+    searchTheatersPage(@Payload() queryDto: TheaterQueryDto) {
+        return this.service.searchTheatersPage(queryDto)
     }
 
     @MessagePattern(Messages.Theaters.theatersExist)

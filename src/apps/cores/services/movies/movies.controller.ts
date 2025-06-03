@@ -31,9 +31,9 @@ export class MoviesController {
         return this.service.deleteMovies(movieIds)
     }
 
-    @MessagePattern(Messages.Movies.findMovies)
-    findMovies(@Payload() queryDto: MovieQueryDto) {
-        return this.service.findMovies(queryDto)
+    @MessagePattern(Messages.Movies.searchMoviesPage)
+    searchMoviesPage(@Payload() queryDto: MovieQueryDto) {
+        return this.service.searchMoviesPage(queryDto)
     }
 
     @MessagePattern(Messages.Movies.getMoviesByIds)
