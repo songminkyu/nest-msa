@@ -1,7 +1,6 @@
 import { HttpStatus } from '@nestjs/common'
 import { Byte, jsonToObject } from 'common'
 import { createWriteStream } from 'fs'
-import { reject } from 'lodash'
 import superagent from 'superagent'
 
 interface EventMessage {
@@ -127,13 +126,13 @@ export class HttpTestClient {
                         if (message.event !== 'error' && message.data) {
                             messageHandler(message.data)
                         } else {
-                            reject(message)
+                            errorHandler(message)
                         }
                     } else if (0 < lines[0].length) {
                         /**
                          * {"message":"Cannot GET /showtime-creation/events2","error":"Not Found","statusCode":404}
                          */
-                        reject(data)
+                        errorHandler(data)
                     }
                 })
                 res.on('end', (error) => {
