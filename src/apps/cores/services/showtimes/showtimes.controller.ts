@@ -21,23 +21,23 @@ export class ShowtimesController {
         return this.service.getShowtimes(showtimeIds)
     }
 
-    @MessagePattern(Messages.Showtimes.findAllShowtimes)
-    findAllShowtimes(@Payload() queryDto: ShowtimeQueryDto) {
-        return this.service.findAllShowtimes(queryDto)
+    @MessagePattern(Messages.Showtimes.searchShowtimes)
+    searchShowtimes(@Payload() queryDto: ShowtimeQueryDto) {
+        return this.service.searchShowtimes(queryDto)
     }
 
-    @MessagePattern(Messages.Showtimes.findShowingMovieIds)
-    findShowingMovieIds() {
-        return this.service.findShowingMovieIds()
+    @MessagePattern(Messages.Showtimes.searchShowingMovieIds)
+    searchShowingMovieIds() {
+        return this.service.searchShowingMovieIds()
     }
 
-    @MessagePattern(Messages.Showtimes.findTheaterIds)
-    findTheaterIds(@Payload() queryDto: ShowtimeQueryDto) {
-        return this.service.findTheaterIds(queryDto)
+    @MessagePattern(Messages.Showtimes.searchTheaterIds)
+    searchTheaterIds(@Payload() queryDto: ShowtimeQueryDto) {
+        return this.service.searchTheaterIds(queryDto)
     }
 
-    @MessagePattern(Messages.Showtimes.findShowdates)
-    findShowdates(queryDto: ShowtimeQueryDto) {
-        return this.service.findShowdates(queryDto)
+    @MessagePattern(Messages.Showtimes.searchShowdates)
+    searchShowdates(queryDto: ShowtimeQueryDto) {
+        return this.service.searchShowdates(queryDto)
     }
 }

@@ -24,9 +24,9 @@ export class TicketsController {
         return this.service.updateTicketStatus(ticketIds, status)
     }
 
-    @MessagePattern(Messages.Tickets.findAllTickets)
-    findAllTickets(@Payload() queryDto: TicketQueryDto) {
-        return this.service.findAllTickets(queryDto)
+    @MessagePattern(Messages.Tickets.searchTickets)
+    searchTickets(@Payload() queryDto: TicketQueryDto) {
+        return this.service.searchTickets(queryDto)
     }
 
     @MessagePattern(Messages.Tickets.getSalesStatuses)

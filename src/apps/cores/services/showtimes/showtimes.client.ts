@@ -16,19 +16,19 @@ export class ShowtimesClient {
         return this.proxy.getJson(Messages.Showtimes.getShowtimes, showtimeIds)
     }
 
-    findAllShowtimes(queryDto: ShowtimeQueryDto): Promise<ShowtimeDto[]> {
-        return this.proxy.getJson(Messages.Showtimes.findAllShowtimes, queryDto)
+    searchShowtimes(queryDto: ShowtimeQueryDto): Promise<ShowtimeDto[]> {
+        return this.proxy.getJson(Messages.Showtimes.searchShowtimes, queryDto)
     }
 
-    findShowingMovieIds(): Promise<string[]> {
-        return this.proxy.getJson(Messages.Showtimes.findShowingMovieIds, {})
+    searchShowingMovieIds(): Promise<string[]> {
+        return this.proxy.getJson(Messages.Showtimes.searchShowingMovieIds, {})
     }
 
-    findTheaterIds(queryDto: ShowtimeQueryDto): Promise<string[]> {
-        return this.proxy.getJson(Messages.Showtimes.findTheaterIds, queryDto)
+    searchTheaterIds(queryDto: ShowtimeQueryDto): Promise<string[]> {
+        return this.proxy.getJson(Messages.Showtimes.searchTheaterIds, queryDto)
     }
 
-    findShowdates(queryDto: ShowtimeQueryDto): Promise<Date[]> {
-        return this.proxy.getJson(Messages.Showtimes.findShowdates, queryDto)
+    searchShowdates(queryDto: ShowtimeQueryDto): Promise<Date[]> {
+        return this.proxy.getJson(Messages.Showtimes.searchShowdates, queryDto)
     }
 }

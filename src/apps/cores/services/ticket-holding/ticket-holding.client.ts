@@ -11,8 +11,8 @@ export class TicketHoldingClient {
         return this.proxy.getJson(Messages.TicketHolding.holdTickets, holdDto)
     }
 
-    findHeldTicketIds(showtimeId: string, customerId: string): Promise<string[]> {
-        return this.proxy.getJson(Messages.TicketHolding.findHeldTicketIds, {
+    searchHeldTicketIds(showtimeId: string, customerId: string): Promise<string[]> {
+        return this.proxy.getJson(Messages.TicketHolding.searchHeldTicketIds, {
             showtimeId,
             customerId
         })

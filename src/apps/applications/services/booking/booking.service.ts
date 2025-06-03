@@ -24,26 +24,26 @@ export class BookingService {
         private ticketsService: TicketsClient
     ) {}
 
-    async findShowingTheaters({ movieId, latlong }: FindShowingTheatersDto) {
-        const theaterIds = await this.showtimesService.findTheaterIds({ movieIds: [movieId] })
+    async searchShowingTheaters({ movieId, latlong }: FindShowingTheatersDto) {
+        const theaterIds = await this.showtimesService.searchTheaterIds({ movieIds: [movieId] })
         const theaters = await this.theatersService.getTheaters(theaterIds)
         const showingTheaters = sortTheatersByDistance(theaters, latlong)
 
         return showingTheaters
     }
 
-    async findShowdates({ movieId, theaterId }: FindShowdatesDto) {
-        return this.showtimesService.findShowdates({ movieIds: [movieId], theaterIds: [theaterId] })
+    async searchShowdates({ movieId, theaterId }: FindShowdatesDto) {
+        return this.showtimesService.searchShowdates({ movieIds: [movieId], theaterIds: [theaterId] })
     }
 
-    async findShowtimes({ movieId, theaterId, showdate }: FindShowtimesDto) {
+    async searchShowtimes({ movieId, theaterId, showdate }: FindShowtimesDto) {
         const startOfDay = new Date(showdate)
         startOfDay.setHours(0, 0, 0, 0)
 
         const endOfDay = new Date(showdate)
         endOfDay.setHours(23, 59, 59, 999)
 
-        const showtimes = await this.showtimesService.findAllShowtimes({
+        const showtimes = await this.showtimesService.searchShowtimes({
             movieIds: [movieId],
             theaterIds: [theaterId],
             startTimeRange: { start: startOfDay, end: endOfDay }
@@ -58,7 +58,7 @@ export class BookingService {
     }
 
     async getAvailableTickets(showtimeId: string) {
-        const tickets = await this.ticketsService.findAllTickets({ showtimeIds: [showtimeId] })
+        const tickets = await this.ticketsService.searchTickets({ showtimeIds: [showtimeId] })
         return tickets
     }
 

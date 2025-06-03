@@ -11,8 +11,8 @@ export class RecommendationService {
         private watchRecordsService: WatchRecordsClient
     ) {}
 
-    async findRecommendedMovies(customerId: string | null) {
-        const showingMovieIds = await this.showtimesService.findShowingMovieIds()
+    async searchRecommendedMovies(customerId: string | null) {
+        const showingMovieIds = await this.showtimesService.searchShowingMovieIds()
 
         const showingMovies = await this.moviesService.getMoviesByIds(showingMovieIds)
         let watchedMovies: MovieDto[] = []

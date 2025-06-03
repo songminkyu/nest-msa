@@ -106,7 +106,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         )
 
         await this.showtimesService.createShowtimes(createDtos)
-        const showtimes = await this.showtimesService.findAllShowtimes({ batchIds: [batchId] })
+        const showtimes = await this.showtimesService.searchShowtimes({ batchIds: [batchId] })
         return showtimes
     }
 

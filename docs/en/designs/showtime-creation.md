@@ -69,8 +69,8 @@ Admin -> Frontend: 극장 선택
         theaterIds
     }
     end note
-        Backend -> ShowtimeCreation: findShowtimes(theaterIds)
-            ShowtimeCreation -> Showtimes: findShowtimes(theaterIds, date.now)
+        Backend -> ShowtimeCreation: searchShowtimes(theaterIds)
+            ShowtimeCreation -> Showtimes: searchShowtimes(theaterIds, date.now)
             ShowtimeCreation <-- Showtimes: showtimes[]
         Backend <-- ShowtimeCreation: showtimes[]
     Frontend <-- Backend: showtimes[]

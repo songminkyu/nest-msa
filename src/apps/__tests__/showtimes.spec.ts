@@ -22,14 +22,14 @@ describe('Showtimes', () => {
         const { success } = await fix.showtimesClient.createShowtimes([createDto])
         expect(success).toBeTruthy()
 
-        const showtimes = await fix.showtimesClient.findAllShowtimes({
+        const showtimes = await fix.showtimesClient.searchShowtimes({
             batchIds: [testObjectId(0x1)]
         })
 
         expect(showtimes).toEqual([expectedDto])
     })
 
-    describe('findAllShowtimes', () => {
+    describe('searchShowtimes', () => {
         const batchId = testObjectId(0x1)
         const movieId = testObjectId(0x2)
         const theaterId = testObjectId(0x3)
@@ -51,17 +51,17 @@ describe('Showtimes', () => {
         })
 
         it('batchIds', async () => {
-            const showtimes = await fix.showtimesClient.findAllShowtimes({ batchIds: [batchId] })
+            const showtimes = await fix.showtimesClient.searchShowtimes({ batchIds: [batchId] })
             expectEqualUnsorted(showtimes, expectedDtos)
         })
 
         it('movieIds', async () => {
-            const showtimes = await fix.showtimesClient.findAllShowtimes({ movieIds: [movieId] })
+            const showtimes = await fix.showtimesClient.searchShowtimes({ movieIds: [movieId] })
             expectEqualUnsorted(showtimes, expectedDtos)
         })
 
         it('theaterIds', async () => {
-            const showtimes = await fix.showtimesClient.findAllShowtimes({
+            const showtimes = await fix.showtimesClient.searchShowtimes({
                 theaterIds: [theaterId]
             })
             expectEqualUnsorted(showtimes, expectedDtos)
@@ -73,13 +73,13 @@ describe('Showtimes', () => {
                 end: new Date('2000-01-02T12:00')
             }
 
-            const showtimes = await fix.showtimesClient.findAllShowtimes({ startTimeRange })
+            const showtimes = await fix.showtimesClient.searchShowtimes({ startTimeRange })
             expect(showtimes).toHaveLength(2)
         })
 
         /* 1개 이상의 필터를 설정하지 않으면 BAD_REQUEST(400)를 반환해야 한다 */
         it('Should return BAD_REQUEST(400) if no filter is provided', async () => {
-            const promise = fix.showtimesClient.findAllShowtimes({})
+            const promise = fix.showtimesClient.searchShowtimes({})
             await expect(promise).rejects.toThrow('At least one filter condition must be provided')
         })
     })
@@ -111,7 +111,7 @@ describe('Showtimes', () => {
         })
     })
 
-    it('findShowingMovieIds', async () => {
+    it('searchShowingMovieIds', async () => {
         const now = new Date()
 
         const buildCreateDto = (movieId: string, start: Date) =>
@@ -129,11 +129,11 @@ describe('Showtimes', () => {
         const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const foundMovieIds = await fix.showtimesClient.findShowingMovieIds()
+        const foundMovieIds = await fix.showtimesClient.searchShowingMovieIds()
         expect(foundMovieIds).toEqual([testObjectId(0x2), testObjectId(0x3)])
     })
 
-    it('findTheaterIds', async () => {
+    it('searchTheaterIds', async () => {
         const movieId = testObjectId(0x10)
 
         const buildCreateDto = (movieId: string, theaterId: string) =>
@@ -148,11 +148,11 @@ describe('Showtimes', () => {
         const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const foundTheaterIds = await fix.showtimesClient.findTheaterIds({ movieIds: [movieId] })
+        const foundTheaterIds = await fix.showtimesClient.searchTheaterIds({ movieIds: [movieId] })
         expect(foundTheaterIds).toEqual([testObjectId(0x1), testObjectId(0x2)])
     })
 
-    it('findShowdates', async () => {
+    it('searchShowdates', async () => {
         const movieId = testObjectId(0x1)
         const theaterId = testObjectId(0x2)
 
@@ -169,7 +169,7 @@ describe('Showtimes', () => {
         const { success } = await fix.showtimesClient.createShowtimes(createDtos)
         expect(success).toBeTruthy()
 
-        const showdates = await fix.showtimesClient.findShowdates({
+        const showdates = await fix.showtimesClient.searchShowdates({
             movieIds: [movieId],
             theaterIds: [theaterId]
         })

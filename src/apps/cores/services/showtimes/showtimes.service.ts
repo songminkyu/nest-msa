@@ -20,24 +20,24 @@ export class ShowtimesService {
         return this.toDtos(showtimes)
     }
 
-    async findAllShowtimes(queryDto: ShowtimeQueryDto) {
-        const showtimes = await this.repository.findAllShowtimes(queryDto)
+    async searchShowtimes(queryDto: ShowtimeQueryDto) {
+        const showtimes = await this.repository.searchShowtimes(queryDto)
 
         return this.toDtos(showtimes)
     }
 
-    async findShowingMovieIds() {
+    async searchShowingMovieIds() {
         const currentTime = new Date()
 
         return this.repository.findMovieIds({ startTimeRange: { start: currentTime } })
     }
 
-    async findTheaterIds(queryDto: ShowtimeQueryDto) {
-        return this.repository.findTheaterIds(queryDto)
+    async searchTheaterIds(queryDto: ShowtimeQueryDto) {
+        return this.repository.searchTheaterIds(queryDto)
     }
 
-    async findShowdates(queryDto: ShowtimeQueryDto) {
-        return this.repository.findShowdates(queryDto)
+    async searchShowdates(queryDto: ShowtimeQueryDto) {
+        return this.repository.searchShowdates(queryDto)
     }
 
     private toDto = (showtime: ShowtimeDocument) =>

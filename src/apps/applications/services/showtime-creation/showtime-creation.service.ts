@@ -21,8 +21,8 @@ export class ShowtimeCreationService {
         return this.theatersService.searchTheatersPage(queryDto)
     }
 
-    async findShowtimes(theaterIds: string[]) {
-        return this.showtimesService.findAllShowtimes({
+    async searchShowtimes(theaterIds: string[]) {
+        return this.showtimesService.searchShowtimes({
             theaterIds,
             endTimeRange: { start: new Date() }
         })

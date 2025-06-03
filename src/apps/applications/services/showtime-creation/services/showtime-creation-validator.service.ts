@@ -74,7 +74,7 @@ export class ShowtimeCreationValidatorService {
         const timeslotsByTheater = new Map<string, TimeslotMap>()
 
         for (const theaterId of theaterIds) {
-            const fetchedShowtimes = await this.showtimesService.findAllShowtimes({
+            const fetchedShowtimes = await this.showtimesService.searchShowtimes({
                 theaterIds: [theaterId],
                 startTimeRange: { start: startDate, end: endDate }
             })

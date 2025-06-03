@@ -19,9 +19,9 @@ export class ShowtimeCreationController {
         return this.service.searchTheatersPage(queryDto)
     }
 
-    @MessagePattern(Messages.ShowtimeCreation.findShowtimes)
-    findShowtimes(@Payload() theaterIds: string[]) {
-        return this.service.findShowtimes(theaterIds)
+    @MessagePattern(Messages.ShowtimeCreation.searchShowtimes)
+    searchShowtimes(@Payload() theaterIds: string[]) {
+        return this.service.searchShowtimes(theaterIds)
     }
 
     @MessagePattern(Messages.ShowtimeCreation.createBatchShowtimes)

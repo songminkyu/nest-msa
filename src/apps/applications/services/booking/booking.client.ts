@@ -13,16 +13,16 @@ import {
 export class BookingClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    findShowingTheaters(dto: FindShowingTheatersDto): Promise<TheaterDto[]> {
-        return this.proxy.getJson(Messages.Booking.findShowingTheaters, dto)
+    searchShowingTheaters(dto: FindShowingTheatersDto): Promise<TheaterDto[]> {
+        return this.proxy.getJson(Messages.Booking.searchShowingTheaters, dto)
     }
 
-    findShowdates(dto: FindShowdatesDto): Promise<Date[]> {
-        return this.proxy.getJson(Messages.Booking.findShowdates, dto)
+    searchShowdates(dto: FindShowdatesDto): Promise<Date[]> {
+        return this.proxy.getJson(Messages.Booking.searchShowdates, dto)
     }
 
-    findShowtimes(dto: FindShowtimesDto): Promise<ShowtimeSalesStatusDto[]> {
-        return this.proxy.getJson(Messages.Booking.findShowtimes, dto)
+    searchShowtimes(dto: FindShowtimesDto): Promise<ShowtimeSalesStatusDto[]> {
+        return this.proxy.getJson(Messages.Booking.searchShowtimes, dto)
     }
 
     getAvailableTickets(showtimeId: string): Promise<TicketDto[]> {

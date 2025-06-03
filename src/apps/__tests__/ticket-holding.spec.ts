@@ -1,6 +1,6 @@
 import { generateShortId, sleep } from 'common'
 import { testObjectId } from 'testlib'
-import { findHeldTicketIds, Fixture, holdTickets, releaseTickets } from './ticket-holding.fixture'
+import { searchHeldTicketIds, Fixture, holdTickets, releaseTickets } from './ticket-holding.fixture'
 import { isEqual, sortBy } from 'lodash'
 
 describe('Ticket Holding', () => {
@@ -93,7 +93,7 @@ describe('Ticket Holding', () => {
 
                         const heldTicketIds = await Promise.all(
                             customers.map((customer) =>
-                                findHeldTicketIds(fix, showtimeId, customer)
+                                searchHeldTicketIds(fix, showtimeId, customer)
                             )
                         )
 
@@ -108,7 +108,7 @@ describe('Ticket Holding', () => {
         )
     })
 
-    describe('findHeldTicketIds', () => {
+    describe('searchHeldTicketIds', () => {
         const customerId = testObjectId(0x10)
         const ticketIds = [testObjectId(0x30), testObjectId(0x31)]
         const showtimeId = testObjectId(0x40)
@@ -117,7 +117,7 @@ describe('Ticket Holding', () => {
         it('Should return held tickets', async () => {
             await holdTickets(fix, { showtimeId, customerId, ticketIds })
 
-            const heldTickets = await findHeldTicketIds(fix, showtimeId, customerId)
+            const heldTickets = await searchHeldTicketIds(fix, showtimeId, customerId)
 
             expect(heldTickets).toEqual(ticketIds)
         })
@@ -129,12 +129,12 @@ describe('Ticket Holding', () => {
 
             await holdTickets(fix, { showtimeId, customerId, ticketIds })
 
-            const beforeExpiry = await findHeldTicketIds(fix, showtimeId, customerId)
+            const beforeExpiry = await searchHeldTicketIds(fix, showtimeId, customerId)
             expect(beforeExpiry).toEqual(ticketIds)
 
             await sleep(Rules.Ticket.holdExpirationTime + 500)
 
-            const afterExpiry = await findHeldTicketIds(fix, showtimeId, customerId)
+            const afterExpiry = await searchHeldTicketIds(fix, showtimeId, customerId)
             expect(afterExpiry).toEqual([])
         })
     })
@@ -150,13 +150,13 @@ describe('Ticket Holding', () => {
             const firstHold = await holdTickets(fix, { customerId, showtimeId, ticketIds })
             expect(firstHold).toBeTruthy()
 
-            const beforeRelease = await findHeldTicketIds(fix, showtimeId, customerId)
+            const beforeRelease = await searchHeldTicketIds(fix, showtimeId, customerId)
             expect(beforeRelease).toEqual(ticketIds)
 
             const releaseResult = await releaseTickets(fix, showtimeId, customerId)
             expect(releaseResult).toBeTruthy()
 
-            const afterRelease = await findHeldTicketIds(fix, showtimeId, customerId)
+            const afterRelease = await searchHeldTicketIds(fix, showtimeId, customerId)
             expect(afterRelease).toEqual([])
 
             const secondHold = await holdTickets(fix, {

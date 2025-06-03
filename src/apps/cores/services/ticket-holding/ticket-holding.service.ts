@@ -75,14 +75,14 @@ export class TicketHoldingService {
         return result === 1
     }
 
-    async findHeldTicketIds(showtimeId: string, customerId: string): Promise<string[]> {
+    async searchHeldTicketIds(showtimeId: string, customerId: string): Promise<string[]> {
         const tickets = await this.cacheService.get(getCustomerKey(showtimeId, customerId))
 
         return tickets ? JSON.parse(tickets) : []
     }
 
     async releaseTickets(showtimeId: string, customerId: string) {
-        const tickets = await this.findHeldTicketIds(showtimeId, customerId)
+        const tickets = await this.searchHeldTicketIds(showtimeId, customerId)
 
         await Promise.all(
             tickets.map((ticketId) => this.cacheService.delete(getTicketKey(showtimeId, ticketId)))

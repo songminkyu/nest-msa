@@ -100,7 +100,7 @@ export const createShowtimes = async (fix: CommonFixture, createDtos: ShowtimeCr
 
     const batchIds = uniq(createDtos.map((dto) => dto.batchId))
 
-    const showtimes = await fix.showtimesClient.findAllShowtimes({ batchIds })
+    const showtimes = await fix.showtimesClient.searchShowtimes({ batchIds })
     return showtimes
 }
 
@@ -124,7 +124,7 @@ export const createTickets = async (fix: CommonFixture, createDtos: TicketCreate
 
     const batchIds = uniq(createDtos.map((dto) => dto.batchId))
 
-    const tickets = await fix.ticketsClient.findAllTickets({ batchIds })
+    const tickets = await fix.ticketsClient.searchTickets({ batchIds })
     return tickets
 }
 

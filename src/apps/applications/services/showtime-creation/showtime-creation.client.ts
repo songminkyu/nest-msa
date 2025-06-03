@@ -16,8 +16,8 @@ export class ShowtimeCreationClient {
         return this.proxy.getJson(Messages.ShowtimeCreation.searchTheatersPage, queryDto)
     }
 
-    findShowtimes(theaterIds: string[]): Promise<ShowtimeDto[]> {
-        return this.proxy.getJson(Messages.ShowtimeCreation.findShowtimes, theaterIds)
+    searchShowtimes(theaterIds: string[]): Promise<ShowtimeDto[]> {
+        return this.proxy.getJson(Messages.ShowtimeCreation.searchShowtimes, theaterIds)
     }
 
     createBatchShowtimes(createDto: ShowtimeBatchCreateDto): Promise<ShowtimeBatchCreateResponse> {

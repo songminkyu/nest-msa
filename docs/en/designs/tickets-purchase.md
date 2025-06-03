@@ -63,10 +63,10 @@ actor Customer
 
 Customer -> Frontend: 영화 예매 시스템에 접속
 Frontend -> Backend: 추천 영화 목록 요청\nGET /movies/recommended
-Backend -> Recommendation: findRecommendedMovies({customerId})
+Backend -> Recommendation: searchRecommendedMovies({customerId})
 Recommendation -> Showtimes: findShowingMovieIds()
 Showtimes --> Recommendation: showingMovieIds
-Recommendation -> Movies: findAllMovies({movieIds: showingMovieIds})
+Recommendation -> Movies: searchMovies({movieIds: showingMovieIds})
 Movies --> Recommendation: movies
 group if customer exists
     Recommendation -> WatchRecordsService: findWatchRecords(customerId)
@@ -79,7 +79,7 @@ group if customer exists
         purchaseId,
     }
     end note
-    Recommendation -> Movies: findAllMovies({movieIds: watchRecords.movieIds})
+    Recommendation -> Movies: searchMovies({movieIds: watchRecords.movieIds})
     Recommendation <-- Movies: watchedMovies
 end
 Recommendation -> Recommendation: generateRecommendedMovies\n(movies, watchedMovies)
@@ -109,7 +109,7 @@ actor Customer
 
 Customer -> Frontend: 영화 선택
     Frontend -> Backend: 상영 극장 목록 요청\nGET /booking/movies/{movieId}/theaters\n?latlong=37.123,128.678
-        Backend -> Booking: findShowingTheaters({movieId, latlong})
+        Backend -> Booking: searchShowingTheaters({movieId, latlong})
             Booking -> Showtimes: findShowingTheaterIds({movieId})
             Booking <-- Showtimes: theaterIds[]
             Booking -> Theaters: getTheaters({theaterIds})
@@ -133,8 +133,8 @@ Customer <-- Frontend: 상영일 목록 제공
 
 Customer -> Frontend: 상영일 선택
     Frontend -> Backend: 상영 시간 목록 요청\nGET /booking/movies/{movieId}/\ntheaters/{theaterId}/showdates/{}/showtimes
-        Backend -> Booking: findShowtimes({movieId, theaterId, showdate})
-            Booking -> Showtimes: findShowtimes({movieId, theaterId, showdate})
+        Backend -> Booking: searchShowtimes({movieId, theaterId, showdate})
+            Booking -> Showtimes: searchShowtimes({movieId, theaterId, showdate})
             Booking <-- Showtimes: showtimes[]
             Booking -> Tickets: getSalesStatuses({ showtimeIds })
             Booking <-- Tickets: salesStatuses[]
@@ -154,7 +154,7 @@ Customer <-- Frontend: 상영 시간 목록 제공
 Customer -> Frontend: 상영 시간 선택
     Frontend -> Backend: 구매 가능한 티켓 목록 요청\nGET /booking/showtimes/{}/tickets
         Backend -> Booking: getAvailableTickets(showtimeId)
-            Booking -> Tickets: findAllTickets({showtimeId})
+            Booking -> Tickets: searchTickets({showtimeId})
             Booking <-- Tickets: tickets[]
         Backend <-- Booking: tickets[]
     Frontend <-- Backend: tickets[]

@@ -28,8 +28,8 @@ export class TicketsService {
         return this.toDtos(tickets)
     }
 
-    async findAllTickets(queryDto: TicketQueryDto) {
-        const tickets = await this.repository.findAllTickets(queryDto)
+    async searchTickets(queryDto: TicketQueryDto) {
+        const tickets = await this.repository.searchTickets(queryDto)
 
         return this.toDtos(tickets)
     }

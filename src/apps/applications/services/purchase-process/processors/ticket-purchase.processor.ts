@@ -93,7 +93,7 @@ export class TicketPurchaseProcessor {
         const heldTicketIds: string[] = []
 
         for (const showtime of showtimes) {
-            const ticketIds = await this.ticketHoldingService.findHeldTicketIds(
+            const ticketIds = await this.ticketHoldingService.searchHeldTicketIds(
                 showtime.id,
                 customerId
             )

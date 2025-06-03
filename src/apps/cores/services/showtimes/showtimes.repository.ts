@@ -25,7 +25,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         await this.saveMany(showtimes)
     }
 
-    async findAllShowtimes(queryDto: ShowtimeQueryDto) {
+    async searchShowtimes(queryDto: ShowtimeQueryDto) {
         const query = this.buildQuery(queryDto)
 
         const showtimes = await this.model.find(query).sort({ timeRange: 1 }).exec()
@@ -39,14 +39,14 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         return movieIds.map((id) => id.toString())
     }
 
-    async findTheaterIds(queryDto: ShowtimeQueryDto) {
+    async searchTheaterIds(queryDto: ShowtimeQueryDto) {
         const query = this.buildQuery(queryDto)
 
         const theaterIds = await this.model.distinct('theaterId', query).exec()
         return theaterIds.map((id) => id.toString())
     }
 
-    async findShowdates(queryDto: ShowtimeQueryDto) {
+    async searchShowdates(queryDto: ShowtimeQueryDto) {
         const query = this.buildQuery(queryDto)
 
         const showdates = await this.model.aggregate([

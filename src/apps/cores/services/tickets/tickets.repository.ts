@@ -36,7 +36,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
         return result
     }
 
-    async findAllTickets(queryDto: TicketQueryDto) {
+    async searchTickets(queryDto: TicketQueryDto) {
         const query = this.buildQuery(queryDto)
 
         const tickets = await this.model.find(query).sort({ batchId: 1 }).exec()

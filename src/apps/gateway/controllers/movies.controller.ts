@@ -51,9 +51,9 @@ export class MoviesController {
 
     @UseGuards(CustomerOptionalJwtAuthGuard)
     @Get('recommended')
-    async findRecommendedMovies(@Req() req: CustomerAuthRequest) {
+    async searchRecommendedMovies(@Req() req: CustomerAuthRequest) {
         const customerId = req.user.customerId
-        return this.recommendationService.findRecommendedMovies(customerId)
+        return this.recommendationService.searchRecommendedMovies(customerId)
     }
 
     @Get(':movieId')
