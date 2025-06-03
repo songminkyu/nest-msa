@@ -94,28 +94,28 @@ describe('common/utils/etc', () => {
         /* ISO 8601 형식의 날짜 문자열을 Date 객체로 변환해야 한다 */
         it('Should convert ISO 8601 date strings to Date objects', () => {
             const obj = jsonToObject({
-                date: '2023-06-18T12:00:00.000Z'
+                date: '2023-06-18T12:12:34.567Z'
             })
 
             expect(obj.date).toBeInstanceOf(Date)
-            expect((obj.date as any).toISOString()).toEqual('2023-06-18T12:00:00.000Z')
+            expect((obj.date as any).toISOString()).toEqual('2023-06-18T12:12:34.567Z')
         })
 
         /* 중첩된 객체 내의 날짜 문자열을 재귀적으로 변환해야 한다 */
         it('Should recursively convert date strings in nested objects', () => {
             const obj = jsonToObject({
                 level1: {
-                    date: '2023-06-18T12:00:00.000Z',
+                    date: '2023-06-18T12:12:34.567Z',
                     level2: {
-                        date: ['2023-06-19T12:00:00.000Z'],
+                        date: ['2023-06-19T12:12:34.567Z'],
                         date2: nullDate,
                         null: null
                     }
                 }
             })
             expect(obj.level1.date).toBeInstanceOf(Date)
-            expect((obj.level1.date as any).toISOString()).toEqual('2023-06-18T12:00:00.000Z')
-            expect(obj.level1.level2.date).toEqual([new Date('2023-06-19T12:00:00.000Z')])
+            expect((obj.level1.date as any).toISOString()).toEqual('2023-06-18T12:12:34.567Z')
+            expect(obj.level1.level2.date).toEqual([new Date('2023-06-19T12:12:34.567Z')])
         })
 
         /* 날짜 형식이 아닌 문자열은 무시해야 한다 */
