@@ -9,11 +9,11 @@ export class BookingController {
     constructor(private bookingService: BookingClient) {}
 
     @Get('movies/:movieId/theaters')
-    async searchShowingTheaters(
+    async searchTheaters(
         @Param('movieId') movieId: string,
         @LatLongQuery('latlong') latlong: LatLong
     ) {
-        return this.bookingService.searchShowingTheaters({ movieId, latlong })
+        return this.bookingService.searchTheaters({ movieId, latlong })
     }
 
     @Get('movies/:movieId/theaters/:theaterId/showdates')

@@ -6,22 +6,22 @@ import {
     SearchShowdatesDto,
     SearchShowingTheatersDto,
     SearchShowtimesDto,
-    ShowtimeSalesStatusDto
+    ShowtimeWithTicketSalesDto
 } from './dtos'
 
 @Injectable()
 export class BookingClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    searchShowingTheaters(dto: SearchShowingTheatersDto): Promise<TheaterDto[]> {
-        return this.proxy.getJson(Messages.Booking.searchShowingTheaters, dto)
+    searchTheaters(dto: SearchShowingTheatersDto): Promise<TheaterDto[]> {
+        return this.proxy.getJson(Messages.Booking.searchTheaters, dto)
     }
 
     searchShowdates(dto: SearchShowdatesDto): Promise<Date[]> {
         return this.proxy.getJson(Messages.Booking.searchShowdates, dto)
     }
 
-    searchShowtimes(dto: SearchShowtimesDto): Promise<ShowtimeSalesStatusDto[]> {
+    searchShowtimes(dto: SearchShowtimesDto): Promise<ShowtimeWithTicketSalesDto[]> {
         return this.proxy.getJson(Messages.Booking.searchShowtimes, dto)
     }
 

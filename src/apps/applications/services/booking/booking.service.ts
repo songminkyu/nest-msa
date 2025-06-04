@@ -7,12 +7,12 @@ import {
     TicketsClient
 } from 'apps/cores'
 import { pickIds } from 'common'
-import { generateShowtimesWithSalesStatus, sortTheatersByDistance } from './booking.utils'
+import { generateShowtimesWithTicketSales, sortTheatersByDistance } from './booking.utils'
 import {
     SearchShowdatesDto,
     SearchShowingTheatersDto,
     SearchShowtimesDto,
-    ShowtimeSalesStatusDto
+    ShowtimeWithTicketSalesDto
 } from './dtos'
 
 @Injectable()
@@ -24,7 +24,7 @@ export class BookingService {
         private ticketsService: TicketsClient
     ) {}
 
-    async searchShowingTheaters({ movieId, latlong }: SearchShowingTheatersDto) {
+    async searchTheaters({ movieId, latlong }: SearchShowingTheatersDto) {
         const theaterIds = await this.showtimesService.searchTheaterIds({ movieIds: [movieId] })
         const theaters = await this.theatersService.getTheaters(theaterIds)
         const showingTheaters = sortTheatersByDistance(theaters, latlong)
@@ -53,11 +53,11 @@ export class BookingService {
         })
 
         const ids = pickIds(showtimes)
-        const salesStatuses = await this.ticketsService.getSalesStatuses(ids)
+        const ticketSalesForShowtimes = await this.ticketsService.getTicketSalesForShowtimes(ids)
 
-        const showtimesWithSalesStatus = generateShowtimesWithSalesStatus(showtimes, salesStatuses)
+        const showtimesWithSalesStatus = generateShowtimesWithTicketSales(showtimes, ticketSalesForShowtimes)
 
-        return showtimesWithSalesStatus as ShowtimeSalesStatusDto[]
+        return showtimesWithSalesStatus as ShowtimeWithTicketSalesDto[]
     }
 
     async getAvailableTickets(showtimeId: string) {

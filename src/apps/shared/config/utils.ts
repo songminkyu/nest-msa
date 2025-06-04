@@ -26,16 +26,16 @@ type Paths<T, ParentPath extends string = ''> = {
  * For example, given an object like this:
  * {
  *   Booking: {
- *     searchShowingTheaters: null
+ *     searchTheaters: null
  *   }
  * }
  * The result would be:
  * {
  *   Booking: {
- *     searchShowingTheaters: "Booking.searchShowingTheaters"
+ *     searchTheaters: "Booking.searchTheaters"
  *   }
  * }
- * This result is used in a format such as '@MessagePattern(Messages.Booking.searchShowingTheaters)'.
+ * This result is used in a format such as '@MessagePattern(Messages.Booking.searchTheaters)'.
  */
 export function createRouteMap<T extends Record<string, any>>(
     obj: T,

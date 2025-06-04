@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, objectIds, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
-import { SalesStatusByShowtimeDto, TicketCreateDto, TicketQueryDto } from './dtos'
+import { TicketSalesForShowtimeDto, TicketCreateDto, TicketQueryDto } from './dtos'
 import { Ticket, TicketStatus } from './models'
 
 @Injectable()
@@ -43,8 +43,8 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
         return tickets
     }
 
-    async getSalesStatuses(showtimeIds: string[]) {
-        const salesStatuses = await this.model.aggregate([
+    async getTicketSalesForShowtimes(showtimeIds: string[]) {
+        const showtimeTicketSalesArray = await this.model.aggregate([
             { $match: { showtimeId: { $in: objectIds(showtimeIds) } } },
             {
                 $group: {
@@ -64,7 +64,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
             }
         ])
 
-        return salesStatuses as SalesStatusByShowtimeDto[]
+        return showtimeTicketSalesArray as TicketSalesForShowtimeDto[]
     }
 
     private buildQuery(queryDto: TicketQueryDto, options: QueryBuilderOptions = {}) {

@@ -109,7 +109,7 @@ actor Customer
 
 Customer -> Frontend: 영화 선택
     Frontend -> Backend: 상영 극장 목록 요청\nGET /booking/movies/{movieId}/theaters\n?latlong=37.123,128.678
-        Backend -> Booking: searchShowingTheaters({movieId, latlong})
+        Backend -> Booking: searchTheaters({movieId, latlong})
             Booking -> Showtimes: findShowingTheaterIds({movieId})
             Booking <-- Showtimes: theaterIds[]
             Booking -> Theaters: getTheaters({theaterIds})
@@ -136,7 +136,7 @@ Customer -> Frontend: 상영일 선택
         Backend -> Booking: searchShowtimes({movieId, theaterId, showdate})
             Booking -> Showtimes: searchShowtimes({movieId, theaterId, showdate})
             Booking <-- Showtimes: showtimes[]
-            Booking -> Tickets: getSalesStatuses({ showtimeIds })
+            Booking -> Tickets: getTicketSalesForShowtimes({ showtimeIds })
             Booking <-- Tickets: salesStatuses[]
             note left
             ShowtimeSalesStatus = {

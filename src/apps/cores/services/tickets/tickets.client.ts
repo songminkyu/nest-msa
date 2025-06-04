@@ -3,7 +3,7 @@ import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
 import {
     CreateTicketsResult,
-    SalesStatusByShowtimeDto,
+    TicketSalesForShowtimeDto,
     TicketCreateDto,
     TicketDto,
     TicketQueryDto
@@ -26,8 +26,8 @@ export class TicketsClient {
         return this.proxy.getJson(Messages.Tickets.searchTickets, queryDto)
     }
 
-    getSalesStatuses(showtimeIds: string[]): Promise<SalesStatusByShowtimeDto[]> {
-        return this.proxy.getJson(Messages.Tickets.getSalesStatuses, showtimeIds)
+    getTicketSalesForShowtimes(showtimeIds: string[]): Promise<TicketSalesForShowtimeDto[]> {
+        return this.proxy.getJson(Messages.Tickets.getTicketSalesForShowtimes, showtimeIds)
     }
 
     getTickets(ticketIds: string[]): Promise<TicketDto[]> {

@@ -20,7 +20,7 @@ export const Messages = createRouteMap(
             createTickets: null,
             updateTicketStatus: null,
             searchTickets: null,
-            getSalesStatuses: null,
+            getTicketSalesForShowtimes: null,
             getTickets: null
         },
         TicketHolding: {
@@ -80,7 +80,7 @@ export const Messages = createRouteMap(
             processPurchase: null
         },
         Booking: {
-            searchShowingTheaters: null,
+            searchTheaters: null,
             searchShowdates: null,
             searchShowtimes: null,
             getAvailableTickets: null,

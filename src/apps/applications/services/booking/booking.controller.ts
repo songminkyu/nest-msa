@@ -9,9 +9,9 @@ import { HoldTicketsDto } from 'apps/cores'
 export class BookingController {
     constructor(private service: BookingService) {}
 
-    @MessagePattern(Messages.Booking.searchShowingTheaters)
-    searchShowingTheaters(@Payload() dto: SearchShowingTheatersDto) {
-        return this.service.searchShowingTheaters(dto)
+    @MessagePattern(Messages.Booking.searchTheaters)
+    searchTheaters(@Payload() dto: SearchShowingTheatersDto) {
+        return this.service.searchTheaters(dto)
     }
 
     @MessagePattern(Messages.Booking.searchShowdates)

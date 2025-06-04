@@ -1,6 +1,6 @@
 import { LatLong } from 'common'
-import { SalesStatusByShowtimeDto, ShowtimeDto, TheaterDto } from 'apps/cores'
-import { ShowtimeSalesStatusDto } from './dtos'
+import { TicketSalesForShowtimeDto, ShowtimeDto, TheaterDto } from 'apps/cores'
+import { ShowtimeWithTicketSalesDto } from './dtos'
 
 export function sortTheatersByDistance(theaters: TheaterDto[], latlong: LatLong) {
     return theaters.sort(
@@ -10,19 +10,19 @@ export function sortTheatersByDistance(theaters: TheaterDto[], latlong: LatLong)
     )
 }
 
-export function generateShowtimesWithSalesStatus(
+export function generateShowtimesWithTicketSales(
     showtimes: ShowtimeDto[],
-    salesStatuses: SalesStatusByShowtimeDto[]
+    ticketSalesForShowtimes: TicketSalesForShowtimeDto[]
 ) {
-    const salesStatusByShowtime = new Map(
-        salesStatuses.map((status) => [status.showtimeId, status])
+    const ticketSalesByShowtime = new Map(
+        ticketSalesForShowtimes.map((status) => [status.showtimeId, status])
     )
 
-    const showtimeSalesStatuses = showtimes.map((showtime) => {
-        const { total, sold, available } = salesStatusByShowtime.get(showtime.id)!
+    const showtimesWithTicketSales = showtimes.map((showtime) => {
+        const { total, sold, available } = ticketSalesByShowtime.get(showtime.id)!
 
-        return { ...showtime, salesStatus: { total, sold, available } }
+        return { ...showtime, ticketSales: { total, sold, available } }
     })
 
-    return showtimeSalesStatuses as ShowtimeSalesStatusDto[]
+    return showtimesWithTicketSales as ShowtimeWithTicketSalesDto[]
 }

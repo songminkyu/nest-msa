@@ -29,9 +29,9 @@ export class TicketsController {
         return this.service.searchTickets(queryDto)
     }
 
-    @MessagePattern(Messages.Tickets.getSalesStatuses)
-    getSalesStatuses(@Payload() showtimeIds: string[]) {
-        return this.service.getSalesStatuses(showtimeIds)
+    @MessagePattern(Messages.Tickets.getTicketSalesForShowtimes)
+    getTicketSalesForShowtimes(@Payload() showtimeIds: string[]) {
+        return this.service.getTicketSalesForShowtimes(showtimeIds)
     }
 
     @MessagePattern(Messages.Tickets.getTickets)
