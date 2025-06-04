@@ -3,10 +3,10 @@ import { mapDocToDto } from 'common'
 import { CustomersRepository } from './customers.repository'
 import {
     CustomerAuthPayload,
-    CustomerCreateDto,
+    CreateCustomerDto,
     CustomerDto,
-    CustomerQueryDto,
-    CustomerUpdateDto
+    SearchCustomersDto,
+    UpdateCustomerDto
 } from './dtos'
 import { CustomerErrors } from './errors'
 import { CustomerDocument } from './models'
@@ -28,7 +28,7 @@ export class CustomersService {
         private authenticationService: CustomerAuthenticationService
     ) {}
 
-    async createCustomer(createDto: CustomerCreateDto) {
+    async createCustomer(createDto: CreateCustomerDto) {
         const existingCustomer = await this.repository.findByEmail(createDto.email)
 
         if (existingCustomer) {
@@ -44,7 +44,7 @@ export class CustomersService {
         return this.toDto(newCustomer)
     }
 
-    async updateCustomer(customerId: string, updateDto: CustomerUpdateDto) {
+    async updateCustomer(customerId: string, updateDto: UpdateCustomerDto) {
         const customer = await this.repository.updateCustomer(customerId, updateDto)
         return this.toDto(customer)
     }
@@ -59,7 +59,7 @@ export class CustomersService {
         return deleteResult
     }
 
-    async searchCustomersPage(queryDto: CustomerQueryDto) {
+    async searchCustomersPage(queryDto: SearchCustomersDto) {
         const { items, ...paginated } = await this.repository.searchCustomersPage(queryDto)
         return { ...paginated, items: this.toDtos(items) }
     }

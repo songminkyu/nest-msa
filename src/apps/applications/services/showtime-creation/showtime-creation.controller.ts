@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { CommonQueryDto } from 'common'
 import { Messages } from 'shared'
-import { ShowtimeBatchCreateDto } from './dtos'
+import { CreateShowtimeBatchDto } from './dtos'
 import { ShowtimeCreationService } from './showtime-creation.service'
 
 @Controller()
@@ -25,7 +25,7 @@ export class ShowtimeCreationController {
     }
 
     @MessagePattern(Messages.ShowtimeCreation.createBatchShowtimes)
-    createBatchShowtimes(@Payload() createDto: ShowtimeBatchCreateDto) {
+    createBatchShowtimes(@Payload() createDto: CreateShowtimeBatchDto) {
         return this.service.createBatchShowtimes(createDto)
     }
 }

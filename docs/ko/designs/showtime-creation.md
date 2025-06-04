@@ -129,14 +129,14 @@ Backend <-- ShowtimeCreation: ShowtimeBatchCreationResult(success)
 ```
 
 ```
-ShowtimeBatchCreateDto {
+CreateShowtimeBatchDto {
     "movieId": "movie#1",
     "theaterIds": ["theater#1","theater#2"],
     "durationMinutes": 90,
     "startTimes": [202012120900, 202012121100, 202012121300]
 }
 
-ShowtimeBatchCreateResult{
+CreateShowtimeBatchResult{
     "batchId": "batchid#1",
     "result": "complete",
     "createdShowtimes": 100,

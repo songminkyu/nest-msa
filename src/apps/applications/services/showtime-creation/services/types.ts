@@ -1,6 +1,6 @@
-import { ShowtimeBatchCreateDto } from '../dtos'
+import { CreateShowtimeBatchDto } from '../dtos'
 
-export class ShowtimeBatchCreateJobData extends ShowtimeBatchCreateDto {
+export class ShowtimeBatchCreateJobData extends CreateShowtimeBatchDto {
     batchId: string
 }
 

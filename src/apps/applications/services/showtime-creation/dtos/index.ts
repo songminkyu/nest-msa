@@ -1,2 +1,2 @@
-export * from './showtime-batch-create.dto'
-export * from './showtime-batch-create.response'
+export * from './create-showtime-batch.dto'
+export * from './create-showtime-batch.response'

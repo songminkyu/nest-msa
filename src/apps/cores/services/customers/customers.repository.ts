@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
-import { CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
+import { CreateCustomerDto, SearchCustomersDto, UpdateCustomerDto } from './dtos'
 import { CustomerErrors } from './errors'
 import { Customer } from './models'
 
@@ -12,7 +12,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         super(model)
     }
 
-    async createCustomer(createDto: CustomerCreateDto) {
+    async createCustomer(createDto: CreateCustomerDto) {
         const customer = this.newDocument()
         customer.name = createDto.name
         customer.email = createDto.email
@@ -22,7 +22,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         return customer.save()
     }
 
-    async updateCustomer(customerId: string, updateDto: CustomerUpdateDto) {
+    async updateCustomer(customerId: string, updateDto: UpdateCustomerDto) {
         const customer = await this.getById(customerId)
         if (updateDto.name) customer.name = updateDto.name
         if (updateDto.email) customer.email = updateDto.email
@@ -31,7 +31,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         return customer.save()
     }
 
-    async searchCustomersPage(queryDto: CustomerQueryDto) {
+    async searchCustomersPage(queryDto: SearchCustomersDto) {
         const { take, skip, orderby } = queryDto
 
         const paginated = await this.findWithPagination({
@@ -60,7 +60,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         return customer.password
     }
 
-    private buildQuery(queryDto: CustomerQueryDto, options: QueryBuilderOptions) {
+    private buildQuery(queryDto: SearchCustomersDto, options: QueryBuilderOptions) {
         const { name, email } = queryDto
 
         const builder = new QueryBuilder<Customer>()

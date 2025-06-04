@@ -12,7 +12,7 @@ import {
     UsePipes
 } from '@nestjs/common'
 import { EventPattern } from '@nestjs/microservices'
-import { ShowtimeBatchCreateDto, ShowtimeCreationClient } from 'apps/applications'
+import { CreateShowtimeBatchDto, ShowtimeCreationClient } from 'apps/applications'
 import { CommonQueryDto } from 'common'
 import { Observable, Subject } from 'rxjs'
 import { Events } from 'shared'
@@ -48,7 +48,7 @@ export class ShowtimeCreationController implements OnModuleDestroy {
 
     @HttpCode(HttpStatus.ACCEPTED)
     @Post('showtimes')
-    async createBatchShowtimes(@Body() createDto: ShowtimeBatchCreateDto) {
+    async createBatchShowtimes(@Body() createDto: CreateShowtimeBatchDto) {
         return this.showtimeCreationService.createBatchShowtimes(createDto)
     }
 

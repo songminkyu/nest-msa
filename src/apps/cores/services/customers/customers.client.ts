@@ -3,21 +3,21 @@ import { ClientProxyService, DeleteResult, InjectClientProxy, JwtAuthTokens } fr
 import { Messages } from 'shared'
 import {
     CustomerAuthPayload,
-    CustomerCreateDto,
+    CreateCustomerDto,
     CustomerDto,
-    CustomerQueryDto,
-    CustomerUpdateDto
+    SearchCustomersDto,
+    UpdateCustomerDto
 } from './dtos'
 
 @Injectable()
 export class CustomersClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    async createCustomer(createDto: CustomerCreateDto): Promise<CustomerDto> {
+    async createCustomer(createDto: CreateCustomerDto): Promise<CustomerDto> {
         return this.proxy.getJson<CustomerDto>(Messages.Customers.createCustomer, createDto)
     }
 
-    updateCustomer(customerId: string, updateDto: CustomerUpdateDto): Promise<CustomerDto> {
+    updateCustomer(customerId: string, updateDto: UpdateCustomerDto): Promise<CustomerDto> {
         return this.proxy.getJson(Messages.Customers.updateCustomer, { customerId, updateDto })
     }
 
@@ -29,7 +29,7 @@ export class CustomersClient {
         return this.proxy.getJson(Messages.Customers.deleteCustomers, customerIds)
     }
 
-    searchCustomersPage(queryDto: CustomerQueryDto): Promise<CustomerDto[]> {
+    searchCustomersPage(queryDto: SearchCustomersDto): Promise<CustomerDto[]> {
         return this.proxy.getJson(Messages.Customers.searchCustomersPage, queryDto)
     }
 

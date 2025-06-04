@@ -2,21 +2,21 @@ import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
 import { CustomersService } from './customers.service'
-import { CustomerAuthPayload, CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
+import { CustomerAuthPayload, CreateCustomerDto, SearchCustomersDto, UpdateCustomerDto } from './dtos'
 
 @Controller()
 export class CustomersController {
     constructor(private service: CustomersService) {}
 
     @MessagePattern(Messages.Customers.createCustomer)
-    async createCustomer(@Payload() createDto: CustomerCreateDto) {
+    async createCustomer(@Payload() createDto: CreateCustomerDto) {
         return this.service.createCustomer(createDto)
     }
 
     @MessagePattern(Messages.Customers.updateCustomer)
     updateCustomer(
         @Payload('customerId') customerId: string,
-        @Payload('updateDto') updateDto: CustomerUpdateDto
+        @Payload('updateDto') updateDto: UpdateCustomerDto
     ) {
         return this.service.updateCustomer(customerId, updateDto)
     }
@@ -32,7 +32,7 @@ export class CustomersController {
     }
 
     @MessagePattern(Messages.Customers.searchCustomersPage)
-    searchCustomersPage(@Payload() queryDto: CustomerQueryDto) {
+    searchCustomersPage(@Payload() queryDto: SearchCustomersDto) {
         return this.service.searchCustomersPage(queryDto)
     }
 
