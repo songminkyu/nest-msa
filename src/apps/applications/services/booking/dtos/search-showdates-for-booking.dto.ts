@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator'
 
-export class SearchShowdatesDto {
+export class SearchShowdatesForBookingDto {
     @IsString()
     @IsNotEmpty()
     movieId: string

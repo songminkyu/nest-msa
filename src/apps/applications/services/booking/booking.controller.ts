@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
 import { BookingService } from './booking.service'
-import { SearchShowingTheatersDto, SearchShowdatesDto, SearchShowtimesDto } from './dtos'
+import { SearchTheatersForBookingDto, SearchShowdatesForBookingDto, SearchShowtimesForBookingDto } from './dtos'
 import { HoldTicketsDto } from 'apps/cores'
 
 @Controller()
@@ -10,17 +10,17 @@ export class BookingController {
     constructor(private service: BookingService) {}
 
     @MessagePattern(Messages.Booking.searchTheaters)
-    searchTheaters(@Payload() dto: SearchShowingTheatersDto) {
+    searchTheaters(@Payload() dto: SearchTheatersForBookingDto) {
         return this.service.searchTheaters(dto)
     }
 
     @MessagePattern(Messages.Booking.searchShowdates)
-    searchShowdates(@Payload() dto: SearchShowdatesDto) {
+    searchShowdates(@Payload() dto: SearchShowdatesForBookingDto) {
         return this.service.searchShowdates(dto)
     }
 
     @MessagePattern(Messages.Booking.searchShowtimes)
-    searchShowtimes(@Payload() dto: SearchShowtimesDto) {
+    searchShowtimes(@Payload() dto: SearchShowtimesForBookingDto) {
         return this.service.searchShowtimes(dto)
     }
 

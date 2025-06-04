@@ -9,9 +9,9 @@ import {
 import { pickIds } from 'common'
 import { generateShowtimesForBooking, sortTheatersByDistance } from './booking.utils'
 import {
-    SearchShowdatesDto,
-    SearchShowingTheatersDto,
-    SearchShowtimesDto,
+    SearchShowdatesForBookingDto,
+    SearchTheatersForBookingDto,
+    SearchShowtimesForBookingDto,
     ShowtimeForBooking
 } from './dtos'
 
@@ -31,7 +31,7 @@ export class BookingService {
         private ticketsService: TicketsClient
     ) {}
 
-    async searchTheaters({ movieId, latlong }: SearchShowingTheatersDto) {
+    async searchTheaters({ movieId, latlong }: SearchTheatersForBookingDto) {
         const theaterIds = await this.showtimesService.searchTheaterIds({ movieIds: [movieId] })
         const theaters = await this.theatersService.getTheaters(theaterIds)
         const showingTheaters = sortTheatersByDistance(theaters, latlong)
@@ -39,14 +39,14 @@ export class BookingService {
         return showingTheaters
     }
 
-    async searchShowdates({ movieId, theaterId }: SearchShowdatesDto) {
+    async searchShowdates({ movieId, theaterId }: SearchShowdatesForBookingDto) {
         return this.showtimesService.searchShowdates({
             movieIds: [movieId],
             theaterIds: [theaterId]
         })
     }
 
-    async searchShowtimes({ movieId, theaterId, showdate }: SearchShowtimesDto) {
+    async searchShowtimes({ movieId, theaterId, showdate }: SearchShowtimesForBookingDto) {
         const startOfDay = new Date(showdate)
         startOfDay.setHours(0, 0, 0, 0)
 

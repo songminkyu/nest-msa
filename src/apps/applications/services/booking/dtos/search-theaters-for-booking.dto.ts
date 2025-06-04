@@ -2,7 +2,7 @@ import { Type } from 'class-transformer'
 import { IsNotEmpty, IsString, ValidateNested } from 'class-validator'
 import { LatLong } from 'common'
 
-export class SearchShowingTheatersDto {
+export class SearchTheatersForBookingDto {
     @IsString()
     @IsNotEmpty()
     movieId: string

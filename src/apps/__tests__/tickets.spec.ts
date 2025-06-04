@@ -123,7 +123,9 @@ describe('Tickets', () => {
         const ticketIds = pickIds(tickets.slice(0, soldCount))
         await fix.ticketsClient.updateTicketStatus(ticketIds, TicketStatus.sold)
 
-        const ticketSalesForShowtimes = await fix.ticketsClient.getTicketSalesForShowtimes([showtimeId])
+        const ticketSalesForShowtimes = await fix.ticketsClient.getTicketSalesForShowtimes([
+            showtimeId
+        ])
 
         expect(ticketSalesForShowtimes).toEqual([
             { showtimeId, total: ticketCount, sold: soldCount, available: ticketCount - soldCount }
