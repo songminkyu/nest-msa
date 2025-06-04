@@ -3,9 +3,9 @@ import { HoldTicketsDto, TheaterDto, TicketDto } from 'apps/cores'
 import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
 import {
-    FindShowdatesDto,
-    FindShowingTheatersDto,
-    FindShowtimesDto,
+    SearchShowdatesDto,
+    SearchShowingTheatersDto,
+    SearchShowtimesDto,
     ShowtimeSalesStatusDto
 } from './dtos'
 
@@ -13,15 +13,15 @@ import {
 export class BookingClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    searchShowingTheaters(dto: FindShowingTheatersDto): Promise<TheaterDto[]> {
+    searchShowingTheaters(dto: SearchShowingTheatersDto): Promise<TheaterDto[]> {
         return this.proxy.getJson(Messages.Booking.searchShowingTheaters, dto)
     }
 
-    searchShowdates(dto: FindShowdatesDto): Promise<Date[]> {
+    searchShowdates(dto: SearchShowdatesDto): Promise<Date[]> {
         return this.proxy.getJson(Messages.Booking.searchShowdates, dto)
     }
 
-    searchShowtimes(dto: FindShowtimesDto): Promise<ShowtimeSalesStatusDto[]> {
+    searchShowtimes(dto: SearchShowtimesDto): Promise<ShowtimeSalesStatusDto[]> {
         return this.proxy.getJson(Messages.Booking.searchShowtimes, dto)
     }
 
