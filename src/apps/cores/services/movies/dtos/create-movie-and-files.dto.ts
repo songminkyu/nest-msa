@@ -1,12 +1,12 @@
+import { StorageFileCreateDto } from 'apps/infrastructures'
 import { Type } from 'class-transformer'
 import { IsArray, ValidateNested } from 'class-validator'
-import { StorageFileCreateDto } from 'apps/infrastructures'
-import { MovieCreateDto } from './movie-create.dto'
+import { CreateMovieDto } from './create-movie.dto'
 
-export class MovieCreateWithFilesDto {
+export class CreateMovieAndFilesDto {
     @ValidateNested({})
-    @Type(() => MovieCreateDto)
-    movieCreateDto: MovieCreateDto
+    @Type(() => CreateMovieDto)
+    movieCreateDto: CreateMovieDto
 
     @IsArray()
     @ValidateNested({ each: true })

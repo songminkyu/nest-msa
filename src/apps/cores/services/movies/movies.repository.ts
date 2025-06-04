@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectIds, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
-import { MovieCreateDto, MovieQueryDto, MovieUpdateDto } from './dtos'
+import { CreateMovieDto, SearchMovieDto, UpdateMovieDto } from './dtos'
 import { Movie } from './models'
 
 @Injectable()
@@ -11,7 +11,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         super(model)
     }
 
-    async createMovie(createDto: MovieCreateDto, storageFileIds: string[]) {
+    async createMovie(createDto: CreateMovieDto, storageFileIds: string[]) {
         const movie = this.newDocument()
         movie.title = createDto.title
         movie.genre = createDto.genre
@@ -25,7 +25,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         return movie.save()
     }
 
-    async updateMovie(movieId: string, updateDto: MovieUpdateDto) {
+    async updateMovie(movieId: string, updateDto: UpdateMovieDto) {
         const movie = await this.getById(movieId)
 
         if (updateDto.title) movie.title = updateDto.title
@@ -39,7 +39,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         return movie.save()
     }
 
-    async searchMoviesPage(queryDto: MovieQueryDto) {
+    async searchMoviesPage(queryDto: SearchMovieDto) {
         const { take, skip, orderby } = queryDto
 
         const paginated = await this.findWithPagination({
@@ -54,7 +54,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         return paginated
     }
 
-    private buildQuery(queryDto: MovieQueryDto, options: QueryBuilderOptions) {
+    private buildQuery(queryDto: SearchMovieDto, options: QueryBuilderOptions) {
         const { title, genre, releaseDate, plot, director, rating } = queryDto
 
         const builder = new QueryBuilder<Movie>()
