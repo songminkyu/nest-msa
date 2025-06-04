@@ -39,7 +39,7 @@ export class BookingController {
 
     @Get('showtimes/:showtimeId/tickets')
     async getTicketsForShowtime(@Param('showtimeId') showtimeId: string) {
-        return this.bookingService.getAvailableTickets(showtimeId)
+        return this.bookingService.getTickets(showtimeId)
     }
 
     @UseGuards(CustomerJwtAuthGuard)

@@ -40,6 +40,10 @@ export class ShowtimesService {
         return this.repository.searchShowdates(queryDto)
     }
 
+    async showtimesExist(showtimeIds: string[]): Promise<boolean> {
+        return this.repository.existByIds(showtimeIds)
+    }
+
     private toDto = (showtime: ShowtimeDocument) =>
         mapDocToDto(showtime, ShowtimeDto, ['id', 'theaterId', 'movieId', 'timeRange'])
 

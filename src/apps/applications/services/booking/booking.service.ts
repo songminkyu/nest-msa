@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import {
     HoldTicketsDto,
     ShowtimesClient,
@@ -7,13 +7,20 @@ import {
     TicketsClient
 } from 'apps/cores'
 import { pickIds } from 'common'
-import { generateShowtimesWithTicketSales, sortTheatersByDistance } from './booking.utils'
+import { generateShowtimesForBooking, sortTheatersByDistance } from './booking.utils'
 import {
     SearchShowdatesDto,
     SearchShowingTheatersDto,
     SearchShowtimesDto,
-    ShowtimeWithTicketSalesDto
+    ShowtimeForBooking
 } from './dtos'
+
+export const BookingServiceErrors = {
+    ShowtimeNotFound: {
+        code: 'ERR_BOOKING_SHOWTIME_NOT_FOUND',
+        message: 'The requested showtime could not be found.'
+    }
+}
 
 @Injectable()
 export class BookingService {
@@ -55,12 +62,18 @@ export class BookingService {
         const ids = pickIds(showtimes)
         const ticketSalesForShowtimes = await this.ticketsService.getTicketSalesForShowtimes(ids)
 
-        const showtimesWithSalesStatus = generateShowtimesWithTicketSales(showtimes, ticketSalesForShowtimes)
+        const showtimesForBooking = generateShowtimesForBooking(showtimes, ticketSalesForShowtimes)
 
-        return showtimesWithSalesStatus as ShowtimeWithTicketSalesDto[]
+        return showtimesForBooking as ShowtimeForBooking[]
     }
 
-    async getAvailableTickets(showtimeId: string) {
+    async getTickets(showtimeId: string) {
+        const showtimeExists = await this.showtimesService.showtimesExist([showtimeId])
+
+        if (!showtimeExists) {
+            throw new NotFoundException({ ...BookingServiceErrors.ShowtimeNotFound, showtimeId })
+        }
+
         const tickets = await this.ticketsService.searchTickets({ showtimeIds: [showtimeId] })
         return tickets
     }

@@ -40,4 +40,9 @@ export class ShowtimesController {
     searchShowdates(queryDto: ShowtimeQueryDto) {
         return this.service.searchShowdates(queryDto)
     }
+
+    @MessagePattern(Messages.Showtimes.showtimesExist)
+    showtimesExist(@Payload() showtimeIds: string[]) {
+        return this.service.showtimesExist(showtimeIds)
+    }
 }

@@ -31,4 +31,8 @@ export class ShowtimesClient {
     searchShowdates(queryDto: ShowtimeQueryDto): Promise<Date[]> {
         return this.proxy.getJson(Messages.Showtimes.searchShowdates, queryDto)
     }
+
+    showtimesExist(showtimeIds: string[]): Promise<boolean> {
+        return this.proxy.getJson(Messages.Showtimes.showtimesExist, showtimeIds)
+    }
 }

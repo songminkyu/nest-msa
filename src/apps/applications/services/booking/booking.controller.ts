@@ -24,9 +24,9 @@ export class BookingController {
         return this.service.searchShowtimes(dto)
     }
 
-    @MessagePattern(Messages.Booking.getAvailableTickets)
-    getAvailableTickets(@Payload() showtimeId: string) {
-        return this.service.getAvailableTickets(showtimeId)
+    @MessagePattern(Messages.Booking.getTickets)
+    getTickets(@Payload() showtimeId: string) {
+        return this.service.getTickets(showtimeId)
     }
 
     @MessagePattern(Messages.Booking.holdTickets)
