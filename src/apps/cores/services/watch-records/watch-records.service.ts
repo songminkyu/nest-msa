@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { mapDocToDto } from 'common'
-import { WatchRecordCreateDto, WatchRecordDto, WatchRecordQueryDto } from './dtos'
+import { CreateWatchRecordDto, WatchRecordDto, SearchWatchRecordsDto } from './dtos'
 import { WatchRecordDocument } from './models'
 import { WatchRecordsRepository } from './watch-records.repository'
 
@@ -8,14 +8,14 @@ import { WatchRecordsRepository } from './watch-records.repository'
 export class WatchRecordsService {
     constructor(private repository: WatchRecordsRepository) {}
 
-    async createWatchRecord(createDto: WatchRecordCreateDto) {
+    async createWatchRecord(createDto: CreateWatchRecordDto) {
         const watchRecord = await this.repository.createWatchRecord(createDto)
 
         return this.toDto(watchRecord)
     }
 
-    async findWatchRecords(queryDto: WatchRecordQueryDto) {
-        const { items, ...paginated } = await this.repository.findWatchRecords(queryDto)
+    async searchWatchRecordsPage(searchDto: SearchWatchRecordsDto) {
+        const { items, ...paginated } = await this.repository.searchWatchRecordsPage(searchDto)
 
         return { ...paginated, items: this.toDtos(items) }
     }

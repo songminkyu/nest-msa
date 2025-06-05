@@ -2,25 +2,25 @@ import { Injectable } from '@nestjs/common'
 import { MovieDto, ShowtimeDto, TheaterDto } from 'apps/cores'
 import { ClientProxyService, CommonQueryDto, InjectClientProxy } from 'common'
 import { Events, Messages } from 'shared'
-import { ShowtimeBatchCreateDto, ShowtimeBatchCreateResponse } from './dtos'
+import { CreateShowtimeBatchDto, CreateShowtimeBatchResponse } from './dtos'
 
 @Injectable()
 export class ShowtimeCreationClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    findMovies(queryDto: CommonQueryDto): Promise<MovieDto[]> {
-        return this.proxy.getJson(Messages.ShowtimeCreation.findMovies, queryDto)
+    searchMoviesPage(searchDto: CommonQueryDto): Promise<MovieDto[]> {
+        return this.proxy.getJson(Messages.ShowtimeCreation.searchMoviesPage, searchDto)
     }
 
-    findTheaters(queryDto: CommonQueryDto): Promise<TheaterDto[]> {
-        return this.proxy.getJson(Messages.ShowtimeCreation.findTheaters, queryDto)
+    searchTheatersPage(searchDto: CommonQueryDto): Promise<TheaterDto[]> {
+        return this.proxy.getJson(Messages.ShowtimeCreation.searchTheatersPage, searchDto)
     }
 
-    findShowtimes(theaterIds: string[]): Promise<ShowtimeDto[]> {
-        return this.proxy.getJson(Messages.ShowtimeCreation.findShowtimes, theaterIds)
+    searchShowtimes(theaterIds: string[]): Promise<ShowtimeDto[]> {
+        return this.proxy.getJson(Messages.ShowtimeCreation.searchShowtimes, theaterIds)
     }
 
-    createBatchShowtimes(createDto: ShowtimeBatchCreateDto): Promise<ShowtimeBatchCreateResponse> {
+    createBatchShowtimes(createDto: CreateShowtimeBatchDto): Promise<CreateShowtimeBatchResponse> {
         return this.proxy.getJson(Messages.ShowtimeCreation.createBatchShowtimes, createDto)
     }
 

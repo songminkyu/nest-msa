@@ -2,20 +2,20 @@ import { Injectable } from '@nestjs/common'
 import { StorageFileCreateDto } from 'apps/infrastructures'
 import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
-import { MovieCreateDto, MovieDto, MovieQueryDto, MovieUpdateDto } from './dtos'
+import { CreateMovieDto, MovieDto, SearchMoviesDto, UpdateMovieDto } from './dtos'
 
 @Injectable()
 export class MoviesClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
     createMovie(
-        movieCreateDto: MovieCreateDto,
+        movieCreateDto: CreateMovieDto,
         fileCreateDtos: StorageFileCreateDto[]
     ): Promise<MovieDto> {
         return this.proxy.getJson(Messages.Movies.createMovie, { movieCreateDto, fileCreateDtos })
     }
 
-    updateMovie(movieId: string, updateDto: MovieUpdateDto): Promise<MovieDto> {
+    updateMovie(movieId: string, updateDto: UpdateMovieDto): Promise<MovieDto> {
         return this.proxy.getJson(Messages.Movies.updateMovie, { movieId, updateDto })
     }
 
@@ -27,8 +27,8 @@ export class MoviesClient {
         return this.proxy.getJson(Messages.Movies.deleteMovies, movieIds)
     }
 
-    findMovies(queryDto: MovieQueryDto): Promise<MovieDto[]> {
-        return this.proxy.getJson(Messages.Movies.findMovies, queryDto)
+    searchMoviesPage(searchDto: SearchMoviesDto): Promise<MovieDto[]> {
+        return this.proxy.getJson(Messages.Movies.searchMoviesPage, searchDto)
     }
 
     getMoviesByIds(movieIds: string[]): Promise<MovieDto[]> {

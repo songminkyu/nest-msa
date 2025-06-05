@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { mapDocToDto } from 'common'
-import { ShowtimeCreateDto, ShowtimeDto, ShowtimeQueryDto } from './dtos'
+import { CreateShowtimeDto, ShowtimeDto, SearchShowtimesDto } from './dtos'
 import { ShowtimeDocument } from './models'
 import { ShowtimesRepository } from './showtimes.repository'
 
@@ -8,7 +8,7 @@ import { ShowtimesRepository } from './showtimes.repository'
 export class ShowtimesService {
     constructor(private repository: ShowtimesRepository) {}
 
-    async createShowtimes(createDtos: ShowtimeCreateDto[]) {
+    async createShowtimes(createDtos: CreateShowtimeDto[]) {
         await this.repository.createShowtimes(createDtos)
 
         return { success: true, count: createDtos.length }
@@ -20,24 +20,28 @@ export class ShowtimesService {
         return this.toDtos(showtimes)
     }
 
-    async findAllShowtimes(queryDto: ShowtimeQueryDto) {
-        const showtimes = await this.repository.findAllShowtimes(queryDto)
+    async searchShowtimes(searchDto: SearchShowtimesDto) {
+        const showtimes = await this.repository.searchShowtimes(searchDto)
 
         return this.toDtos(showtimes)
     }
 
-    async findShowingMovieIds() {
+    async searchShowingMovieIds() {
         const currentTime = new Date()
 
         return this.repository.findMovieIds({ startTimeRange: { start: currentTime } })
     }
 
-    async findTheaterIds(queryDto: ShowtimeQueryDto) {
-        return this.repository.findTheaterIds(queryDto)
+    async searchTheaterIds(searchDto: SearchShowtimesDto) {
+        return this.repository.searchTheaterIds(searchDto)
     }
 
-    async findShowdates(queryDto: ShowtimeQueryDto) {
-        return this.repository.findShowdates(queryDto)
+    async searchShowdates(searchDto: SearchShowtimesDto) {
+        return this.repository.searchShowdates(searchDto)
+    }
+
+    async showtimesExist(showtimeIds: string[]): Promise<boolean> {
+        return this.repository.existByIds(showtimeIds)
     }
 
     private toDto = (showtime: ShowtimeDocument) =>

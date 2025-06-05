@@ -2,18 +2,18 @@
 
 # NEST-MSA
 
-Nest로 구현된 영화 예매 시스템의 백엔드 예제 프로젝트입니다. 주요 특징은 다음과 같습니다:
+Nest(NestJS) 기반의 MSA(Microservices Architecture) 예제 프로젝트로 주요 특징은 다음과 같습니다:
 
 - **Docker 기반 개발 환경**: 컨테이너를 활용해 일관된 개발 환경을 제공합니다.
 - **데이터베이스 통합**: MongoDB 및 Redis에 대한 사전 설정을 포함합니다.
 - **테스트 커버리지 확보**: Jest 기반의 단위 및 통합 테스트 코드를 제공합니다.
-- **고성능 테스트 실행**: Jest의 병렬 실행 기능으로 테스트 속도를 향상시켰습니다.
-- **계층화 아키텍처**: 관심사를 분리한 3-Layer 아키텍처를 적용했습니다.
+- **고성능 테스트 실행**: Jest의 병렬 실행 기능을 활용해 테스트 속도를 향상시켰습니다.
+- **계층화 아키텍처**: 관심사를 분리한 3계층 구조를 적용했습니다.
 - **MSA 지원**: NATS 메시지 브로커 기반의 마이크로서비스 아키텍처를 지원합니다.
-- **E2E 테스트 자동화**: Bash 스크립트를 활용한 종단 간 테스트 환경을 구축했습니다.
-- **설계 문서 포함**: PlantUML로 작성된 아키텍처 다이어그램이 포함되어 있습니다.
+- **E2E 테스트 자동화**: Bash 스크립트를 활용해 종단 간 테스트 환경을 구축했습니다.
+- **설계 문서 제공**: PlantUML로 작성된 아키텍처 다이어그램을 제공합니다.
 
-> 이 프로젝트는 `Microservices Architecture`입니다. `Monolithic Architecture`는 [nest-mono](https://github.com/mannercode/nest-mono) 프로젝트를 참조하세요.
+> 이 프로젝트는 `Microservices Architecture` 기반입니다. `Monolithic Architecture`가 필요한 경우 [nest-mono](https://github.com/mannercode/nest-mono) 프로젝트를 참조하세요.
 
 ## 1. 시스템 요구 사항
 
@@ -67,7 +67,7 @@ ENV LANG=ko_KR.UTF-8 \
     LC_ALL=ko_KR.UTF-8
 ```
 
-### 3.4 개발 인프라 구성
+### 3.4 개발 환경 인프라 구성
 
 개발용 인프라 설정을 변경하려면 다음 파일들을 수정하세요:
 
@@ -97,7 +97,7 @@ ENV LANG=ko_KR.UTF-8 \
 - **운영 환경 유사성 확보**: 운영 시 발생 가능한 오류를 조기에 발견할 수 있습니다.
 - **간단한 설정**: 추가 라이브러리 학습 없이 테스트 환경 구성이 가능합니다.
 
-> 반복 테스트 시 MongoDB의 메모리 사용량 증가로 인해 간헐적인 실패 가능성이 있습니다. 그래서 전체 테스트 실행 전 인프라를 초기화 하도록 스크립트를 구성했습니다.
+> 반복 테스트 시 MongoDB 메모리 사용량의 증가로 인해 간헐적인 실패 가능성이 있습니다. 그래서 전체 테스트 실행 전 인프라를 초기화 하도록 스크립트를 구성했습니다.
 >
 > 자세한 사항은 `scripts/run-test.sh` 파일을 참고하세요.
 
@@ -217,7 +217,14 @@ src
 
 ## 9. 추가 문서
 
-아래 문서에서 구현 및 설계에 대한 더 자세한 정보를 확인할 수 있습니다:
+이 프로젝트의 구현 및 설계에 대한 자세한 사항은, 아래 문서를 참고하세요:
 
-- [Design Guide](./ko/guides/design.guide.md)
-- [Implementation Guide](./ko/guides/implementation.guide.md)
+- 가이드 문서
+    - [본질 기반 해석](https://mannercode.com/2024/05/04/ebi.html)
+    - [설계 가이드](./ko/guides/design.guide.md)
+    - [구현 가이드](./ko/guides/implementation.guide.md)
+- 설계 문서
+    - [유스케이스](./ko/designs/use-cases.md)
+    - [엔티티](./ko/designs/entities.md)
+    - [상영시간 생성](./ko/designs/showtime-creation.md)
+    - [티켓 구매](./ko/designs/tickets-purchase.md)

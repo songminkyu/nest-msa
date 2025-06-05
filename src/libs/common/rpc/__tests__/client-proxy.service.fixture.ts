@@ -1,7 +1,7 @@
 import { Controller, Get, MessageEvent, Sse } from '@nestjs/common'
 import { EventPattern, MessagePattern, NatsOptions, Transport } from '@nestjs/microservices'
 import { ClientProxyModule, ClientProxyService, InjectClientProxy } from 'common'
-import { Observable, ReplaySubject, Subject } from 'rxjs'
+import { Observable, ReplaySubject } from 'rxjs'
 import {
     createHttpTestContext,
     getNatsTestConnection,

@@ -13,12 +13,12 @@ export class TicketHoldingController {
         return this.service.holdTickets(holdDto)
     }
 
-    @MessagePattern(Messages.TicketHolding.findHeldTicketIds)
-    findHeldTicketIds(
+    @MessagePattern(Messages.TicketHolding.searchHeldTicketIds)
+    searchHeldTicketIds(
         @Payload('showtimeId') showtimeId: string,
         @Payload('customerId') customerId: string
     ) {
-        return this.service.findHeldTicketIds(showtimeId, customerId)
+        return this.service.searchHeldTicketIds(showtimeId, customerId)
     }
 
     @MessagePattern(Messages.TicketHolding.releaseTickets)

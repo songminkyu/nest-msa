@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { newObjectId, CommonQueryDto } from 'common'
 import { MoviesClient, ShowtimesClient, TheatersClient } from 'apps/cores'
-import { ShowtimeBatchCreateDto, ShowtimeBatchCreateResponse } from './dtos'
+import { CreateShowtimeBatchDto, CreateShowtimeBatchResponse } from './dtos'
 import { ShowtimeCreationWorkerService } from './services'
 
 @Injectable()
@@ -13,26 +13,26 @@ export class ShowtimeCreationService {
         private batchCreationService: ShowtimeCreationWorkerService
     ) {}
 
-    async findMovies(queryDto: CommonQueryDto) {
-        return this.moviesService.findMovies(queryDto)
+    async searchMoviesPage(searchDto: CommonQueryDto) {
+        return this.moviesService.searchMoviesPage(searchDto)
     }
 
-    async findTheaters(queryDto: CommonQueryDto) {
-        return this.theatersService.findTheaters(queryDto)
+    async searchTheatersPage(searchDto: CommonQueryDto) {
+        return this.theatersService.searchTheatersPage(searchDto)
     }
 
-    async findShowtimes(theaterIds: string[]) {
-        return this.showtimesService.findAllShowtimes({
+    async searchShowtimes(theaterIds: string[]) {
+        return this.showtimesService.searchShowtimes({
             theaterIds,
             endTimeRange: { start: new Date() }
         })
     }
 
-    async createBatchShowtimes(createDto: ShowtimeBatchCreateDto) {
+    async createBatchShowtimes(createDto: CreateShowtimeBatchDto) {
         const batchId = newObjectId()
 
         this.batchCreationService.enqueueTask({ ...createDto, batchId })
 
-        return { batchId } as ShowtimeBatchCreateResponse
+        return { batchId } as CreateShowtimeBatchResponse
     }
 }

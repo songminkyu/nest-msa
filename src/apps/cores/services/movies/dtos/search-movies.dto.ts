@@ -1,7 +1,7 @@
 import { IsOptional } from 'class-validator'
 import { CommonQueryDto } from 'common'
 
-export class MovieQueryDto extends CommonQueryDto {
+export class SearchMoviesDto extends CommonQueryDto {
     @IsOptional()
     title?: string
 

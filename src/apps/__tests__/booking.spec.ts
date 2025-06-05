@@ -1,6 +1,6 @@
 import { Seatmap, ShowtimeDto, TheaterDto, TicketDto } from 'apps/cores'
 import { DateTimeRange, DateUtil, pickIds } from 'common'
-import { step } from 'testlib'
+import { nullObjectId, step } from 'testlib'
 import { Fixture } from './booking.fixture'
 
 describe('Booking', () => {
@@ -112,6 +112,15 @@ describe('Booking', () => {
                 .headers({ Authorization: `Bearer ${fix.accessToken}` })
                 .body({ ticketIds })
                 .ok({ success: true })
+        })
+    })
+
+    describe('getTickets', () => {
+        /* 상영시간이 존재하지 않으면 NotFoundException을 던져야 한다 */
+        it('Should throw NotFoundException if any showtime does not exist', async () => {
+            const promise = fix.bookingClient.getTickets(nullObjectId)
+
+            await expect(promise).rejects.toThrow('The requested showtime could not be found.')
         })
     })
 })

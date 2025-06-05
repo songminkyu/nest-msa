@@ -3,7 +3,7 @@ import { IsArray, IsDate, IsEnum, IsInt, IsNotEmpty, IsString, MaxLength } from 
 
 import { MovieGenre, MovieRating } from '../models'
 
-export class MovieCreateDto {
+export class CreateMovieDto {
     @IsString()
     @IsNotEmpty()
     title: string

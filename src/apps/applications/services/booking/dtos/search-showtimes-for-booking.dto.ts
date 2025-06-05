@@ -1,18 +1,16 @@
+import { Type } from 'class-transformer'
 import { IsDate, IsNotEmpty, IsString } from 'class-validator'
 
-export class WatchRecordCreateDto {
-    @IsString()
-    @IsNotEmpty()
-    customerId: string
-
+export class SearchShowtimesForBookingDto {
     @IsString()
     @IsNotEmpty()
     movieId: string
 
     @IsString()
     @IsNotEmpty()
-    purchaseId: string
+    theaterId: string
 
     @IsDate()
-    watchDate: Date
+    @Type(() => Date)
+    showdate: Date
 }

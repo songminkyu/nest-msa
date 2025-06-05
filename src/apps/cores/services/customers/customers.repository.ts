@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
-import { CustomerCreateDto, CustomerQueryDto, CustomerUpdateDto } from './dtos'
+import { CreateCustomerDto, SearchCustomersDto, UpdateCustomerDto } from './dtos'
 import { CustomerErrors } from './errors'
 import { Customer } from './models'
 
@@ -12,7 +12,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         super(model)
     }
 
-    async createCustomer(createDto: CustomerCreateDto) {
+    async createCustomer(createDto: CreateCustomerDto) {
         const customer = this.newDocument()
         customer.name = createDto.name
         customer.email = createDto.email
@@ -22,7 +22,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         return customer.save()
     }
 
-    async updateCustomer(customerId: string, updateDto: CustomerUpdateDto) {
+    async updateCustomer(customerId: string, updateDto: UpdateCustomerDto) {
         const customer = await this.getById(customerId)
         if (updateDto.name) customer.name = updateDto.name
         if (updateDto.email) customer.email = updateDto.email
@@ -31,12 +31,12 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         return customer.save()
     }
 
-    async findCustomers(queryDto: CustomerQueryDto) {
-        const { take, skip, orderby } = queryDto
+    async searchCustomersPage(searchDto: SearchCustomersDto) {
+        const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query = this.buildQuery(queryDto, { allowEmpty: true })
+                const query = this.buildQuery(searchDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
@@ -60,8 +60,8 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         return customer.password
     }
 
-    private buildQuery(queryDto: CustomerQueryDto, options: QueryBuilderOptions) {
-        const { name, email } = queryDto
+    private buildQuery(searchDto: SearchCustomersDto, options: QueryBuilderOptions) {
+        const { name, email } = searchDto
 
         const builder = new QueryBuilder<Customer>()
         builder.addRegex('name', name)

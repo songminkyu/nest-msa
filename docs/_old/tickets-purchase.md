@@ -96,7 +96,7 @@ actor Customer
 
 Customer -> Frontend : 영화 선택
     Frontend -> Backend : 상영 극장 목록 요청\nGET /showing/movies/{}/theaters?userLocation=37.123,128.678
-        Backend -> Showing: findShowingTheaters({movieId, userLocation})
+        Backend -> Showing: searchTheaters({movieId, userLocation})
             Showing -> Showtimes: findShowingTheaterIds({movieId})
             Showing <-- Showtimes: theaterIds[]
             Showing -> Theaters: getTheaters({theaterIds})
@@ -134,9 +134,9 @@ actor Customer
 Customer -> Frontend : 상영일 선택
     Frontend -> Backend : 상영 시간 목록 요청\nGET /showing/movies/{}/theaters/{}/showdates/{}/showtimes
         Backend -> Showing: getShowtimesWithSalesStatus({movieId, theaterId, showdate})
-            Showing -> Showtimes: findShowtimes({movieId, theaterId, showdate})
+            Showing -> Showtimes: searchShowtimes({movieId, theaterId, showdate})
             Showing <-- Showtimes: showtimes[]
-            Showing -> Tickets: getSalesStatuses({ showtimeIds })
+            Showing -> Tickets: getTicketSalesForShowtimes({ showtimeIds })
             Showing <-- Tickets: salesStatuses[]
             note left
             ShowtimeSalesStatus = {

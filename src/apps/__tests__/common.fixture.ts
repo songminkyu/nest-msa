@@ -1,8 +1,8 @@
 import {
     MovieGenre,
     MovieRating,
-    ShowtimeCreateDto,
-    TicketCreateDto,
+    CreateShowtimeDto,
+    CreateTicketDto,
     TicketStatus
 } from 'apps/cores'
 import { DateTimeRange } from 'common'
@@ -82,7 +82,7 @@ export const createTheater = async (fix: CommonFixture, override = {}) => {
     return theater
 }
 
-export const buildShowtimeCreateDto = (overrides: Partial<ShowtimeCreateDto> = {}) => {
+export const buildShowtimeCreateDto = (overrides: Partial<CreateShowtimeDto> = {}) => {
     const createDto = {
         batchId: nullObjectId,
         movieId: nullObjectId,
@@ -94,13 +94,13 @@ export const buildShowtimeCreateDto = (overrides: Partial<ShowtimeCreateDto> = {
     return { createDto, expectedDto }
 }
 
-export const createShowtimes = async (fix: CommonFixture, createDtos: ShowtimeCreateDto[]) => {
+export const createShowtimes = async (fix: CommonFixture, createDtos: CreateShowtimeDto[]) => {
     const { success } = await fix.showtimesClient.createShowtimes(createDtos)
     expect(success).toBeTruthy()
 
     const batchIds = uniq(createDtos.map((dto) => dto.batchId))
 
-    const showtimes = await fix.showtimesClient.findAllShowtimes({ batchIds })
+    const showtimes = await fix.showtimesClient.searchShowtimes({ batchIds })
     return showtimes
 }
 
@@ -118,13 +118,13 @@ export const buildTicketCreateDto = (overrides = {}) => {
     return { createDto, expectedDto }
 }
 
-export const createTickets = async (fix: CommonFixture, createDtos: TicketCreateDto[]) => {
+export const createTickets = async (fix: CommonFixture, createDtos: CreateTicketDto[]) => {
     const { success } = await fix.ticketsClient.createTickets(createDtos)
     expect(success).toBeTruthy()
 
     const batchIds = uniq(createDtos.map((dto) => dto.batchId))
 
-    const tickets = await fix.ticketsClient.findAllTickets({ batchIds })
+    const tickets = await fix.ticketsClient.searchTickets({ batchIds })
     return tickets
 }
 

@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
 import { RecommendationClient } from 'apps/applications'
-import { MovieCreateDto, MovieQueryDto, MoviesClient, MovieUpdateDto } from 'apps/cores'
+import { CreateMovieDto, SearchMoviesDto, MoviesClient, UpdateMovieDto } from 'apps/cores'
 import { pick } from 'lodash'
 import { MulterExceptionFilter } from './filters'
 import { CustomerOptionalJwtAuthGuard } from './guards'
@@ -35,7 +35,7 @@ export class MoviesController {
     @Post()
     async createMovie(
         @UploadedFiles() files: Express.Multer.File[],
-        @Body() movieCreateDto: MovieCreateDto
+        @Body() movieCreateDto: CreateMovieDto
     ) {
         const fileCreateDtos = files.map((file) =>
             pick(file, 'originalname', 'mimetype', 'size', 'path')
@@ -45,15 +45,15 @@ export class MoviesController {
     }
 
     @Patch(':movieId')
-    async updateMovie(@Param('movieId') movieId: string, @Body() updateDto: MovieUpdateDto) {
+    async updateMovie(@Param('movieId') movieId: string, @Body() updateDto: UpdateMovieDto) {
         return this.moviesService.updateMovie(movieId, updateDto)
     }
 
     @UseGuards(CustomerOptionalJwtAuthGuard)
     @Get('recommended')
-    async findRecommendedMovies(@Req() req: CustomerAuthRequest) {
+    async searchRecommendedMovies(@Req() req: CustomerAuthRequest) {
         const customerId = req.user.customerId
-        return this.recommendationService.findRecommendedMovies(customerId)
+        return this.recommendationService.searchRecommendedMovies(customerId)
     }
 
     @Get(':movieId')
@@ -69,7 +69,7 @@ export class MoviesController {
 
     @UsePipes(DefaultPaginationPipe)
     @Get()
-    async findMovies(@Query() queryDto: MovieQueryDto) {
-        return this.moviesService.findMovies(queryDto)
+    async searchMoviesPage(@Query() searchDto: SearchMoviesDto) {
+        return this.moviesService.searchMoviesPage(searchDto)
     }
 }

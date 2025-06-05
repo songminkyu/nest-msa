@@ -9,25 +9,28 @@ export class BookingController {
     constructor(private bookingService: BookingClient) {}
 
     @Get('movies/:movieId/theaters')
-    async findShowingTheaters(
+    async searchTheaters(
         @Param('movieId') movieId: string,
         @LatLongQuery('latlong') latlong: LatLong
     ) {
-        return this.bookingService.findShowingTheaters({ movieId, latlong })
+        return this.bookingService.searchTheaters({ movieId, latlong })
     }
 
     @Get('movies/:movieId/theaters/:theaterId/showdates')
-    async findShowdates(@Param('movieId') movieId: string, @Param('theaterId') theaterId: string) {
-        return this.bookingService.findShowdates({ movieId, theaterId })
+    async searchShowdates(
+        @Param('movieId') movieId: string,
+        @Param('theaterId') theaterId: string
+    ) {
+        return this.bookingService.searchShowdates({ movieId, theaterId })
     }
 
     @Get('movies/:movieId/theaters/:theaterId/showdates/:showdate/showtimes')
-    async findShowtimes(
+    async searchShowtimes(
         @Param('movieId') movieId: string,
         @Param('theaterId') theaterId: string,
         @Param('showdate') showdate: string
     ) {
-        return this.bookingService.findShowtimes({
+        return this.bookingService.searchShowtimes({
             movieId,
             theaterId,
             showdate: DateUtil.fromYMD(showdate)
@@ -36,7 +39,7 @@ export class BookingController {
 
     @Get('showtimes/:showtimeId/tickets')
     async getTicketsForShowtime(@Param('showtimeId') showtimeId: string) {
-        return this.bookingService.getAvailableTickets(showtimeId)
+        return this.bookingService.getTickets(showtimeId)
     }
 
     @UseGuards(CustomerJwtAuthGuard)

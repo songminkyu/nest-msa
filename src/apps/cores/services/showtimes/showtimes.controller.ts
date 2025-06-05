@@ -1,7 +1,7 @@
 import { Controller, ParseArrayPipe } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
-import { ShowtimeCreateDto, ShowtimeQueryDto } from './dtos'
+import { CreateShowtimeDto, SearchShowtimesDto } from './dtos'
 import { ShowtimesService } from './showtimes.service'
 import { CreateShowtimesResult } from './types'
 
@@ -11,7 +11,7 @@ export class ShowtimesController {
 
     @MessagePattern(Messages.Showtimes.createShowtimes)
     createShowtimes(
-        @Payload(new ParseArrayPipe({ items: ShowtimeCreateDto })) createDtos: ShowtimeCreateDto[]
+        @Payload(new ParseArrayPipe({ items: CreateShowtimeDto })) createDtos: CreateShowtimeDto[]
     ): Promise<CreateShowtimesResult> {
         return this.service.createShowtimes(createDtos)
     }
@@ -21,23 +21,28 @@ export class ShowtimesController {
         return this.service.getShowtimes(showtimeIds)
     }
 
-    @MessagePattern(Messages.Showtimes.findAllShowtimes)
-    findAllShowtimes(@Payload() queryDto: ShowtimeQueryDto) {
-        return this.service.findAllShowtimes(queryDto)
+    @MessagePattern(Messages.Showtimes.searchShowtimes)
+    searchShowtimes(@Payload() searchDto: SearchShowtimesDto) {
+        return this.service.searchShowtimes(searchDto)
     }
 
-    @MessagePattern(Messages.Showtimes.findShowingMovieIds)
-    findShowingMovieIds() {
-        return this.service.findShowingMovieIds()
+    @MessagePattern(Messages.Showtimes.searchShowingMovieIds)
+    searchShowingMovieIds() {
+        return this.service.searchShowingMovieIds()
     }
 
-    @MessagePattern(Messages.Showtimes.findTheaterIds)
-    findTheaterIds(@Payload() queryDto: ShowtimeQueryDto) {
-        return this.service.findTheaterIds(queryDto)
+    @MessagePattern(Messages.Showtimes.searchTheaterIds)
+    searchTheaterIds(@Payload() searchDto: SearchShowtimesDto) {
+        return this.service.searchTheaterIds(searchDto)
     }
 
-    @MessagePattern(Messages.Showtimes.findShowdates)
-    findShowdates(queryDto: ShowtimeQueryDto) {
-        return this.service.findShowdates(queryDto)
+    @MessagePattern(Messages.Showtimes.searchShowdates)
+    searchShowdates(searchDto: SearchShowtimesDto) {
+        return this.service.searchShowdates(searchDto)
+    }
+
+    @MessagePattern(Messages.Showtimes.showtimesExist)
+    showtimesExist(@Payload() showtimeIds: string[]) {
+        return this.service.showtimesExist(showtimeIds)
     }
 }

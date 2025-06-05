@@ -23,7 +23,7 @@ describe('Tickets', () => {
         expectEqualUnsorted(tickets, [expectedDto])
     })
 
-    describe('findAllTickets', () => {
+    describe('searchTickets', () => {
         const batchIds = [testObjectId(0x10), testObjectId(0x11)]
         const movieIds = [testObjectId(0x20), testObjectId(0x21)]
         const theaterIds = [testObjectId(0x30), testObjectId(0x31)]
@@ -49,28 +49,28 @@ describe('Tickets', () => {
         })
 
         it('batchIds', async () => {
-            const tickets = await fix.ticketsClient.findAllTickets({ batchIds })
+            const tickets = await fix.ticketsClient.searchTickets({ batchIds })
             expectEqualUnsorted(tickets, [expectedDtos[0], expectedDtos[1]])
         })
 
         it('movieIds', async () => {
-            const tickets = await fix.ticketsClient.findAllTickets({ movieIds })
+            const tickets = await fix.ticketsClient.searchTickets({ movieIds })
             expectEqualUnsorted(tickets, [expectedDtos[2], expectedDtos[3]])
         })
 
         it('theaterIds', async () => {
-            const tickets = await fix.ticketsClient.findAllTickets({ theaterIds })
+            const tickets = await fix.ticketsClient.searchTickets({ theaterIds })
             expectEqualUnsorted(tickets, [expectedDtos[4], expectedDtos[5]])
         })
 
         it('showtimeIds', async () => {
-            const tickets = await fix.ticketsClient.findAllTickets({ showtimeIds })
+            const tickets = await fix.ticketsClient.searchTickets({ showtimeIds })
             expectEqualUnsorted(tickets, [expectedDtos[6], expectedDtos[7]])
         })
 
         /* 1개 이상의 필터를 설정하지 않으면 BAD_REQUEST(400)를 반환해야 한다 */
         it('Should return BAD_REQUEST(400) if no filter is provided', async () => {
-            const promise = fix.ticketsClient.findAllTickets({})
+            const promise = fix.ticketsClient.searchTickets({})
             await expect(promise).rejects.toThrow('At least one filter condition must be provided')
         })
     })
@@ -80,7 +80,7 @@ describe('Tickets', () => {
         let tickets: TicketDto[]
 
         const getStatus = async () => {
-            const tickets = await fix.ticketsClient.findAllTickets({ batchIds: [batchId] })
+            const tickets = await fix.ticketsClient.searchTickets({ batchIds: [batchId] })
             return tickets.map((ticket) => ticket.status)
         }
 
@@ -92,7 +92,7 @@ describe('Tickets', () => {
             const { success } = await fix.ticketsClient.createTickets(createDtos)
             expect(success).toBeTruthy()
 
-            tickets = await fix.ticketsClient.findAllTickets({ batchIds: [batchId] })
+            tickets = await fix.ticketsClient.searchTickets({ batchIds: [batchId] })
         })
 
         /* 티켓의 상태를 변경해야 한다 */
@@ -112,7 +112,7 @@ describe('Tickets', () => {
         })
     })
 
-    it('getSalesStatuses', async () => {
+    it('getTicketSalesForShowtimes', async () => {
         const showtimeId = testObjectId(0x10)
         const ticketCount = 50
         const soldCount = 5
@@ -123,9 +123,11 @@ describe('Tickets', () => {
         const ticketIds = pickIds(tickets.slice(0, soldCount))
         await fix.ticketsClient.updateTicketStatus(ticketIds, TicketStatus.sold)
 
-        const salesStatuses = await fix.ticketsClient.getSalesStatuses([showtimeId])
+        const ticketSalesForShowtimes = await fix.ticketsClient.getTicketSalesForShowtimes([
+            showtimeId
+        ])
 
-        expect(salesStatuses).toEqual([
+        expect(ticketSalesForShowtimes).toEqual([
             { showtimeId, total: ticketCount, sold: soldCount, available: ticketCount - soldCount }
         ])
     })

@@ -1,8 +1,8 @@
-> 🇺🇸 [View in Korean](docs/README.ko.md)
+> 🇰🇷 [View in Korean](docs/README.ko.md)
 
 # NEST-MSA
 
-An example backend project for a movie ticket reservation system implemented with NestJS. Key features include:
+This project is a Nest(NestJS)-based example that follows the Microservices Architecture (MSA), featuring the following characteristics:
 
 - **Docker-based Development Environment**: Provides a consistent development environment using containers.
 - **Database Integration**: Includes pre-configured settings for MongoDB and Redis.
@@ -12,6 +12,8 @@ An example backend project for a movie ticket reservation system implemented wit
 - **MSA Support**: Supports a microservice architecture based on the NATS message broker.
 - **E2E Test Automation**: Builds an end-to-end test environment using Bash scripts.
 - **Design Documents Included**: Contains architecture diagrams created with PlantUML.
+
+> This project is based on the `Microservices Architecture`. If you need a `Monolithic Architecture`, please refer to the [nest-mono](https://github.com/mannercode/nest-mono) project.
 
 ## 1. System Requirements
 
@@ -65,7 +67,7 @@ ENV LANG=ko_KR.UTF-8 \
     LC_ALL=ko_KR.UTF-8
 ```
 
-3.4 Configuring the Development Infrastructure
+### 3.4 Configuring the Development Infrastructure
 
 To modify development infrastructure settings, edit the following:
 
@@ -214,7 +216,14 @@ Example:
 
 ## 9. Additional Documentation
 
-You can find more detailed implementation and design information in:
+For more details on the implementation and design, see the documents below.
 
-- [Design Guide](./docs/guides/design.guide.md)
-- [Implementation Guide](./docs/guides/implementation.guide.md)
+- Guides
+    - [Essence-Based Interpretation](https://mannercode.com/2024/05/04/ebi-en.html)
+    - [Design Guide](docs/en/guides/design.guide.md)
+    - [Implementation Guide](docs/en/guides/implementation.guide.md)
+- Designs
+    - [Use Cases](docs/en/designs/use-cases.md)
+    - [Entities](docs/en/designs/entities.md)
+    - [Showtime Creation](docs/en/designs/showtime-creation.md)
+    - [Tickets Purchase](docs/en/designs/tickets-purchase.md)

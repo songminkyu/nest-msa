@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, DeleteResult, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
-import { TheaterCreateDto, TheaterDto, TheaterQueryDto, TheaterUpdateDto } from './dtos'
+import { CreateTheaterDto, TheaterDto, SearchTheatersDto, UpdateTheaterDto } from './dtos'
 
 @Injectable()
 export class TheatersClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    createTheater(createDto: TheaterCreateDto): Promise<TheaterDto> {
+    createTheater(createDto: CreateTheaterDto): Promise<TheaterDto> {
         return this.proxy.getJson(Messages.Theaters.createTheater, createDto)
     }
 
-    updateTheater(theaterId: string, updateDto: TheaterUpdateDto): Promise<TheaterDto> {
+    updateTheater(theaterId: string, updateDto: UpdateTheaterDto): Promise<TheaterDto> {
         return this.proxy.getJson(Messages.Theaters.updateTheater, { theaterId, updateDto })
     }
 
@@ -23,8 +23,8 @@ export class TheatersClient {
         return this.proxy.getJson(Messages.Theaters.deleteTheaters, theaterIds)
     }
 
-    findTheaters(queryDto: TheaterQueryDto): Promise<TheaterDto[]> {
-        return this.proxy.getJson(Messages.Theaters.findTheaters, queryDto)
+    searchTheatersPage(searchDto: SearchTheatersDto): Promise<TheaterDto[]> {
+        return this.proxy.getJson(Messages.Theaters.searchTheatersPage, searchDto)
     }
 
     theatersExist(theaterIds: string[]): Promise<boolean> {

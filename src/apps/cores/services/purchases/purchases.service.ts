@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { mapDocToDto } from 'common'
 import { PaymentsClient } from 'apps/infrastructures'
-import { PurchaseCreateDto, PurchaseDto } from './dtos'
+import { CreatePurchaseDto, PurchaseDto } from './dtos'
 import { PurchaseDocument } from './models'
 import { PurchasesRepository } from './purchases.repository'
 
@@ -12,7 +12,7 @@ export class PurchasesService {
         private paymentsService: PaymentsClient
     ) {}
 
-    async createPurchase(createDto: PurchaseCreateDto) {
+    async createPurchase(createDto: CreatePurchaseDto) {
         const payment = await this.paymentsService.processPayment({
             customerId: createDto.customerId,
             amount: createDto.totalPrice

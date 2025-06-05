@@ -1,2 +1,2 @@
-export * from './purchase-create.dto'
+export * from './create-purchase.dto'
 export * from './purchase.dto'

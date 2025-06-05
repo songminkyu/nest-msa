@@ -3,10 +3,10 @@ import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
 import {
     CreateTicketsResult,
-    SalesStatusByShowtimeDto,
-    TicketCreateDto,
+    TicketSalesForShowtimeDto,
+    CreateTicketDto,
     TicketDto,
-    TicketQueryDto
+    SearchTicketsDto
 } from './dtos'
 import { TicketStatus } from './models'
 
@@ -14,7 +14,7 @@ import { TicketStatus } from './models'
 export class TicketsClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    createTickets(createDtos: TicketCreateDto[]): Promise<CreateTicketsResult> {
+    createTickets(createDtos: CreateTicketDto[]): Promise<CreateTicketsResult> {
         return this.proxy.getJson(Messages.Tickets.createTickets, createDtos)
     }
 
@@ -22,12 +22,12 @@ export class TicketsClient {
         return this.proxy.getJson(Messages.Tickets.updateTicketStatus, { ticketIds, status })
     }
 
-    findAllTickets(queryDto: TicketQueryDto): Promise<TicketDto[]> {
-        return this.proxy.getJson(Messages.Tickets.findAllTickets, queryDto)
+    searchTickets(searchDto: SearchTicketsDto): Promise<TicketDto[]> {
+        return this.proxy.getJson(Messages.Tickets.searchTickets, searchDto)
     }
 
-    getSalesStatuses(showtimeIds: string[]): Promise<SalesStatusByShowtimeDto[]> {
-        return this.proxy.getJson(Messages.Tickets.getSalesStatuses, showtimeIds)
+    getTicketSalesForShowtimes(showtimeIds: string[]): Promise<TicketSalesForShowtimeDto[]> {
+        return this.proxy.getJson(Messages.Tickets.getTicketSalesForShowtimes, showtimeIds)
     }
 
     getTickets(ticketIds: string[]): Promise<TicketDto[]> {

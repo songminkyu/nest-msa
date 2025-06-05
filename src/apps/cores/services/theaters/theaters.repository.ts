@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
-import { TheaterCreateDto, TheaterQueryDto, TheaterUpdateDto } from './dtos'
+import { CreateTheaterDto, SearchTheatersDto, UpdateTheaterDto } from './dtos'
 import { Theater } from './models'
 
 @Injectable()
@@ -11,7 +11,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         super(model)
     }
 
-    async createTheater(createDto: TheaterCreateDto) {
+    async createTheater(createDto: CreateTheaterDto) {
         const theater = this.newDocument()
         theater.name = createDto.name
         theater.latlong = createDto.latlong
@@ -20,7 +20,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return theater.save()
     }
 
-    async updateTheater(theaterId: string, updateDto: TheaterUpdateDto) {
+    async updateTheater(theaterId: string, updateDto: UpdateTheaterDto) {
         const theater = await this.getById(theaterId)
 
         if (updateDto.name) theater.name = updateDto.name
@@ -30,12 +30,12 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return theater.save()
     }
 
-    async findTheaters(queryDto: TheaterQueryDto) {
-        const { take, skip, orderby } = queryDto
+    async searchTheatersPage(searchDto: SearchTheatersDto) {
+        const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query = this.buildQuery(queryDto, { allowEmpty: true })
+                const query = this.buildQuery(searchDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
@@ -45,8 +45,8 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return paginated
     }
 
-    private buildQuery(queryDto: TheaterQueryDto, options: QueryBuilderOptions) {
-        const { name } = queryDto
+    private buildQuery(searchDto: SearchTheatersDto, options: QueryBuilderOptions) {
+        const { name } = searchDto
 
         const builder = new QueryBuilder<Theater>()
         builder.addRegex('name', name)

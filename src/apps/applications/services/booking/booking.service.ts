@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import {
     HoldTicketsDto,
     ShowtimesClient,
@@ -7,13 +7,20 @@ import {
     TicketsClient
 } from 'apps/cores'
 import { pickIds } from 'common'
-import { generateShowtimesWithSalesStatus, sortTheatersByDistance } from './booking.utils'
+import { generateShowtimesForBooking, sortTheatersByDistance } from './booking.utils'
 import {
-    FindShowdatesDto,
-    FindShowingTheatersDto,
-    FindShowtimesDto,
-    ShowtimeSalesStatusDto
+    SearchShowdatesForBookingDto,
+    SearchTheatersForBookingDto,
+    SearchShowtimesForBookingDto,
+    ShowtimeForBooking
 } from './dtos'
+
+export const BookingServiceErrors = {
+    ShowtimeNotFound: {
+        code: 'ERR_BOOKING_SHOWTIME_NOT_FOUND',
+        message: 'The requested showtime could not be found.'
+    }
+}
 
 @Injectable()
 export class BookingService {
@@ -24,41 +31,50 @@ export class BookingService {
         private ticketsService: TicketsClient
     ) {}
 
-    async findShowingTheaters({ movieId, latlong }: FindShowingTheatersDto) {
-        const theaterIds = await this.showtimesService.findTheaterIds({ movieIds: [movieId] })
+    async searchTheaters({ movieId, latlong }: SearchTheatersForBookingDto) {
+        const theaterIds = await this.showtimesService.searchTheaterIds({ movieIds: [movieId] })
         const theaters = await this.theatersService.getTheaters(theaterIds)
         const showingTheaters = sortTheatersByDistance(theaters, latlong)
 
         return showingTheaters
     }
 
-    async findShowdates({ movieId, theaterId }: FindShowdatesDto) {
-        return this.showtimesService.findShowdates({ movieIds: [movieId], theaterIds: [theaterId] })
+    async searchShowdates({ movieId, theaterId }: SearchShowdatesForBookingDto) {
+        return this.showtimesService.searchShowdates({
+            movieIds: [movieId],
+            theaterIds: [theaterId]
+        })
     }
 
-    async findShowtimes({ movieId, theaterId, showdate }: FindShowtimesDto) {
+    async searchShowtimes({ movieId, theaterId, showdate }: SearchShowtimesForBookingDto) {
         const startOfDay = new Date(showdate)
         startOfDay.setHours(0, 0, 0, 0)
 
         const endOfDay = new Date(showdate)
         endOfDay.setHours(23, 59, 59, 999)
 
-        const showtimes = await this.showtimesService.findAllShowtimes({
+        const showtimes = await this.showtimesService.searchShowtimes({
             movieIds: [movieId],
             theaterIds: [theaterId],
             startTimeRange: { start: startOfDay, end: endOfDay }
         })
 
         const ids = pickIds(showtimes)
-        const salesStatuses = await this.ticketsService.getSalesStatuses(ids)
+        const ticketSalesForShowtimes = await this.ticketsService.getTicketSalesForShowtimes(ids)
 
-        const showtimesWithSalesStatus = generateShowtimesWithSalesStatus(showtimes, salesStatuses)
+        const showtimesForBooking = generateShowtimesForBooking(showtimes, ticketSalesForShowtimes)
 
-        return showtimesWithSalesStatus as ShowtimeSalesStatusDto[]
+        return showtimesForBooking as ShowtimeForBooking[]
     }
 
-    async getAvailableTickets(showtimeId: string) {
-        const tickets = await this.ticketsService.findAllTickets({ showtimeIds: [showtimeId] })
+    async getTickets(showtimeId: string) {
+        const showtimeExists = await this.showtimesService.showtimesExist([showtimeId])
+
+        if (!showtimeExists) {
+            throw new NotFoundException({ ...BookingServiceErrors.ShowtimeNotFound, showtimeId })
+        }
+
+        const tickets = await this.ticketsService.searchTickets({ showtimeIds: [showtimeId] })
         return tickets
     }
 

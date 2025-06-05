@@ -2,30 +2,30 @@ import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { CommonQueryDto } from 'common'
 import { Messages } from 'shared'
-import { ShowtimeBatchCreateDto } from './dtos'
+import { CreateShowtimeBatchDto } from './dtos'
 import { ShowtimeCreationService } from './showtime-creation.service'
 
 @Controller()
 export class ShowtimeCreationController {
     constructor(private service: ShowtimeCreationService) {}
 
-    @MessagePattern(Messages.ShowtimeCreation.findMovies)
-    findMovies(@Payload() queryDto: CommonQueryDto) {
-        return this.service.findMovies(queryDto)
+    @MessagePattern(Messages.ShowtimeCreation.searchMoviesPage)
+    searchMoviesPage(@Payload() searchDto: CommonQueryDto) {
+        return this.service.searchMoviesPage(searchDto)
     }
 
-    @MessagePattern(Messages.ShowtimeCreation.findTheaters)
-    findTheaters(@Payload() queryDto: CommonQueryDto) {
-        return this.service.findTheaters(queryDto)
+    @MessagePattern(Messages.ShowtimeCreation.searchTheatersPage)
+    searchTheatersPage(@Payload() searchDto: CommonQueryDto) {
+        return this.service.searchTheatersPage(searchDto)
     }
 
-    @MessagePattern(Messages.ShowtimeCreation.findShowtimes)
-    findShowtimes(@Payload() theaterIds: string[]) {
-        return this.service.findShowtimes(theaterIds)
+    @MessagePattern(Messages.ShowtimeCreation.searchShowtimes)
+    searchShowtimes(@Payload() theaterIds: string[]) {
+        return this.service.searchShowtimes(theaterIds)
     }
 
     @MessagePattern(Messages.ShowtimeCreation.createBatchShowtimes)
-    createBatchShowtimes(@Payload() createDto: ShowtimeBatchCreateDto) {
+    createBatchShowtimes(@Payload() createDto: CreateShowtimeBatchDto) {
         return this.service.createBatchShowtimes(createDto)
     }
 }

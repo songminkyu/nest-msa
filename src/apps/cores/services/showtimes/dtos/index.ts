@@ -1,3 +1,3 @@
-export * from './showtime-create.dto'
-export * from './showtime-query.dto'
+export * from './create-showtime.dto'
+export * from './search-showtimes.dto'
 export * from './showtime.dto'

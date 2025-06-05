@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes } from '@nestjs/common'
-import { TheaterCreateDto, TheaterQueryDto, TheatersClient, TheaterUpdateDto } from 'apps/cores'
+import { CreateTheaterDto, SearchTheatersDto, TheatersClient, UpdateTheaterDto } from 'apps/cores'
 import { DefaultPaginationPipe } from './pipes'
 
 @Controller('theaters')
@@ -7,14 +7,14 @@ export class TheatersController {
     constructor(private theatersService: TheatersClient) {}
 
     @Post()
-    async createTheater(@Body() createDto: TheaterCreateDto) {
+    async createTheater(@Body() createDto: CreateTheaterDto) {
         return this.theatersService.createTheater(createDto)
     }
 
     @Patch(':theaterId')
     async updateTheater(
         @Param('theaterId') theaterId: string,
-        @Body() updateDto: TheaterUpdateDto
+        @Body() updateDto: UpdateTheaterDto
     ) {
         return this.theatersService.updateTheater(theaterId, updateDto)
     }
@@ -32,7 +32,7 @@ export class TheatersController {
 
     @UsePipes(DefaultPaginationPipe)
     @Get()
-    async findTheaters(@Query() queryDto: TheaterQueryDto) {
-        return this.theatersService.findTheaters(queryDto)
+    async searchTheatersPage(@Query() searchDto: SearchTheatersDto) {
+        return this.theatersService.searchTheatersPage(searchDto)
     }
 }

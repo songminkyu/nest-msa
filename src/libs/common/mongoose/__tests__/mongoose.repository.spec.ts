@@ -31,8 +31,8 @@ describe('MongooseRepository', () => {
             newDoc.name = 'document name'
             await newDoc.save()
 
-            const findDoc = await fix.repository.findById(newDoc.id)
-            expect(toDto(findDoc!)).toEqual(toDto(newDoc))
+            const foundDoc = await fix.repository.findById(newDoc.id)
+            expect(toDto(foundDoc!)).toEqual(toDto(newDoc))
         })
 
         /* 필수 필드가 누락된 경우 예외를 던져야 한다 */
@@ -52,9 +52,9 @@ describe('MongooseRepository', () => {
             updateDoc.name = 'name2'
             await updateDoc!.save()
 
-            const findDoc = await fix.repository.findById(newDoc.id)
+            const foundDoc = await fix.repository.findById(newDoc.id)
 
-            expect(findDoc?.name).toEqual('name2')
+            expect(foundDoc?.name).toEqual('name2')
         })
     })
 

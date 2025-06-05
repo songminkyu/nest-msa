@@ -12,7 +12,7 @@ import {
     UsePipes
 } from '@nestjs/common'
 import { EventPattern } from '@nestjs/microservices'
-import { ShowtimeBatchCreateDto, ShowtimeCreationClient } from 'apps/applications'
+import { CreateShowtimeBatchDto, ShowtimeCreationClient } from 'apps/applications'
 import { CommonQueryDto } from 'common'
 import { Observable, Subject } from 'rxjs'
 import { Events } from 'shared'
@@ -30,25 +30,25 @@ export class ShowtimeCreationController implements OnModuleDestroy {
 
     @UsePipes(DefaultPaginationPipe)
     @Get('theaters')
-    async findTheaters(@Query() queryDto: CommonQueryDto) {
-        return this.showtimeCreationService.findTheaters(queryDto)
+    async searchTheatersPage(@Query() searchDto: CommonQueryDto) {
+        return this.showtimeCreationService.searchTheatersPage(searchDto)
     }
 
     @UsePipes(DefaultPaginationPipe)
     @Get('movies')
-    async findMovies(@Query() queryDto: CommonQueryDto) {
-        return this.showtimeCreationService.findMovies(queryDto)
+    async searchMoviesPage(@Query() searchDto: CommonQueryDto) {
+        return this.showtimeCreationService.searchMoviesPage(searchDto)
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('showtimes/find')
-    async findShowtimesByTheaterIds(@Body('theaterIds') theaterIds: string[]) {
-        return this.showtimeCreationService.findShowtimes(theaterIds)
+    async searchShowtimesByTheaterIds(@Body('theaterIds') theaterIds: string[]) {
+        return this.showtimeCreationService.searchShowtimes(theaterIds)
     }
 
     @HttpCode(HttpStatus.ACCEPTED)
     @Post('showtimes')
-    async createBatchShowtimes(@Body() createDto: ShowtimeBatchCreateDto) {
+    async createBatchShowtimes(@Body() createDto: CreateShowtimeBatchDto) {
         return this.showtimeCreationService.createBatchShowtimes(createDto)
     }
 

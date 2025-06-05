@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
-import { ShowtimeCreateDto, ShowtimeDto, ShowtimeQueryDto } from './dtos'
+import { CreateShowtimeDto, ShowtimeDto, SearchShowtimesDto } from './dtos'
 import { CreateShowtimesResult } from './types'
 
 @Injectable()
 export class ShowtimesClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    createShowtimes(createDtos: ShowtimeCreateDto[]): Promise<CreateShowtimesResult> {
+    createShowtimes(createDtos: CreateShowtimeDto[]): Promise<CreateShowtimesResult> {
         return this.proxy.getJson(Messages.Showtimes.createShowtimes, createDtos)
     }
 
@@ -16,19 +16,23 @@ export class ShowtimesClient {
         return this.proxy.getJson(Messages.Showtimes.getShowtimes, showtimeIds)
     }
 
-    findAllShowtimes(queryDto: ShowtimeQueryDto): Promise<ShowtimeDto[]> {
-        return this.proxy.getJson(Messages.Showtimes.findAllShowtimes, queryDto)
+    searchShowtimes(searchDto: SearchShowtimesDto): Promise<ShowtimeDto[]> {
+        return this.proxy.getJson(Messages.Showtimes.searchShowtimes, searchDto)
     }
 
-    findShowingMovieIds(): Promise<string[]> {
-        return this.proxy.getJson(Messages.Showtimes.findShowingMovieIds, {})
+    searchShowingMovieIds(): Promise<string[]> {
+        return this.proxy.getJson(Messages.Showtimes.searchShowingMovieIds, {})
     }
 
-    findTheaterIds(queryDto: ShowtimeQueryDto): Promise<string[]> {
-        return this.proxy.getJson(Messages.Showtimes.findTheaterIds, queryDto)
+    searchTheaterIds(searchDto: SearchShowtimesDto): Promise<string[]> {
+        return this.proxy.getJson(Messages.Showtimes.searchTheaterIds, searchDto)
     }
 
-    findShowdates(queryDto: ShowtimeQueryDto): Promise<Date[]> {
-        return this.proxy.getJson(Messages.Showtimes.findShowdates, queryDto)
+    searchShowdates(searchDto: SearchShowtimesDto): Promise<Date[]> {
+        return this.proxy.getJson(Messages.Showtimes.searchShowdates, searchDto)
+    }
+
+    showtimesExist(showtimeIds: string[]): Promise<boolean> {
+        return this.proxy.getJson(Messages.Showtimes.showtimesExist, showtimeIds)
     }
 }

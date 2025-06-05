@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectIds, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
-import { MovieCreateDto, MovieQueryDto, MovieUpdateDto } from './dtos'
+import { CreateMovieDto, SearchMoviesDto, UpdateMovieDto } from './dtos'
 import { Movie } from './models'
 
 @Injectable()
@@ -11,7 +11,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         super(model)
     }
 
-    async createMovie(createDto: MovieCreateDto, storageFileIds: string[]) {
+    async createMovie(createDto: CreateMovieDto, storageFileIds: string[]) {
         const movie = this.newDocument()
         movie.title = createDto.title
         movie.genre = createDto.genre
@@ -25,7 +25,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         return movie.save()
     }
 
-    async updateMovie(movieId: string, updateDto: MovieUpdateDto) {
+    async updateMovie(movieId: string, updateDto: UpdateMovieDto) {
         const movie = await this.getById(movieId)
 
         if (updateDto.title) movie.title = updateDto.title
@@ -39,12 +39,12 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         return movie.save()
     }
 
-    async findMovies(queryDto: MovieQueryDto) {
-        const { take, skip, orderby } = queryDto
+    async searchMoviesPage(searchDto: SearchMoviesDto) {
+        const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query = this.buildQuery(queryDto, { allowEmpty: true })
+                const query = this.buildQuery(searchDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
@@ -54,8 +54,8 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         return paginated
     }
 
-    private buildQuery(queryDto: MovieQueryDto, options: QueryBuilderOptions) {
-        const { title, genre, releaseDate, plot, director, rating } = queryDto
+    private buildQuery(searchDto: SearchMoviesDto, options: QueryBuilderOptions) {
+        const { title, genre, releaseDate, plot, director, rating } = searchDto
 
         const builder = new QueryBuilder<Movie>()
         builder.addRegex('title', title)

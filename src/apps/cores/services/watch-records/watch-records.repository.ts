@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
-import { WatchRecordCreateDto, WatchRecordQueryDto } from './dtos'
+import { CreateWatchRecordDto, SearchWatchRecordsDto } from './dtos'
 import { WatchRecord } from './models'
 
 @Injectable()
@@ -11,7 +11,7 @@ export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
         super(model)
     }
 
-    async createWatchRecord(createDto: WatchRecordCreateDto) {
+    async createWatchRecord(createDto: CreateWatchRecordDto) {
         const watchRecord = this.newDocument()
         watchRecord.customerId = objectId(createDto.customerId)
         watchRecord.movieId = objectId(createDto.movieId)
@@ -21,12 +21,12 @@ export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
         return watchRecord.save()
     }
 
-    async findWatchRecords(queryDto: WatchRecordQueryDto) {
-        const { take, skip, orderby } = queryDto
+    async searchWatchRecordsPage(searchDto: SearchWatchRecordsDto) {
+        const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query = this.buildQuery(queryDto, { allowEmpty: true })
+                const query = this.buildQuery(searchDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
@@ -36,8 +36,8 @@ export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
         return paginated
     }
 
-    private buildQuery(queryDto: WatchRecordQueryDto, options: QueryBuilderOptions) {
-        const { customerId } = queryDto
+    private buildQuery(searchDto: SearchWatchRecordsDto, options: QueryBuilderOptions) {
+        const { customerId } = searchDto
 
         const builder = new QueryBuilder<WatchRecord>()
         builder.addId('customerId', customerId)

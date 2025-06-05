@@ -69,8 +69,8 @@ Admin -> Frontend: 극장 선택
         theaterIds
     }
     end note
-        Backend -> ShowtimeCreation: findShowtimes(theaterIds)
-            ShowtimeCreation -> Showtimes: findShowtimes(theaterIds, date.now)
+        Backend -> ShowtimeCreation: searchShowtimes(theaterIds)
+            ShowtimeCreation -> Showtimes: searchShowtimes(theaterIds, date.now)
             ShowtimeCreation <-- Showtimes: showtimes[]
         Backend <-- ShowtimeCreation: showtimes[]
     Frontend <-- Backend: showtimes[]
@@ -129,14 +129,14 @@ Backend <-- ShowtimeCreation: ShowtimeBatchCreationResult(success)
 ```
 
 ```
-ShowtimeBatchCreateDto {
+CreateShowtimeBatchDto {
     "movieId": "movie#1",
     "theaterIds": ["theater#1","theater#2"],
     "durationMinutes": 90,
     "startTimes": [202012120900, 202012121100, 202012121300]
 }
 
-ShowtimeBatchCreateResult{
+CreateShowtimeBatchResult{
     "batchId": "batchid#1",
     "result": "complete",
     "createdShowtimes": 100,

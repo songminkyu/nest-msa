@@ -13,7 +13,12 @@ import {
     UseGuards,
     UsePipes
 } from '@nestjs/common'
-import { CustomerCreateDto, CustomerQueryDto, CustomersClient, CustomerUpdateDto } from 'apps/cores'
+import {
+    CreateCustomerDto,
+    SearchCustomersDto,
+    CustomersClient,
+    UpdateCustomerDto
+} from 'apps/cores'
 import { Assert } from 'common'
 import { CustomerJwtAuthGuard, CustomerLocalAuthGuard, Public } from './guards'
 import { DefaultPaginationPipe } from './pipes'
@@ -26,14 +31,14 @@ export class CustomersController {
 
     @Public()
     @Post()
-    async createCustomer(@Body() createDto: CustomerCreateDto) {
+    async createCustomer(@Body() createDto: CreateCustomerDto) {
         return this.customersService.createCustomer(createDto)
     }
 
     @Patch(':customerId')
     async updateCustomer(
         @Param('customerId') customerId: string,
-        @Body() updateDto: CustomerUpdateDto
+        @Body() updateDto: UpdateCustomerDto
     ) {
         return this.customersService.updateCustomer(customerId, updateDto)
     }
@@ -51,8 +56,8 @@ export class CustomersController {
 
     @UsePipes(DefaultPaginationPipe)
     @Get()
-    async findCustomers(@Query() queryDto: CustomerQueryDto) {
-        return this.customersService.findCustomers(queryDto)
+    async searchCustomersPage(@Query() searchDto: SearchCustomersDto) {
+        return this.customersService.searchCustomersPage(searchDto)
     }
 
     @UseGuards(CustomerLocalAuthGuard)
