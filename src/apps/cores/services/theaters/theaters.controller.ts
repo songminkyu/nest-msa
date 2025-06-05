@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
-import { TheaterCreateDto, TheaterQueryDto, TheaterUpdateDto } from './dtos'
+import { CreateTheaterDto, SearchTheatersDto, UpdateTheaterDto } from './dtos'
 import { TheatersService } from './theaters.service'
 
 @Controller()
@@ -9,14 +9,14 @@ export class TheatersController {
     constructor(private service: TheatersService) {}
 
     @MessagePattern(Messages.Theaters.createTheater)
-    createTheater(@Payload() createDto: TheaterCreateDto) {
+    createTheater(@Payload() createDto: CreateTheaterDto) {
         return this.service.createTheater(createDto)
     }
 
     @MessagePattern(Messages.Theaters.updateTheater)
     updateTheater(
         @Payload('theaterId') theaterId: string,
-        @Payload('updateDto') updateDto: TheaterUpdateDto
+        @Payload('updateDto') updateDto: UpdateTheaterDto
     ) {
         return this.service.updateTheater(theaterId, updateDto)
     }
@@ -32,7 +32,7 @@ export class TheatersController {
     }
 
     @MessagePattern(Messages.Theaters.searchTheatersPage)
-    searchTheatersPage(@Payload() queryDto: TheaterQueryDto) {
+    searchTheatersPage(@Payload() queryDto: SearchTheatersDto) {
         return this.service.searchTheatersPage(queryDto)
     }
 

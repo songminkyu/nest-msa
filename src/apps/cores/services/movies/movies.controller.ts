@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
-import { CreateMovieAndFilesDto, SearchMovieDto, UpdateMovieDto } from './dtos'
+import { CreateMovieAndFilesDto, SearchMoviesDto, UpdateMovieDto } from './dtos'
 import { MoviesService } from './movies.service'
 
 @Controller()
@@ -32,7 +32,7 @@ export class MoviesController {
     }
 
     @MessagePattern(Messages.Movies.searchMoviesPage)
-    searchMoviesPage(@Payload() queryDto: SearchMovieDto) {
+    searchMoviesPage(@Payload() queryDto: SearchMoviesDto) {
         return this.service.searchMoviesPage(queryDto)
     }
 

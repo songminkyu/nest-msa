@@ -13,7 +13,12 @@ import {
     UseGuards,
     UsePipes
 } from '@nestjs/common'
-import { CreateCustomerDto, SearchCustomersDto, CustomersClient, UpdateCustomerDto } from 'apps/cores'
+import {
+    CreateCustomerDto,
+    SearchCustomersDto,
+    CustomersClient,
+    UpdateCustomerDto
+} from 'apps/cores'
 import { Assert } from 'common'
 import { CustomerJwtAuthGuard, CustomerLocalAuthGuard, Public } from './guards'
 import { DefaultPaginationPipe } from './pipes'

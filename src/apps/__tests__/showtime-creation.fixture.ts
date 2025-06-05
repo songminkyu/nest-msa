@@ -1,11 +1,11 @@
-import { MovieDto, ShowtimeCreateDto, TheaterDto } from 'apps/cores'
+import { MovieDto, CreateShowtimeDto, TheaterDto } from 'apps/cores'
 import { DateTimeRange, jsonToObject } from 'common'
 import { HttpTestClient, nullObjectId } from 'testlib'
 import { createMovie, createTheater } from './common.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 
 export const createShowtimeDtos = (startTimes: Date[], overrides = {}) => {
-    const createDtos: ShowtimeCreateDto[] = []
+    const createDtos: CreateShowtimeDto[] = []
 
     startTimes.map((startTime) => {
         const createDto = {

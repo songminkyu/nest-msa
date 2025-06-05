@@ -1,7 +1,7 @@
 import { Controller, ParseArrayPipe } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
-import { ShowtimeCreateDto, ShowtimeQueryDto } from './dtos'
+import { CreateShowtimeDto, SearchShowtimesDto } from './dtos'
 import { ShowtimesService } from './showtimes.service'
 import { CreateShowtimesResult } from './types'
 
@@ -11,7 +11,7 @@ export class ShowtimesController {
 
     @MessagePattern(Messages.Showtimes.createShowtimes)
     createShowtimes(
-        @Payload(new ParseArrayPipe({ items: ShowtimeCreateDto })) createDtos: ShowtimeCreateDto[]
+        @Payload(new ParseArrayPipe({ items: CreateShowtimeDto })) createDtos: CreateShowtimeDto[]
     ): Promise<CreateShowtimesResult> {
         return this.service.createShowtimes(createDtos)
     }
@@ -22,7 +22,7 @@ export class ShowtimesController {
     }
 
     @MessagePattern(Messages.Showtimes.searchShowtimes)
-    searchShowtimes(@Payload() queryDto: ShowtimeQueryDto) {
+    searchShowtimes(@Payload() queryDto: SearchShowtimesDto) {
         return this.service.searchShowtimes(queryDto)
     }
 
@@ -32,12 +32,12 @@ export class ShowtimesController {
     }
 
     @MessagePattern(Messages.Showtimes.searchTheaterIds)
-    searchTheaterIds(@Payload() queryDto: ShowtimeQueryDto) {
+    searchTheaterIds(@Payload() queryDto: SearchShowtimesDto) {
         return this.service.searchTheaterIds(queryDto)
     }
 
     @MessagePattern(Messages.Showtimes.searchShowdates)
-    searchShowdates(queryDto: ShowtimeQueryDto) {
+    searchShowdates(queryDto: SearchShowtimesDto) {
         return this.service.searchShowdates(queryDto)
     }
 

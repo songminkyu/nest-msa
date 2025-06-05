@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { PurchaseCreateDto, PurchasesClient } from 'apps/cores'
+import { CreatePurchaseDto, PurchasesClient } from 'apps/cores'
 import { TicketPurchaseProcessor } from './processors'
 
 @Injectable()
@@ -9,7 +9,7 @@ export class PurchaseProcessService {
         private ticketProcessor: TicketPurchaseProcessor
     ) {}
 
-    async processPurchase(createDto: PurchaseCreateDto) {
+    async processPurchase(createDto: CreatePurchaseDto) {
         await this.ticketProcessor.validatePurchase(createDto)
 
         const purchase = await this.purchasesService.createPurchase(createDto)

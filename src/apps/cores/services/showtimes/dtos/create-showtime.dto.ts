@@ -2,7 +2,7 @@ import { Type } from 'class-transformer'
 import { IsNotEmpty, IsString, ValidateNested } from 'class-validator'
 import { DateTimeRange } from 'common'
 
-export class ShowtimeCreateDto {
+export class CreateShowtimeDto {
     @IsString()
     @IsNotEmpty()
     batchId: string

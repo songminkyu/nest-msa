@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { mapDocToDto, pickIds } from 'common'
 import { StorageFileCreateDto, StorageFilesClient } from 'apps/infrastructures'
 import { Routes } from 'shared'
-import { CreateMovieDto, MovieDto, SearchMovieDto, UpdateMovieDto } from './dtos'
+import { CreateMovieDto, MovieDto, SearchMoviesDto, UpdateMovieDto } from './dtos'
 import { MovieDocument } from './models'
 import { MoviesRepository } from './movies.repository'
 
@@ -47,7 +47,7 @@ export class MoviesService {
         return success
     }
 
-    async searchMoviesPage(queryDto: SearchMovieDto) {
+    async searchMoviesPage(queryDto: SearchMoviesDto) {
         const { items, ...paginated } = await this.repository.searchMoviesPage(queryDto)
 
         return { ...paginated, items: this.toDtos(items) }

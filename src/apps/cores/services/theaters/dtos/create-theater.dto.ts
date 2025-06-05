@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString, ValidateNested } from 'class-validator'
 import { LatLong } from 'common'
 import { Seatmap } from '../models'
 
-export class TheaterCreateDto {
+export class CreateTheaterDto {
     @IsString()
     @IsNotEmpty()
     name: string

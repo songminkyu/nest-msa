@@ -1,6 +1,6 @@
 import { plainToInstance } from 'class-transformer'
 import { validateSync } from 'class-validator'
-import { DateTimeRange } from 'common'
+import { DateTimeRange, PartialDateTimeRange } from 'common'
 
 describe('DateTimeRange', () => {
     /* 문자열 날짜를 Date 객체로 변환하고 유효성 검사를 통과해야 함 */
@@ -57,5 +57,23 @@ describe('DateTimeRange', () => {
         }
 
         expect(throwException).toThrow('Invalid options provided.')
+    })
+})
+
+describe('PartialDateTimeRange', () => {
+    /* 문자열 날짜를 Date 객체로 변환하고 유효성 검사를 통과해야 함 */
+    it('Should convert string dates to Date objects and pass validation', () => {
+        const plainData = {
+            start: '2023-01-01T00:00:00Z',
+            end: '2023-01-02T00:00:00Z'
+        }
+
+        const instance = plainToInstance(PartialDateTimeRange, plainData)
+
+        expect(instance.start).toBeInstanceOf(Date)
+        expect(instance.end).toBeInstanceOf(Date)
+
+        const errors = validateSync(instance)
+        expect(errors).toHaveLength(0)
     })
 })

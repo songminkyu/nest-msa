@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import {
-    PurchaseCreateDto,
+    CreatePurchaseDto,
     PurchaseItemDto,
     PurchaseItemType,
     ShowtimeDto,
@@ -38,7 +38,7 @@ export class TicketPurchaseProcessor {
         private purchaseProcessProxy: PurchaseProcessClient
     ) {}
 
-    async validatePurchase(createDto: PurchaseCreateDto) {
+    async validatePurchase(createDto: CreatePurchaseDto) {
         const ticketItems = createDto.purchaseItems.filter(
             (item) => item.type === PurchaseItemType.ticket
         )
@@ -109,7 +109,7 @@ export class TicketPurchaseProcessor {
         }
     }
 
-    async completePurchase(createDto: PurchaseCreateDto) {
+    async completePurchase(createDto: CreatePurchaseDto) {
         const ticketItems = createDto.purchaseItems.filter(
             (item) => item.type === PurchaseItemType.ticket
         )
@@ -122,7 +122,7 @@ export class TicketPurchaseProcessor {
         return true
     }
 
-    async rollbackPurchase(createDto: PurchaseCreateDto) {
+    async rollbackPurchase(createDto: CreatePurchaseDto) {
         const ticketItems = createDto.purchaseItems.filter(
             (item) => item.type === PurchaseItemType.ticket
         )

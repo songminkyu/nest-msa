@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
-import { TheaterCreateDto, TheaterQueryDto, TheaterUpdateDto } from './dtos'
+import { CreateTheaterDto, SearchTheatersDto, UpdateTheaterDto } from './dtos'
 import { Theater } from './models'
 
 @Injectable()
@@ -11,7 +11,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         super(model)
     }
 
-    async createTheater(createDto: TheaterCreateDto) {
+    async createTheater(createDto: CreateTheaterDto) {
         const theater = this.newDocument()
         theater.name = createDto.name
         theater.latlong = createDto.latlong
@@ -20,7 +20,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return theater.save()
     }
 
-    async updateTheater(theaterId: string, updateDto: TheaterUpdateDto) {
+    async updateTheater(theaterId: string, updateDto: UpdateTheaterDto) {
         const theater = await this.getById(theaterId)
 
         if (updateDto.name) theater.name = updateDto.name
@@ -30,7 +30,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return theater.save()
     }
 
-    async searchTheatersPage(queryDto: TheaterQueryDto) {
+    async searchTheatersPage(queryDto: SearchTheatersDto) {
         const { take, skip, orderby } = queryDto
 
         const paginated = await this.findWithPagination({
@@ -45,7 +45,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return paginated
     }
 
-    private buildQuery(queryDto: TheaterQueryDto, options: QueryBuilderOptions) {
+    private buildQuery(queryDto: SearchTheatersDto, options: QueryBuilderOptions) {
         const { name } = queryDto
 
         const builder = new QueryBuilder<Theater>()

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { StorageFileCreateDto } from 'apps/infrastructures'
 import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
-import { CreateMovieDto, MovieDto, SearchMovieDto, UpdateMovieDto } from './dtos'
+import { CreateMovieDto, MovieDto, SearchMoviesDto, UpdateMovieDto } from './dtos'
 
 @Injectable()
 export class MoviesClient {
@@ -27,7 +27,7 @@ export class MoviesClient {
         return this.proxy.getJson(Messages.Movies.deleteMovies, movieIds)
     }
 
-    searchMoviesPage(queryDto: SearchMovieDto): Promise<MovieDto[]> {
+    searchMoviesPage(queryDto: SearchMoviesDto): Promise<MovieDto[]> {
         return this.proxy.getJson(Messages.Movies.searchMoviesPage, queryDto)
     }
 

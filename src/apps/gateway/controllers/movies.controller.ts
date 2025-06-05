@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
 import { RecommendationClient } from 'apps/applications'
-import { CreateMovieDto, SearchMovieDto, MoviesClient, UpdateMovieDto } from 'apps/cores'
+import { CreateMovieDto, SearchMoviesDto, MoviesClient, UpdateMovieDto } from 'apps/cores'
 import { pick } from 'lodash'
 import { MulterExceptionFilter } from './filters'
 import { CustomerOptionalJwtAuthGuard } from './guards'
@@ -69,7 +69,7 @@ export class MoviesController {
 
     @UsePipes(DefaultPaginationPipe)
     @Get()
-    async searchMoviesPage(@Query() queryDto: SearchMovieDto) {
+    async searchMoviesPage(@Query() queryDto: SearchMoviesDto) {
         return this.moviesService.searchMoviesPage(queryDto)
     }
 }

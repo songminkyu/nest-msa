@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, objectIds, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
-import { TicketSalesForShowtimeDto, TicketCreateDto, TicketQueryDto } from './dtos'
+import { TicketSalesForShowtimeDto, CreateTicketDto, SearchTicketsDto } from './dtos'
 import { Ticket, TicketStatus } from './models'
 
 @Injectable()
@@ -11,7 +11,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
         super(model)
     }
 
-    async createTickets(createDtos: TicketCreateDto[]) {
+    async createTickets(createDtos: CreateTicketDto[]) {
         const tickets = createDtos.map((dto) => {
             const ticket = this.newDocument()
             ticket.batchId = objectId(dto.batchId)
@@ -36,7 +36,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
         return result
     }
 
-    async searchTickets(queryDto: TicketQueryDto) {
+    async searchTickets(queryDto: SearchTicketsDto) {
         const query = this.buildQuery(queryDto)
 
         const tickets = await this.model.find(query).sort({ batchId: 1 }).exec()
@@ -67,7 +67,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
         return showtimeTicketSalesArray as TicketSalesForShowtimeDto[]
     }
 
-    private buildQuery(queryDto: TicketQueryDto, options: QueryBuilderOptions = {}) {
+    private buildQuery(queryDto: SearchTicketsDto, options: QueryBuilderOptions = {}) {
         const { batchIds, movieIds, theaterIds, showtimeIds } = queryDto
 
         const builder = new QueryBuilder<Ticket>()

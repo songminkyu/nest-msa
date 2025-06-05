@@ -1,4 +1,4 @@
-export interface CreateTicketsResult {
+export class CreateTicketsResult {
     success: boolean
     count: number
 }

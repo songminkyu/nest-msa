@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Assert, mapDocToDto } from 'common'
-import { TicketCreateDto, TicketDto, TicketQueryDto } from './dtos'
+import { CreateTicketsResult, CreateTicketDto, TicketDto, SearchTicketsDto } from './dtos'
 import { TicketDocument, TicketStatus } from './models'
 import { TicketsRepository } from './tickets.repository'
 
@@ -8,10 +8,10 @@ import { TicketsRepository } from './tickets.repository'
 export class TicketsService {
     constructor(private repository: TicketsRepository) {}
 
-    async createTickets(createDtos: TicketCreateDto[]) {
+    async createTickets(createDtos: CreateTicketDto[]) {
         await this.repository.createTickets(createDtos)
 
-        return { success: true, count: createDtos.length }
+        return { success: true, count: createDtos.length } as CreateTicketsResult
     }
 
     async updateTicketStatus(ticketIds: string[], status: TicketStatus) {
@@ -28,7 +28,7 @@ export class TicketsService {
         return this.toDtos(tickets)
     }
 
-    async searchTickets(queryDto: TicketQueryDto) {
+    async searchTickets(queryDto: SearchTicketsDto) {
         const tickets = await this.repository.searchTickets(queryDto)
 
         return this.toDtos(tickets)

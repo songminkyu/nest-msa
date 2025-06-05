@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { mapDocToDto } from 'common'
-import { ShowtimeCreateDto, ShowtimeDto, ShowtimeQueryDto } from './dtos'
+import { CreateShowtimeDto, ShowtimeDto, SearchShowtimesDto } from './dtos'
 import { ShowtimeDocument } from './models'
 import { ShowtimesRepository } from './showtimes.repository'
 
@@ -8,7 +8,7 @@ import { ShowtimesRepository } from './showtimes.repository'
 export class ShowtimesService {
     constructor(private repository: ShowtimesRepository) {}
 
-    async createShowtimes(createDtos: ShowtimeCreateDto[]) {
+    async createShowtimes(createDtos: CreateShowtimeDto[]) {
         await this.repository.createShowtimes(createDtos)
 
         return { success: true, count: createDtos.length }
@@ -20,7 +20,7 @@ export class ShowtimesService {
         return this.toDtos(showtimes)
     }
 
-    async searchShowtimes(queryDto: ShowtimeQueryDto) {
+    async searchShowtimes(queryDto: SearchShowtimesDto) {
         const showtimes = await this.repository.searchShowtimes(queryDto)
 
         return this.toDtos(showtimes)
@@ -32,11 +32,11 @@ export class ShowtimesService {
         return this.repository.findMovieIds({ startTimeRange: { start: currentTime } })
     }
 
-    async searchTheaterIds(queryDto: ShowtimeQueryDto) {
+    async searchTheaterIds(queryDto: SearchShowtimesDto) {
         return this.repository.searchTheaterIds(queryDto)
     }
 
-    async searchShowdates(queryDto: ShowtimeQueryDto) {
+    async searchShowdates(queryDto: SearchShowtimesDto) {
         return this.repository.searchShowdates(queryDto)
     }
 

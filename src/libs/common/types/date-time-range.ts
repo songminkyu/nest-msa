@@ -27,3 +27,13 @@ export class DateTimeRange {
         throw new Error('Invalid options provided.')
     }
 }
+
+export class PartialDateTimeRange {
+    @IsDate()
+    @Type(() => Date)
+    start?: Date
+
+    @IsDate()
+    @Type(() => Date)
+    end?: Date
+}
