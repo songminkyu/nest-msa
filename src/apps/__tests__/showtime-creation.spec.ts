@@ -69,7 +69,7 @@ describe('Showtime Creation', () => {
 
     /* 상영시간 생성 */
     describe('Creating showtimes', () => {
-        const createBatchShowtimes = async (
+        const createShowtimeBatch = async (
             movieId: string,
             theaterIds: string[],
             startTimes: Date[]
@@ -93,7 +93,7 @@ describe('Showtime Creation', () => {
                 new Date('2100-01-01T13:00')
             ]
 
-            const { batchId } = await createBatchShowtimes(fix.movie.id, theaterIds, startTimes)
+            const { batchId } = await createShowtimeBatch(fix.movie.id, theaterIds, startTimes)
 
             expect(batchId).toBeDefined()
 
@@ -113,7 +113,7 @@ describe('Showtime Creation', () => {
         it('Should fail if the specified movie does not exist', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['error'])
 
-            const { batchId } = await createBatchShowtimes(
+            const { batchId } = await createShowtimeBatch(
                 nullObjectId,
                 [fix.theater.id],
                 [nullDate]
@@ -132,7 +132,7 @@ describe('Showtime Creation', () => {
         it('Should fail if one or more specified theaters do not exist', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['error'])
 
-            const { batchId } = await createBatchShowtimes(fix.movie.id, [nullObjectId], [nullDate])
+            const { batchId } = await createShowtimeBatch(fix.movie.id, [nullObjectId], [nullDate])
 
             expect(batchId).toBeDefined()
 

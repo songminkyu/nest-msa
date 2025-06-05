@@ -80,7 +80,7 @@ Admin -> Frontend: 상영시간 선택
 
 Admin -> Frontend: 상영시간 등록버튼 클릭
     Frontend -> Backend: 상영시간 생성 요청\nPOST /showtime-creation/showtimes
-        Backend -> ShowtimeCreation: createBatchShowtimes(request)
+        Backend -> ShowtimeCreation: createShowtimeBatch(request)
         Backend <-- ShowtimeCreation: ShowtimeBatchCreateResponse(success)
     Frontend <-- Backend: OK(201)
 Admin <-- Frontend: 상영시간 등록성공 화면
@@ -92,7 +92,7 @@ Admin <-- Frontend: 상영시간 등록성공 화면
 
 ```plantuml
 @startuml
-Backend -> ShowtimeCreation: createBatchShowtimes(request)
+Backend -> ShowtimeCreation: createShowtimeBatch(request)
         ShowtimeCreation -> ShowtimeCreation: enqueueTask(request)
         ShowtimeCreation --> ShowtimeCreation: batchId
 Backend <-- ShowtimeCreation: batchId

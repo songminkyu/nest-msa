@@ -24,8 +24,8 @@ export class ShowtimeCreationController {
         return this.service.searchShowtimes(theaterIds)
     }
 
-    @MessagePattern(Messages.ShowtimeCreation.createBatchShowtimes)
-    createBatchShowtimes(@Payload() createDto: CreateShowtimeBatchDto) {
-        return this.service.createBatchShowtimes(createDto)
+    @MessagePattern(Messages.ShowtimeCreation.createShowtimeBatch)
+    createShowtimeBatch(@Payload() createDto: CreateShowtimeBatchDto) {
+        return this.service.createShowtimeBatch(createDto)
     }
 }

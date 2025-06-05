@@ -28,7 +28,7 @@ export class ShowtimeCreationService {
         })
     }
 
-    async createBatchShowtimes(createDto: CreateShowtimeBatchDto) {
+    async createShowtimeBatch(createDto: CreateShowtimeBatchDto) {
         const batchId = newObjectId()
 
         this.batchCreationService.enqueueTask({ ...createDto, batchId })
