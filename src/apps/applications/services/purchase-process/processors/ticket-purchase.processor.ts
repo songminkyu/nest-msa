@@ -12,7 +12,7 @@ import {
 import { DateUtil, pickItems } from 'common'
 import { uniq } from 'lodash'
 import { Rules } from 'shared'
-import { PurchaseProcessClient } from '../purchase-process.client'
+import { PurchaseProcessEvents } from '../purchase-process.events'
 
 export const PurchaseErrors = {
     MaxTicketsExceeded: {
@@ -35,7 +35,7 @@ export class TicketPurchaseProcessor {
         private ticketsService: TicketsClient,
         private showtimesService: ShowtimesClient,
         private ticketHoldingService: TicketHoldingClient,
-        private purchaseProcessProxy: PurchaseProcessClient
+        private events: PurchaseProcessEvents
     ) {}
 
     async validatePurchase(createDto: CreatePurchaseDto) {
@@ -117,7 +117,7 @@ export class TicketPurchaseProcessor {
 
         await this.ticketsService.updateTicketStatus(ticketIds, TicketStatus.sold)
 
-        await this.purchaseProcessProxy.emitTicketPurchased(createDto.customerId, ticketIds)
+        await this.events.emitTicketPurchased(createDto.customerId, ticketIds)
 
         return true
     }
@@ -130,7 +130,7 @@ export class TicketPurchaseProcessor {
 
         await this.ticketsService.updateTicketStatus(ticketIds, TicketStatus.available)
 
-        await this.purchaseProcessProxy.emitTicketPurchaseCanceled(createDto.customerId, ticketIds)
+        await this.events.emitTicketPurchaseCanceled(createDto.customerId, ticketIds)
 
         return true
     }

@@ -80,7 +80,9 @@ describe('Tickets', () => {
         let tickets: TicketDto[]
 
         const getStatus = async () => {
-            const tickets = await fix.ticketsClient.searchTickets({ transactionIds: [transactionId] })
+            const tickets = await fix.ticketsClient.searchTickets({
+                transactionIds: [transactionId]
+            })
             return tickets.map((ticket) => ticket.status)
         }
 

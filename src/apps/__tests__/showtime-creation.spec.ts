@@ -93,7 +93,11 @@ describe('Showtime Creation', () => {
                 new Date('2100-01-01T13:00')
             ]
 
-            const { transactionId } = await createShowtimeBatch(fix.movie.id, theaterIds, startTimes)
+            const { transactionId } = await createShowtimeBatch(
+                fix.movie.id,
+                theaterIds,
+                startTimes
+            )
 
             expect(transactionId).toBeDefined()
 
@@ -132,7 +136,11 @@ describe('Showtime Creation', () => {
         it('Should fail if one or more specified theaters do not exist', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['error'])
 
-            const { transactionId } = await createShowtimeBatch(fix.movie.id, [nullObjectId], [nullDate])
+            const { transactionId } = await createShowtimeBatch(
+                fix.movie.id,
+                [nullObjectId],
+                [nullDate]
+            )
 
             expect(transactionId).toBeDefined()
 

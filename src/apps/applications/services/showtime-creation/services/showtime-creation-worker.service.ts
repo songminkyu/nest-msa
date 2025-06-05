@@ -11,7 +11,7 @@ import {
 } from 'apps/cores'
 import { Job, Queue } from 'bullmq'
 import { Assert, DateTimeRange, jsonToObject, MethodLog } from 'common'
-import { ShowtimeCreationClient } from '../showtime-creation.client'
+import { ShowtimeCreationEvents } from '../showtime-creation.events'
 import { ShowtimeCreationValidatorService } from './showtime-creation-validator.service'
 import { ShowtimeBatchCreateJobData, ShowtimeBatchCreateStatus } from './types'
 
@@ -23,7 +23,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         private showtimesService: ShowtimesClient,
         private ticketsService: TicketsClient,
         private validatorService: ShowtimeCreationValidatorService,
-        private client: ShowtimeCreationClient,
+        private events: ShowtimeCreationEvents,
         @InjectQueue('showtime-creation') private queue: Queue
     ) {
         super()
@@ -45,7 +45,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     }
 
     async enqueueTask(data: ShowtimeBatchCreateJobData) {
-        this.client.emitStatusChanged({
+        this.events.emitStatusChanged({
             status: ShowtimeBatchCreateStatus.waiting,
             transactionId: data.transactionId
         })
@@ -57,7 +57,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         try {
             await this.processShowtimesCreation(jsonToObject(job.data))
         } catch (error) {
-            this.client.emitStatusChanged({
+            this.events.emitStatusChanged({
                 status: ShowtimeBatchCreateStatus.error,
                 transactionId: job.data.transactionId,
                 message: error.message
@@ -67,7 +67,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
 
     @MethodLog()
     private async processShowtimesCreation(data: ShowtimeBatchCreateJobData) {
-        this.client.emitStatusChanged({
+        this.events.emitStatusChanged({
             status: ShowtimeBatchCreateStatus.processing,
             transactionId: data.transactionId
         })
@@ -75,16 +75,19 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         const conflictingShowtimes = await this.validatorService.validate(data)
 
         if (conflictingShowtimes.length > 0) {
-            this.client.emitStatusChanged({
+            this.events.emitStatusChanged({
                 status: ShowtimeBatchCreateStatus.fail,
                 transactionId: data.transactionId,
                 conflictingShowtimes
             })
         } else {
             const createdShowtimes = await this.createShowtimes(data)
-            const createdTicketCount = await this.createTickets(createdShowtimes, data.transactionId)
+            const createdTicketCount = await this.createTickets(
+                createdShowtimes,
+                data.transactionId
+            )
 
-            this.client.emitStatusChanged({
+            this.events.emitStatusChanged({
                 status: ShowtimeBatchCreateStatus.complete,
                 transactionId: data.transactionId,
                 createdShowtimeCount: createdShowtimes.length,
@@ -106,7 +109,9 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         )
 
         await this.showtimesService.createShowtimes(createDtos)
-        const showtimes = await this.showtimesService.searchShowtimes({ transactionIds: [transactionId] })
+        const showtimes = await this.showtimesService.searchShowtimes({
+            transactionIds: [transactionId]
+        })
         return showtimes
     }
 
