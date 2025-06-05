@@ -69,7 +69,7 @@ export class MoviesController {
 
     @UsePipes(DefaultPaginationPipe)
     @Get()
-    async searchMoviesPage(@Query() queryDto: SearchMoviesDto) {
-        return this.moviesService.searchMoviesPage(queryDto)
+    async searchMoviesPage(@Query() searchDto: SearchMoviesDto) {
+        return this.moviesService.searchMoviesPage(searchDto)
     }
 }

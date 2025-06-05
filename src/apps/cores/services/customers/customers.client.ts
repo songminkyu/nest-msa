@@ -29,8 +29,8 @@ export class CustomersClient {
         return this.proxy.getJson(Messages.Customers.deleteCustomers, customerIds)
     }
 
-    searchCustomersPage(queryDto: SearchCustomersDto): Promise<CustomerDto[]> {
-        return this.proxy.getJson(Messages.Customers.searchCustomersPage, queryDto)
+    searchCustomersPage(searchDto: SearchCustomersDto): Promise<CustomerDto[]> {
+        return this.proxy.getJson(Messages.Customers.searchCustomersPage, searchDto)
     }
 
     generateAuthTokens(payload: CustomerAuthPayload): Promise<JwtAuthTokens> {

@@ -36,8 +36,8 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
         return result
     }
 
-    async searchTickets(queryDto: SearchTicketsDto) {
-        const query = this.buildQuery(queryDto)
+    async searchTickets(searchDto: SearchTicketsDto) {
+        const query = this.buildQuery(searchDto)
 
         const tickets = await this.model.find(query).sort({ batchId: 1 }).exec()
         return tickets
@@ -67,8 +67,8 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
         return showtimeTicketSalesArray as TicketSalesForShowtimeDto[]
     }
 
-    private buildQuery(queryDto: SearchTicketsDto, options: QueryBuilderOptions = {}) {
-        const { batchIds, movieIds, theaterIds, showtimeIds } = queryDto
+    private buildQuery(searchDto: SearchTicketsDto, options: QueryBuilderOptions = {}) {
+        const { batchIds, movieIds, theaterIds, showtimeIds } = searchDto
 
         const builder = new QueryBuilder<Ticket>()
         builder.addIn('batchId', batchIds)

@@ -22,8 +22,8 @@ export class ShowtimesController {
     }
 
     @MessagePattern(Messages.Showtimes.searchShowtimes)
-    searchShowtimes(@Payload() queryDto: SearchShowtimesDto) {
-        return this.service.searchShowtimes(queryDto)
+    searchShowtimes(@Payload() searchDto: SearchShowtimesDto) {
+        return this.service.searchShowtimes(searchDto)
     }
 
     @MessagePattern(Messages.Showtimes.searchShowingMovieIds)
@@ -32,13 +32,13 @@ export class ShowtimesController {
     }
 
     @MessagePattern(Messages.Showtimes.searchTheaterIds)
-    searchTheaterIds(@Payload() queryDto: SearchShowtimesDto) {
-        return this.service.searchTheaterIds(queryDto)
+    searchTheaterIds(@Payload() searchDto: SearchShowtimesDto) {
+        return this.service.searchTheaterIds(searchDto)
     }
 
     @MessagePattern(Messages.Showtimes.searchShowdates)
-    searchShowdates(queryDto: SearchShowtimesDto) {
-        return this.service.searchShowdates(queryDto)
+    searchShowdates(searchDto: SearchShowtimesDto) {
+        return this.service.searchShowdates(searchDto)
     }
 
     @MessagePattern(Messages.Showtimes.showtimesExist)

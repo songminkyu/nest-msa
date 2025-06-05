@@ -23,8 +23,8 @@ export class TheatersClient {
         return this.proxy.getJson(Messages.Theaters.deleteTheaters, theaterIds)
     }
 
-    searchTheatersPage(queryDto: SearchTheatersDto): Promise<TheaterDto[]> {
-        return this.proxy.getJson(Messages.Theaters.searchTheatersPage, queryDto)
+    searchTheatersPage(searchDto: SearchTheatersDto): Promise<TheaterDto[]> {
+        return this.proxy.getJson(Messages.Theaters.searchTheatersPage, searchDto)
     }
 
     theatersExist(theaterIds: string[]): Promise<boolean> {

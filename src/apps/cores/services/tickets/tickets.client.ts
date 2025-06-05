@@ -22,8 +22,8 @@ export class TicketsClient {
         return this.proxy.getJson(Messages.Tickets.updateTicketStatus, { ticketIds, status })
     }
 
-    searchTickets(queryDto: SearchTicketsDto): Promise<TicketDto[]> {
-        return this.proxy.getJson(Messages.Tickets.searchTickets, queryDto)
+    searchTickets(searchDto: SearchTicketsDto): Promise<TicketDto[]> {
+        return this.proxy.getJson(Messages.Tickets.searchTickets, searchDto)
     }
 
     getTicketSalesForShowtimes(showtimeIds: string[]): Promise<TicketSalesForShowtimeDto[]> {

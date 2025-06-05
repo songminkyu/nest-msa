@@ -37,8 +37,8 @@ export class CustomersController {
     }
 
     @MessagePattern(Messages.Customers.searchCustomersPage)
-    searchCustomersPage(@Payload() queryDto: SearchCustomersDto) {
-        return this.service.searchCustomersPage(queryDto)
+    searchCustomersPage(@Payload() searchDto: SearchCustomersDto) {
+        return this.service.searchCustomersPage(searchDto)
     }
 
     @MessagePattern(Messages.Customers.login)

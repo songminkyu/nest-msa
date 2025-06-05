@@ -32,8 +32,8 @@ export class TheatersController {
     }
 
     @MessagePattern(Messages.Theaters.searchTheatersPage)
-    searchTheatersPage(@Payload() queryDto: SearchTheatersDto) {
-        return this.service.searchTheatersPage(queryDto)
+    searchTheatersPage(@Payload() searchDto: SearchTheatersDto) {
+        return this.service.searchTheatersPage(searchDto)
     }
 
     @MessagePattern(Messages.Theaters.theatersExist)

@@ -56,8 +56,8 @@ export class CustomersController {
 
     @UsePipes(DefaultPaginationPipe)
     @Get()
-    async searchCustomersPage(@Query() queryDto: SearchCustomersDto) {
-        return this.customersService.searchCustomersPage(queryDto)
+    async searchCustomersPage(@Query() searchDto: SearchCustomersDto) {
+        return this.customersService.searchCustomersPage(searchDto)
     }
 
     @UseGuards(CustomerLocalAuthGuard)

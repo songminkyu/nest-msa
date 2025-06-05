@@ -13,12 +13,12 @@ export class ShowtimeCreationService {
         private batchCreationService: ShowtimeCreationWorkerService
     ) {}
 
-    async searchMoviesPage(queryDto: CommonQueryDto) {
-        return this.moviesService.searchMoviesPage(queryDto)
+    async searchMoviesPage(searchDto: CommonQueryDto) {
+        return this.moviesService.searchMoviesPage(searchDto)
     }
 
-    async searchTheatersPage(queryDto: CommonQueryDto) {
-        return this.theatersService.searchTheatersPage(queryDto)
+    async searchTheatersPage(searchDto: CommonQueryDto) {
+        return this.theatersService.searchTheatersPage(searchDto)
     }
 
     async searchShowtimes(theaterIds: string[]) {

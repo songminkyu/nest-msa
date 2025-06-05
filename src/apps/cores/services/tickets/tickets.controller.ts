@@ -25,8 +25,8 @@ export class TicketsController {
     }
 
     @MessagePattern(Messages.Tickets.searchTickets)
-    searchTickets(@Payload() queryDto: SearchTicketsDto) {
-        return this.service.searchTickets(queryDto)
+    searchTickets(@Payload() searchDto: SearchTicketsDto) {
+        return this.service.searchTickets(searchDto)
     }
 
     @MessagePattern(Messages.Tickets.getTicketSalesForShowtimes)

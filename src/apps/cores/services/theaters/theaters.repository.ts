@@ -30,12 +30,12 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return theater.save()
     }
 
-    async searchTheatersPage(queryDto: SearchTheatersDto) {
-        const { take, skip, orderby } = queryDto
+    async searchTheatersPage(searchDto: SearchTheatersDto) {
+        const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query = this.buildQuery(queryDto, { allowEmpty: true })
+                const query = this.buildQuery(searchDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
@@ -45,8 +45,8 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return paginated
     }
 
-    private buildQuery(queryDto: SearchTheatersDto, options: QueryBuilderOptions) {
-        const { name } = queryDto
+    private buildQuery(searchDto: SearchTheatersDto, options: QueryBuilderOptions) {
+        const { name } = searchDto
 
         const builder = new QueryBuilder<Theater>()
         builder.addRegex('name', name)

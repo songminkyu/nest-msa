@@ -27,8 +27,8 @@ export class MoviesClient {
         return this.proxy.getJson(Messages.Movies.deleteMovies, movieIds)
     }
 
-    searchMoviesPage(queryDto: SearchMoviesDto): Promise<MovieDto[]> {
-        return this.proxy.getJson(Messages.Movies.searchMoviesPage, queryDto)
+    searchMoviesPage(searchDto: SearchMoviesDto): Promise<MovieDto[]> {
+        return this.proxy.getJson(Messages.Movies.searchMoviesPage, searchDto)
     }
 
     getMoviesByIds(movieIds: string[]): Promise<MovieDto[]> {

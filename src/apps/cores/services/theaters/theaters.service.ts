@@ -28,8 +28,8 @@ export class TheatersService {
         return deleteResult
     }
 
-    async searchTheatersPage(queryDto: SearchTheatersDto) {
-        const { items, ...paginated } = await this.repository.searchTheatersPage(queryDto)
+    async searchTheatersPage(searchDto: SearchTheatersDto) {
+        const { items, ...paginated } = await this.repository.searchTheatersPage(searchDto)
 
         return { ...paginated, items: this.toDtos(items) }
     }

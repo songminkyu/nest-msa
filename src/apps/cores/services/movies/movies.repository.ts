@@ -39,12 +39,12 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         return movie.save()
     }
 
-    async searchMoviesPage(queryDto: SearchMoviesDto) {
-        const { take, skip, orderby } = queryDto
+    async searchMoviesPage(searchDto: SearchMoviesDto) {
+        const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query = this.buildQuery(queryDto, { allowEmpty: true })
+                const query = this.buildQuery(searchDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
@@ -54,8 +54,8 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         return paginated
     }
 
-    private buildQuery(queryDto: SearchMoviesDto, options: QueryBuilderOptions) {
-        const { title, genre, releaseDate, plot, director, rating } = queryDto
+    private buildQuery(searchDto: SearchMoviesDto, options: QueryBuilderOptions) {
+        const { title, genre, releaseDate, plot, director, rating } = searchDto
 
         const builder = new QueryBuilder<Movie>()
         builder.addRegex('title', title)

@@ -14,8 +14,8 @@ export class WatchRecordsService {
         return this.toDto(watchRecord)
     }
 
-    async searchWatchRecordsPage(queryDto: SearchWatchRecordsDto) {
-        const { items, ...paginated } = await this.repository.searchWatchRecordsPage(queryDto)
+    async searchWatchRecordsPage(searchDto: SearchWatchRecordsDto) {
+        const { items, ...paginated } = await this.repository.searchWatchRecordsPage(searchDto)
 
         return { ...paginated, items: this.toDtos(items) }
     }

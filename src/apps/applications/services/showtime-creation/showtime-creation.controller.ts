@@ -10,13 +10,13 @@ export class ShowtimeCreationController {
     constructor(private service: ShowtimeCreationService) {}
 
     @MessagePattern(Messages.ShowtimeCreation.searchMoviesPage)
-    searchMoviesPage(@Payload() queryDto: CommonQueryDto) {
-        return this.service.searchMoviesPage(queryDto)
+    searchMoviesPage(@Payload() searchDto: CommonQueryDto) {
+        return this.service.searchMoviesPage(searchDto)
     }
 
     @MessagePattern(Messages.ShowtimeCreation.searchTheatersPage)
-    searchTheatersPage(@Payload() queryDto: CommonQueryDto) {
-        return this.service.searchTheatersPage(queryDto)
+    searchTheatersPage(@Payload() searchDto: CommonQueryDto) {
+        return this.service.searchTheatersPage(searchDto)
     }
 
     @MessagePattern(Messages.ShowtimeCreation.searchShowtimes)

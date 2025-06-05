@@ -31,12 +31,12 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         return customer.save()
     }
 
-    async searchCustomersPage(queryDto: SearchCustomersDto) {
-        const { take, skip, orderby } = queryDto
+    async searchCustomersPage(searchDto: SearchCustomersDto) {
+        const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query = this.buildQuery(queryDto, { allowEmpty: true })
+                const query = this.buildQuery(searchDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
@@ -60,8 +60,8 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         return customer.password
     }
 
-    private buildQuery(queryDto: SearchCustomersDto, options: QueryBuilderOptions) {
-        const { name, email } = queryDto
+    private buildQuery(searchDto: SearchCustomersDto, options: QueryBuilderOptions) {
+        const { name, email } = searchDto
 
         const builder = new QueryBuilder<Customer>()
         builder.addRegex('name', name)

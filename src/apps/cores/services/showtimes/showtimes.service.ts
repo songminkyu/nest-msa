@@ -20,8 +20,8 @@ export class ShowtimesService {
         return this.toDtos(showtimes)
     }
 
-    async searchShowtimes(queryDto: SearchShowtimesDto) {
-        const showtimes = await this.repository.searchShowtimes(queryDto)
+    async searchShowtimes(searchDto: SearchShowtimesDto) {
+        const showtimes = await this.repository.searchShowtimes(searchDto)
 
         return this.toDtos(showtimes)
     }
@@ -32,12 +32,12 @@ export class ShowtimesService {
         return this.repository.findMovieIds({ startTimeRange: { start: currentTime } })
     }
 
-    async searchTheaterIds(queryDto: SearchShowtimesDto) {
-        return this.repository.searchTheaterIds(queryDto)
+    async searchTheaterIds(searchDto: SearchShowtimesDto) {
+        return this.repository.searchTheaterIds(searchDto)
     }
 
-    async searchShowdates(queryDto: SearchShowtimesDto) {
-        return this.repository.searchShowdates(queryDto)
+    async searchShowdates(searchDto: SearchShowtimesDto) {
+        return this.repository.searchShowdates(searchDto)
     }
 
     async showtimesExist(showtimeIds: string[]): Promise<boolean> {

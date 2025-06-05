@@ -21,12 +21,12 @@ export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
         return watchRecord.save()
     }
 
-    async searchWatchRecordsPage(queryDto: SearchWatchRecordsDto) {
-        const { take, skip, orderby } = queryDto
+    async searchWatchRecordsPage(searchDto: SearchWatchRecordsDto) {
+        const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
             callback: (helpers) => {
-                const query = this.buildQuery(queryDto, { allowEmpty: true })
+                const query = this.buildQuery(searchDto, { allowEmpty: true })
 
                 helpers.setQuery(query)
             },
@@ -36,8 +36,8 @@ export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
         return paginated
     }
 
-    private buildQuery(queryDto: SearchWatchRecordsDto, options: QueryBuilderOptions) {
-        const { customerId } = queryDto
+    private buildQuery(searchDto: SearchWatchRecordsDto, options: QueryBuilderOptions) {
+        const { customerId } = searchDto
 
         const builder = new QueryBuilder<WatchRecord>()
         builder.addId('customerId', customerId)
