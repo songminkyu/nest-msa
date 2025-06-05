@@ -1,7 +1,7 @@
 import { MovieDto } from 'apps/cores'
 
-export class MovieRecommender {
-    static getRecommendations(showingMovies: MovieDto[], watchedMovies: MovieDto[]) {
+export class MovieRecommendationEngine {
+    static recommend(showingMovies: MovieDto[], watchedMovies: MovieDto[]) {
         /*
         Collect IDs of watched movies to exclude them from recommendations.
         이미 본 영화 ID를 저장하여 추천 목록에서 제외
