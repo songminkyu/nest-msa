@@ -28,11 +28,11 @@ export class ShowtimeCreationService {
         })
     }
 
-    async createShowtimeBatch(createDto: CreateShowtimeBatchDto) {
-        const batchId = newObjectId()
+    async enqueueShowtimeBatch(createDto: CreateShowtimeBatchDto) {
+        const transactionId = newObjectId()
 
-        this.batchCreationService.enqueueTask({ ...createDto, batchId })
+        this.batchCreationService.enqueueTask({ ...createDto, transactionId })
 
-        return { batchId } as CreateShowtimeBatchResponse
+        return { transactionId } as CreateShowtimeBatchResponse
     }
 }

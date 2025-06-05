@@ -17,20 +17,20 @@ describe('Showtimes', () => {
     })
 
     it('createShowtimes', async () => {
-        const { createDto, expectedDto } = buildShowtimeCreateDto({ batchId: testObjectId(0x1) })
+        const { createDto, expectedDto } = buildShowtimeCreateDto({ transactionId: testObjectId(0x1) })
 
         const { success } = await fix.showtimesClient.createShowtimes([createDto])
         expect(success).toBeTruthy()
 
         const showtimes = await fix.showtimesClient.searchShowtimes({
-            batchIds: [testObjectId(0x1)]
+            transactionIds: [testObjectId(0x1)]
         })
 
         expect(showtimes).toEqual([expectedDto])
     })
 
     describe('searchShowtimes', () => {
-        const batchId = testObjectId(0x1)
+        const transactionId = testObjectId(0x1)
         const movieId = testObjectId(0x2)
         const theaterId = testObjectId(0x3)
         const startTimes = [
@@ -43,15 +43,15 @@ describe('Showtimes', () => {
         let expectedDtos: ShowtimeDto[]
 
         beforeEach(async () => {
-            const result = buildShowtimeCreateDtos(startTimes, { batchId, movieId, theaterId })
+            const result = buildShowtimeCreateDtos(startTimes, { transactionId, movieId, theaterId })
 
             const { success } = await fix.showtimesClient.createShowtimes(result.createDtos)
             expect(success).toBeTruthy()
             expectedDtos = result.expectedDtos
         })
 
-        it('batchIds', async () => {
-            const showtimes = await fix.showtimesClient.searchShowtimes({ batchIds: [batchId] })
+        it('transactionIds', async () => {
+            const showtimes = await fix.showtimesClient.searchShowtimes({ transactionIds: [transactionId] })
             expectEqualUnsorted(showtimes, expectedDtos)
         })
 

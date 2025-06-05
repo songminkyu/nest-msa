@@ -84,13 +84,13 @@ export const createTheater = async (fix: CommonFixture, override = {}) => {
 
 export const buildShowtimeCreateDto = (overrides: Partial<CreateShowtimeDto> = {}) => {
     const createDto = {
-        batchId: nullObjectId,
+        transactionId: nullObjectId,
         movieId: nullObjectId,
         theaterId: nullObjectId,
         timeRange: DateTimeRange.create({ start: new Date('2000-01-01T12:00'), minutes: 1 }),
         ...overrides
     }
-    const expectedDto = { id: expect.any(String), ...omit(createDto, 'batchId') }
+    const expectedDto = { id: expect.any(String), ...omit(createDto, 'transactionId') }
     return { createDto, expectedDto }
 }
 
@@ -98,15 +98,15 @@ export const createShowtimes = async (fix: CommonFixture, createDtos: CreateShow
     const { success } = await fix.showtimesClient.createShowtimes(createDtos)
     expect(success).toBeTruthy()
 
-    const batchIds = uniq(createDtos.map((dto) => dto.batchId))
+    const transactionIds = uniq(createDtos.map((dto) => dto.transactionId))
 
-    const showtimes = await fix.showtimesClient.searchShowtimes({ batchIds })
+    const showtimes = await fix.showtimesClient.searchShowtimes({ transactionIds })
     return showtimes
 }
 
 export const buildTicketCreateDto = (overrides = {}) => {
     const createDto = {
-        batchId: nullObjectId,
+        transactionId: nullObjectId,
         movieId: nullObjectId,
         theaterId: nullObjectId,
         showtimeId: nullObjectId,
@@ -114,7 +114,7 @@ export const buildTicketCreateDto = (overrides = {}) => {
         seat: { block: '1b', row: '1r', seatnum: 1 },
         ...overrides
     }
-    const expectedDto = { id: expect.any(String), ...omit(createDto, 'batchId') }
+    const expectedDto = { id: expect.any(String), ...omit(createDto, 'transactionId') }
     return { createDto, expectedDto }
 }
 
@@ -122,9 +122,9 @@ export const createTickets = async (fix: CommonFixture, createDtos: CreateTicket
     const { success } = await fix.ticketsClient.createTickets(createDtos)
     expect(success).toBeTruthy()
 
-    const batchIds = uniq(createDtos.map((dto) => dto.batchId))
+    const transactionIds = uniq(createDtos.map((dto) => dto.transactionId))
 
-    const tickets = await fix.ticketsClient.searchTickets({ batchIds })
+    const tickets = await fix.ticketsClient.searchTickets({ transactionIds })
     return tickets
 }
 

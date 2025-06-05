@@ -5,7 +5,7 @@ import { DateTimeRange } from 'common'
 export class CreateShowtimeDto {
     @IsString()
     @IsNotEmpty()
-    batchId: string
+    transactionId: string
 
     @IsString()
     @IsNotEmpty()

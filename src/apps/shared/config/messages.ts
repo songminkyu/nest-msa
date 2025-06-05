@@ -72,7 +72,7 @@ export const Messages = createRouteMap(
             searchMoviesPage: null,
             searchTheatersPage: null,
             searchShowtimes: null,
-            createShowtimeBatch: null
+            enqueueShowtimeBatch: null
         },
         Recommendation: {
             searchRecommendedMovies: null

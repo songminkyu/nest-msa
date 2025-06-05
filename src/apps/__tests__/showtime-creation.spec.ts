@@ -93,16 +93,16 @@ describe('Showtime Creation', () => {
                 new Date('2100-01-01T13:00')
             ]
 
-            const { batchId } = await createShowtimeBatch(fix.movie.id, theaterIds, startTimes)
+            const { transactionId } = await createShowtimeBatch(fix.movie.id, theaterIds, startTimes)
 
-            expect(batchId).toBeDefined()
+            expect(transactionId).toBeDefined()
 
             const seatCount = Seatmap.getSeatCount(fix.theater.seatmap)
             const createdShowtimeCount = theaterIds.length * startTimes.length
             const createdTicketCount = createdShowtimeCount * seatCount
 
             await expect(monitorPromise).resolves.toEqual({
-                batchId,
+                transactionId,
                 status: 'complete',
                 createdShowtimeCount,
                 createdTicketCount
@@ -113,16 +113,16 @@ describe('Showtime Creation', () => {
         it('Should fail if the specified movie does not exist', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['error'])
 
-            const { batchId } = await createShowtimeBatch(
+            const { transactionId } = await createShowtimeBatch(
                 nullObjectId,
                 [fix.theater.id],
                 [nullDate]
             )
 
-            expect(batchId).toBeDefined()
+            expect(transactionId).toBeDefined()
 
             await expect(monitorPromise).resolves.toEqual({
-                batchId,
+                transactionId,
                 status: 'error',
                 message: 'The requested movie could not be found.'
             })
@@ -132,12 +132,12 @@ describe('Showtime Creation', () => {
         it('Should fail if one or more specified theaters do not exist', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['error'])
 
-            const { batchId } = await createShowtimeBatch(fix.movie.id, [nullObjectId], [nullDate])
+            const { transactionId } = await createShowtimeBatch(fix.movie.id, [nullObjectId], [nullDate])
 
-            expect(batchId).toBeDefined()
+            expect(transactionId).toBeDefined()
 
             await expect(monitorPromise).resolves.toEqual({
-                batchId,
+                transactionId,
                 status: 'error',
                 message: 'One or more requested theaters could not be found.'
             })
@@ -180,8 +180,8 @@ describe('Showtime Creation', () => {
                 })
                 .accepted()
 
-            const { batchId } = body
-            expect(batchId).toBeDefined()
+            const { transactionId } = body
+            expect(transactionId).toBeDefined()
 
             const expected = showtimes.filter((showtime) =>
                 [
@@ -191,7 +191,7 @@ describe('Showtime Creation', () => {
                 ].includes(showtime.timeRange.start.getTime())
             )
             const { conflictingShowtimes, ...result } = (await monitorPromise) as any
-            expect(result).toEqual({ batchId, status: 'fail' })
+            expect(result).toEqual({ transactionId, status: 'fail' })
             expectEqualUnsorted(conflictingShowtimes, expected)
         })
     })

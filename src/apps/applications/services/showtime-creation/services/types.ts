@@ -1,7 +1,7 @@
 import { CreateShowtimeBatchDto } from '../dtos'
 
 export class ShowtimeBatchCreateJobData extends CreateShowtimeBatchDto {
-    batchId: string
+    transactionId: string
 }
 
 export enum ShowtimeBatchCreateStatus {

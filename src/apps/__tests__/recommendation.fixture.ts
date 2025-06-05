@@ -26,7 +26,7 @@ export const createShowingMovies = async (fix: CommonFixture, dtos: Partial<Movi
 
     const showtimesCreateDtos = showingMovies.map((movie) => ({
         movieId: movie.id,
-        batchId: nullObjectId,
+        transactionId: nullObjectId,
         theaterId: nullObjectId,
         timeRange: DateTimeRange.create({ start: new Date('2999-01-01'), days: 1 })
     }))

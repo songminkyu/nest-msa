@@ -9,7 +9,7 @@ export const createShowtimeDtos = (startTimes: Date[], overrides = {}) => {
 
     startTimes.map((startTime) => {
         const createDto = {
-            batchId: nullObjectId,
+            transactionId: nullObjectId,
             movieId: nullObjectId,
             theaterId: nullObjectId,
             timeRange: DateTimeRange.create({ start: startTime, minutes: 90 }),

@@ -53,7 +53,7 @@ class Showtime {
     end: Date
     theaterId: ObjectId
     movieId: ObjectId
-    batchId:ObjectId
+    transactionId:ObjectId
 }
 
 class Ticket {

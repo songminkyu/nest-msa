@@ -47,7 +47,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     async enqueueTask(data: ShowtimeBatchCreateJobData) {
         this.client.emitStatusChanged({
             status: ShowtimeBatchCreateStatus.waiting,
-            batchId: data.batchId
+            transactionId: data.transactionId
         })
 
         await this.queue.add('showtime-creation.create', data)
@@ -59,7 +59,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         } catch (error) {
             this.client.emitStatusChanged({
                 status: ShowtimeBatchCreateStatus.error,
-                batchId: job.data.batchId,
+                transactionId: job.data.transactionId,
                 message: error.message
             })
         }
@@ -69,7 +69,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     private async processShowtimesCreation(data: ShowtimeBatchCreateJobData) {
         this.client.emitStatusChanged({
             status: ShowtimeBatchCreateStatus.processing,
-            batchId: data.batchId
+            transactionId: data.transactionId
         })
 
         const conflictingShowtimes = await this.validatorService.validate(data)
@@ -77,16 +77,16 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         if (conflictingShowtimes.length > 0) {
             this.client.emitStatusChanged({
                 status: ShowtimeBatchCreateStatus.fail,
-                batchId: data.batchId,
+                transactionId: data.transactionId,
                 conflictingShowtimes
             })
         } else {
             const createdShowtimes = await this.createShowtimes(data)
-            const createdTicketCount = await this.createTickets(createdShowtimes, data.batchId)
+            const createdTicketCount = await this.createTickets(createdShowtimes, data.transactionId)
 
             this.client.emitStatusChanged({
                 status: ShowtimeBatchCreateStatus.complete,
-                batchId: data.batchId,
+                transactionId: data.transactionId,
                 createdShowtimeCount: createdShowtimes.length,
                 createdTicketCount
             })
@@ -94,11 +94,11 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     }
 
     private async createShowtimes(data: ShowtimeBatchCreateJobData) {
-        const { batchId, movieId, theaterIds, durationMinutes, startTimes } = data
+        const { transactionId, movieId, theaterIds, durationMinutes, startTimes } = data
 
         const createDtos = theaterIds.flatMap((theaterId) =>
             startTimes.map((start) => ({
-                batchId,
+                transactionId,
                 movieId,
                 theaterId,
                 timeRange: DateTimeRange.create({ start, minutes: durationMinutes })
@@ -106,11 +106,11 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         )
 
         await this.showtimesService.createShowtimes(createDtos)
-        const showtimes = await this.showtimesService.searchShowtimes({ batchIds: [batchId] })
+        const showtimes = await this.showtimesService.searchShowtimes({ transactionIds: [transactionId] })
         return showtimes
     }
 
-    private async createTickets(showtimes: ShowtimeDto[], batchId: string) {
+    private async createTickets(showtimes: ShowtimeDto[], transactionId: string) {
         let totalCount = 0
 
         const theaterIds = Array.from(new Set(showtimes.map((showtime) => showtime.theaterId)))
@@ -131,7 +131,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
                     movieId: showtime.movieId,
                     status: TicketStatus.available,
                     seat,
-                    batchId
+                    transactionId
                 }))
 
                 const { count } = await this.ticketsService.createTickets(ticketCreateDtos)

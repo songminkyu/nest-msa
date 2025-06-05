@@ -24,7 +24,7 @@ describe('Tickets', () => {
     })
 
     describe('searchTickets', () => {
-        const batchIds = [testObjectId(0x10), testObjectId(0x11)]
+        const transactionIds = [testObjectId(0x10), testObjectId(0x11)]
         const movieIds = [testObjectId(0x20), testObjectId(0x21)]
         const theaterIds = [testObjectId(0x30), testObjectId(0x31)]
         const showtimeIds = [testObjectId(0x40), testObjectId(0x41)]
@@ -32,8 +32,8 @@ describe('Tickets', () => {
 
         beforeEach(async () => {
             const allDtos = [
-                buildTicketCreateDto({ batchId: batchIds[0] }),
-                buildTicketCreateDto({ batchId: batchIds[1] }),
+                buildTicketCreateDto({ transactionId: transactionIds[0] }),
+                buildTicketCreateDto({ transactionId: transactionIds[1] }),
                 buildTicketCreateDto({ movieId: movieIds[0] }),
                 buildTicketCreateDto({ movieId: movieIds[1] }),
                 buildTicketCreateDto({ theaterId: theaterIds[0] }),
@@ -48,8 +48,8 @@ describe('Tickets', () => {
             expect(success).toBeTruthy()
         })
 
-        it('batchIds', async () => {
-            const tickets = await fix.ticketsClient.searchTickets({ batchIds })
+        it('transactionIds', async () => {
+            const tickets = await fix.ticketsClient.searchTickets({ transactionIds })
             expectEqualUnsorted(tickets, [expectedDtos[0], expectedDtos[1]])
         })
 
@@ -76,23 +76,23 @@ describe('Tickets', () => {
     })
 
     describe('updateTicketStatus', () => {
-        const batchId = testObjectId(0x01)
+        const transactionId = testObjectId(0x01)
         let tickets: TicketDto[]
 
         const getStatus = async () => {
-            const tickets = await fix.ticketsClient.searchTickets({ batchIds: [batchId] })
+            const tickets = await fix.ticketsClient.searchTickets({ transactionIds: [transactionId] })
             return tickets.map((ticket) => ticket.status)
         }
 
         beforeEach(async () => {
             const createDtos = [
-                buildTicketCreateDto({ batchId }).createDto,
-                buildTicketCreateDto({ batchId }).createDto
+                buildTicketCreateDto({ transactionId }).createDto,
+                buildTicketCreateDto({ transactionId }).createDto
             ]
             const { success } = await fix.ticketsClient.createTickets(createDtos)
             expect(success).toBeTruthy()
 
-            tickets = await fix.ticketsClient.searchTickets({ batchIds: [batchId] })
+            tickets = await fix.ticketsClient.searchTickets({ transactionIds: [transactionId] })
         })
 
         /* 티켓의 상태를 변경해야 한다 */

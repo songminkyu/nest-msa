@@ -3,7 +3,7 @@ import { CommonQueryDto, PartialDateTimeRange } from 'common'
 
 export class SearchShowtimesDto extends CommonQueryDto {
     @IsOptional()
-    batchIds?: string[]
+    transactionIds?: string[]
 
     @IsOptional()
     movieIds?: string[]

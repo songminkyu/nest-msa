@@ -3,7 +3,7 @@ import { CommonQueryDto } from 'common'
 
 export class SearchTicketsDto extends CommonQueryDto {
     @IsOptional()
-    batchIds?: string[]
+    transactionIds?: string[]
 
     @IsOptional()
     movieIds?: string[]
