@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { mapDocToDto } from 'common'
-import { PaymentCreateDto, PaymentDto } from './dtos'
+import { CreatePaymentDto, PaymentDto } from './dtos'
 import { PaymentDocument } from './models'
 import { PaymentsRepository } from './payments.repository'
 
@@ -8,7 +8,7 @@ import { PaymentsRepository } from './payments.repository'
 export class PaymentsService {
     constructor(private repository: PaymentsRepository) {}
 
-    async processPayment(createDto: PaymentCreateDto) {
+    async processPayment(createDto: CreatePaymentDto) {
         const payment = await this.repository.createPayment(createDto)
 
         return this.toDto(payment)
