@@ -92,7 +92,7 @@ Admin <-- Frontend: 상영시간 등록성공 화면
 
 ```plantuml
 @startuml
-Backend -> ShowtimeCreation: enqueueShowtimeBatch(request)
+Backend -> ShowtimeCreation: createShowtimeBatch(request)
         ShowtimeCreation -> ShowtimeCreation: enqueueTask(request)
         ShowtimeCreation --> ShowtimeCreation: transactionId
 Backend <-- ShowtimeCreation: transactionId
