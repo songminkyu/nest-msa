@@ -40,7 +40,7 @@ export class ShowtimesService {
         return this.repository.searchShowdates(searchDto)
     }
 
-    async showtimesExist(showtimeIds: string[]): Promise<boolean> {
+    async allShowtimesExist(showtimeIds: string[]): Promise<boolean> {
         return this.repository.existByIds(showtimeIds)
     }
 

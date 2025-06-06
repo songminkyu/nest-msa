@@ -25,15 +25,17 @@ export class ShowtimeCreationValidatorService {
     ) {}
 
     async validate(data: ShowtimeBatchCreateJobData) {
-        await this.ensureMovieExists(data.movieId)
-        await this.ensureTheatersExist(data.theaterIds)
+        await this.verifyMovieExists(data.movieId)
+        await this.verifyTheatersExist(data.theaterIds)
 
-        const conflictingShowtimes = await this.checkTimeConflicts(data)
+        const conflictingShowtimes = await this.findConflictingShowtimes(data)
 
-        return conflictingShowtimes
+        return { isValid: 0 === conflictingShowtimes.length, conflictingShowtimes }
     }
 
-    private async checkTimeConflicts(data: ShowtimeBatchCreateJobData): Promise<ShowtimeDto[]> {
+    private async findConflictingShowtimes(
+        data: ShowtimeBatchCreateJobData
+    ): Promise<ShowtimeDto[]> {
         const { durationMinutes, startTimes, theaterIds } = data
 
         const timeslotsByTheater = await this.generateTimeslotMapByTheater(data)
@@ -93,8 +95,9 @@ export class ShowtimeCreationValidatorService {
         return timeslotsByTheater
     }
 
-    private async ensureMovieExists(movieId: string): Promise<void> {
+    private async verifyMovieExists(movieId: string): Promise<void> {
         const movieExists = await this.moviesService.moviesExist([movieId])
+
         if (!movieExists) {
             throw new NotFoundException({
                 ...ShowtimeCreationValidatorServiceErrors.MovieNotFound,
@@ -103,8 +106,9 @@ export class ShowtimeCreationValidatorService {
         }
     }
 
-    private async ensureTheatersExist(theaterIds: string[]): Promise<void> {
+    private async verifyTheatersExist(theaterIds: string[]): Promise<void> {
         const theatersExist = await this.theatersService.theatersExist(theaterIds)
+
         if (!theatersExist) {
             throw new NotFoundException({
                 ...ShowtimeCreationValidatorServiceErrors.TheaterNotFound,

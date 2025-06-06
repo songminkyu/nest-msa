@@ -32,7 +32,7 @@ export class ShowtimesClient {
         return this.proxy.getJson(Messages.Showtimes.searchShowdates, searchDto)
     }
 
-    showtimesExist(showtimeIds: string[]): Promise<boolean> {
-        return this.proxy.getJson(Messages.Showtimes.showtimesExist, showtimeIds)
+    allShowtimesExist(showtimeIds: string[]): Promise<boolean> {
+        return this.proxy.getJson(Messages.Showtimes.allShowtimesExist, showtimeIds)
     }
 }

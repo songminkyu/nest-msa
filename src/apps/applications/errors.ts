@@ -1,6 +1,7 @@
-import { PurchaseErrors, ShowtimeCreationValidatorServiceErrors } from './services'
+import { BookingServiceErrors, PurchaseErrors, ShowtimeCreationValidatorServiceErrors } from './services'
 
 export const ApplicationErrors = {
     Purchase: PurchaseErrors,
-    ShowtimeCreation: ShowtimeCreationValidatorServiceErrors
+    ShowtimeCreation: ShowtimeCreationValidatorServiceErrors,
+    Booking: BookingServiceErrors
 }

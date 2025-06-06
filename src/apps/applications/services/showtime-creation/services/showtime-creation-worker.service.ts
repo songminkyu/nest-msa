@@ -72,15 +72,9 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
             transactionId: data.transactionId
         })
 
-        const conflictingShowtimes = await this.validatorService.validate(data)
+        const { isValid, conflictingShowtimes } = await this.validatorService.validate(data)
 
-        if (conflictingShowtimes.length > 0) {
-            this.events.emitStatusChanged({
-                status: ShowtimeBatchCreateStatus.fail,
-                transactionId: data.transactionId,
-                conflictingShowtimes
-            })
-        } else {
+        if (isValid) {
             const createdShowtimes = await this.createShowtimes(data)
             const createdTicketCount = await this.createTickets(
                 createdShowtimes,
@@ -92,6 +86,12 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
                 transactionId: data.transactionId,
                 createdShowtimeCount: createdShowtimes.length,
                 createdTicketCount
+            })
+        } else {
+            this.events.emitStatusChanged({
+                status: ShowtimeBatchCreateStatus.fail,
+                transactionId: data.transactionId,
+                conflictingShowtimes
             })
         }
     }
