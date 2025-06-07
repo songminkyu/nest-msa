@@ -84,6 +84,7 @@ describe('Customers', () => {
         /* 고객을 삭제해야 한다 */
         it('Should delete the customer', async () => {
             await fix.httpClient.delete(`/customers/${customer.id}`).ok()
+
             await fix.httpClient.get(`/customers/${customer.id}`).notFound({
                 ...Errors.Mongoose.MultipleDocumentsNotFound,
                 notFoundIds: [customer.id]

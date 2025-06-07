@@ -2,6 +2,7 @@ import { Seatmap, ShowtimeDto, TheaterDto, TicketDto } from 'apps/cores'
 import { DateTimeRange, DateUtil, pickIds } from 'common'
 import { nullObjectId, step } from 'testlib'
 import { Fixture } from './booking.fixture'
+import { Errors } from './utils'
 
 describe('Booking', () => {
     let fix: Fixture
@@ -115,13 +116,12 @@ describe('Booking', () => {
         })
     })
 
-    describe('getTickets', () => {
-        /* 상영시간이 존재하지 않으면 NotFoundException을 던져야 한다 */
-        it('Should throw NotFoundException if any showtime does not exist', async () => {
-            // TODO rest api로 고쳐
-            const promise = fix.bookingClient.getTickets(nullObjectId)
-
-            await expect(promise).rejects.toThrow('The requested showtime could not be found.')
+    describe('GET /booking/showtimes/:id/tickets', () => {
+        /* 상영시간이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        it('Should return NOT_FOUND(404) if the showtime does not exist', async () => {
+            await fix.httpClient
+                .get(`/booking/showtimes/${nullObjectId}/tickets`)
+                .notFound({ ...Errors.Booking.ShowtimeNotFound, showtimeId: nullObjectId })
         })
     })
 })
