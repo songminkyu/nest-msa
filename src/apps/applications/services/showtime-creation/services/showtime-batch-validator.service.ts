@@ -5,7 +5,7 @@ import { CreateShowtimeBatchDto } from '../dtos'
 
 type TimeslotMap = Map<number, ShowtimeDto>
 
-export const ShowtimeCreationValidatorServiceErrors = {
+export const ShowtimeBatchValidatorServiceErrors = {
     MovieNotFound: {
         code: 'ERR_SHOWTIME_CREATION_MOVIE_NOT_FOUND',
         message: 'The requested movie could not be found.'
@@ -17,7 +17,7 @@ export const ShowtimeCreationValidatorServiceErrors = {
 }
 
 @Injectable()
-export class ShowtimeCreationValidatorService {
+export class ShowtimeBatchValidatorService {
     constructor(
         private theatersService: TheatersClient,
         private moviesService: MoviesClient,
@@ -96,7 +96,7 @@ export class ShowtimeCreationValidatorService {
 
         if (!movieExists) {
             throw new NotFoundException({
-                ...ShowtimeCreationValidatorServiceErrors.MovieNotFound,
+                ...ShowtimeBatchValidatorServiceErrors.MovieNotFound,
                 movieId
             })
         }
@@ -107,7 +107,7 @@ export class ShowtimeCreationValidatorService {
 
         if (!theatersExist) {
             throw new NotFoundException({
-                ...ShowtimeCreationValidatorServiceErrors.TheaterNotFound,
+                ...ShowtimeBatchValidatorServiceErrors.TheaterNotFound,
                 theaterIds
             })
         }
