@@ -84,7 +84,7 @@ describe('Showtime Creation', () => {
 
         /* 상영시간 생성 요청이 성공해야 한다 */
         it('Should successfully process the showtime creation request', async () => {
-            const monitorPromise = monitorEvents(fix.httpClient, ['complete'])
+            const monitorPromise = monitorEvents(fix.httpClient, ['succeeded'])
 
             const theaterIds = [fix.theater.id]
             const startTimes = [
@@ -107,7 +107,7 @@ describe('Showtime Creation', () => {
 
             await expect(monitorPromise).resolves.toEqual({
                 transactionId,
-                status: 'complete',
+                status: 'succeeded',
                 createdShowtimeCount,
                 createdTicketCount
             })
@@ -172,7 +172,7 @@ describe('Showtime Creation', () => {
 
         /* 상영시간 충돌 시 충돌 정보를 반환해야 한다 */
         it('Should return conflict information when showtimes conflict.', async () => {
-            const monitorPromise = monitorEvents(fix.httpClient, ['fail'])
+            const monitorPromise = monitorEvents(fix.httpClient, ['failed'])
 
             const { body } = await fix.httpClient
                 .post('/showtime-creation/showtimes')
@@ -199,7 +199,7 @@ describe('Showtime Creation', () => {
                 ].includes(showtime.timeRange.start.getTime())
             )
             const { conflictingShowtimes, ...result } = (await monitorPromise) as any
-            expect(result).toEqual({ transactionId, status: 'fail' })
+            expect(result).toEqual({ transactionId, status: 'failed' })
             expectEqualUnsorted(conflictingShowtimes, expected)
         })
     })

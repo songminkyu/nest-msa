@@ -1,13 +1,14 @@
 import { CreateShowtimeBatchDto } from '../dtos'
 
-export class ShowtimeBatchCreateJobData extends CreateShowtimeBatchDto {
+export class CreateShowtimeBatchJobData {
+    createDto: CreateShowtimeBatchDto
     transactionId: string
 }
 
-export enum ShowtimeBatchCreateStatus {
-    waiting = 'waiting',
-    processing = 'processing',
-    complete = 'complete',
-    fail = 'fail',
-    error = 'error'
+export enum CreateShowtimeBatchStatus {
+    WAITING = 'waiting',
+    PROCESSING = 'processing',
+    SUCCEEDED = 'succeeded',
+    FAILED = 'failed',
+    ERROR = 'error'
 }

@@ -48,12 +48,12 @@ export class ShowtimeCreationController implements OnModuleDestroy {
 
     @HttpCode(HttpStatus.ACCEPTED)
     @Post('showtimes')
-    async createShowtimeBatch(@Body() createDto: CreateShowtimeBatchDto) {
-        return this.showtimeCreationService.createShowtimeBatch(createDto)
+    async requestShowtimeCreation(@Body() createDto: CreateShowtimeBatchDto) {
+        return this.showtimeCreationService.requestShowtimeCreation(createDto)
     }
 
     @Sse('events')
-    events(): Observable<MessageEvent> {
+    monitorEvents(): Observable<MessageEvent> {
         return this.sseEventSubject.asObservable()
     }
 

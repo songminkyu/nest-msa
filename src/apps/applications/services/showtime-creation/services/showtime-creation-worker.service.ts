@@ -13,7 +13,7 @@ import { Job, Queue } from 'bullmq'
 import { Assert, DateTimeRange, jsonToObject, MethodLog } from 'common'
 import { ShowtimeCreationEvents } from '../showtime-creation.events'
 import { ShowtimeCreationValidatorService } from './showtime-creation-validator.service'
-import { ShowtimeBatchCreateJobData, ShowtimeBatchCreateStatus } from './types'
+import { CreateShowtimeBatchJobData, CreateShowtimeBatchStatus } from './types'
 
 @Injectable()
 @Processor('showtime-creation')
@@ -44,21 +44,21 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         await this.worker.waitUntilReady()
     }
 
-    async enqueueTask(data: ShowtimeBatchCreateJobData) {
+    async enqueueTask(data: CreateShowtimeBatchJobData) {
         this.events.emitStatusChanged({
-            status: ShowtimeBatchCreateStatus.waiting,
+            status: CreateShowtimeBatchStatus.WAITING,
             transactionId: data.transactionId
         })
 
         await this.queue.add('showtime-creation.create', data)
     }
 
-    async process(job: Job<ShowtimeBatchCreateJobData>) {
+    async process(job: Job<CreateShowtimeBatchJobData>) {
         try {
-            await this.processShowtimesCreation(jsonToObject(job.data))
+            await this.processJobData(jsonToObject(job.data))
         } catch (error) {
             this.events.emitStatusChanged({
-                status: ShowtimeBatchCreateStatus.error,
+                status: CreateShowtimeBatchStatus.ERROR,
                 transactionId: job.data.transactionId,
                 message: error.message
             })
@@ -66,38 +66,41 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     }
 
     @MethodLog()
-    private async processShowtimesCreation(data: ShowtimeBatchCreateJobData) {
+    private async processJobData(data: CreateShowtimeBatchJobData) {
         this.events.emitStatusChanged({
-            status: ShowtimeBatchCreateStatus.processing,
+            status: CreateShowtimeBatchStatus.PROCESSING,
             transactionId: data.transactionId
         })
 
-        const { isValid, conflictingShowtimes } = await this.validatorService.validate(data)
+        const { isValid, conflictingShowtimes } = await this.validatorService.validate(
+            data.createDto
+        )
 
         if (isValid) {
-            const createdShowtimes = await this.createShowtimes(data)
-            const createdTicketCount = await this.createTickets(
+            const createdShowtimes = await this.createShowtimeBatch(data)
+
+            const createdTicketCount = await this.createTicketBatch(
                 createdShowtimes,
                 data.transactionId
             )
 
             this.events.emitStatusChanged({
-                status: ShowtimeBatchCreateStatus.complete,
+                status: CreateShowtimeBatchStatus.SUCCEEDED,
                 transactionId: data.transactionId,
                 createdShowtimeCount: createdShowtimes.length,
                 createdTicketCount
             })
         } else {
             this.events.emitStatusChanged({
-                status: ShowtimeBatchCreateStatus.fail,
+                status: CreateShowtimeBatchStatus.FAILED,
                 transactionId: data.transactionId,
                 conflictingShowtimes
             })
         }
     }
 
-    private async createShowtimes(data: ShowtimeBatchCreateJobData) {
-        const { transactionId, movieId, theaterIds, durationMinutes, startTimes } = data
+    private async createShowtimeBatch({ transactionId, createDto }: CreateShowtimeBatchJobData) {
+        const { movieId, theaterIds, durationMinutes, startTimes } = createDto
 
         const createDtos = theaterIds.flatMap((theaterId) =>
             startTimes.map((start) => ({
@@ -115,7 +118,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         return showtimes
     }
 
-    private async createTickets(showtimes: ShowtimeDto[], transactionId: string) {
+    private async createTicketBatch(showtimes: ShowtimeDto[], transactionId: string) {
         let totalCount = 0
 
         const theaterIds = Array.from(new Set(showtimes.map((showtime) => showtime.theaterId)))
@@ -130,7 +133,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
 
                 Assert.defined(theater, 'The theater must exist.')
 
-                const ticketCreateDtos = Seatmap.getAllSeats(theater.seatmap).map((seat) => ({
+                const createTicketDtos = Seatmap.getAllSeats(theater.seatmap).map((seat) => ({
                     showtimeId: showtime.id,
                     theaterId: showtime.theaterId,
                     movieId: showtime.movieId,
@@ -139,7 +142,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
                     transactionId
                 }))
 
-                const { count } = await this.ticketsService.createTickets(ticketCreateDtos)
+                const { count } = await this.ticketsService.createTickets(createTicketDtos)
                 totalCount += count
             })
         )

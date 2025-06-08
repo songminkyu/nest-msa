@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { MoviesClient, ShowtimeDto, ShowtimesClient, TheatersClient } from 'apps/cores'
 import { Assert, DateTimeRange, DateUtil, Time } from 'common'
-import { ShowtimeBatchCreateJobData } from './types'
+import { CreateShowtimeBatchDto } from '../dtos'
 
 type TimeslotMap = Map<number, ShowtimeDto>
 
@@ -24,21 +24,19 @@ export class ShowtimeCreationValidatorService {
         private showtimesService: ShowtimesClient
     ) {}
 
-    async validate(data: ShowtimeBatchCreateJobData) {
-        await this.verifyMovieExists(data.movieId)
-        await this.verifyTheatersExist(data.theaterIds)
+    async validate(createDto: CreateShowtimeBatchDto) {
+        await this.verifyMovieExists(createDto.movieId)
+        await this.verifyTheatersExist(createDto.theaterIds)
 
-        const conflictingShowtimes = await this.findConflictingShowtimes(data)
+        const conflictingShowtimes = await this.findConflictingShowtimes(createDto)
 
         return { isValid: 0 === conflictingShowtimes.length, conflictingShowtimes }
     }
 
-    private async findConflictingShowtimes(
-        data: ShowtimeBatchCreateJobData
-    ): Promise<ShowtimeDto[]> {
-        const { durationMinutes, startTimes, theaterIds } = data
+    private async findConflictingShowtimes(createDto: CreateShowtimeBatchDto) {
+        const { durationMinutes, startTimes, theaterIds } = createDto
 
-        const timeslotsByTheater = await this.generateTimeslotMapByTheater(data)
+        const timeslotsByTheater = await this.generateTimeslotMapByTheater(createDto)
 
         const conflictingShowtimes: ShowtimeDto[] = []
 
@@ -64,10 +62,8 @@ export class ShowtimeCreationValidatorService {
         return conflictingShowtimes
     }
 
-    private async generateTimeslotMapByTheater(
-        data: ShowtimeBatchCreateJobData
-    ): Promise<Map<string, TimeslotMap>> {
-        const { theaterIds, durationMinutes, startTimes } = data
+    private async generateTimeslotMapByTheater(createDto: CreateShowtimeBatchDto) {
+        const { theaterIds, durationMinutes, startTimes } = createDto
 
         const startDate = DateUtil.earliest(startTimes)
         const maxDate = DateUtil.latest(startTimes)
@@ -95,7 +91,7 @@ export class ShowtimeCreationValidatorService {
         return timeslotsByTheater
     }
 
-    private async verifyMovieExists(movieId: string): Promise<void> {
+    private async verifyMovieExists(movieId: string) {
         const movieExists = await this.moviesService.moviesExist([movieId])
 
         if (!movieExists) {
@@ -106,7 +102,7 @@ export class ShowtimeCreationValidatorService {
         }
     }
 
-    private async verifyTheatersExist(theaterIds: string[]): Promise<void> {
+    private async verifyTheatersExist(theaterIds: string[]) {
         const theatersExist = await this.theatersService.theatersExist(theaterIds)
 
         if (!theatersExist) {

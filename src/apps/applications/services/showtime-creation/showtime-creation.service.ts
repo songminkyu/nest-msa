@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { MoviesClient, ShowtimesClient, TheatersClient } from 'apps/cores'
 import { CommonQueryDto, newObjectId, OrderDirection } from 'common'
-import { CreateShowtimeBatchDto, CreateShowtimeBatchResponse } from './dtos'
+import { CreateShowtimeBatchDto, RequestShowtimeCreationResponse } from './dtos'
 import { ShowtimeCreationWorkerService } from './services'
 
 @Injectable()
@@ -10,7 +10,7 @@ export class ShowtimeCreationService {
         private theatersService: TheatersClient,
         private moviesService: MoviesClient,
         private showtimesService: ShowtimesClient,
-        private batchCreationService: ShowtimeCreationWorkerService
+        private workerService: ShowtimeCreationWorkerService
     ) {}
 
     async searchMoviesPage(searchDto: CommonQueryDto) {
@@ -31,11 +31,11 @@ export class ShowtimeCreationService {
         })
     }
 
-    async createShowtimeBatch(createDto: CreateShowtimeBatchDto) {
+    async requestShowtimeCreation(createDto: CreateShowtimeBatchDto) {
         const transactionId = newObjectId()
 
-        this.batchCreationService.enqueueTask({ ...createDto, transactionId })
+        this.workerService.enqueueTask({ createDto, transactionId })
 
-        return { transactionId } as CreateShowtimeBatchResponse
+        return { transactionId } as RequestShowtimeCreationResponse
     }
 }
