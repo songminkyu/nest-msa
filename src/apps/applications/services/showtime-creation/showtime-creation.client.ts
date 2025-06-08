@@ -20,7 +20,9 @@ export class ShowtimeCreationClient {
         return this.proxy.getJson(Messages.ShowtimeCreation.searchShowtimes, theaterIds)
     }
 
-    requestShowtimeCreation(createDto: CreateShowtimeBatchDto): Promise<RequestShowtimeCreationResponse> {
+    requestShowtimeCreation(
+        createDto: CreateShowtimeBatchDto
+    ): Promise<RequestShowtimeCreationResponse> {
         return this.proxy.getJson(Messages.ShowtimeCreation.requestShowtimeCreation, createDto)
     }
 }
