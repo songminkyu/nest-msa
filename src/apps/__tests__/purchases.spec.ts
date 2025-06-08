@@ -57,14 +57,14 @@ describe('Purchases', () => {
         it('Should mark purchased tickets as sold', async () => {
             const ticketIds = purchaseItems.map((item) => item.ticketId)
             const retrievedTickets = await fix.ticketsService.getTickets(ticketIds)
-            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.sold))
+            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.Sold))
         })
 
         /* 구매하지 않은 티켓은 available 상태여야 한다 */
         it('Should keep unpurchased tickets in available status', async () => {
             const ticketIds = availableTickets.map((ticket) => ticket.id)
             const retrievedTickets = await fix.ticketsService.getTickets(ticketIds)
-            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.available))
+            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.Available))
         })
     })
 
@@ -75,7 +75,7 @@ describe('Purchases', () => {
             purchase = await fix.purchasesService.createPurchase({
                 customerId: fix.customer.id,
                 totalPrice: 1,
-                purchaseItems: [{ type: PurchaseItemType.ticket, ticketId: nullObjectId }]
+                purchaseItems: [{ type: PurchaseItemType.Ticket, ticketId: nullObjectId }]
             })
         })
 

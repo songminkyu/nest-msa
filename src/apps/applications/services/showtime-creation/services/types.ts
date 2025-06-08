@@ -6,9 +6,9 @@ export class CreateShowtimeBatchJobData {
 }
 
 export enum CreateShowtimeBatchStatus {
-    WAITING = 'waiting',
-    PROCESSING = 'processing',
-    SUCCEEDED = 'succeeded',
-    FAILED = 'failed',
-    ERROR = 'error'
+    Waiting = 'waiting',
+    Processing = 'processing',
+    Succeeded = 'succeeded',
+    Failed = 'failed',
+    Error = 'error'
 }

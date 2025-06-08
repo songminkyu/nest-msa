@@ -5,8 +5,8 @@ import { MongooseConfig } from 'shared'
 import { Seat } from '../../theaters'
 
 export enum TicketStatus {
-    available = 'available',
-    sold = 'sold'
+    Available = 'available',
+    Sold = 'sold'
 }
 
 @Schema(MongooseConfig.schemaOptions)

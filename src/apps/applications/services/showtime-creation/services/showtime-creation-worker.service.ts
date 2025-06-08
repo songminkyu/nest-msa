@@ -46,7 +46,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
 
     async enqueueTask(data: CreateShowtimeBatchJobData) {
         this.events.emitStatusChanged({
-            status: CreateShowtimeBatchStatus.WAITING,
+            status: CreateShowtimeBatchStatus.Waiting,
             transactionId: data.transactionId
         })
 
@@ -58,7 +58,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
             await this.processJobData(jsonToObject(job.data))
         } catch (error) {
             this.events.emitStatusChanged({
-                status: CreateShowtimeBatchStatus.ERROR,
+                status: CreateShowtimeBatchStatus.Error,
                 transactionId: job.data.transactionId,
                 message: error.message
             })
@@ -68,7 +68,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     @MethodLog()
     private async processJobData(data: CreateShowtimeBatchJobData) {
         this.events.emitStatusChanged({
-            status: CreateShowtimeBatchStatus.PROCESSING,
+            status: CreateShowtimeBatchStatus.Processing,
             transactionId: data.transactionId
         })
 
@@ -85,14 +85,14 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
             )
 
             this.events.emitStatusChanged({
-                status: CreateShowtimeBatchStatus.SUCCEEDED,
+                status: CreateShowtimeBatchStatus.Succeeded,
                 transactionId: data.transactionId,
                 createdShowtimeCount: createdShowtimes.length,
                 createdTicketCount
             })
         } else {
             this.events.emitStatusChanged({
-                status: CreateShowtimeBatchStatus.FAILED,
+                status: CreateShowtimeBatchStatus.Failed,
                 transactionId: data.transactionId,
                 conflictingShowtimes
             })
@@ -137,7 +137,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
                     showtimeId: showtime.id,
                     theaterId: showtime.theaterId,
                     movieId: showtime.movieId,
-                    status: TicketStatus.available,
+                    status: TicketStatus.Available,
                     seat,
                     transactionId
                 }))

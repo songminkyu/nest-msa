@@ -73,7 +73,7 @@ export const setupPurchaseData = async (
     await holdTickets(fix, showtime.id, heldTickets)
 
     const purchaseItems = heldTickets.map((ticket) => ({
-        type: PurchaseItemType.ticket,
+        type: PurchaseItemType.Ticket,
         ticketId: ticket.id
     }))
 

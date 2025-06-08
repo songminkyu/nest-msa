@@ -36,7 +36,7 @@ export class CommonQueryDto {
 
         const [name, direction] = parts
 
-        if (!(direction in OrderDirection)) {
+        if (!Object.values(OrderDirection).includes(direction)) {
             throw new BadRequestException(PaginationErrors.DirectionInvalid)
         }
 

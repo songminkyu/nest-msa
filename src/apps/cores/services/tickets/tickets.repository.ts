@@ -50,7 +50,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
                 $group: {
                     _id: '$showtimeId',
                     total: { $sum: 1 },
-                    sold: { $sum: { $cond: [{ $eq: ['$status', TicketStatus.sold] }, 1, 0] } }
+                    sold: { $sum: { $cond: [{ $eq: ['$status', TicketStatus.Sold] }, 1, 0] } }
                 }
             },
             {

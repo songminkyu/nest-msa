@@ -16,7 +16,7 @@ export class ShowtimeCreationService {
     async searchMoviesPage(searchDto: CommonQueryDto) {
         return this.moviesService.searchMoviesPage({
             ...searchDto,
-            orderby: { name: 'releaseDate', direction: OrderDirection.desc }
+            orderby: { name: 'releaseDate', direction: OrderDirection.Desc }
         })
     }
 

@@ -1,19 +1,17 @@
 import { IsEnum, IsInt, IsString } from 'class-validator'
 
 export enum OrderDirection {
-    asc = 'asc',
-    desc = 'desc'
+    Asc = 'asc',
+    Desc = 'desc'
 }
 
 export class OrderOption {
     @IsString()
     name: string
 
-    @IsString()
     @IsEnum(OrderDirection)
     direction: OrderDirection
 }
-
 export class PaginationResult<E> {
     @IsInt()
     skip: number

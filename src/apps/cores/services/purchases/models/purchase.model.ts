@@ -5,7 +5,7 @@ import { HydratedDocument, Types } from 'mongoose'
 import { MongooseConfig } from 'shared'
 
 export enum PurchaseItemType {
-    ticket = 'ticket'
+    Ticket = 'ticket'
 }
 
 export class PurchaseItem {

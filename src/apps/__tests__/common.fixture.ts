@@ -110,7 +110,7 @@ export const buildTicketCreateDto = (overrides = {}) => {
         movieId: nullObjectId,
         theaterId: nullObjectId,
         showtimeId: nullObjectId,
-        status: TicketStatus.available,
+        status: TicketStatus.Available,
         seat: { block: '1b', row: '1r', seatnum: 1 },
         ...overrides
     }

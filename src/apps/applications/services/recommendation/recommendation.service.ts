@@ -21,7 +21,7 @@ export class RecommendationService {
             const { items } = await this.watchRecordsService.searchWatchRecordsPage({
                 customerId,
                 take: 50,
-                orderby: { name: 'watchDate', direction: OrderDirection.desc }
+                orderby: { name: 'watchDate', direction: OrderDirection.Desc }
             })
             const movieIds = items.map((record) => record.movieId)
             watchedMovies = await this.moviesService.getMoviesByIds(movieIds)

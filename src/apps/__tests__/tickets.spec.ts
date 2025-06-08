@@ -99,18 +99,18 @@ describe('Tickets', () => {
 
         /* 티켓의 상태를 변경해야 한다 */
         it('Should change the status of the ticket', async () => {
-            expect(await getStatus()).toEqual([TicketStatus.available, TicketStatus.available])
+            expect(await getStatus()).toEqual([TicketStatus.Available, TicketStatus.Available])
 
             const updatedTickets = await fix.ticketsClient.updateTicketStatus(
                 pickIds(tickets),
-                TicketStatus.sold
+                TicketStatus.Sold
             )
             expect(updatedTickets.map((ticket) => ticket.status)).toEqual([
-                TicketStatus.sold,
-                TicketStatus.sold
+                TicketStatus.Sold,
+                TicketStatus.Sold
             ])
 
-            expect(await getStatus()).toEqual([TicketStatus.sold, TicketStatus.sold])
+            expect(await getStatus()).toEqual([TicketStatus.Sold, TicketStatus.Sold])
         })
     })
 
@@ -123,7 +123,7 @@ describe('Tickets', () => {
         const tickets = await createTickets(fix, createDtos)
 
         const ticketIds = pickIds(tickets.slice(0, soldCount))
-        await fix.ticketsClient.updateTicketStatus(ticketIds, TicketStatus.sold)
+        await fix.ticketsClient.updateTicketStatus(ticketIds, TicketStatus.Sold)
 
         const ticketSalesForShowtimes = await fix.ticketsClient.getTicketSalesForShowtimes([
             showtimeId

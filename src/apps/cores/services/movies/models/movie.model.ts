@@ -4,15 +4,15 @@ import { HydratedDocument, Types } from 'mongoose'
 import { MongooseConfig } from 'shared'
 
 export enum MovieGenre {
-    Action = 'Action',
-    Comedy = 'Comedy',
-    Drama = 'Drama',
-    Fantasy = 'Fantasy',
-    Horror = 'Horror',
-    Mystery = 'Mystery',
-    Romance = 'Romance',
-    Thriller = 'Thriller',
-    Western = 'Western'
+    Action = 'action',
+    Comedy = 'comedy',
+    Drama = 'drama',
+    Fantasy = 'fantasy',
+    Horror = 'horror',
+    Mystery = 'mystery',
+    Romance = 'romance',
+    Thriller = 'thriller',
+    Western = 'western'
 }
 
 export enum MovieRating {

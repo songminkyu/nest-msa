@@ -52,12 +52,12 @@ describe('Movies', () => {
         it('Should update movie information', async () => {
             const updateDto = {
                 title: 'update title',
-                genre: ['Romance', 'Thriller'],
+                genre: ['romance', 'thriller'],
                 releaseDate: new Date('2000-01-01'),
                 plot: `new plot`,
                 durationMinutes: 10,
                 director: 'Steven Spielberg',
-                rating: MovieRating.R
+                rating: 'R'
             }
             const expected = { ...movie, ...updateDto }
 

@@ -101,7 +101,7 @@ describe('MongooseRepository', () => {
             const skip = 10
             const take = 5
             const { items, ...paginated } = await fix.repository.findWithPagination({
-                pagination: { skip, take, orderby: { name: 'name', direction: OrderDirection.asc } }
+                pagination: { skip, take, orderby: { name: 'name', direction: OrderDirection.Asc } }
             })
 
             sortByName(samples)
@@ -114,7 +114,7 @@ describe('MongooseRepository', () => {
             const { items } = await fix.repository.findWithPagination({
                 pagination: {
                     take: samples.length,
-                    orderby: { name: 'name', direction: OrderDirection.asc }
+                    orderby: { name: 'name', direction: OrderDirection.Asc }
                 }
             })
 
@@ -127,7 +127,7 @@ describe('MongooseRepository', () => {
             const { items } = await fix.repository.findWithPagination({
                 pagination: {
                     take: samples.length,
-                    orderby: { name: 'name', direction: OrderDirection.desc }
+                    orderby: { name: 'name', direction: OrderDirection.Desc }
                 }
             })
 
