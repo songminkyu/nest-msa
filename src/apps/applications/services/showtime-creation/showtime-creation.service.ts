@@ -34,7 +34,7 @@ export class ShowtimeCreationService {
     async requestShowtimeCreation(createDto: CreateShowtimeBatchDto) {
         const transactionId = newObjectId()
 
-        this.workerService.enqueueTask({ createDto, transactionId })
+        this.workerService.enqueueJob({ createDto, transactionId })
 
         return { transactionId } as RequestShowtimeCreationResponse
     }

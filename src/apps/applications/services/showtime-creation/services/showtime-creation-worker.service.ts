@@ -34,7 +34,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         await this.worker.waitUntilReady()
     }
 
-    async enqueueTask(data: CreateShowtimeBatchJobData) {
+    async enqueueJob(data: CreateShowtimeBatchJobData) {
         this.events.emitStatusChanged({
             status: CreateShowtimeBatchStatus.Waiting,
             transactionId: data.transactionId
