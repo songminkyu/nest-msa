@@ -1,11 +1,12 @@
 import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Injectable } from '@nestjs/common'
 import { Job, Queue } from 'bullmq'
-import { jsonToObject, MethodLog } from 'common'
+import { jsonToObject, MethodLog, newObjectId } from 'common'
+import { CreateShowtimeBatchDto } from '../dtos'
 import { ShowtimeCreationEvents } from '../showtime-creation.events'
 import { ShowtimeBatchCreatorService } from './showtime-batch-creator.service'
 import { ShowtimeBatchValidatorService } from './showtime-batch-validator.service'
-import { CreateShowtimeBatchJobData, CreateShowtimeBatchStatus } from './types'
+import { ShowtimeCreationJobData, ShowtimeCreationStatus } from './types'
 
 @Injectable()
 @Processor('showtime-creation')
@@ -34,21 +35,26 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         await this.worker.waitUntilReady()
     }
 
-    async enqueueJob(data: CreateShowtimeBatchJobData) {
-        this.events.emitStatusChanged({
-            status: CreateShowtimeBatchStatus.Waiting,
-            transactionId: data.transactionId
-        })
+    async requestShowtimeCreation(createDto: CreateShowtimeBatchDto) {
+        const transactionId = newObjectId()
+
+        const data = { createDto, transactionId } as ShowtimeCreationJobData
+
+        this.events.emitStatusChanged({ status: ShowtimeCreationStatus.Waiting, transactionId })
 
         await this.queue.add('showtime-creation.create', data)
+
+        return transactionId
     }
 
-    async process(job: Job<CreateShowtimeBatchJobData>) {
+    async process(job: Job<ShowtimeCreationJobData>) {
         try {
-            await this.processJobData(jsonToObject(job.data))
+            const data = jsonToObject(job.data)
+
+            await this.processJobData(data)
         } catch (error) {
             this.events.emitStatusChanged({
-                status: CreateShowtimeBatchStatus.Error,
+                status: ShowtimeCreationStatus.Error,
                 transactionId: job.data.transactionId,
                 message: error.message
             })
@@ -56,9 +62,9 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
     }
 
     @MethodLog()
-    private async processJobData({ transactionId, createDto }: CreateShowtimeBatchJobData) {
+    private async processJobData({ transactionId, createDto }: ShowtimeCreationJobData) {
         this.events.emitStatusChanged({
-            status: CreateShowtimeBatchStatus.Processing,
+            status: ShowtimeCreationStatus.Processing,
             transactionId
         })
 
@@ -68,13 +74,13 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
             const result = await this.creatorService.create(createDto, transactionId)
 
             this.events.emitStatusChanged({
-                status: CreateShowtimeBatchStatus.Succeeded,
+                status: ShowtimeCreationStatus.Succeeded,
                 transactionId,
                 ...result
             })
         } else {
             this.events.emitStatusChanged({
-                status: CreateShowtimeBatchStatus.Failed,
+                status: ShowtimeCreationStatus.Failed,
                 transactionId,
                 conflictingShowtimes
             })

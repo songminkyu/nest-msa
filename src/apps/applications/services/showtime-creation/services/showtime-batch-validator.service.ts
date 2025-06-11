@@ -114,6 +114,7 @@ export class ShowtimeBatchValidatorService {
     }
 }
 
+// TODO 10분은 규칙에 적어놔야 한다.
 const iterateEvery10Mins = (
     timeRange: DateTimeRange,
     callback: (time: number) => boolean | void
