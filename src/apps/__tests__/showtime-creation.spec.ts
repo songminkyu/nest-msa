@@ -59,7 +59,7 @@ describe('Showtime Creation', () => {
         /* 예정된 상영시간 목록을 반환해야 한다 */
         it('Should return the list of scheduled showtimes', async () => {
             const { body } = await fix.httpClient
-                .post('/showtime-creation/showtimes/find')
+                .post('/showtime-creation/showtimes/search')
                 .body({ theaterIds: [fix.theater.id] })
                 .ok()
 
