@@ -14,7 +14,7 @@ findTheaters({ movieId })
 
 ## 2. 조회 함수: **find / get / search**
 
-| 형태                 | 용도                               | 없을 때 동작                             |
+| 형태                 | 용도                                  | 없을 때 동작                             |
 | -------------------- | ------------------------------------- | ---------------------------------------- |
 | **`findXxx(...)`**   | "없을 수도 있는" 대상 **선택적 조회** | `null` 또는 `undefined` 반환             |
 | **`getXxx(...)`**    | 반드시 존재해야 하는 **단건 조회**    | **예외 throw** (예: `NotFoundException`) |
@@ -27,11 +27,13 @@ getSeed(seedId: string): Promise<Seed>              // 없으면 예외 throw
 searchSeeds(dto: SeedSearchDto): Promise<Seed[]>    // 조건 검색, 없으면 []
 ```
 
+> find는 찾으려는 대상이 명확한 경우, search는 찾는 대상이 뭐가 될지 알 수 없는 경우
+
 ## 3. 존재 여부(Predicate) 함수: **exist / is / has / can / should**
 
 이 프로젝트는 단일 엔티티 존재 함수는 사용하지 않는다. 따라서 아래처럼 두 개의 존재 함수만 사용한다.
 
-| 형태               | 동작                      |
+| 형태                      | 동작                      |
 | ------------------------- | ------------------------- |
 | **`moviesExist(ids)`**    | 모든 ID가 존재해야 `true` |
 | **`anyMovieExists(ids)`** | 하나라도 존재하면 `true`  |
@@ -47,7 +49,7 @@ searchSeeds(dto: SeedSearchDto): Promise<Seed[]>    // 조건 검색, 없으면 
 
 ## 4. 검증 함수: **verify / check / ensure**
 
-| 형태              | 용도                                        |
+| 형태              | 용도                                          |
 | ----------------- | --------------------------------------------- |
 | verifyMovieExists | “확인하고, 없으면 예외/에러”처럼              |
 | checkMovieExists  | 결과를 bool 로 받지만 “검사 행위”를 살짝 강조 |
