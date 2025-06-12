@@ -1,5 +1,5 @@
-import { MovieDto, CreateShowtimeDto, TheaterDto } from 'apps/cores'
-import { comment, DateTimeRange, jsonToObject, notUsed } from 'common'
+import { CreateShowtimeDto, MovieDto, TheaterDto } from 'apps/cores'
+import { DateTimeRange, jsonToObject, notUsed } from 'common'
 import { HttpTestClient, nullObjectId } from 'testlib'
 import { createMovie, createTheater } from './common.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
@@ -24,7 +24,7 @@ export const createShowtimeDtos = (startTimes: Date[], overrides = {}) => {
 
 export const monitorEvents = (client: HttpTestClient, waitStatuses: string[]) => {
     return new Promise((resolve, reject) => {
-        client.get('/showtime-creation/events').sse((data) => {
+        client.get('/showtime-creation/event-stream').sse((data) => {
             const result = jsonToObject(JSON.parse(data))
 
             if (['waiting', 'processing'].includes(result.status)) {

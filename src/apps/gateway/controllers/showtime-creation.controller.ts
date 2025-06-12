@@ -20,12 +20,12 @@ import { DefaultPaginationPipe } from './pipes'
 
 @Controller('showtime-creation')
 export class ShowtimeCreationController implements OnModuleDestroy {
-    private sseEventSubject = new Subject<MessageEvent>()
+    private eventStream = new Subject<MessageEvent>()
 
     constructor(private showtimeCreationService: ShowtimeCreationClient) {}
 
     onModuleDestroy() {
-        this.sseEventSubject.complete()
+        this.eventStream.complete()
     }
 
     @UsePipes(DefaultPaginationPipe)
@@ -52,15 +52,15 @@ export class ShowtimeCreationController implements OnModuleDestroy {
         return this.showtimeCreationService.requestShowtimeCreation(createDto)
     }
 
-    @Sse('events')
-    monitorEvents(): Observable<MessageEvent> {
-        return this.sseEventSubject.asObservable()
+    @Sse('event-stream')
+    getEventStream(): Observable<MessageEvent> {
+        return this.eventStream.asObservable()
     }
 
     @EventPattern(Events.ShowtimeCreation.statusChanged, {
         queue: false // 모든 인스턴스에 이벤트 브로드캐스팅 설정
     })
     handleEvent(data: any) {
-        this.sseEventSubject.next({ data })
+        this.eventStream.next({ data })
     }
 }
