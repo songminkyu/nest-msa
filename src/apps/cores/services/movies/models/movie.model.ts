@@ -29,7 +29,7 @@ export class Movie extends MongooseSchema {
     title: string
 
     @Prop({ type: [String], enum: MovieGenre, default: [] })
-    genre: MovieGenre[]
+    genres: MovieGenre[]
 
     @Prop({ required: true })
     releaseDate: Date
@@ -47,7 +47,7 @@ export class Movie extends MongooseSchema {
     rating: MovieRating
 
     @Prop({ required: true })
-    imageFileIds: Types.ObjectId[]
+    imageIds: Types.ObjectId[]
 }
 export type MovieDocument = HydratedDocument<Movie>
 export const MovieSchema = createMongooseSchema(Movie)

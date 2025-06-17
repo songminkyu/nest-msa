@@ -18,38 +18,38 @@ describe('Recommendation', () => {
 
         beforeEach(async () => {
             await createWatchedMovies(fix, [
-                { title: 'Action1', genre: [MovieGenre.Action] },
-                { title: 'Action2', genre: [MovieGenre.Action] },
-                { title: 'Action3', genre: [MovieGenre.Action] },
-                { title: 'Comedy1', genre: [MovieGenre.Comedy] },
-                { title: 'Comedy2', genre: [MovieGenre.Comedy] },
-                { title: 'Drama1', genre: [MovieGenre.Drama] }
+                { title: 'Action1', genres: [MovieGenre.Action] },
+                { title: 'Action2', genres: [MovieGenre.Action] },
+                { title: 'Action3', genres: [MovieGenre.Action] },
+                { title: 'Comedy1', genres: [MovieGenre.Comedy] },
+                { title: 'Comedy2', genres: [MovieGenre.Comedy] },
+                { title: 'Drama1', genres: [MovieGenre.Drama] }
             ])
 
             showingMovies = await createShowingMovies(fix, [
                 {
                     title: 'Fantasy',
-                    genre: [MovieGenre.Fantasy],
+                    genres: [MovieGenre.Fantasy],
                     releaseDate: new Date('2900-01-01')
                 },
                 {
                     title: 'Comedy1',
-                    genre: [MovieGenre.Comedy],
+                    genres: [MovieGenre.Comedy],
                     releaseDate: new Date('2900-02-01')
                 },
                 {
                     title: 'Comedy2',
-                    genre: [MovieGenre.Comedy],
+                    genres: [MovieGenre.Comedy],
                     releaseDate: new Date('2900-03-01')
                 },
                 {
                     title: 'Action',
-                    genre: [MovieGenre.Action],
+                    genres: [MovieGenre.Action],
                     releaseDate: new Date('2900-04-01')
                 },
                 {
                     title: 'Drama',
-                    genre: [MovieGenre.Drama],
+                    genres: [MovieGenre.Drama],
                     releaseDate: new Date('2900-05-01')
                 }
             ])

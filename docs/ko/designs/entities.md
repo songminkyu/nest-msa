@@ -37,8 +37,8 @@ end note
 
 class Showtime {
     id: ObjectId
-    start: Date
-    end: Date
+    startTime: Date
+    endTime: Date
     theaterId: ObjectId
     movieId: ObjectId
     transactionId:ObjectId

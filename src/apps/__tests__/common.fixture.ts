@@ -45,7 +45,7 @@ export const createCustomer = async (fix: CommonFixture, override = {}) => {
 export const buildMovieCreateDto = (overrides = {}) => {
     const createDto = {
         title: `MovieTitle`,
-        genre: [MovieGenre.Action],
+        genres: [MovieGenre.Action],
         releaseDate: new Date('1900-01-01'),
         plot: `MoviePlot`,
         durationMinutes: 90,

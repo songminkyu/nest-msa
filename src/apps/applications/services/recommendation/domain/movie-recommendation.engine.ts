@@ -12,9 +12,9 @@ export class MovieRecommendationEngine {
         Calculate the frequency of each genre in the user's watch history.
         사용자가 관람한 영화의 장르 빈도를 계산
         */
-        const genreFrequency: { [genre: string]: number } = {}
+        const genreFrequency: { [genres: string]: number } = {}
         for (const movie of watchedMovies) {
-            for (const genre of movie.genre) {
+            for (const genre of movie.genres) {
                 genreFrequency[genre] = (genreFrequency[genre] || 0) + 1
             }
         }
@@ -39,7 +39,7 @@ export class MovieRecommendationEngine {
             .filter((movie) => !watchedMovieIds.has(movie.id))
             .map((movie) => {
                 let genreScore = 0
-                for (const genre of movie.genre) {
+                for (const genre of movie.genres) {
                     const index = favoriteGenres.indexOf(genre)
                     if (index !== -1) {
                         /*

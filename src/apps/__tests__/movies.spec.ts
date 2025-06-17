@@ -52,7 +52,7 @@ describe('Movies', () => {
         it('Should update movie information', async () => {
             const updateDto = {
                 title: 'update title',
-                genre: ['romance', 'thriller'],
+                genres: ['romance', 'thriller'],
                 releaseDate: new Date('2000-01-01'),
                 plot: `new plot`,
                 durationMinutes: 10,
@@ -141,7 +141,7 @@ describe('Movies', () => {
                     director: 'James Cameron',
                     releaseDate: new Date('2000-01-01'),
                     rating: MovieRating.NC17,
-                    genre: [MovieGenre.Action, MovieGenre.Comedy]
+                    genres: [MovieGenre.Action, MovieGenre.Comedy]
                 }),
                 createMovie(fix, {
                     title: 'title-a2',
@@ -149,7 +149,7 @@ describe('Movies', () => {
                     director: 'Steven Spielberg',
                     releaseDate: new Date('2000-01-02'),
                     rating: MovieRating.NC17,
-                    genre: [MovieGenre.Romance, MovieGenre.Drama]
+                    genres: [MovieGenre.Romance, MovieGenre.Drama]
                 }),
                 createMovie(fix, {
                     title: 'title-b1',
@@ -157,7 +157,7 @@ describe('Movies', () => {
                     director: 'James Cameron',
                     releaseDate: new Date('2000-01-02'),
                     rating: MovieRating.PG,
-                    genre: [MovieGenre.Drama, MovieGenre.Comedy]
+                    genres: [MovieGenre.Drama, MovieGenre.Comedy]
                 }),
                 createMovie(fix, {
                     title: 'title-b2',
@@ -165,7 +165,7 @@ describe('Movies', () => {
                     director: 'Steven Spielberg',
                     releaseDate: new Date('2000-01-03'),
                     rating: MovieRating.R,
-                    genre: [MovieGenre.Thriller, MovieGenre.Western]
+                    genres: [MovieGenre.Thriller, MovieGenre.Western]
                 })
             ])
         })

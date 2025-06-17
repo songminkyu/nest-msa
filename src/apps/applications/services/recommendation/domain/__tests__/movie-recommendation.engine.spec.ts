@@ -3,10 +3,10 @@ import { MovieRecommendationEngine } from '..'
 
 describe('MovieRecommendationEngine', () => {
     describe('generateRecommendedMovies', () => {
-        const createDto = (id: string, genre: MovieGenre[], releaseDate: Date) => ({
+        const createDto = (id: string, genres: MovieGenre[], releaseDate: Date) => ({
             id,
             title: `MovieTitle#${id}`,
-            genre,
+            genres,
             releaseDate,
             plot: '.',
             durationMinutes: 0,

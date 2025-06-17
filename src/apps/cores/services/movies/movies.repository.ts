@@ -14,13 +14,13 @@ export class MoviesRepository extends MongooseRepository<Movie> {
     async createMovie(createDto: CreateMovieDto, storageFileIds: string[]) {
         const movie = this.newDocument()
         movie.title = createDto.title
-        movie.genre = createDto.genre
+        movie.genres = createDto.genres
         movie.releaseDate = createDto.releaseDate
         movie.plot = createDto.plot
         movie.durationMinutes = createDto.durationMinutes
         movie.director = createDto.director
         movie.rating = createDto.rating
-        movie.imageFileIds = objectIds(storageFileIds)
+        movie.imageIds = objectIds(storageFileIds)
 
         return movie.save()
     }
@@ -29,7 +29,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         const movie = await this.getById(movieId)
 
         if (updateDto.title) movie.title = updateDto.title
-        if (updateDto.genre) movie.genre = updateDto.genre
+        if (updateDto.genres) movie.genres = updateDto.genres
         if (updateDto.releaseDate) movie.releaseDate = updateDto.releaseDate
         if (updateDto.plot) movie.plot = updateDto.plot
         if (updateDto.durationMinutes) movie.durationMinutes = updateDto.durationMinutes
@@ -59,7 +59,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
 
         const builder = new QueryBuilder<Movie>()
         builder.addRegex('title', title)
-        builder.addEqual('genre', genre)
+        builder.addEqual('genres', genre)
         builder.addEqual('releaseDate', releaseDate)
         builder.addRegex('plot', plot)
         builder.addRegex('director', director)

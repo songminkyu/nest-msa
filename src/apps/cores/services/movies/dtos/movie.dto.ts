@@ -3,7 +3,7 @@ import { MovieGenre, MovieRating } from '../models'
 export class MovieDto {
     id: string
     title: string
-    genre: MovieGenre[]
+    genres: MovieGenre[]
     releaseDate: Date
     plot: string
     durationMinutes: number
