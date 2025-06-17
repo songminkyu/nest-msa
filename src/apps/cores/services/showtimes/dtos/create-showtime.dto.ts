@@ -1,6 +1,5 @@
 import { Type } from 'class-transformer'
-import { IsNotEmpty, IsString, ValidateNested } from 'class-validator'
-import { DateTimeRange } from 'common'
+import { IsDate, IsNotEmpty, IsString } from 'class-validator'
 
 export class CreateShowtimeDto {
     @IsString()
@@ -15,8 +14,11 @@ export class CreateShowtimeDto {
     @IsNotEmpty()
     theaterId: string
 
-    @IsNotEmpty()
-    @ValidateNested()
-    @Type(() => DateTimeRange)
-    timeRange: DateTimeRange
+    @IsDate()
+    @Type(() => Date)
+    startTime: Date
+
+    @IsDate()
+    @Type(() => Date)
+    endTime: Date
 }

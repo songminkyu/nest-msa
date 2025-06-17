@@ -198,7 +198,7 @@ describe('Showtime Creation', () => {
                     new Date('2013-01-31T12:00').getTime(),
                     new Date('2013-01-31T16:30').getTime(),
                     new Date('2013-01-31T18:30').getTime()
-                ].includes(showtime.timeRange.start.getTime())
+                ].includes(showtime.startTime.getTime())
             )
             const { conflictingShowtimes, ...result } = (await monitorPromise) as any
             expect(result).toEqual({ transactionId, status: 'failed' })

@@ -8,7 +8,7 @@ import {
     TicketsClient,
     TicketStatus
 } from 'apps/cores'
-import { Assert, DateTimeRange } from 'common'
+import { Assert, DateUtil } from 'common'
 import { CreateShowtimeBatchDto } from '../dtos'
 
 @Injectable()
@@ -31,11 +31,12 @@ export class ShowtimeBatchCreatorService {
         const { movieId, theaterIds, durationMinutes, startTimes } = createDto
 
         const createDtos = theaterIds.flatMap((theaterId) =>
-            startTimes.map((start) => ({
+            startTimes.map((startTime) => ({
                 transactionId,
                 movieId,
                 theaterId,
-                timeRange: DateTimeRange.create({ start, minutes: durationMinutes })
+                startTime,
+                endTime: DateUtil.addMinutes(startTime, durationMinutes)
             }))
         )
 

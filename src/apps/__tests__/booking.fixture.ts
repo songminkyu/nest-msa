@@ -1,5 +1,5 @@
 import { MovieDto, Seatmap, ShowtimeDto, TheaterDto } from 'apps/cores'
-import { DateTimeRange } from 'common'
+import { DateUtil } from 'common'
 import {
     buildShowtimeCreateDto,
     buildTicketCreateDto,
@@ -32,11 +32,13 @@ const createAllShowtimes = async (fix: CommonFixture, theaters: TheaterDto[], mo
     ]
 
     const showtimeCreateDtos = theaters.flatMap((theater) =>
-        startTimes.map((start) => {
-            const movieId = movie.id
-            const theaterId = theater.id
-            const timeRange = DateTimeRange.create({ start, minutes: 1 })
-            const { createDto } = buildShowtimeCreateDto({ movieId, theaterId, timeRange })
+        startTimes.map((startTime) => {
+            const { createDto } = buildShowtimeCreateDto({
+                movieId: movie.id,
+                theaterId: theater.id,
+                startTime,
+                endTime: DateUtil.addMinutes(startTime, 1)
+            })
             return createDto
         })
     )

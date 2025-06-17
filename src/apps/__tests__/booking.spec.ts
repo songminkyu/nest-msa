@@ -1,5 +1,5 @@
 import { Seatmap, ShowtimeDto, TheaterDto, TicketDto } from 'apps/cores'
-import { DateTimeRange, DateUtil, pickIds } from 'common'
+import { DateUtil, pickIds } from 'common'
 import { nullObjectId, step } from 'testlib'
 import { Fixture } from './booking.fixture'
 import { Errors } from './utils'
@@ -72,18 +72,14 @@ describe('Booking', () => {
                         {
                             movieId,
                             theaterId,
-                            timeRange: DateTimeRange.create({
-                                start: new Date('2999-01-01T12:00'),
-                                minutes: 1
-                            })
+                            startTime: new Date('2999-01-01T12:00'),
+                            endTime: new Date('2999-01-01T12:01')
                         },
                         {
                             movieId,
                             theaterId,
-                            timeRange: DateTimeRange.create({
-                                start: new Date('2999-01-01T14:00'),
-                                minutes: 1
-                            })
+                            startTime: new Date('2999-01-01T14:00'),
+                            endTime: new Date('2999-01-01T14:01')
                         }
                     ].map((item) => expect.objectContaining(item))
                 )

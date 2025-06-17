@@ -87,7 +87,8 @@ export const buildShowtimeCreateDto = (overrides: Partial<CreateShowtimeDto> = {
         transactionId: nullObjectId,
         movieId: nullObjectId,
         theaterId: nullObjectId,
-        timeRange: DateTimeRange.create({ start: new Date('2000-01-01T12:00'), minutes: 1 }),
+        startTime: new Date('2000-01-01T12:00'),
+        endTime: new Date('2000-01-01T12:01'),
         ...overrides
     }
     const expectedDto = { id: expect.any(String), ...omit(createDto, 'transactionId') }

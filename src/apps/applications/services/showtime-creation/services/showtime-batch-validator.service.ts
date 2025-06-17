@@ -80,7 +80,9 @@ export class ShowtimeBatchValidatorService {
             const timeslots = new Map<number, ShowtimeDto>()
 
             for (const showtime of fetchedShowtimes) {
-                iterateEvery10Mins(showtime.timeRange, (time) => {
+                const { startTime: start, endTime: end } = showtime
+
+                iterateEvery10Mins({ start, end }, (time) => {
                     timeslots.set(time, showtime)
                 })
             }

@@ -1,5 +1,4 @@
 import { CustomerDto, MovieDto } from 'apps/cores'
-import { DateTimeRange } from 'common'
 import { nullObjectId } from 'testlib'
 import {
     createCustomerAndLogin,
@@ -28,7 +27,8 @@ export const createShowingMovies = async (fix: CommonFixture, dtos: Partial<Movi
         movieId: movie.id,
         transactionId: nullObjectId,
         theaterId: nullObjectId,
-        timeRange: DateTimeRange.create({ start: new Date('2999-01-01'), days: 1 })
+        startTime: new Date('2999-01-01'),
+        endTime: new Date('2999-01-02')
     }))
 
     await createShowtimes(fix, showtimesCreateDtos)

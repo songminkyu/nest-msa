@@ -1,5 +1,5 @@
 import { CreateShowtimeDto, MovieDto, TheaterDto } from 'apps/cores'
-import { DateTimeRange, jsonToObject, notUsed } from 'common'
+import { DateUtil, jsonToObject, notUsed } from 'common'
 import { HttpTestClient, nullObjectId } from 'testlib'
 import { createMovie, createTheater } from './common.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
@@ -20,7 +20,8 @@ export const createShowtimeDtos = ({
             transactionId: nullObjectId,
             movieId: nullObjectId,
             theaterId,
-            timeRange: DateTimeRange.create({ start: startTime, minutes: durationMinutes })
+            startTime,
+            endTime: DateUtil.addMinutes(startTime, durationMinutes)
         }
 
         createDtos.push(createDto)

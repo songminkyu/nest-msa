@@ -7,7 +7,7 @@ import {
     TheaterDto,
     TicketDto
 } from 'apps/cores'
-import { DateTimeRange, DateUtil, pickIds } from 'common'
+import { DateUtil, pickIds } from 'common'
 import { Rules } from 'shared'
 import {
     buildShowtimeCreateDto,
@@ -24,7 +24,8 @@ const createShowtime = async (fix: Fixture, startTime: Date) => {
     const { createDto } = buildShowtimeCreateDto({
         movieId: fix.movie.id,
         theaterId: fix.theater.id,
-        timeRange: DateTimeRange.create({ start: startTime, minutes: 1 })
+        startTime,
+        endTime: DateUtil.addMinutes(startTime, 1)
     })
 
     const showtimes = await createShowtimes(fix, [createDto])
