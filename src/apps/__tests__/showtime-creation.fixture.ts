@@ -4,16 +4,23 @@ import { HttpTestClient, nullObjectId } from 'testlib'
 import { createMovie, createTheater } from './common.fixture'
 import { CommonFixture, createCommonFixture } from './utils'
 
-export const createShowtimeDtos = (startTimes: Date[], overrides = {}) => {
+export const createShowtimeDtos = ({
+    startTimes,
+    theaterId,
+    durationMinutes
+}: {
+    startTimes: Date[]
+    theaterId: string
+    durationMinutes: number
+}) => {
     const createDtos: CreateShowtimeDto[] = []
 
     startTimes.map((startTime) => {
         const createDto = {
             transactionId: nullObjectId,
             movieId: nullObjectId,
-            theaterId: nullObjectId,
-            timeRange: DateTimeRange.create({ start: startTime, minutes: 90 }),
-            ...overrides
+            theaterId,
+            timeRange: DateTimeRange.create({ start: startTime, minutes: durationMinutes })
         }
 
         createDtos.push(createDto)

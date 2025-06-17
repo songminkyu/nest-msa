@@ -44,14 +44,15 @@ describe('Showtime Creation', () => {
         let showtimes: ShowtimeDto[]
 
         beforeEach(async () => {
-            const createDtos = createShowtimeDtos(
-                [
+            const createDtos = createShowtimeDtos({
+                startTimes: [
                     new Date('2100-01-01T09:00'),
                     new Date('2100-01-01T11:00'),
                     new Date('2100-01-01T13:00')
                 ],
-                { theaterId: fix.theater.id }
-            )
+                theaterId: fix.theater.id,
+                durationMinutes: 1
+            })
 
             showtimes = await createShowtimes(fix, createDtos)
         })
@@ -157,15 +158,16 @@ describe('Showtime Creation', () => {
         let showtimes: ShowtimeDto[]
 
         beforeEach(async () => {
-            const createDtos = createShowtimeDtos(
-                [
+            const createDtos = createShowtimeDtos({
+                startTimes: [
                     new Date('2013-01-31T12:00'),
                     new Date('2013-01-31T14:00'),
                     new Date('2013-01-31T16:30'),
                     new Date('2013-01-31T18:30')
                 ],
-                { theaterId: fix.theater.id, durationMinutes: 90 }
-            )
+                theaterId: fix.theater.id,
+                durationMinutes: 90
+            })
 
             showtimes = await createShowtimes(fix, createDtos)
         })

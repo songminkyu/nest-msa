@@ -6,7 +6,7 @@ export class MovieDto {
     genres: MovieGenre[]
     releaseDate: Date
     plot: string
-    durationMinutes: number
+    durationSeconds: number
     director: string
     rating: MovieRating
     images: string[]

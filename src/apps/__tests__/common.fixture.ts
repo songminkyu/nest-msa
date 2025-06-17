@@ -48,7 +48,7 @@ export const buildMovieCreateDto = (overrides = {}) => {
         genres: [MovieGenre.Action],
         releaseDate: new Date('1900-01-01'),
         plot: `MoviePlot`,
-        durationMinutes: 90,
+        durationSeconds: 90 * 60,
         director: 'James Cameron',
         rating: MovieRating.PG,
         ...overrides

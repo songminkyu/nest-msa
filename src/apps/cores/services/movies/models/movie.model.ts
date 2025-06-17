@@ -38,7 +38,7 @@ export class Movie extends MongooseSchema {
     plot: string
 
     @Prop({ required: true })
-    durationMinutes: number
+    durationSeconds: number
 
     @Prop({ default: 'John Doe' })
     director: string

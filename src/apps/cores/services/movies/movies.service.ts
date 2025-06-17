@@ -70,7 +70,7 @@ export class MoviesService {
             'genres',
             'releaseDate',
             'plot',
-            'durationMinutes',
+            'durationSeconds',
             'director',
             'rating'
         ])
