@@ -1,4 +1,3 @@
-import { expect } from '@jest/globals'
 import { CustomerDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
 import { buildCustomerCreateDto, createCustomer } from './common.fixture'

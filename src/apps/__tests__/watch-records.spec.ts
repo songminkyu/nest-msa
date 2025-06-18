@@ -1,4 +1,3 @@
-import { expect } from '@jest/globals'
 import { WatchRecordDto } from 'apps/cores'
 import { expectEqualUnsorted, testObjectId } from 'testlib'
 import { buildWatchRecordCreateDto, createWatchRecord } from './common.fixture'

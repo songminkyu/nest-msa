@@ -1,4 +1,3 @@
-import { expect } from '@jest/globals'
 import { TheaterDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
 import { buildTheaterCreateDto, createTheater } from './common.fixture'
