@@ -112,7 +112,7 @@ export const buildTicketCreateDto = (overrides = {}) => {
         theaterId: nullObjectId,
         showtimeId: nullObjectId,
         status: TicketStatus.Available,
-        seat: { block: '1b', row: '1r', seatnum: 1 },
+        seat: { block: '1b', row: '1r', seatNumber: 1 },
         ...overrides
     }
     const expectedDto = { id: expect.any(String), ...omit(createDto, 'transactionId') }

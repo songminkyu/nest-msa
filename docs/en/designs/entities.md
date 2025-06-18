@@ -71,7 +71,7 @@ enum TicketStatus {
 Seat {
     block: string
     row: string
-    seatnum: number
+    seatNumber: number
 }
 end note
 
