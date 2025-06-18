@@ -23,7 +23,7 @@ export const createCustomerAndLogin = async (fix: CommonFixture) => {
     return { customer, accessToken }
 }
 
-export const biuldCustomerCreateDto = (overrides = {}) => {
+export const buildCustomerCreateDto = (overrides = {}) => {
     const createDto = {
         name: 'name',
         email: 'name@mail.com',
@@ -36,7 +36,7 @@ export const biuldCustomerCreateDto = (overrides = {}) => {
 }
 
 export const createCustomer = async (fix: CommonFixture, override = {}) => {
-    const { createDto } = biuldCustomerCreateDto(override)
+    const { createDto } = buildCustomerCreateDto(override)
 
     const customer = await fix.customersClient.createCustomer(createDto)
     return customer
