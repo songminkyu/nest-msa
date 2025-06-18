@@ -27,7 +27,7 @@ export class CreateMovieDto {
     plot: string
 
     @IsInt()
-    durationSeconds: number
+    durationInSeconds: number
 
     @IsString()
     director: string

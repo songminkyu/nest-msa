@@ -27,7 +27,7 @@ class Movie {
     genre: string[]
     releaseDate: Date
     plot: string
-    durationSeconds : number
+    durationInSeconds : number
     director: string
     rating: string
 }

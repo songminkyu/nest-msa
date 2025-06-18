@@ -34,7 +34,7 @@ export class ShowtimeBatchValidatorService {
     }
 
     private async findConflictingShowtimes(createDto: CreateShowtimeBatchDto) {
-        const { durationMinutes, startTimes, theaterIds } = createDto
+        const { durationInMinutes, startTimes, theaterIds } = createDto
 
         const timeslotsByTheater = await this.generateTimeslotMapByTheater(createDto)
 
@@ -46,7 +46,7 @@ export class ShowtimeBatchValidatorService {
             Assert.defined(timeslots, `Timeslots must be defined for theater ID: ${theaterId}`)
 
             for (const start of startTimes) {
-                const timeRange = DateTimeRange.create({ start, minutes: durationMinutes })
+                const timeRange = DateTimeRange.create({ start, minutes: durationInMinutes })
 
                 iterateEvery10Mins(timeRange, (time) => {
                     const showtime = timeslots.get(time)
@@ -63,11 +63,11 @@ export class ShowtimeBatchValidatorService {
     }
 
     private async generateTimeslotMapByTheater(createDto: CreateShowtimeBatchDto) {
-        const { theaterIds, durationMinutes, startTimes } = createDto
+        const { theaterIds, durationInMinutes, startTimes } = createDto
 
         const startDate = DateUtil.earliest(startTimes)
         const maxDate = DateUtil.latest(startTimes)
-        const endDate = DateUtil.addMinutes(maxDate, durationMinutes)
+        const endDate = DateUtil.addMinutes(maxDate, durationInMinutes)
 
         const timeslotsByTheater = new Map<string, TimeslotMap>()
 

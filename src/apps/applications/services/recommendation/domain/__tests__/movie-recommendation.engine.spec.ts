@@ -9,7 +9,7 @@ describe('MovieRecommendationEngine', () => {
             genres,
             releaseDate,
             plot: '.',
-            durationSeconds: 0,
+            durationInSeconds: 0,
             director: '.',
             rating: MovieRating.PG,
             images: []

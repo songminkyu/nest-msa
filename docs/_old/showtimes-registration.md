@@ -73,7 +73,7 @@ Frontend -> Backend: POST /showtimes
     CreateShowtimesRequest {
         "movieId": "movie#1",
         "theaterIds": ["theater#1","theater#2"],
-        "durationSeconds": 90,
+        "durationInSeconds": 90,
         "startTimes": [202012120900, 202012121100, 202012121300]
     }
     end note

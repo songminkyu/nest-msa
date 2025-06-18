@@ -28,7 +28,7 @@ export class ShowtimeBatchCreatorService {
     }
 
     private async createShowtimeBatch(createDto: CreateShowtimeBatchDto, transactionId: string) {
-        const { movieId, theaterIds, durationMinutes, startTimes } = createDto
+        const { movieId, theaterIds, durationInMinutes, startTimes } = createDto
 
         const createDtos = theaterIds.flatMap((theaterId) =>
             startTimes.map((startTime) => ({
@@ -36,7 +36,7 @@ export class ShowtimeBatchCreatorService {
                 movieId,
                 theaterId,
                 startTime,
-                endTime: DateUtil.addMinutes(startTime, durationMinutes)
+                endTime: DateUtil.addMinutes(startTime, durationInMinutes)
             }))
         )
 

@@ -55,7 +55,7 @@ describe('Movies', () => {
                 genres: ['romance', 'thriller'],
                 releaseDate: new Date('2000-01-01'),
                 plot: `new plot`,
-                durationSeconds: 10 * 60,
+                durationInSeconds: 10 * 60,
                 director: 'Steven Spielberg',
                 rating: 'R'
             }

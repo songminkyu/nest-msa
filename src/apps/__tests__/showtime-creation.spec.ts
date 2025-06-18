@@ -51,7 +51,7 @@ describe('Showtime Creation', () => {
                     new Date('2100-01-01T13:00')
                 ],
                 theaterId: fix.theater.id,
-                durationMinutes: 1
+                durationInMinutes: 1
             })
 
             showtimes = await createShowtimes(fix, createDtos)
@@ -77,7 +77,7 @@ describe('Showtime Creation', () => {
         ) => {
             const { body } = await fix.httpClient
                 .post('/showtime-creation/showtimes')
-                .body({ movieId, theaterIds, startTimes, durationMinutes: 1 })
+                .body({ movieId, theaterIds, startTimes, durationInMinutes: 1 })
                 .accepted()
 
             return body
@@ -166,7 +166,7 @@ describe('Showtime Creation', () => {
                     new Date('2013-01-31T18:30')
                 ],
                 theaterId: fix.theater.id,
-                durationMinutes: 90
+                durationInMinutes: 90
             })
 
             showtimes = await createShowtimes(fix, createDtos)
@@ -186,7 +186,7 @@ describe('Showtime Creation', () => {
                         new Date('2013-01-31T16:00'),
                         new Date('2013-01-31T20:00')
                     ],
-                    durationMinutes: 30
+                    durationInMinutes: 30
                 })
                 .accepted()
 

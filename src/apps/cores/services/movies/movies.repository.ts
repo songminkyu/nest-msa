@@ -17,7 +17,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         movie.genres = createDto.genres
         movie.releaseDate = createDto.releaseDate
         movie.plot = createDto.plot
-        movie.durationSeconds = createDto.durationSeconds
+        movie.durationInSeconds = createDto.durationInSeconds
         movie.director = createDto.director
         movie.rating = createDto.rating
         movie.imageIds = objectIds(storageFileIds)
@@ -32,7 +32,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         if (updateDto.genres) movie.genres = updateDto.genres
         if (updateDto.releaseDate) movie.releaseDate = updateDto.releaseDate
         if (updateDto.plot) movie.plot = updateDto.plot
-        if (updateDto.durationSeconds) movie.durationSeconds = updateDto.durationSeconds
+        if (updateDto.durationInSeconds) movie.durationInSeconds = updateDto.durationInSeconds
         if (updateDto.director) movie.director = updateDto.director
         if (updateDto.rating) movie.rating = updateDto.rating
 

@@ -13,7 +13,7 @@ export class CreateShowtimeBatchDto {
 
     @IsPositive()
     @IsNotEmpty()
-    durationMinutes: number
+    durationInMinutes: number
 
     @IsArray()
     @ArrayNotEmpty()

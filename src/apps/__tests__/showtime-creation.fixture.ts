@@ -7,11 +7,11 @@ import { CommonFixture, createCommonFixture } from './utils'
 export const createShowtimeDtos = ({
     startTimes,
     theaterId,
-    durationMinutes
+    durationInMinutes
 }: {
     startTimes: Date[]
     theaterId: string
-    durationMinutes: number
+    durationInMinutes: number
 }) => {
     const createDtos: CreateShowtimeDto[] = []
 
@@ -21,7 +21,7 @@ export const createShowtimeDtos = ({
             movieId: nullObjectId,
             theaterId,
             startTime,
-            endTime: DateUtil.addMinutes(startTime, durationMinutes)
+            endTime: DateUtil.addMinutes(startTime, durationInMinutes)
         }
 
         createDtos.push(createDto)
