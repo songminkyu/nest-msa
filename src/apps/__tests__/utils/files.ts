@@ -4,40 +4,40 @@ import fs from 'fs'
 export interface TestFile {
     path: string
     size: number
-    originalname: string
-    mimetype: string
+    originalName: string
+    mimeType: string
 }
 
 export const TestFiles = {
     image: {
         path: Path.join(__dirname, 'res', 'image.png'),
         size: 0,
-        originalname: 'image.png',
-        mimetype: 'image/png'
+        originalName: 'image.png',
+        mimeType: 'image/png'
     },
     json: {
         path: Path.join(__dirname, 'res', 'file.json'),
         size: 0,
-        originalname: 'file.json',
-        mimetype: 'application/json'
+        originalName: 'file.json',
+        mimeType: 'application/json'
     },
     small: {
         path: Path.join(__dirname, 'res', 'small.txt'),
         size: 0,
-        originalname: 'small.txt',
-        mimetype: 'text/plain'
+        originalName: 'small.txt',
+        mimeType: 'text/plain'
     },
     large: {
         path: Path.join(__dirname, 'res', 'large.txt'),
         size: 0,
-        originalname: 'large.txt',
-        mimetype: 'text/plain'
+        originalName: 'large.txt',
+        mimeType: 'text/plain'
     },
     oversized: {
         path: Path.join(__dirname, 'res', 'oversized.txt'),
         size: 0,
-        originalname: 'oversized.txt',
-        mimetype: 'text/plain'
+        originalName: 'oversized.txt',
+        mimeType: 'text/plain'
     }
 }
 

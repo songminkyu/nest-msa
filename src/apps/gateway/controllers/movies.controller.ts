@@ -37,9 +37,12 @@ export class MoviesController {
         @UploadedFiles() files: Express.Multer.File[],
         @Body() movieCreateDto: CreateMovieDto
     ) {
-        const fileCreateDtos = files.map((file) =>
-            pick(file, 'originalname', 'mimetype', 'size', 'path')
-        )
+        const fileCreateDtos = files.map((file) => ({
+            originalName: file.originalname,
+            mimeType: file.mimetype,
+            size: file.size,
+            path: file.path
+        }))
 
         return this.moviesService.createMovie(movieCreateDto, fileCreateDtos)
     }

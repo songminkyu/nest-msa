@@ -17,8 +17,8 @@ export class StorageFilesRepository extends MongooseRepository<StorageFile> {
         session?: ClientSession
     ) {
         const storageFile = this.newDocument()
-        storageFile.originalname = createDto.originalname
-        storageFile.mimetype = createDto.mimetype
+        storageFile.originalName = createDto.originalName
+        storageFile.mimeType = createDto.mimeType
         storageFile.size = createDto.size
         storageFile.checksum = checksum
 

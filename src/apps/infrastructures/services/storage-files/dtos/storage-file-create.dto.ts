@@ -3,11 +3,11 @@ import { IsInt, IsNotEmpty, IsString } from 'class-validator'
 export class StorageFileCreateDto {
     @IsString()
     @IsNotEmpty()
-    originalname: string
+    originalName: string
 
     @IsString()
     @IsNotEmpty()
-    mimetype: string
+    mimeType: string
 
     @IsInt()
     size: number

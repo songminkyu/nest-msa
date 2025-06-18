@@ -31,11 +31,14 @@ export class StorageFilesController {
     @UseInterceptors(FilesInterceptor('files'))
     @Post()
     async saveFiles(@UploadedFiles() files: Express.Multer.File[], @Body() _body: UploadFileDto) {
-        const createDtos = files.map((file) =>
-            pick(file, 'originalname', 'mimetype', 'size', 'path')
-        )
+        const fileCreateDtos = files.map((file) => ({
+            originalName: file.originalname,
+            mimeType: file.mimetype,
+            size: file.size,
+            path: file.path
+        }))
 
-        const storageFiles = await this.storageFilesService.saveFiles(createDtos)
+        const storageFiles = await this.storageFilesService.saveFiles(fileCreateDtos)
         return { storageFiles }
     }
 
@@ -47,8 +50,8 @@ export class StorageFilesController {
         const readStream = createReadStream(file.storedPath)
 
         const stream = new StreamableFile(readStream, {
-            type: file.mimetype,
-            disposition: `attachment; filename="${encodeURIComponent(file.originalname)}"`,
+            type: file.mimeType,
+            disposition: `attachment; filename="${encodeURIComponent(file.originalName)}"`,
             length: file.size
         })
 
