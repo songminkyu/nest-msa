@@ -14,7 +14,6 @@ import { FilesInterceptor } from '@nestjs/platform-express'
 import { StorageFilesClient } from 'apps/infrastructures'
 import { IsString } from 'class-validator'
 import { createReadStream } from 'fs'
-import { pick } from 'lodash'
 import { Routes } from 'shared'
 import { MulterExceptionFilter } from './filters'
 
