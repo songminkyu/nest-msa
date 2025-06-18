@@ -11,7 +11,7 @@ export class CreateTheaterDto {
     @IsNotEmpty()
     @ValidateNested()
     @Type(() => LatLong)
-    latlong: LatLong
+    latLong: LatLong
 
     @IsNotEmpty()
     @ValidateNested()

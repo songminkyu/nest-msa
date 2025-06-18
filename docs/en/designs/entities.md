@@ -35,7 +35,7 @@ class Movie {
 class Theater{
     id:string
     name:string
-    latlong: LatLong
+    latLong: LatLong
     seatmap:Seatmap
 }
 note left

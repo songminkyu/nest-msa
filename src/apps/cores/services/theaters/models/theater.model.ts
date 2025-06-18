@@ -17,7 +17,7 @@ export class Theater extends MongooseSchema {
         required: true,
         _id: false
     })
-    latlong: LatLong
+    latLong: LatLong
 
     @Prop({ type: Object, required: true })
     seatmap: Seatmap

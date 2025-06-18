@@ -50,7 +50,7 @@ RESTful API의 핵심은 **자원(Resource)**을 중심으로 하고, 그 자원
 
 ```
 추천영화목록요청  GET /movies?filter=recommended&customerId={}
-상영극장목록요청  GET /theaters?movieId={}&latlong=37.123,128.678
+상영극장목록요청  GET /theaters?movieId={}&latLong=37.123,128.678
 상영일목록요청   GET /showtimes?movieId={}&theaterId={}&group=date
                  /showdates?movieId={}&theaterId={}
 상영시간목록요청  GET /showtimes?movieId={}&theaterId={}&showdate={}
@@ -73,7 +73,7 @@ RESTful API의 핵심은 **자원(Resource)**을 중심으로 하고, 그 자원
 
 ```
 추천영화목록요청  GET /movies/recommendations?customerId={}
-상영극장목록요청  GET /movies/{movieId}/theaters?latlong=37.123,128.678
+상영극장목록요청  GET /movies/{movieId}/theaters?latLong=37.123,128.678
 상영일목록요청   GET /movies/{movieId}/theaters/{theaterId}/showdates
 상영시간목록요청  GET /movies/{movieId}/theaters/{theaterId}/showdates/{}/showtimes
 예매정보요청     GET /showtimes/{}/tickets
@@ -88,7 +88,7 @@ RESTful API의 핵심은 **자원(Resource)**을 중심으로 하고, 그 자원
 
 ```
 추천영화목록요청 GET /movies/recommendations?customerId={}
-상영극장목록요청 GET /booking/movies/{movieId}/theaters?latlong=37.123,128.678
+상영극장목록요청 GET /booking/movies/{movieId}/theaters?latLong=37.123,128.678
 상영일목록요청 GET /booking/movies/{movieId}/theaters/{theaterId}/showdates
 상영시간목록요청 GET /booking/movies/{movieId}/theaters/{theaterId}/showdates/{}/showtimes
 예매정보요청 GET /booking/showtimes/{}/tickets

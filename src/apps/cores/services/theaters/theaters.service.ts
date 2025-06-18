@@ -39,7 +39,7 @@ export class TheatersService {
     }
 
     private toDto = (theater: TheaterDocument) =>
-        mapDocToDto(theater, TheaterDto, ['id', 'name', 'latlong', 'seatmap'])
+        mapDocToDto(theater, TheaterDto, ['id', 'name', 'latLong', 'seatmap'])
 
     private toDtos = (theaters: TheaterDocument[]) => theaters.map((theater) => this.toDto(theater))
 }

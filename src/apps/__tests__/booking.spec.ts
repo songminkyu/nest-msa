@@ -25,19 +25,19 @@ describe('Booking', () => {
 
         /* 1. 상영 극장 목록 요청 */
         await step('1. Request list of theaters screening the movie', async () => {
-            const latlong = '31.9,131.9'
+            const latLong = '31.9,131.9'
 
             const { body: theaters } = await fix.httpClient
-                .get(`/booking/movies/${fix.movie.id}/theaters?latlong=${latlong}`)
+                .get(`/booking/movies/${fix.movie.id}/theaters?latLong=${latLong}`)
                 .ok()
 
             expect(theaters).toEqual(
                 [
-                    { latlong: { latitude: 32.0, longitude: 132.0 } }, // distance = 0.1
-                    { latlong: { latitude: 31.0, longitude: 131.0 } }, // distance = 0.9
-                    { latlong: { latitude: 33.0, longitude: 133.0 } }, // distance = 1.1
-                    { latlong: { latitude: 30.0, longitude: 130.0 } }, // distance = 1.9
-                    { latlong: { latitude: 34.0, longitude: 134.0 } } // distance = 2.1
+                    { latLong: { latitude: 32.0, longitude: 132.0 } }, // distance = 0.1
+                    { latLong: { latitude: 31.0, longitude: 131.0 } }, // distance = 0.9
+                    { latLong: { latitude: 33.0, longitude: 133.0 } }, // distance = 1.1
+                    { latLong: { latitude: 30.0, longitude: 130.0 } }, // distance = 1.9
+                    { latLong: { latitude: 34.0, longitude: 134.0 } } // distance = 2.1
                 ].map((item) => expect.objectContaining(item))
             )
 

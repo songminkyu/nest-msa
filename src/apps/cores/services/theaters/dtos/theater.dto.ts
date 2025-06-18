@@ -4,6 +4,6 @@ import { Seatmap } from '../models'
 export class TheaterDto {
     id: string
     name: string
-    latlong: LatLong
+    latLong: LatLong
     seatmap: Seatmap
 }

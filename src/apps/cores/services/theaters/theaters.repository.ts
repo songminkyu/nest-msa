@@ -14,7 +14,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
     async createTheater(createDto: CreateTheaterDto) {
         const theater = this.newDocument()
         theater.name = createDto.name
-        theater.latlong = createDto.latlong
+        theater.latLong = createDto.latLong
         theater.seatmap = createDto.seatmap
 
         return theater.save()
@@ -24,7 +24,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         const theater = await this.getById(theaterId)
 
         if (updateDto.name) theater.name = updateDto.name
-        if (updateDto.latlong) theater.latlong = updateDto.latlong
+        if (updateDto.latLong) theater.latLong = updateDto.latLong
         if (updateDto.seatmap) theater.seatmap = updateDto.seatmap
 
         return theater.save()

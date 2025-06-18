@@ -2,11 +2,11 @@ import { ShowtimeDto, TheaterDto, TicketSalesForShowtimeDto } from 'apps/cores'
 import { LatLong } from 'common'
 import { ShowtimeForBooking } from './dtos'
 
-export function sortTheatersByDistance(theaters: TheaterDto[], latlong: LatLong) {
+export function sortTheatersByDistance(theaters: TheaterDto[], latLong: LatLong) {
     return theaters.sort(
         (a, b) =>
-            Math.abs(LatLong.distanceInMeters(a.latlong, latlong)) -
-            Math.abs(LatLong.distanceInMeters(b.latlong, latlong))
+            Math.abs(LatLong.distanceInMeters(a.latLong, latLong)) -
+            Math.abs(LatLong.distanceInMeters(b.latLong, latLong))
     )
 }
 

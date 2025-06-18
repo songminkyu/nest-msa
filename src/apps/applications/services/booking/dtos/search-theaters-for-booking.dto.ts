@@ -10,5 +10,5 @@ export class SearchTheatersForBookingDto {
     @IsNotEmpty()
     @ValidateNested()
     @Type(() => LatLong)
-    latlong: LatLong
+    latLong: LatLong
 }

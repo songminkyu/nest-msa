@@ -4,9 +4,9 @@ import { createHttpTestContext, HttpTestClient } from 'testlib'
 
 @Controller()
 class TestController {
-    @Get('latlong')
-    async testLatLong(@LatLongQuery('location') latlong: LatLong) {
-        return latlong
+    @Get('latLong')
+    async testLatLong(@LatLongQuery('location') latLong: LatLong) {
+        return latLong
     }
 }
 
