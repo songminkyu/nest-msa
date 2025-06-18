@@ -6,7 +6,7 @@ class Customer {
     id: string
     name: string
     email: string
-    birthdate: Date
+    birthDate: Date
 }
 
 class Movie {

@@ -27,7 +27,7 @@ export const biuldCustomerCreateDto = (overrides = {}) => {
     const createDto = {
         name: 'name',
         email: 'name@mail.com',
-        birthdate: new Date('2020-12-12'),
+        birthDate: new Date('2020-12-12'),
         password: 'password',
         ...overrides
     }

@@ -57,7 +57,7 @@ describe('Customers', () => {
             const updateDto = {
                 name: 'update-name',
                 email: 'new@mail.com',
-                birthdate: new Date('1900-12-31')
+                birthDate: new Date('1900-12-31')
             }
             const expected = { ...customer, ...updateDto }
 
