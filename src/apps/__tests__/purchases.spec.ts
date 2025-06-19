@@ -95,7 +95,10 @@ describe('Purchases', () => {
             await fix.httpClient
                 .post('/purchases')
                 .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
-                .badRequest({ ...Errors.TicketPurchase.MaxTicketsExceeded, maxCount: expect.any(Number) })
+                .badRequest({
+                    ...Errors.TicketPurchase.MaxTicketsExceeded,
+                    maxCount: expect.any(Number)
+                })
         })
 
         /* 구매 가능 시간을 초과하면 BAD_REQUEST(400)를 반환해야 한다 */
