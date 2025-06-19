@@ -70,7 +70,7 @@ describe('Showtime Creation', () => {
 
     /* 상영시간 생성 */
     describe('Creating showtimes', () => {
-        const createShowtimeBatch = async (
+        const requestShowtimeCreation = async (
             movieId: string,
             theaterIds: string[],
             startTimes: Date[]
@@ -94,7 +94,7 @@ describe('Showtime Creation', () => {
                 new Date('2100-01-01T13:00')
             ]
 
-            const { transactionId } = await createShowtimeBatch(
+            const { transactionId } = await requestShowtimeCreation(
                 fix.movie.id,
                 theaterIds,
                 startTimes
@@ -118,7 +118,7 @@ describe('Showtime Creation', () => {
         it('Should fail if the specified movie does not exist', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['error'])
 
-            const { transactionId } = await createShowtimeBatch(
+            const { transactionId } = await requestShowtimeCreation(
                 nullObjectId,
                 [fix.theater.id],
                 [nullDate]
@@ -137,7 +137,7 @@ describe('Showtime Creation', () => {
         it('Should fail if one or more specified theaters do not exist', async () => {
             const monitorPromise = monitorEvents(fix.httpClient, ['error'])
 
-            const { transactionId } = await createShowtimeBatch(
+            const { transactionId } = await requestShowtimeCreation(
                 fix.movie.id,
                 [nullObjectId],
                 [nullDate]
