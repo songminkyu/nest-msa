@@ -2,18 +2,18 @@ import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Injectable } from '@nestjs/common'
 import { Job, Queue } from 'bullmq'
 import { jsonToObject, MethodLog, newObjectId } from 'common'
-import { CreateShowtimeBatchDto } from '../dtos'
+import { BulkCreateShowtimesDto } from '../dtos'
 import { ShowtimeCreationEvents } from '../showtime-creation.events'
-import { ShowtimeBatchCreatorService } from './showtime-batch-creator.service'
-import { ShowtimeBatchValidatorService } from './showtime-batch-validator.service'
+import { ShowtimeBulkCreatorService } from './showtime-bulk-creator.service'
+import { ShowtimeBulkValidatorService } from './showtime-bulk-validator.service'
 import { ShowtimeCreationJobData, ShowtimeCreationStatus } from './types'
 
 @Injectable()
 @Processor('showtime-creation')
 export class ShowtimeCreationWorkerService extends WorkerHost {
     constructor(
-        private validatorService: ShowtimeBatchValidatorService,
-        private creatorService: ShowtimeBatchCreatorService,
+        private validatorService: ShowtimeBulkValidatorService,
+        private creatorService: ShowtimeBulkCreatorService,
         private events: ShowtimeCreationEvents,
         @InjectQueue('showtime-creation') private queue: Queue
     ) {
@@ -35,7 +35,7 @@ export class ShowtimeCreationWorkerService extends WorkerHost {
         await this.worker.waitUntilReady()
     }
 
-    async requestShowtimeCreation(createDto: CreateShowtimeBatchDto) {
+    async requestShowtimeCreation(createDto: BulkCreateShowtimesDto) {
         const transactionId = newObjectId()
 
         const data = { createDto, transactionId } as ShowtimeCreationJobData

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { MovieDto, ShowtimeDto, TheaterDto } from 'apps/cores'
 import { ClientProxyService, CommonQueryDto, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
-import { CreateShowtimeBatchDto, RequestShowtimeCreationResponse } from './dtos'
+import { BulkCreateShowtimesDto, RequestShowtimeCreationResponse } from './dtos'
 
 @Injectable()
 export class ShowtimeCreationClient {
@@ -21,7 +21,7 @@ export class ShowtimeCreationClient {
     }
 
     requestShowtimeCreation(
-        createDto: CreateShowtimeBatchDto
+        createDto: BulkCreateShowtimesDto
     ): Promise<RequestShowtimeCreationResponse> {
         return this.proxy.getJson(Messages.ShowtimeCreation.requestShowtimeCreation, createDto)
     }

@@ -9,25 +9,25 @@ import {
     TicketStatus
 } from 'apps/cores'
 import { Assert, DateUtil } from 'common'
-import { CreateShowtimeBatchDto } from '../dtos'
+import { BulkCreateShowtimesDto } from '../dtos'
 
 @Injectable()
-export class ShowtimeBatchCreatorService {
+export class ShowtimeBulkCreatorService {
     constructor(
         private theatersService: TheatersClient,
         private showtimesService: ShowtimesClient,
         private ticketsService: TicketsClient
     ) {}
 
-    async create(createDto: CreateShowtimeBatchDto, transactionId: string) {
-        const createdShowtimes = await this.createShowtimeBatch(createDto, transactionId)
+    async create(createDto: BulkCreateShowtimesDto, transactionId: string) {
+        const createdShowtimes = await this.bulkCreateShowtimes(createDto, transactionId)
 
-        const createdTicketCount = await this.createTicketBatch(createdShowtimes, transactionId)
+        const createdTicketCount = await this.bulkCreateTickets(createdShowtimes, transactionId)
 
         return { createdShowtimeCount: createdShowtimes.length, createdTicketCount }
     }
 
-    private async createShowtimeBatch(createDto: CreateShowtimeBatchDto, transactionId: string) {
+    private async bulkCreateShowtimes(createDto: BulkCreateShowtimesDto, transactionId: string) {
         const { movieId, theaterIds, durationInMinutes, startTimes } = createDto
 
         const createDtos = theaterIds.flatMap((theaterId) =>
@@ -47,7 +47,7 @@ export class ShowtimeBatchCreatorService {
         return showtimes
     }
 
-    private async createTicketBatch(showtimes: ShowtimeDto[], transactionId: string) {
+    private async bulkCreateTickets(showtimes: ShowtimeDto[], transactionId: string) {
         let totalCount = 0
 
         const theaterIds = Array.from(new Set(showtimes.map((showtime) => showtime.theaterId)))

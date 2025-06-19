@@ -1,7 +1,7 @@
-import { CreateShowtimeBatchDto } from '../dtos'
+import { BulkCreateShowtimesDto } from '../dtos'
 
 export class ShowtimeCreationJobData {
-    createDto: CreateShowtimeBatchDto
+    createDto: BulkCreateShowtimesDto
     transactionId: string
 }
 

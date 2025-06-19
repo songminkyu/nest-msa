@@ -1,11 +1,11 @@
 import {
     BookingServiceErrors,
     TicketPurchaseErrors,
-    ShowtimeBatchValidatorServiceErrors
+    ShowtimeBulkValidatorServiceErrors
 } from './services'
 
 export const ApplicationErrors = {
     TicketPurchase: TicketPurchaseErrors,
-    ShowtimeCreation: ShowtimeBatchValidatorServiceErrors,
+    ShowtimeCreation: ShowtimeBulkValidatorServiceErrors,
     Booking: BookingServiceErrors
 }

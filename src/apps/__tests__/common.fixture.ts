@@ -1,11 +1,10 @@
 import {
-    MovieGenre,
-    MovieRating,
     CreateShowtimeDto,
     CreateTicketDto,
+    MovieGenre,
+    MovieRating,
     TicketStatus
 } from 'apps/cores'
-import { DateTimeRange } from 'common'
 import { omit, uniq } from 'lodash'
 import { nullDate, nullObjectId } from 'testlib'
 import { CommonFixture, TestFiles } from './utils'

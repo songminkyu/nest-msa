@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { MoviesClient, ShowtimeDto, ShowtimesClient, TheatersClient } from 'apps/cores'
 import { Assert, DateTimeRange, DateUtil, Time } from 'common'
-import { CreateShowtimeBatchDto } from '../dtos'
+import { BulkCreateShowtimesDto } from '../dtos'
 
 type TimeslotMap = Map<number, ShowtimeDto>
 
-export const ShowtimeBatchValidatorServiceErrors = {
+export const ShowtimeBulkValidatorServiceErrors = {
     MovieNotFound: {
         code: 'ERR_SHOWTIME_CREATION_MOVIE_NOT_FOUND',
         message: 'The requested movie could not be found.'
@@ -17,14 +17,14 @@ export const ShowtimeBatchValidatorServiceErrors = {
 }
 
 @Injectable()
-export class ShowtimeBatchValidatorService {
+export class ShowtimeBulkValidatorService {
     constructor(
         private theatersService: TheatersClient,
         private moviesService: MoviesClient,
         private showtimesService: ShowtimesClient
     ) {}
 
-    async validate(createDto: CreateShowtimeBatchDto) {
+    async validate(createDto: BulkCreateShowtimesDto) {
         await this.verifyMovieExists(createDto.movieId)
         await this.verifyTheatersExist(createDto.theaterIds)
 
@@ -33,7 +33,7 @@ export class ShowtimeBatchValidatorService {
         return { isValid: 0 === conflictingShowtimes.length, conflictingShowtimes }
     }
 
-    private async findConflictingShowtimes(createDto: CreateShowtimeBatchDto) {
+    private async findConflictingShowtimes(createDto: BulkCreateShowtimesDto) {
         const { durationInMinutes, startTimes, theaterIds } = createDto
 
         const timeslotsByTheater = await this.generateTimeslotMapByTheater(createDto)
@@ -62,7 +62,7 @@ export class ShowtimeBatchValidatorService {
         return conflictingShowtimes
     }
 
-    private async generateTimeslotMapByTheater(createDto: CreateShowtimeBatchDto) {
+    private async generateTimeslotMapByTheater(createDto: BulkCreateShowtimesDto) {
         const { theaterIds, durationInMinutes, startTimes } = createDto
 
         const startDate = DateUtil.earliest(startTimes)
@@ -98,7 +98,7 @@ export class ShowtimeBatchValidatorService {
 
         if (!movieExists) {
             throw new NotFoundException({
-                ...ShowtimeBatchValidatorServiceErrors.MovieNotFound,
+                ...ShowtimeBulkValidatorServiceErrors.MovieNotFound,
                 movieId
             })
         }
@@ -109,7 +109,7 @@ export class ShowtimeBatchValidatorService {
 
         if (!theatersExist) {
             throw new NotFoundException({
-                ...ShowtimeBatchValidatorServiceErrors.TheaterNotFound,
+                ...ShowtimeBulkValidatorServiceErrors.TheaterNotFound,
                 theaterIds
             })
         }

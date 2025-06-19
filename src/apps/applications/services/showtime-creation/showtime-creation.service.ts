@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { MoviesClient, ShowtimesClient, TheatersClient } from 'apps/cores'
 import { CommonQueryDto, OrderDirection } from 'common'
-import { CreateShowtimeBatchDto, RequestShowtimeCreationResponse } from './dtos'
+import { BulkCreateShowtimesDto, RequestShowtimeCreationResponse } from './dtos'
 import { ShowtimeCreationWorkerService } from './services'
 
 @Injectable()
@@ -31,7 +31,7 @@ export class ShowtimeCreationService {
         })
     }
 
-    async requestShowtimeCreation(createDto: CreateShowtimeBatchDto) {
+    async requestShowtimeCreation(createDto: BulkCreateShowtimesDto) {
         const transactionId = await this.workerService.requestShowtimeCreation(createDto)
 
         return { transactionId } as RequestShowtimeCreationResponse
