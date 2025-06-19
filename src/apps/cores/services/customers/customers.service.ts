@@ -33,7 +33,7 @@ export class CustomersService {
 
         if (existingCustomer) {
             throw new ConflictException({
-                ...CustomerErrors.emailAlreadyExists,
+                ...CustomerErrors.EmailAlreadyExists,
                 email: createDto.email
             })
         }

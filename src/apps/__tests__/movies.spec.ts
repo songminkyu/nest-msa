@@ -24,7 +24,7 @@ describe('Movies', () => {
 
             const { body } = await fix.httpClient
                 .post('/movies')
-                .attachs([{ name: 'files', file: fix.image.path }])
+                .attachments([{ name: 'files', file: fix.image.path }])
                 .fields(objectToFields(createDto))
                 .created()
 

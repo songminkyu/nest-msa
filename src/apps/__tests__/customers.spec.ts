@@ -32,7 +32,7 @@ describe('Customers', () => {
             await fix.httpClient
                 .post('/customers')
                 .body(createDto)
-                .conflict({ ...Errors.Customer.emailAlreadyExists, email: createDto.email })
+                .conflict({ ...Errors.Customer.EmailAlreadyExists, email: createDto.email })
         })
 
         /* 필수 필드가 누락되면 BAD_REQUEST(400)를 반환해야 한다 */

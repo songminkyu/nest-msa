@@ -14,7 +14,7 @@ import { uniq } from 'lodash'
 import { Rules } from 'shared'
 import { PurchaseProcessEvents } from '../purchase-process.events'
 
-export const PurchaseErrors = {
+export const TicketPurchaseErrors = {
     MaxTicketsExceeded: {
         code: 'ERR_PURCHASE_MAX_TICKETS_EXCEEDED',
         message: 'You have exceeded the maximum number of tickets allowed for purchase.'
@@ -64,7 +64,7 @@ export class TicketPurchaseProcessor {
     private validateTicketCount(ticketItems: PurchaseItemDto[]) {
         if (Rules.Ticket.maxTicketsPerPurchase < ticketItems.length) {
             throw new BadRequestException({
-                ...PurchaseErrors.MaxTicketsExceeded,
+                ...TicketPurchaseErrors.MaxTicketsExceeded,
                 maxCount: Rules.Ticket.maxTicketsPerPurchase
             })
         }
@@ -76,7 +76,7 @@ export class TicketPurchaseProcessor {
 
             if (startTime.getTime() < cutoffTime.getTime()) {
                 throw new BadRequestException({
-                    ...PurchaseErrors.DeadlineExceeded,
+                    ...TicketPurchaseErrors.DeadlineExceeded,
                     deadlineMinutes: Rules.Ticket.purchaseDeadlineMinutes,
                     startTime: startTime.toString(),
                     cutoffTime: cutoffTime.toString()
@@ -105,7 +105,7 @@ export class TicketPurchaseProcessor {
         const isAllExist = purchaseTicketIds.every((ticketId) => heldTicketIds.includes(ticketId))
 
         if (!isAllExist) {
-            throw new BadRequestException(PurchaseErrors.TicketNotHeld)
+            throw new BadRequestException(TicketPurchaseErrors.TicketNotHeld)
         }
     }
 

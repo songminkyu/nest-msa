@@ -95,7 +95,7 @@ describe('Purchases', () => {
             await fix.httpClient
                 .post('/purchases')
                 .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
-                .badRequest({ ...Errors.Purchase.MaxTicketsExceeded, maxCount: expect.any(Number) })
+                .badRequest({ ...Errors.TicketPurchase.MaxTicketsExceeded, maxCount: expect.any(Number) })
         })
 
         /* 구매 가능 시간을 초과하면 BAD_REQUEST(400)를 반환해야 한다 */
@@ -108,7 +108,7 @@ describe('Purchases', () => {
                 .post('/purchases')
                 .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
                 .badRequest({
-                    ...Errors.Purchase.DeadlineExceeded,
+                    ...Errors.TicketPurchase.DeadlineExceeded,
                     deadlineMinutes: expect.any(Number),
                     cutoffTime: expect.any(String),
                     startTime: expect.any(String)
@@ -123,7 +123,7 @@ describe('Purchases', () => {
             await fix.httpClient
                 .post('/purchases')
                 .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
-                .badRequest(Errors.Purchase.TicketNotHeld)
+                .badRequest(Errors.TicketPurchase.TicketNotHeld)
         })
     })
 

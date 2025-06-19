@@ -14,9 +14,9 @@ export class PurchasesController {
         return this.purchaseProcessService.processPurchase(createDto)
     }
 
-    @Get(':purchseId')
-    async getPurchase(@Param('purchseId') purchseId: string) {
-        const purchases = await this.purchasesService.getPurchases([purchseId])
+    @Get(':purchaseId')
+    async getPurchase(@Param('purchaseId') purchaseId: string) {
+        const purchases = await this.purchasesService.getPurchases([purchaseId])
         return purchases[0]
     }
 }
