@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 . "$(dirname "$0")/common.cfg"
 
 kafka_topics() {
