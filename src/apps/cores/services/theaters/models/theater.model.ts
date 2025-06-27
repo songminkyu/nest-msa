@@ -9,6 +9,7 @@ export class Theater extends MongooseSchema {
     @Prop({ required: true })
     name: string
 
+    // TODO Location으로 바꿔라 lat,long,address 포함해라
     @Prop({
         type: {
             latitude: { type: Number, required: true },
