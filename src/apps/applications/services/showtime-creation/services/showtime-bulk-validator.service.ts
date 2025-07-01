@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { MoviesClient, ShowtimeDto, ShowtimesClient, TheatersClient } from 'apps/cores'
 import { Assert, DateTimeRange, DateUtil, Time } from 'common'
+import { Rules } from 'shared'
 import { BulkCreateShowtimesDto } from '../dtos'
 
 type TimeslotMap = Map<number, ShowtimeDto>
@@ -48,7 +49,7 @@ export class ShowtimeBulkValidatorService {
             for (const start of startTimes) {
                 const timeRange = DateTimeRange.create({ start, minutes: durationInMinutes })
 
-                iterateEvery10Mins(timeRange, (time) => {
+                iterateShowtimeUnitInMinutes(timeRange, (time) => {
                     const showtime = timeslots.get(time)
 
                     if (showtime) {
@@ -82,7 +83,7 @@ export class ShowtimeBulkValidatorService {
             for (const showtime of fetchedShowtimes) {
                 const { startTime: start, endTime: end } = showtime
 
-                iterateEvery10Mins({ start, end }, (time) => {
+                iterateShowtimeUnitInMinutes({ start, end }, (time) => {
                     timeslots.set(time, showtime)
                 })
             }
@@ -116,15 +117,14 @@ export class ShowtimeBulkValidatorService {
     }
 }
 
-// TODO 10분은 규칙에 적어놔야 한다.
-const iterateEvery10Mins = (
+const iterateShowtimeUnitInMinutes = (
     timeRange: DateTimeRange,
     callback: (time: number) => boolean | void
 ) => {
     for (
         let time = timeRange.start.getTime();
         time <= timeRange.end.getTime();
-        time = time + Time.toMs('10m')
+        time = time + Time.toMs(`${Rules.Showtime.unitInMinutes}m`)
     ) {
         if (false === callback(time)) {
             break
