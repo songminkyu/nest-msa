@@ -33,11 +33,11 @@ describe('Booking', () => {
 
             expect(theaters).toEqual(
                 [
-                    { latLong: { latitude: 32.0, longitude: 132.0 } }, // distance = 0.1
-                    { latLong: { latitude: 31.0, longitude: 131.0 } }, // distance = 0.9
-                    { latLong: { latitude: 33.0, longitude: 133.0 } }, // distance = 1.1
-                    { latLong: { latitude: 30.0, longitude: 130.0 } }, // distance = 1.9
-                    { latLong: { latitude: 34.0, longitude: 134.0 } } // distance = 2.1
+                    { location: { latitude: 32.0, longitude: 132.0 } }, // distance = 0.1
+                    { location: { latitude: 31.0, longitude: 131.0 } }, // distance = 0.9
+                    { location: { latitude: 33.0, longitude: 133.0 } }, // distance = 1.1
+                    { location: { latitude: 30.0, longitude: 130.0 } }, // distance = 1.9
+                    { location: { latitude: 34.0, longitude: 134.0 } } // distance = 2.1
                 ].map((item) => expect.objectContaining(item))
             )
 

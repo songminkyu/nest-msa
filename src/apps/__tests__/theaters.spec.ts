@@ -44,7 +44,7 @@ describe('Theaters', () => {
         it('Should update theater information', async () => {
             const updateDto = {
                 name: 'update-name',
-                latLong: { latitude: 30.0, longitude: 120.0 },
+                location: { latitude: 30.0, longitude: 120.0 },
                 seatmap: []
             }
             const expected = { ...theater, ...updateDto }

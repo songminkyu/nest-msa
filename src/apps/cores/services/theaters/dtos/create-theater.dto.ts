@@ -1,7 +1,6 @@
 import { Type } from 'class-transformer'
 import { IsNotEmpty, IsString, ValidateNested } from 'class-validator'
-import { LatLong } from 'common'
-import { Seatmap } from '../models'
+import { Seatmap, TheaterLocation } from '../models'
 
 export class CreateTheaterDto {
     @IsString()
@@ -10,8 +9,8 @@ export class CreateTheaterDto {
 
     @IsNotEmpty()
     @ValidateNested()
-    @Type(() => LatLong)
-    latLong: LatLong
+    @Type(() => TheaterLocation)
+    location: TheaterLocation
 
     @IsNotEmpty()
     @ValidateNested()

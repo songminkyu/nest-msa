@@ -5,8 +5,8 @@ import { ShowtimeForBooking } from './dtos'
 export function sortTheatersByDistance(theaters: TheaterDto[], latLong: LatLong) {
     return theaters.sort(
         (a, b) =>
-            Math.abs(LatLong.distanceInMeters(a.latLong, latLong)) -
-            Math.abs(LatLong.distanceInMeters(b.latLong, latLong))
+            Math.abs(LatLong.distanceInMeters(a.location, latLong)) -
+            Math.abs(LatLong.distanceInMeters(b.location, latLong))
     )
 }
 

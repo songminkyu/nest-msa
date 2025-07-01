@@ -13,11 +13,11 @@ import { CommonFixture, createCommonFixture } from './helpers'
 
 const createTheaters = async (fix: CommonFixture) => {
     const theaters = await Promise.all([
-        createTheater(fix, { latLong: { latitude: 30.0, longitude: 130.0 } }),
-        createTheater(fix, { latLong: { latitude: 31.0, longitude: 131.0 } }),
-        createTheater(fix, { latLong: { latitude: 32.0, longitude: 132.0 } }),
-        createTheater(fix, { latLong: { latitude: 33.0, longitude: 133.0 } }),
-        createTheater(fix, { latLong: { latitude: 34.0, longitude: 134.0 } })
+        createTheater(fix, { location: { latitude: 30.0, longitude: 130.0 } }),
+        createTheater(fix, { location: { latitude: 31.0, longitude: 131.0 } }),
+        createTheater(fix, { location: { latitude: 32.0, longitude: 132.0 } }),
+        createTheater(fix, { location: { latitude: 33.0, longitude: 133.0 } }),
+        createTheater(fix, { location: { latitude: 34.0, longitude: 134.0 } })
     ])
 
     return theaters

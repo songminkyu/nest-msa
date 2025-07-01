@@ -66,7 +66,7 @@ export const createMovie = async (fix: CommonFixture, override = {}) => {
 export const buildTheaterCreateDto = (overrides = {}) => {
     const createDto = {
         name: `theater name`,
-        latLong: { latitude: 38.123, longitude: 138.678 },
+        location: { latitude: 38.123, longitude: 138.678 },
         seatmap: { blocks: [{ name: 'A', rows: [{ name: '1', seats: 'OOOOXXOOOO' }] }] },
         ...overrides
     }

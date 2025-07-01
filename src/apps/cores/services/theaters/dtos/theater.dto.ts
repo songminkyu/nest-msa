@@ -1,9 +1,8 @@
-import { LatLong } from 'common'
-import { Seatmap } from '../models'
+import { Seatmap, TheaterLocation } from '../models'
 
 export class TheaterDto {
     id: string
     name: string
-    latLong: LatLong
+    location: TheaterLocation
     seatmap: Seatmap
 }
