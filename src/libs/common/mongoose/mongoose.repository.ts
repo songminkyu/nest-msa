@@ -109,17 +109,17 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
     }
 
     async findWithPagination(args: {
-        callback?: (helpers: QueryWithHelpers<Array<Doc>, Doc>) => void
+        handleQuery?: (query: QueryWithHelpers<Array<Doc>, Doc>) => void
         pagination: CommonQueryDto
         session?: SessionArg
     }) {
-        const { callback, pagination, session } = args
+        const { handleQuery, pagination, session } = args
 
         if (!pagination.take) {
             throw new BadRequestException(MongooseErrors.TakeMissing)
         }
 
-        const helpers = this.model.find({}, null, { session })
+        const query = this.model.find({}, null, { session })
 
         let take = 0
         let skip = 0
@@ -129,25 +129,25 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
             if (take <= 0) {
                 throw new BadRequestException({ ...MongooseErrors.TakeInvalid, take })
             }
-            helpers.limit(take)
+            query.limit(take)
         }
 
         if (pagination.skip) {
             skip = pagination.skip
-            helpers.skip(skip)
+            query.skip(skip)
         }
 
         if (pagination.orderby) {
             const { name, direction } = pagination.orderby
-            helpers.sort({ [name]: direction })
+            query.sort({ [name]: direction })
         }
 
-        if (callback) {
-            await callback(helpers)
+        if (handleQuery) {
+            await handleQuery(query)
         }
 
-        const items = await helpers.exec()
-        const total = await this.model.countDocuments(helpers.getQuery()).exec()
+        const items = await query.exec()
+        const total = await this.model.countDocuments(query.getQuery()).exec()
 
         return { skip, take, total, items } as PaginationResult<HydratedDocument<Doc>>
     }

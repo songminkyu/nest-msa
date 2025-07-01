@@ -19,14 +19,14 @@ export const ShowtimeBulkValidatorServiceErrors = {
 
 const iterateShowtimeSlot = (
     timeRange: DateTimeRange,
-    onEachSlot: (time: number) => boolean | void
+    handleSlot: (time: number) => boolean | void
 ) => {
     for (
         let time = timeRange.start.getTime();
         time <= timeRange.end.getTime();
         time = time + Time.toMs(`${Rules.Showtime.slotMinutes}m`)
     ) {
-        if (false === onEachSlot(time)) {
+        if (false === handleSlot(time)) {
             break
         }
     }

@@ -151,7 +151,7 @@ describe('MongooseRepository', () => {
         /* QueryHelper를 사용해 조건을 설정해야 한다 */
         it('Should apply conditions using QueryHelper', async () => {
             const { items } = await fix.repository.findWithPagination({
-                callback: (helpers) => {
+                handleQuery: (helpers) => {
                     helpers.setQuery({ name: /Sample-00/i })
                 },
                 pagination: { take: 10 }
