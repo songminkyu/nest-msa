@@ -17,6 +17,21 @@ export const ShowtimeBulkValidatorServiceErrors = {
     }
 }
 
+const iterateShowtimeSlot = (
+    timeRange: DateTimeRange,
+    onEachSlot: (time: number) => boolean | void
+) => {
+    for (
+        let time = timeRange.start.getTime();
+        time <= timeRange.end.getTime();
+        time = time + Time.toMs(`${Rules.Showtime.slotMinutes}m`)
+    ) {
+        if (false === onEachSlot(time)) {
+            break
+        }
+    }
+}
+
 @Injectable()
 export class ShowtimeBulkValidatorService {
     constructor(
@@ -49,11 +64,12 @@ export class ShowtimeBulkValidatorService {
             for (const start of startTimes) {
                 const timeRange = DateTimeRange.create({ start, minutes: durationInMinutes })
 
-                iterateShowtimeUnitInMinutes(timeRange, (time) => {
+                iterateShowtimeSlot(timeRange, (time) => {
                     const showtime = timeslots.get(time)
 
                     if (showtime) {
                         conflictingShowtimes.push(showtime)
+
                         return false
                     }
                 })
@@ -83,7 +99,7 @@ export class ShowtimeBulkValidatorService {
             for (const showtime of fetchedShowtimes) {
                 const { startTime: start, endTime: end } = showtime
 
-                iterateShowtimeUnitInMinutes({ start, end }, (time) => {
+                iterateShowtimeSlot({ start, end }, (time) => {
                     timeslots.set(time, showtime)
                 })
             }
@@ -113,21 +129,6 @@ export class ShowtimeBulkValidatorService {
                 ...ShowtimeBulkValidatorServiceErrors.TheaterNotFound,
                 theaterIds
             })
-        }
-    }
-}
-
-const iterateShowtimeUnitInMinutes = (
-    timeRange: DateTimeRange,
-    callback: (time: number) => boolean | void
-) => {
-    for (
-        let time = timeRange.start.getTime();
-        time <= timeRange.end.getTime();
-        time = time + Time.toMs(`${Rules.Showtime.slotMinutes}m`)
-    ) {
-        if (false === callback(time)) {
-            break
         }
     }
 }
