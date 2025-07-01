@@ -9,7 +9,7 @@ import {
     createTheater,
     createTickets
 } from './common.fixture'
-import { CommonFixture, createCommonFixture } from './utils'
+import { CommonFixture, createCommonFixture } from './helpers'
 
 const createTheaters = async (fix: CommonFixture) => {
     const theaters = await Promise.all([

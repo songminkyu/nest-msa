@@ -2,7 +2,7 @@ import { CustomerDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
 import { buildCustomerCreateDto, createCustomer } from './common.fixture'
 import { Fixture } from './customers.fixture'
-import { Errors } from './utils'
+import { Errors } from './helpers'
 
 describe('Customers', () => {
     let fix: Fixture

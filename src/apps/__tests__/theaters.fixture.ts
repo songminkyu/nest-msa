@@ -1,4 +1,4 @@
-import { CommonFixture, createCommonFixture } from './utils'
+import { CommonFixture, createCommonFixture } from './helpers'
 
 export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>

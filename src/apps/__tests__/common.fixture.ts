@@ -7,7 +7,7 @@ import {
 } from 'apps/cores'
 import { omit, uniq } from 'lodash'
 import { nullDate, nullObjectId } from 'testlib'
-import { CommonFixture, TestFiles } from './utils'
+import { CommonFixture, TestFiles } from './helpers'
 
 export const createCustomerAndLogin = async (fix: CommonFixture) => {
     const email = 'user@mail.com'

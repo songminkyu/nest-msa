@@ -2,7 +2,7 @@ import { PurchaseDto, PurchaseItemDto, PurchaseItemType, TicketDto, TicketStatus
 import { Rules } from 'shared'
 import { nullObjectId } from 'testlib'
 import { Fixture, setupPurchaseData } from './purchases.fixture'
-import { Errors } from './utils'
+import { Errors } from './helpers'
 
 describe('Purchases', () => {
     let fix: Fixture

@@ -2,7 +2,7 @@ import { StorageFileDto } from 'apps/infrastructures'
 import { generateShortId, getChecksum, Path } from 'common'
 import { nullObjectId } from 'testlib'
 import { Fixture, saveFile } from './storage-files.fixture'
-import { Errors } from './utils'
+import { Errors } from './helpers'
 
 describe('File Upload', () => {
     let fix: Fixture
