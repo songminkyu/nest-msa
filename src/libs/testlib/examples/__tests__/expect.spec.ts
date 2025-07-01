@@ -1,6 +1,6 @@
 // TODO testlib로 옮겨라
 
-describe('jest examples', () => {
+describe('jest.expect examples', () => {
     it('toBe vs toEqual', () => {
         /*
         toEqual
