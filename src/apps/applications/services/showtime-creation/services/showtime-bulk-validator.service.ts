@@ -124,7 +124,7 @@ const iterateShowtimeUnitInMinutes = (
     for (
         let time = timeRange.start.getTime();
         time <= timeRange.end.getTime();
-        time = time + Time.toMs(`${Rules.Showtime.unitInMinutes}m`)
+        time = time + Time.toMs(`${Rules.Showtime.slotMinutes}m`)
     ) {
         if (false === callback(time)) {
             break

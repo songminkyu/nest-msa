@@ -67,7 +67,7 @@ export class TicketHoldingService {
         `
         const result = await this.cacheService.executeScript(script, keys, [
             customerId,
-            Rules.Ticket.holdExpirationTime.toString(),
+            Rules.Ticket.holdDurationInMs.toString(),
             JSON.stringify(ticketIds),
             showtimeId
         ])

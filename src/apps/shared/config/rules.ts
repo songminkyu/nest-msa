@@ -25,13 +25,13 @@ export const Rules = {
         Time duration a ticket can be temporarily held (reserved)
         티켓을 임시로 선점할 수 있는 시간
         */
-        holdExpirationTime: Time.toMs('10m')
+        holdDurationInMs: Time.toMs('10m')
     },
     Showtime: {
         /*
         The minimum unit of time used to divide showtimes (in minutes)
         상영 시간을 나누는 최소 단위 (분 단위)
         */
-        unitInMinutes: 10
+        slotMinutes: 10
     }
 }
