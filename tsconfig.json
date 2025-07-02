@@ -24,7 +24,7 @@
         "noFallthroughCasesInSwitch": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "isolatedModules": true,
+        "isolatedModules": false,
         "sourceMap": true,
         "baseUrl": ".",
         "outDir": "./_output/build",
