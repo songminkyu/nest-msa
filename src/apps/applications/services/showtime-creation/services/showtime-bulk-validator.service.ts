@@ -19,14 +19,14 @@ export const ShowtimeBulkValidatorServiceErrors = {
 
 const iterateShowtimeSlot = (
     timeRange: DateTimeRange,
-    handleSlot: (time: number) => boolean | void
+    onTimeslot: (timeslot: number) => boolean | void
 ) => {
     for (
-        let time = timeRange.start.getTime();
-        time <= timeRange.end.getTime();
-        time = time + Time.toMs(`${Rules.Showtime.slotMinutes}m`)
+        let timeslot = timeRange.start.getTime();
+        timeslot <= timeRange.end.getTime();
+        timeslot = timeslot + Time.toMs(`${Rules.Showtime.slotMinutes}m`)
     ) {
-        if (false === handleSlot(time)) {
+        if (false === onTimeslot(timeslot)) {
             break
         }
     }
@@ -64,8 +64,8 @@ export class ShowtimeBulkValidatorService {
             for (const start of startTimes) {
                 const timeRange = DateTimeRange.create({ start, minutes: durationInMinutes })
 
-                iterateShowtimeSlot(timeRange, (time) => {
-                    const showtime = timeslots.get(time)
+                iterateShowtimeSlot(timeRange, (timeslot) => {
+                    const showtime = timeslots.get(timeslot)
 
                     if (showtime) {
                         conflictingShowtimes.push(showtime)
@@ -99,8 +99,8 @@ export class ShowtimeBulkValidatorService {
             for (const showtime of fetchedShowtimes) {
                 const { startTime: start, endTime: end } = showtime
 
-                iterateShowtimeSlot({ start, end }, (time) => {
-                    timeslots.set(time, showtime)
+                iterateShowtimeSlot({ start, end }, (timeslot) => {
+                    timeslots.set(timeslot, showtime)
                 })
             }
 
