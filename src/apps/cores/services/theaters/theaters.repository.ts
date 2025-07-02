@@ -34,10 +34,10 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
-            handleQuery: (helpers) => {
+            configureQuery: (queryHelper) => {
                 const query = this.buildQuery(searchDto, { allowEmpty: true })
 
-                helpers.setQuery(query)
+                queryHelper.setQuery(query)
             },
             pagination: { take, skip, orderby }
         })
