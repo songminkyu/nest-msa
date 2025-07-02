@@ -1,9 +1,8 @@
-import { expect } from '@jest/globals'
 import { TheaterDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
 import { buildTheaterCreateDto, createTheater } from './common.fixture'
 import { Fixture } from './theaters.fixture'
-import { Errors } from './utils'
+import { Errors } from './helpers'
 
 describe('Theaters', () => {
     let fix: Fixture
@@ -45,7 +44,7 @@ describe('Theaters', () => {
         it('Should update theater information', async () => {
             const updateDto = {
                 name: 'update-name',
-                latlong: { latitude: 30.0, longitude: 120.0 },
+                location: { latitude: 30.0, longitude: 120.0 },
                 seatmap: []
             }
             const expected = { ...theater, ...updateDto }

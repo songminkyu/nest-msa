@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 . ./common.cfg
 
 reset_all
@@ -20,7 +20,7 @@ PATCH /customers/$USER_ID \
     -d '{
  "name": "new name",
  "email": "new@mail.com",
- "birthdate": "2000-01-01"
+ "birthDate": "2000-01-01"
  }'
 
 TITLE "Delete User with Specific ID"

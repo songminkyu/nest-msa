@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { MoviesClient, ShowtimeDto, ShowtimesClient, TheatersClient } from 'apps/cores'
 import { Assert, DateTimeRange, DateUtil, Time } from 'common'
-import { ShowtimeBatchCreateJobData } from './types'
+import { Rules } from 'shared'
+import { BulkCreateShowtimesDto } from '../dtos'
 
 type TimeslotMap = Map<number, ShowtimeDto>
 
-export const ShowtimeCreationValidatorServiceErrors = {
+export const ShowtimeBulkValidatorServiceErrors = {
     MovieNotFound: {
         code: 'ERR_SHOWTIME_CREATION_MOVIE_NOT_FOUND',
         message: 'The requested movie could not be found.'
@@ -16,27 +17,42 @@ export const ShowtimeCreationValidatorServiceErrors = {
     }
 }
 
+const iterateTimeslots = (
+    timeRange: DateTimeRange,
+    onTimeslot: (timeslot: number) => boolean | void
+) => {
+    for (
+        let timeslot = timeRange.start.getTime();
+        timeslot <= timeRange.end.getTime();
+        timeslot = timeslot + Time.toMs(`${Rules.Showtime.timeslotInMinutes}m`)
+    ) {
+        if (false === onTimeslot(timeslot)) {
+            break
+        }
+    }
+}
+
 @Injectable()
-export class ShowtimeCreationValidatorService {
+export class ShowtimeBulkValidatorService {
     constructor(
         private theatersService: TheatersClient,
         private moviesService: MoviesClient,
         private showtimesService: ShowtimesClient
     ) {}
 
-    async validate(data: ShowtimeBatchCreateJobData) {
-        await this.ensureMovieExists(data.movieId)
-        await this.ensureTheatersExist(data.theaterIds)
+    async validate(createDto: BulkCreateShowtimesDto) {
+        await this.verifyMovieExists(createDto.movieId)
+        await this.verifyTheatersExist(createDto.theaterIds)
 
-        const conflictingShowtimes = await this.checkTimeConflicts(data)
+        const conflictingShowtimes = await this.findConflictingShowtimes(createDto)
 
-        return conflictingShowtimes
+        return { isValid: 0 === conflictingShowtimes.length, conflictingShowtimes }
     }
 
-    private async checkTimeConflicts(data: ShowtimeBatchCreateJobData): Promise<ShowtimeDto[]> {
-        const { durationMinutes, startTimes, theaterIds } = data
+    private async findConflictingShowtimes(createDto: BulkCreateShowtimesDto) {
+        const { durationInMinutes, startTimes, theaterIds } = createDto
 
-        const timeslotsByTheater = await this.generateTimeslotMapByTheater(data)
+        const timeslotsByTheater = await this.generateTimeslotMapByTheater(createDto)
 
         const conflictingShowtimes: ShowtimeDto[] = []
 
@@ -46,13 +62,14 @@ export class ShowtimeCreationValidatorService {
             Assert.defined(timeslots, `Timeslots must be defined for theater ID: ${theaterId}`)
 
             for (const start of startTimes) {
-                const timeRange = DateTimeRange.create({ start, minutes: durationMinutes })
+                const timeRange = DateTimeRange.create({ start, minutes: durationInMinutes })
 
-                iterateEvery10Mins(timeRange, (time) => {
-                    const showtime = timeslots.get(time)
+                iterateTimeslots(timeRange, (timeslot) => {
+                    const showtime = timeslots.get(timeslot)
 
                     if (showtime) {
                         conflictingShowtimes.push(showtime)
+
                         return false
                     }
                 })
@@ -62,14 +79,12 @@ export class ShowtimeCreationValidatorService {
         return conflictingShowtimes
     }
 
-    private async generateTimeslotMapByTheater(
-        data: ShowtimeBatchCreateJobData
-    ): Promise<Map<string, TimeslotMap>> {
-        const { theaterIds, durationMinutes, startTimes } = data
+    private async generateTimeslotMapByTheater(createDto: BulkCreateShowtimesDto) {
+        const { theaterIds, durationInMinutes, startTimes } = createDto
 
         const startDate = DateUtil.earliest(startTimes)
         const maxDate = DateUtil.latest(startTimes)
-        const endDate = DateUtil.addMinutes(maxDate, durationMinutes)
+        const endDate = DateUtil.addMinutes(maxDate, durationInMinutes)
 
         const timeslotsByTheater = new Map<string, TimeslotMap>()
 
@@ -82,8 +97,10 @@ export class ShowtimeCreationValidatorService {
             const timeslots = new Map<number, ShowtimeDto>()
 
             for (const showtime of fetchedShowtimes) {
-                iterateEvery10Mins(showtime.timeRange, (time) => {
-                    timeslots.set(time, showtime)
+                const { startTime: start, endTime: end } = showtime
+
+                iterateTimeslots({ start, end }, (timeslot) => {
+                    timeslots.set(timeslot, showtime)
                 })
             }
 
@@ -93,38 +110,25 @@ export class ShowtimeCreationValidatorService {
         return timeslotsByTheater
     }
 
-    private async ensureMovieExists(movieId: string): Promise<void> {
+    private async verifyMovieExists(movieId: string) {
         const movieExists = await this.moviesService.moviesExist([movieId])
+
         if (!movieExists) {
             throw new NotFoundException({
-                ...ShowtimeCreationValidatorServiceErrors.MovieNotFound,
+                ...ShowtimeBulkValidatorServiceErrors.MovieNotFound,
                 movieId
             })
         }
     }
 
-    private async ensureTheatersExist(theaterIds: string[]): Promise<void> {
+    private async verifyTheatersExist(theaterIds: string[]) {
         const theatersExist = await this.theatersService.theatersExist(theaterIds)
+
         if (!theatersExist) {
             throw new NotFoundException({
-                ...ShowtimeCreationValidatorServiceErrors.TheaterNotFound,
+                ...ShowtimeBulkValidatorServiceErrors.TheaterNotFound,
                 theaterIds
             })
-        }
-    }
-}
-
-const iterateEvery10Mins = (
-    timeRange: DateTimeRange,
-    callback: (time: number) => boolean | void
-) => {
-    for (
-        let time = timeRange.start.getTime();
-        time <= timeRange.end.getTime();
-        time = time + Time.toMs('10m')
-    ) {
-        if (false === callback(time)) {
-            break
         }
     }
 }

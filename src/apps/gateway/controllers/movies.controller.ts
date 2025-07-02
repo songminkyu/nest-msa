@@ -16,8 +16,7 @@ import {
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
 import { RecommendationClient } from 'apps/applications'
-import { CreateMovieDto, SearchMoviesDto, MoviesClient, UpdateMovieDto } from 'apps/cores'
-import { pick } from 'lodash'
+import { CreateMovieDto, MoviesClient, SearchMoviesDto, UpdateMovieDto } from 'apps/cores'
 import { MulterExceptionFilter } from './filters'
 import { CustomerOptionalJwtAuthGuard } from './guards'
 import { DefaultPaginationPipe } from './pipes'
@@ -37,9 +36,12 @@ export class MoviesController {
         @UploadedFiles() files: Express.Multer.File[],
         @Body() movieCreateDto: CreateMovieDto
     ) {
-        const fileCreateDtos = files.map((file) =>
-            pick(file, 'originalname', 'mimetype', 'size', 'path')
-        )
+        const fileCreateDtos = files.map((file) => ({
+            originalName: file.originalname,
+            mimeType: file.mimetype,
+            size: file.size,
+            path: file.path
+        }))
 
         return this.moviesService.createMovie(movieCreateDto, fileCreateDtos)
     }

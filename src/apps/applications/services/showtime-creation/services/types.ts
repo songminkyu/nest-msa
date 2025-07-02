@@ -1,13 +1,14 @@
-import { CreateShowtimeBatchDto } from '../dtos'
+import { BulkCreateShowtimesDto } from '../dtos'
 
-export class ShowtimeBatchCreateJobData extends CreateShowtimeBatchDto {
-    batchId: string
+export class ShowtimeCreationJobData {
+    createDto: BulkCreateShowtimesDto
+    transactionId: string
 }
 
-export enum ShowtimeBatchCreateStatus {
-    waiting = 'waiting',
-    processing = 'processing',
-    complete = 'complete',
-    fail = 'fail',
-    error = 'error'
+export enum ShowtimeCreationStatus {
+    Waiting = 'waiting',
+    Processing = 'processing',
+    Succeeded = 'succeeded',
+    Failed = 'failed',
+    Error = 'error'
 }

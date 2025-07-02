@@ -1,1 +1,1 @@
-export * from './movie-recommender'
+export * from './movie-recommendation.engine'

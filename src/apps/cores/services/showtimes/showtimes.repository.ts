@@ -14,10 +14,11 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
     async createShowtimes(createDtos: CreateShowtimeDto[]) {
         const showtimes = createDtos.map((dto) => {
             const doc = this.newDocument()
-            doc.batchId = objectId(dto.batchId)
+            doc.transactionId = objectId(dto.transactionId)
             doc.movieId = objectId(dto.movieId)
             doc.theaterId = objectId(dto.theaterId)
-            doc.timeRange = dto.timeRange
+            doc.startTime = dto.startTime
+            doc.endTime = dto.endTime
 
             return doc
         })
@@ -28,7 +29,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
     async searchShowtimes(searchDto: SearchShowtimesDto) {
         const query = this.buildQuery(searchDto)
 
-        const showtimes = await this.model.find(query).sort({ timeRange: 1 }).exec()
+        const showtimes = await this.model.find(query).sort({ startTime: 1 }).exec()
         return showtimes
     }
 
@@ -53,7 +54,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
             { $match: query },
             {
                 $project: {
-                    date: { $dateToString: { format: '%Y-%m-%d', date: '$timeRange.start' } }
+                    date: { $dateToString: { format: '%Y-%m-%d', date: '$startTime' } }
                 }
             },
             { $group: { _id: '$date' } },
@@ -64,14 +65,14 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
     }
 
     private buildQuery(searchDto: SearchShowtimesDto, options: QueryBuilderOptions = {}) {
-        const { batchIds, movieIds, theaterIds, startTimeRange, endTimeRange } = searchDto
+        const { transactionIds, movieIds, theaterIds, startTimeRange, endTimeRange } = searchDto
 
         const builder = new QueryBuilder<Showtime>()
-        builder.addIn('batchId', batchIds)
+        builder.addIn('transactionId', transactionIds)
         builder.addIn('movieId', movieIds)
         builder.addIn('theaterId', theaterIds)
-        builder.addRange('timeRange.start', startTimeRange)
-        builder.addRange('timeRange.end', endTimeRange)
+        builder.addRange('startTime', startTimeRange)
+        builder.addRange('endTime', endTimeRange)
 
         const query = builder.build(options)
         return query

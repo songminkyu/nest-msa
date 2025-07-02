@@ -73,8 +73,8 @@ export class StorageFilesService {
     private toDto = (file: StorageFileDocument) => {
         const dto = mapDocToDto(file, StorageFileDto, [
             'id',
-            'originalname',
-            'mimetype',
+            'originalName',
+            'mimeType',
             'size',
             'checksum'
         ])

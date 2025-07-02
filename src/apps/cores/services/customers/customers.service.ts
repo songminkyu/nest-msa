@@ -33,7 +33,7 @@ export class CustomersService {
 
         if (existingCustomer) {
             throw new ConflictException({
-                ...CustomerErrors.emailAlreadyExists,
+                ...CustomerErrors.EmailAlreadyExists,
                 email: createDto.email
             })
         }
@@ -77,7 +77,7 @@ export class CustomersService {
     }
 
     private toDto = (customer: CustomerDocument) =>
-        mapDocToDto(customer, CustomerDto, ['id', 'name', 'email', 'birthdate'])
+        mapDocToDto(customer, CustomerDto, ['id', 'name', 'email', 'birthDate'])
 
     private toDtos = (customers: CustomerDocument[]) =>
         customers.map((customer) => this.toDto(customer))

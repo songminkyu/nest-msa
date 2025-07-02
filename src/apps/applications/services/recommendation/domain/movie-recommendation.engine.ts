@@ -1,7 +1,7 @@
 import { MovieDto } from 'apps/cores'
 
-export class MovieRecommender {
-    static getRecommendations(showingMovies: MovieDto[], watchedMovies: MovieDto[]) {
+export class MovieRecommendationEngine {
+    static recommend(showingMovies: MovieDto[], watchedMovies: MovieDto[]) {
         /*
         Collect IDs of watched movies to exclude them from recommendations.
         이미 본 영화 ID를 저장하여 추천 목록에서 제외
@@ -12,9 +12,9 @@ export class MovieRecommender {
         Calculate the frequency of each genre in the user's watch history.
         사용자가 관람한 영화의 장르 빈도를 계산
         */
-        const genreFrequency: { [genre: string]: number } = {}
+        const genreFrequency: { [genres: string]: number } = {}
         for (const movie of watchedMovies) {
-            for (const genre of movie.genre) {
+            for (const genre of movie.genres) {
                 genreFrequency[genre] = (genreFrequency[genre] || 0) + 1
             }
         }
@@ -39,7 +39,7 @@ export class MovieRecommender {
             .filter((movie) => !watchedMovieIds.has(movie.id))
             .map((movie) => {
                 let genreScore = 0
-                for (const genre of movie.genre) {
+                for (const genre of movie.genres) {
                     const index = favoriteGenres.indexOf(genre)
                     if (index !== -1) {
                         /*

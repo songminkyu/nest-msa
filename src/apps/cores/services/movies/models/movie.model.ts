@@ -4,15 +4,15 @@ import { HydratedDocument, Types } from 'mongoose'
 import { MongooseConfig } from 'shared'
 
 export enum MovieGenre {
-    Action = 'Action',
-    Comedy = 'Comedy',
-    Drama = 'Drama',
-    Fantasy = 'Fantasy',
-    Horror = 'Horror',
-    Mystery = 'Mystery',
-    Romance = 'Romance',
-    Thriller = 'Thriller',
-    Western = 'Western'
+    Action = 'action',
+    Comedy = 'comedy',
+    Drama = 'drama',
+    Fantasy = 'fantasy',
+    Horror = 'horror',
+    Mystery = 'mystery',
+    Romance = 'romance',
+    Thriller = 'thriller',
+    Western = 'western'
 }
 
 export enum MovieRating {
@@ -29,7 +29,7 @@ export class Movie extends MongooseSchema {
     title: string
 
     @Prop({ type: [String], enum: MovieGenre, default: [] })
-    genre: MovieGenre[]
+    genres: MovieGenre[]
 
     @Prop({ required: true })
     releaseDate: Date
@@ -38,7 +38,7 @@ export class Movie extends MongooseSchema {
     plot: string
 
     @Prop({ required: true })
-    durationMinutes: number
+    durationInSeconds: number
 
     @Prop({ default: 'John Doe' })
     director: string
@@ -47,7 +47,7 @@ export class Movie extends MongooseSchema {
     rating: MovieRating
 
     @Prop({ required: true })
-    imageFileIds: Types.ObjectId[]
+    imageIds: Types.ObjectId[]
 }
 export type MovieDocument = HydratedDocument<Movie>
 export const MovieSchema = createMongooseSchema(Movie)

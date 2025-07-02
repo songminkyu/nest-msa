@@ -1,8 +1,8 @@
 import { PurchaseDto, PurchaseItemDto, PurchaseItemType, TicketDto, TicketStatus } from 'apps/cores'
 import { Rules } from 'shared'
 import { nullObjectId } from 'testlib'
+import { Errors } from './helpers'
 import { Fixture, setupPurchaseData } from './purchases.fixture'
-import { Errors } from './utils'
 
 describe('Purchases', () => {
     let fix: Fixture
@@ -57,14 +57,14 @@ describe('Purchases', () => {
         it('Should mark purchased tickets as sold', async () => {
             const ticketIds = purchaseItems.map((item) => item.ticketId)
             const retrievedTickets = await fix.ticketsService.getTickets(ticketIds)
-            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.sold))
+            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.Sold))
         })
 
         /* 구매하지 않은 티켓은 available 상태여야 한다 */
         it('Should keep unpurchased tickets in available status', async () => {
             const ticketIds = availableTickets.map((ticket) => ticket.id)
             const retrievedTickets = await fix.ticketsService.getTickets(ticketIds)
-            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.available))
+            retrievedTickets.forEach((ticket) => expect(ticket.status).toBe(TicketStatus.Available))
         })
     })
 
@@ -75,7 +75,7 @@ describe('Purchases', () => {
             purchase = await fix.purchasesService.createPurchase({
                 customerId: fix.customer.id,
                 totalPrice: 1,
-                purchaseItems: [{ type: PurchaseItemType.ticket, ticketId: nullObjectId }]
+                purchaseItems: [{ type: PurchaseItemType.Ticket, ticketId: nullObjectId }]
             })
         })
 
@@ -95,21 +95,24 @@ describe('Purchases', () => {
             await fix.httpClient
                 .post('/purchases')
                 .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
-                .badRequest({ ...Errors.Purchase.MaxTicketsExceeded, maxCount: expect.any(Number) })
+                .badRequest({
+                    ...Errors.TicketPurchase.MaxTicketsExceeded,
+                    maxCount: expect.any(Number)
+                })
         })
 
         /* 구매 가능 시간을 초과하면 BAD_REQUEST(400)를 반환해야 한다 */
         it('Should return BAD_REQUEST(400) if the purchase deadline is exceeded', async () => {
             const { purchaseItems } = await setupPurchaseData(fix, {
-                minutesFromNow: Rules.Ticket.purchaseDeadlineMinutes
+                minutesFromNow: Rules.Ticket.purchaseDeadlineInMinutes
             })
 
             await fix.httpClient
                 .post('/purchases')
                 .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
                 .badRequest({
-                    ...Errors.Purchase.DeadlineExceeded,
-                    deadlineMinutes: expect.any(Number),
+                    ...Errors.TicketPurchase.DeadlineExceeded,
+                    purchaseDeadlineInMinutes: expect.any(Number),
                     cutoffTime: expect.any(String),
                     startTime: expect.any(String)
                 })
@@ -123,7 +126,7 @@ describe('Purchases', () => {
             await fix.httpClient
                 .post('/purchases')
                 .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
-                .badRequest(Errors.Purchase.TicketNotHeld)
+                .badRequest(Errors.TicketPurchase.TicketNotHeld)
         })
     })
 

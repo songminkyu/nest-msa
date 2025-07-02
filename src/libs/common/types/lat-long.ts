@@ -5,7 +5,7 @@ import { IsNumber, Max, Min, validate } from 'class-validator'
 export const LatLongErrors = {
     Required: {
         code: 'ERR_LATLONG_REQUIRED',
-        message: 'The latlong query parameter is required'
+        message: 'The latLong query parameter is required'
     },
     FormatInvalid: {
         code: 'ERR_LATLONG_FORMAT_INVALID',

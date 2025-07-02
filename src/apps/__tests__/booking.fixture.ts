@@ -1,5 +1,5 @@
 import { MovieDto, Seatmap, ShowtimeDto, TheaterDto } from 'apps/cores'
-import { DateTimeRange } from 'common'
+import { DateUtil } from 'common'
 import {
     buildShowtimeCreateDto,
     buildTicketCreateDto,
@@ -9,15 +9,15 @@ import {
     createTheater,
     createTickets
 } from './common.fixture'
-import { CommonFixture, createCommonFixture } from './utils'
+import { CommonFixture, createCommonFixture } from './helpers'
 
 const createTheaters = async (fix: CommonFixture) => {
     const theaters = await Promise.all([
-        createTheater(fix, { latlong: { latitude: 30.0, longitude: 130.0 } }),
-        createTheater(fix, { latlong: { latitude: 31.0, longitude: 131.0 } }),
-        createTheater(fix, { latlong: { latitude: 32.0, longitude: 132.0 } }),
-        createTheater(fix, { latlong: { latitude: 33.0, longitude: 133.0 } }),
-        createTheater(fix, { latlong: { latitude: 34.0, longitude: 134.0 } })
+        createTheater(fix, { location: { latitude: 30.0, longitude: 130.0 } }),
+        createTheater(fix, { location: { latitude: 31.0, longitude: 131.0 } }),
+        createTheater(fix, { location: { latitude: 32.0, longitude: 132.0 } }),
+        createTheater(fix, { location: { latitude: 33.0, longitude: 133.0 } }),
+        createTheater(fix, { location: { latitude: 34.0, longitude: 134.0 } })
     ])
 
     return theaters
@@ -32,11 +32,13 @@ const createAllShowtimes = async (fix: CommonFixture, theaters: TheaterDto[], mo
     ]
 
     const showtimeCreateDtos = theaters.flatMap((theater) =>
-        startTimes.map((start) => {
-            const movieId = movie.id
-            const theaterId = theater.id
-            const timeRange = DateTimeRange.create({ start, minutes: 1 })
-            const { createDto } = buildShowtimeCreateDto({ movieId, theaterId, timeRange })
+        startTimes.map((startTime) => {
+            const { createDto } = buildShowtimeCreateDto({
+                movieId: movie.id,
+                theaterId: theater.id,
+                startTime,
+                endTime: DateUtil.addMinutes(startTime, 1)
+            })
             return createDto
         })
     )

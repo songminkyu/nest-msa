@@ -6,7 +6,7 @@ class Customer {
     id: string
     name: string
     email: string
-    birthdate: Date
+    birthDate: Date
 }
 
 class Movie {
@@ -15,7 +15,7 @@ class Movie {
     genre: string[]
     releaseDate: Date
     plot: string
-    durationMinutes : number
+    durationInSeconds : number
     director: string
     rating: string
 }
@@ -23,7 +23,7 @@ class Movie {
 class Theater{
     id:string
     name:string
-    latlong: LatLong
+    latLong: LatLong
     seatmap:Seatmap
 }
 note left
@@ -37,11 +37,11 @@ end note
 
 class Showtime {
     id: ObjectId
-    start: Date
-    end: Date
+    startTime: Date
+    endTime: Date
     theaterId: ObjectId
     movieId: ObjectId
-    batchId:ObjectId
+    transactionId:ObjectId
 }
 
 class Ticket {
@@ -59,7 +59,7 @@ enum TicketStatus {
 Seat {
     block: string
     row: string
-    seatnum: number
+    seatNumber: number
 }
 end note
 

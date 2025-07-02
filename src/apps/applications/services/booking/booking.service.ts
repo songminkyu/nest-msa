@@ -31,10 +31,10 @@ export class BookingService {
         private ticketsService: TicketsClient
     ) {}
 
-    async searchTheaters({ movieId, latlong }: SearchTheatersForBookingDto) {
+    async searchTheaters({ movieId, latLong }: SearchTheatersForBookingDto) {
         const theaterIds = await this.showtimesService.searchTheaterIds({ movieIds: [movieId] })
         const theaters = await this.theatersService.getTheaters(theaterIds)
-        const showingTheaters = sortTheatersByDistance(theaters, latlong)
+        const showingTheaters = sortTheatersByDistance(theaters, latLong)
 
         return showingTheaters
     }
@@ -68,7 +68,7 @@ export class BookingService {
     }
 
     async getTickets(showtimeId: string) {
-        const showtimeExists = await this.showtimesService.showtimesExist([showtimeId])
+        const showtimeExists = await this.showtimesService.allShowtimesExist([showtimeId])
 
         if (!showtimeExists) {
             throw new NotFoundException({ ...BookingServiceErrors.ShowtimeNotFound, showtimeId })

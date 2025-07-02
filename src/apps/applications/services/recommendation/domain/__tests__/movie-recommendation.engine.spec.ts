@@ -1,15 +1,15 @@
 import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
-import { MovieRecommender } from '..'
+import { MovieRecommendationEngine } from '..'
 
-describe('RecommendationService', () => {
+describe('MovieRecommendationEngine', () => {
     describe('generateRecommendedMovies', () => {
-        const createDto = (id: string, genre: MovieGenre[], releaseDate: Date) => ({
+        const createDto = (id: string, genres: MovieGenre[], releaseDate: Date) => ({
             id,
             title: `MovieTitle#${id}`,
-            genre,
+            genres,
             releaseDate,
             plot: '.',
-            durationMinutes: 0,
+            durationInSeconds: 0,
             director: '.',
             rating: MovieRating.PG,
             images: []
@@ -24,7 +24,7 @@ describe('RecommendationService', () => {
             ]
             const watchedMovies: MovieDto[] = []
 
-            const result = MovieRecommender.getRecommendations(showingMovies, watchedMovies)
+            const result = MovieRecommendationEngine.recommend(showingMovies, watchedMovies)
 
             expect(result.map((movie) => movie.id)).toEqual(['2', '1', '3'])
         })
@@ -42,7 +42,7 @@ describe('RecommendationService', () => {
                 createDto('6', [MovieGenre.Drama], new Date('2023-05-01'))
             ]
 
-            const result = MovieRecommender.getRecommendations(showingMovies, watchedMovies)
+            const result = MovieRecommendationEngine.recommend(showingMovies, watchedMovies)
 
             expect(result.map((movie) => movie.id)).toEqual(['1', '2', '3'])
         })
@@ -58,7 +58,7 @@ describe('RecommendationService', () => {
                 createDto('2', [MovieGenre.Drama], new Date('2023-10-01'))
             ]
 
-            const result = MovieRecommender.getRecommendations(showingMovies, watchedMovies)
+            const result = MovieRecommendationEngine.recommend(showingMovies, watchedMovies)
 
             expect(result.map((movie) => movie.id)).toEqual(['1', '3'])
         })

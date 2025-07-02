@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer'
 import { ArrayNotEmpty, IsArray, IsDate, IsNotEmpty, IsPositive, IsString } from 'class-validator'
 
-export class CreateShowtimeBatchDto {
+export class BulkCreateShowtimesDto {
     @IsString()
     @IsNotEmpty()
     movieId: string
@@ -13,7 +13,7 @@ export class CreateShowtimeBatchDto {
 
     @IsPositive()
     @IsNotEmpty()
-    durationMinutes: number
+    durationInMinutes: number
 
     @IsArray()
     @ArrayNotEmpty()

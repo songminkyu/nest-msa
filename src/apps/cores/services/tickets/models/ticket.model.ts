@@ -5,8 +5,8 @@ import { MongooseConfig } from 'shared'
 import { Seat } from '../../theaters'
 
 export enum TicketStatus {
-    available = 'available',
-    sold = 'sold'
+    Available = 'available',
+    Sold = 'sold'
 }
 
 @Schema(MongooseConfig.schemaOptions)
@@ -27,7 +27,7 @@ export class Ticket extends MongooseSchema {
     seat: Seat
 
     @Prop({ required: true })
-    batchId: Types.ObjectId
+    transactionId: Types.ObjectId
 }
 export type TicketDocument = HydratedDocument<Ticket>
 export const TicketSchema = createMongooseSchema(Ticket)

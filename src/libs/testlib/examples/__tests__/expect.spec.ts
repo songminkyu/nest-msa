@@ -1,4 +1,4 @@
-describe('jest examples', () => {
+describe('jest.expect examples', () => {
     it('toBe vs toEqual', () => {
         /*
         toEqual

@@ -11,7 +11,7 @@ export class Seat {
     row: string
 
     @IsNumber()
-    seatnum: number
+    seatNumber: number
 }
 
 export class SeatRow {
@@ -65,7 +65,7 @@ export class Seatmap {
                         yield {
                             block: block.name,
                             row: row.name,
-                            seatnum: i + 1
+                            seatNumber: i + 1
                         }
                     }
                 }

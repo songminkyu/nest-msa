@@ -3,6 +3,7 @@ import { PurchasesClient, ShowtimesClient, TicketHoldingClient, TicketsClient } 
 import { TicketPurchaseProcessor } from './processors'
 import { PurchaseProcessClient } from './purchase-process.client'
 import { PurchaseProcessController } from './purchase-process.controller'
+import { PurchaseProcessEvents } from './purchase-process.events'
 import { PurchaseProcessService } from './purchase-process.service'
 
 @Module({
@@ -10,6 +11,7 @@ import { PurchaseProcessService } from './purchase-process.service'
         PurchaseProcessService,
         TicketPurchaseProcessor,
         PurchaseProcessClient,
+        PurchaseProcessEvents,
         TicketsClient,
         TicketHoldingClient,
         PurchasesClient,

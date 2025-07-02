@@ -2,7 +2,7 @@ import { StorageFileDto } from 'apps/infrastructures'
 import { generateShortId, getChecksum, Path } from 'common'
 import { nullObjectId } from 'testlib'
 import { Fixture, saveFile } from './storage-files.fixture'
-import { Errors } from './utils'
+import { Errors } from './helpers'
 
 describe('File Upload', () => {
     let fix: Fixture
@@ -20,7 +20,7 @@ describe('File Upload', () => {
         const uploadFile = (attachs: any[], fields?: any[]) =>
             fix.httpClient
                 .post('/storage-files')
-                .attachs(attachs)
+                .attachments(attachs)
                 .fields(fields ?? [{ name: 'name', value: 'test' }])
 
         /* 업로드된 파일이 저장된 파일과 동일해야 한다 */
@@ -69,7 +69,7 @@ describe('File Upload', () => {
         it('Should return BAD_REQUEST(400) if a file with an unallowed MIME type is uploaded', async () => {
             await uploadFile([
                 { name: 'files', file: fix.files.notAllowed.path }
-            ]).unsupportedMediaTypeException({
+            ]).unsupportedMediaType({
                 ...Errors.FileUpload.InvalidFileType,
                 allowedTypes: ['text/plain']
             })

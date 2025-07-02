@@ -1,6 +1,6 @@
 import { Time } from 'common'
 
-describe('DateUtil', () => {
+describe('Time', () => {
     describe('toMs', () => {
         /* 시간 형식 문자열을 밀리초(ms)로 변환해야 한다 */
         it('Should convert a time format string into milliseconds (ms)', () => {

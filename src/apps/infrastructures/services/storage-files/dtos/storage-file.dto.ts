@@ -1,7 +1,7 @@
 export class StorageFileDto {
     id: string
-    originalname: string
-    mimetype: string
+    originalName: string
+    mimeType: string
     size: number
     checksum: string
     storedPath: string

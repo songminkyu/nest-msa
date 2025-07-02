@@ -14,7 +14,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
     async createTickets(createDtos: CreateTicketDto[]) {
         const tickets = createDtos.map((dto) => {
             const ticket = this.newDocument()
-            ticket.batchId = objectId(dto.batchId)
+            ticket.transactionId = objectId(dto.transactionId)
             ticket.movieId = objectId(dto.movieId)
             ticket.theaterId = objectId(dto.theaterId)
             ticket.showtimeId = objectId(dto.showtimeId)
@@ -39,7 +39,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
     async searchTickets(searchDto: SearchTicketsDto) {
         const query = this.buildQuery(searchDto)
 
-        const tickets = await this.model.find(query).sort({ batchId: 1 }).exec()
+        const tickets = await this.model.find(query).sort({ transactionId: 1 }).exec()
         return tickets
     }
 
@@ -50,7 +50,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
                 $group: {
                     _id: '$showtimeId',
                     total: { $sum: 1 },
-                    sold: { $sum: { $cond: [{ $eq: ['$status', TicketStatus.sold] }, 1, 0] } }
+                    sold: { $sum: { $cond: [{ $eq: ['$status', TicketStatus.Sold] }, 1, 0] } }
                 }
             },
             {
@@ -68,10 +68,10 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
     }
 
     private buildQuery(searchDto: SearchTicketsDto, options: QueryBuilderOptions = {}) {
-        const { batchIds, movieIds, theaterIds, showtimeIds } = searchDto
+        const { transactionIds, movieIds, theaterIds, showtimeIds } = searchDto
 
         const builder = new QueryBuilder<Ticket>()
-        builder.addIn('batchId', batchIds)
+        builder.addIn('transactionId', transactionIds)
         builder.addIn('movieId', movieIds)
         builder.addIn('theaterId', theaterIds)
         builder.addIn('showtimeId', showtimeIds)

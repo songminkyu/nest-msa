@@ -1,10 +1,9 @@
-import { expect } from '@jest/globals'
 import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
 import { Path, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, objectToFields } from 'testlib'
 import { buildMovieCreateDto, createMovie } from './common.fixture'
 import { Fixture } from './movies.fixture'
-import { Errors } from './utils'
+import { Errors } from './helpers'
 
 describe('Movies', () => {
     let fix: Fixture
@@ -25,7 +24,7 @@ describe('Movies', () => {
 
             const { body } = await fix.httpClient
                 .post('/movies')
-                .attachs([{ name: 'files', file: fix.image.path }])
+                .attachments([{ name: 'files', file: fix.image.path }])
                 .fields(objectToFields(createDto))
                 .created()
 
@@ -52,12 +51,12 @@ describe('Movies', () => {
         it('Should update movie information', async () => {
             const updateDto = {
                 title: 'update title',
-                genre: ['Romance', 'Thriller'],
+                genres: ['romance', 'thriller'],
                 releaseDate: new Date('2000-01-01'),
                 plot: `new plot`,
-                durationMinutes: 10,
+                durationInSeconds: 10 * 60,
                 director: 'Steven Spielberg',
-                rating: MovieRating.R
+                rating: 'R'
             }
             const expected = { ...movie, ...updateDto }
 
@@ -141,7 +140,7 @@ describe('Movies', () => {
                     director: 'James Cameron',
                     releaseDate: new Date('2000-01-01'),
                     rating: MovieRating.NC17,
-                    genre: [MovieGenre.Action, MovieGenre.Comedy]
+                    genres: [MovieGenre.Action, MovieGenre.Comedy]
                 }),
                 createMovie(fix, {
                     title: 'title-a2',
@@ -149,7 +148,7 @@ describe('Movies', () => {
                     director: 'Steven Spielberg',
                     releaseDate: new Date('2000-01-02'),
                     rating: MovieRating.NC17,
-                    genre: [MovieGenre.Romance, MovieGenre.Drama]
+                    genres: [MovieGenre.Romance, MovieGenre.Drama]
                 }),
                 createMovie(fix, {
                     title: 'title-b1',
@@ -157,7 +156,7 @@ describe('Movies', () => {
                     director: 'James Cameron',
                     releaseDate: new Date('2000-01-02'),
                     rating: MovieRating.PG,
-                    genre: [MovieGenre.Drama, MovieGenre.Comedy]
+                    genres: [MovieGenre.Drama, MovieGenre.Comedy]
                 }),
                 createMovie(fix, {
                     title: 'title-b2',
@@ -165,7 +164,7 @@ describe('Movies', () => {
                     director: 'Steven Spielberg',
                     releaseDate: new Date('2000-01-03'),
                     rating: MovieRating.R,
-                    genre: [MovieGenre.Thriller, MovieGenre.Western]
+                    genres: [MovieGenre.Thriller, MovieGenre.Western]
                 })
             ])
         })

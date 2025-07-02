@@ -1,19 +1,27 @@
-import { MovieDto, CreateShowtimeDto, TheaterDto } from 'apps/cores'
-import { DateTimeRange, jsonToObject } from 'common'
+import { CreateShowtimeDto, MovieDto, TheaterDto } from 'apps/cores'
+import { DateUtil, jsonToObject, notUsed } from 'common'
 import { HttpTestClient, nullObjectId } from 'testlib'
 import { createMovie, createTheater } from './common.fixture'
-import { CommonFixture, createCommonFixture } from './utils'
+import { CommonFixture, createCommonFixture } from './helpers'
 
-export const createShowtimeDtos = (startTimes: Date[], overrides = {}) => {
+export const createShowtimeDtos = ({
+    startTimes,
+    theaterId,
+    durationInMinutes
+}: {
+    startTimes: Date[]
+    theaterId: string
+    durationInMinutes: number
+}) => {
     const createDtos: CreateShowtimeDto[] = []
 
     startTimes.map((startTime) => {
         const createDto = {
-            batchId: nullObjectId,
+            transactionId: nullObjectId,
             movieId: nullObjectId,
-            theaterId: nullObjectId,
-            timeRange: DateTimeRange.create({ start: startTime, minutes: 90 }),
-            ...overrides
+            theaterId,
+            startTime,
+            endTime: DateUtil.addMinutes(startTime, durationInMinutes)
         }
 
         createDtos.push(createDto)
@@ -24,16 +32,18 @@ export const createShowtimeDtos = (startTimes: Date[], overrides = {}) => {
 
 export const monitorEvents = (client: HttpTestClient, waitStatuses: string[]) => {
     return new Promise((resolve, reject) => {
-        client.get('/showtime-creation/events').sse((data) => {
+        client.get('/showtime-creation/event-stream').sse((data) => {
             const result = jsonToObject(JSON.parse(data))
 
-            if (['complete', 'fail', 'error'].includes(result.status)) {
+            if (['waiting', 'processing'].includes(result.status)) {
+                notUsed('Ignore incomplete statuses')
+            } else if (['succeeded', 'failed', 'error'].includes(result.status)) {
                 if (waitStatuses.includes(result.status)) {
                     resolve(result)
                 } else {
                     reject(result)
                 }
-            } else if (!result.status) {
+            } else {
                 reject(data)
             }
         }, reject)

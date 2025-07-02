@@ -1,4 +1,3 @@
-import { expect } from '@jest/globals'
 import { Types } from 'mongoose'
 import type { Fixture } from './mongoose.schema.fixture'
 

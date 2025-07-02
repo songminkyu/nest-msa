@@ -35,6 +35,7 @@ x-nats-common: &nats-common
     profiles: ['infra']
     logging: *default-logging
     networks: ['default']
+    restart: always
     healthcheck:
         test: wget -qO- http://localhost:8222/varz || exit 1
         interval: 5s

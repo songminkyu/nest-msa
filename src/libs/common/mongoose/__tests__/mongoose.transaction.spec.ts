@@ -1,4 +1,3 @@
-import { expect } from '@jest/globals'
 import type { Fixture } from './mongoose.transaction.fixture'
 
 describe('MongooseRepository.withTransaction', () => {

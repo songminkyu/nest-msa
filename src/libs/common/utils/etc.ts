@@ -3,8 +3,8 @@ import { createReadStream } from 'fs'
 import { pipeline, Writable } from 'stream'
 import { promisify } from 'util'
 
-export async function sleep(timeoutInMS: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, timeoutInMS))
+export async function sleep(timeoutInMs: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, timeoutInMs))
 }
 
 export function generateUUID(): string {

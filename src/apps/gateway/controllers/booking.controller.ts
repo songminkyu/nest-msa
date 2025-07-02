@@ -11,9 +11,9 @@ export class BookingController {
     @Get('movies/:movieId/theaters')
     async searchTheaters(
         @Param('movieId') movieId: string,
-        @LatLongQuery('latlong') latlong: LatLong
+        @LatLongQuery('latLong') latLong: LatLong
     ) {
-        return this.bookingService.searchTheaters({ movieId, latlong })
+        return this.bookingService.searchTheaters({ movieId, latLong })
     }
 
     @Get('movies/:movieId/theaters/:theaterId/showdates')

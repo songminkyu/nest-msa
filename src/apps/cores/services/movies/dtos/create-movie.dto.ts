@@ -14,9 +14,9 @@ export class CreateMovieDto {
         if (Array.isArray(value)) return value
 
         const genres = JSON.parse(value)
-        return genres.map((genre: string) => genre as MovieGenre)
+        return genres.map((genres: string) => genres as MovieGenre)
     })
-    genre: MovieGenre[]
+    genres: MovieGenre[]
 
     @IsDate()
     @Type(() => Date)
@@ -27,7 +27,7 @@ export class CreateMovieDto {
     plot: string
 
     @IsInt()
-    durationMinutes: number
+    durationInSeconds: number
 
     @IsString()
     director: string

@@ -25,10 +25,10 @@ export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
         const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
-            callback: (helpers) => {
+            configureQuery: (queryHelper) => {
                 const query = this.buildQuery(searchDto, { allowEmpty: true })
 
-                helpers.setQuery(query)
+                queryHelper.setQuery(query)
             },
             pagination: { take, skip, orderby }
         })

@@ -14,13 +14,13 @@ export class MoviesRepository extends MongooseRepository<Movie> {
     async createMovie(createDto: CreateMovieDto, storageFileIds: string[]) {
         const movie = this.newDocument()
         movie.title = createDto.title
-        movie.genre = createDto.genre
+        movie.genres = createDto.genres
         movie.releaseDate = createDto.releaseDate
         movie.plot = createDto.plot
-        movie.durationMinutes = createDto.durationMinutes
+        movie.durationInSeconds = createDto.durationInSeconds
         movie.director = createDto.director
         movie.rating = createDto.rating
-        movie.imageFileIds = objectIds(storageFileIds)
+        movie.imageIds = objectIds(storageFileIds)
 
         return movie.save()
     }
@@ -29,10 +29,10 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         const movie = await this.getById(movieId)
 
         if (updateDto.title) movie.title = updateDto.title
-        if (updateDto.genre) movie.genre = updateDto.genre
+        if (updateDto.genres) movie.genres = updateDto.genres
         if (updateDto.releaseDate) movie.releaseDate = updateDto.releaseDate
         if (updateDto.plot) movie.plot = updateDto.plot
-        if (updateDto.durationMinutes) movie.durationMinutes = updateDto.durationMinutes
+        if (updateDto.durationInSeconds) movie.durationInSeconds = updateDto.durationInSeconds
         if (updateDto.director) movie.director = updateDto.director
         if (updateDto.rating) movie.rating = updateDto.rating
 
@@ -43,10 +43,10 @@ export class MoviesRepository extends MongooseRepository<Movie> {
         const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
-            callback: (helpers) => {
+            configureQuery: (queryHelper) => {
                 const query = this.buildQuery(searchDto, { allowEmpty: true })
 
-                helpers.setQuery(query)
+                queryHelper.setQuery(query)
             },
             pagination: { take, skip, orderby }
         })
@@ -59,7 +59,7 @@ export class MoviesRepository extends MongooseRepository<Movie> {
 
         const builder = new QueryBuilder<Movie>()
         builder.addRegex('title', title)
-        builder.addEqual('genre', genre)
+        builder.addEqual('genres', genre)
         builder.addEqual('releaseDate', releaseDate)
         builder.addRegex('plot', plot)
         builder.addRegex('director', director)

@@ -14,7 +14,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
     async createTheater(createDto: CreateTheaterDto) {
         const theater = this.newDocument()
         theater.name = createDto.name
-        theater.latlong = createDto.latlong
+        theater.location = createDto.location
         theater.seatmap = createDto.seatmap
 
         return theater.save()
@@ -24,7 +24,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         const theater = await this.getById(theaterId)
 
         if (updateDto.name) theater.name = updateDto.name
-        if (updateDto.latlong) theater.latlong = updateDto.latlong
+        if (updateDto.location) theater.location = updateDto.location
         if (updateDto.seatmap) theater.seatmap = updateDto.seatmap
 
         return theater.save()
@@ -34,10 +34,10 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
-            callback: (helpers) => {
+            configureQuery: (queryHelper) => {
                 const query = this.buildQuery(searchDto, { allowEmpty: true })
 
-                helpers.setQuery(query)
+                queryHelper.setQuery(query)
             },
             pagination: { take, skip, orderby }
         })

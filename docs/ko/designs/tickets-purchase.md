@@ -108,13 +108,13 @@ generateMovieRecommendations(movies, watchedMovies){
 actor Customer
 
 Customer -> Frontend: 영화 선택
-    Frontend -> Backend: 상영 극장 목록 요청\nGET /booking/movies/{movieId}/theaters\n?latlong=37.123,128.678
-        Backend -> Booking: searchTheaters({movieId, latlong})
+    Frontend -> Backend: 상영 극장 목록 요청\nGET /booking/movies/{movieId}/theaters\n?latLong=37.123,128.678
+        Backend -> Booking: searchTheaters({movieId, latLong})
             Booking -> Showtimes: findShowingTheaterIds({movieId})
             Booking <-- Showtimes: theaterIds[]
             Booking -> Theaters: getTheaters({theaterIds})
             Booking <-- Theaters: theaters[]
-            Booking -> Booking: sortTheatersByDistance({theaters, latlong})
+            Booking -> Booking: sortTheatersByDistance({theaters, latLong})
         Backend <-- Booking: showingTheaters[]
     Frontend <-- Backend: showingTheaters[]
 Customer <-- Frontend: 상영 극장 목록 제공

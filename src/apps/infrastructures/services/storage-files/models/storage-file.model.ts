@@ -6,10 +6,10 @@ import { MongooseConfig } from 'shared'
 @Schema(MongooseConfig.schemaOptions)
 export class StorageFile extends MongooseSchema {
     @Prop({ required: true })
-    originalname: string
+    originalName: string
 
     @Prop({ required: true })
-    mimetype: string
+    mimeType: string
 
     @Prop({ required: true })
     size: number

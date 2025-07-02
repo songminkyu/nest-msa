@@ -1,7 +1,8 @@
 import { Seatmap, ShowtimeDto, TheaterDto, TicketDto } from 'apps/cores'
-import { DateTimeRange, DateUtil, pickIds } from 'common'
+import { DateUtil, pickIds } from 'common'
 import { nullObjectId, step } from 'testlib'
 import { Fixture } from './booking.fixture'
+import { Errors } from './helpers'
 
 describe('Booking', () => {
     let fix: Fixture
@@ -24,19 +25,19 @@ describe('Booking', () => {
 
         /* 1. 상영 극장 목록 요청 */
         await step('1. Request list of theaters screening the movie', async () => {
-            const latlong = '31.9,131.9'
+            const latLong = '31.9,131.9'
 
             const { body: theaters } = await fix.httpClient
-                .get(`/booking/movies/${fix.movie.id}/theaters?latlong=${latlong}`)
+                .get(`/booking/movies/${fix.movie.id}/theaters?latLong=${latLong}`)
                 .ok()
 
             expect(theaters).toEqual(
                 [
-                    { latlong: { latitude: 32.0, longitude: 132.0 } }, // distance = 0.1
-                    { latlong: { latitude: 31.0, longitude: 131.0 } }, // distance = 0.9
-                    { latlong: { latitude: 33.0, longitude: 133.0 } }, // distance = 1.1
-                    { latlong: { latitude: 30.0, longitude: 130.0 } }, // distance = 1.9
-                    { latlong: { latitude: 34.0, longitude: 134.0 } } // distance = 2.1
+                    { location: { latitude: 32.0, longitude: 132.0 } }, // distance = 0.1
+                    { location: { latitude: 31.0, longitude: 131.0 } }, // distance = 0.9
+                    { location: { latitude: 33.0, longitude: 133.0 } }, // distance = 1.1
+                    { location: { latitude: 30.0, longitude: 130.0 } }, // distance = 1.9
+                    { location: { latitude: 34.0, longitude: 134.0 } } // distance = 2.1
                 ].map((item) => expect.objectContaining(item))
             )
 
@@ -71,18 +72,14 @@ describe('Booking', () => {
                         {
                             movieId,
                             theaterId,
-                            timeRange: DateTimeRange.create({
-                                start: new Date('2999-01-01T12:00'),
-                                minutes: 1
-                            })
+                            startTime: new Date('2999-01-01T12:00'),
+                            endTime: new Date('2999-01-01T12:01')
                         },
                         {
                             movieId,
                             theaterId,
-                            timeRange: DateTimeRange.create({
-                                start: new Date('2999-01-01T14:00'),
-                                minutes: 1
-                            })
+                            startTime: new Date('2999-01-01T14:00'),
+                            endTime: new Date('2999-01-01T14:01')
                         }
                     ].map((item) => expect.objectContaining(item))
                 )
@@ -115,12 +112,12 @@ describe('Booking', () => {
         })
     })
 
-    describe('getTickets', () => {
-        /* 상영시간이 존재하지 않으면 NotFoundException을 던져야 한다 */
-        it('Should throw NotFoundException if any showtime does not exist', async () => {
-            const promise = fix.bookingClient.getTickets(nullObjectId)
-
-            await expect(promise).rejects.toThrow('The requested showtime could not be found.')
+    describe('GET /booking/showtimes/:id/tickets', () => {
+        /* 상영시간이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        it('Should return NOT_FOUND(404) if the showtime does not exist', async () => {
+            await fix.httpClient
+                .get(`/booking/showtimes/${nullObjectId}/tickets`)
+                .notFound({ ...Errors.Booking.ShowtimeNotFound, showtimeId: nullObjectId })
         })
     })
 })

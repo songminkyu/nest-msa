@@ -12,9 +12,9 @@ import {
 import { DateUtil, pickItems } from 'common'
 import { uniq } from 'lodash'
 import { Rules } from 'shared'
-import { PurchaseProcessClient } from '../purchase-process.client'
+import { PurchaseProcessEvents } from '../purchase-process.events'
 
-export const PurchaseErrors = {
+export const TicketPurchaseErrors = {
     MaxTicketsExceeded: {
         code: 'ERR_PURCHASE_MAX_TICKETS_EXCEEDED',
         message: 'You have exceeded the maximum number of tickets allowed for purchase.'
@@ -35,12 +35,12 @@ export class TicketPurchaseProcessor {
         private ticketsService: TicketsClient,
         private showtimesService: ShowtimesClient,
         private ticketHoldingService: TicketHoldingClient,
-        private purchaseProcessProxy: PurchaseProcessClient
+        private events: PurchaseProcessEvents
     ) {}
 
     async validatePurchase(createDto: CreatePurchaseDto) {
         const ticketItems = createDto.purchaseItems.filter(
-            (item) => item.type === PurchaseItemType.ticket
+            (item) => item.type === PurchaseItemType.Ticket
         )
         const showtimes = await this.getShowtimes(ticketItems)
 
@@ -64,21 +64,24 @@ export class TicketPurchaseProcessor {
     private validateTicketCount(ticketItems: PurchaseItemDto[]) {
         if (Rules.Ticket.maxTicketsPerPurchase < ticketItems.length) {
             throw new BadRequestException({
-                ...PurchaseErrors.MaxTicketsExceeded,
+                ...TicketPurchaseErrors.MaxTicketsExceeded,
                 maxCount: Rules.Ticket.maxTicketsPerPurchase
             })
         }
     }
 
     private validatePurchaseTime(showtimes: ShowtimeDto[]) {
-        for (const { timeRange } of showtimes) {
-            const cutoffTime = DateUtil.addMinutes(new Date(), Rules.Ticket.purchaseDeadlineMinutes)
+        for (const { startTime } of showtimes) {
+            const cutoffTime = DateUtil.addMinutes(
+                new Date(),
+                Rules.Ticket.purchaseDeadlineInMinutes
+            )
 
-            if (timeRange.start.getTime() < cutoffTime.getTime()) {
+            if (startTime.getTime() < cutoffTime.getTime()) {
                 throw new BadRequestException({
-                    ...PurchaseErrors.DeadlineExceeded,
-                    deadlineMinutes: Rules.Ticket.purchaseDeadlineMinutes,
-                    startTime: timeRange.start.toString(),
+                    ...TicketPurchaseErrors.DeadlineExceeded,
+                    purchaseDeadlineInMinutes: Rules.Ticket.purchaseDeadlineInMinutes,
+                    startTime: startTime.toString(),
                     cutoffTime: cutoffTime.toString()
                 })
             }
@@ -105,32 +108,32 @@ export class TicketPurchaseProcessor {
         const isAllExist = purchaseTicketIds.every((ticketId) => heldTicketIds.includes(ticketId))
 
         if (!isAllExist) {
-            throw new BadRequestException(PurchaseErrors.TicketNotHeld)
+            throw new BadRequestException(TicketPurchaseErrors.TicketNotHeld)
         }
     }
 
     async completePurchase(createDto: CreatePurchaseDto) {
         const ticketItems = createDto.purchaseItems.filter(
-            (item) => item.type === PurchaseItemType.ticket
+            (item) => item.type === PurchaseItemType.Ticket
         )
         const ticketIds = ticketItems.map((item) => item.ticketId)
 
-        await this.ticketsService.updateTicketStatus(ticketIds, TicketStatus.sold)
+        await this.ticketsService.updateTicketStatus(ticketIds, TicketStatus.Sold)
 
-        await this.purchaseProcessProxy.emitTicketPurchased(createDto.customerId, ticketIds)
+        await this.events.emitTicketPurchased(createDto.customerId, ticketIds)
 
         return true
     }
 
     async rollbackPurchase(createDto: CreatePurchaseDto) {
         const ticketItems = createDto.purchaseItems.filter(
-            (item) => item.type === PurchaseItemType.ticket
+            (item) => item.type === PurchaseItemType.Ticket
         )
         const ticketIds = ticketItems.map((item) => item.ticketId)
 
-        await this.ticketsService.updateTicketStatus(ticketIds, TicketStatus.available)
+        await this.ticketsService.updateTicketStatus(ticketIds, TicketStatus.Available)
 
-        await this.purchaseProcessProxy.emitTicketPurchaseCanceled(createDto.customerId, ticketIds)
+        await this.events.emitTicketPurchaseCanceled(createDto.customerId, ticketIds)
 
         return true
     }

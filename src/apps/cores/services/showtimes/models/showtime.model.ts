@@ -1,5 +1,5 @@
 import { Prop, Schema } from '@nestjs/mongoose'
-import { DateTimeRange, HardDelete, MongooseSchema, createMongooseSchema } from 'common'
+import { HardDelete, MongooseSchema, createMongooseSchema } from 'common'
 import { HydratedDocument, Types } from 'mongoose'
 import { MongooseConfig } from 'shared'
 
@@ -7,7 +7,7 @@ import { MongooseConfig } from 'shared'
 @Schema(MongooseConfig.schemaOptions)
 export class Showtime extends MongooseSchema {
     @Prop({ required: true })
-    batchId: Types.ObjectId
+    transactionId: Types.ObjectId
 
     @Prop({ required: true })
     theaterId: Types.ObjectId
@@ -15,8 +15,11 @@ export class Showtime extends MongooseSchema {
     @Prop({ required: true })
     movieId: Types.ObjectId
 
-    @Prop({ type: Object, required: true })
-    timeRange: DateTimeRange
+    @Prop({ required: true })
+    startTime: Date
+
+    @Prop({ required: true })
+    endTime: Date
 }
 export type ShowtimeDocument = HydratedDocument<Showtime>
 export const ShowtimeSchema = createMongooseSchema(Showtime)

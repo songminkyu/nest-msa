@@ -37,7 +37,7 @@ export class MoviesService {
             for (const movie of movies) {
                 await movie.deleteOne({ session })
 
-                const fileIds = movie.imageFileIds.map((id) => id.toString())
+                const fileIds = movie.imageIds.map((id) => id.toString())
                 await this.storageFilesService.deleteFiles(fileIds)
             }
 
@@ -67,14 +67,14 @@ export class MoviesService {
         const dto = mapDocToDto(movie, MovieDto, [
             'id',
             'title',
-            'genre',
+            'genres',
             'releaseDate',
             'plot',
-            'durationMinutes',
+            'durationInSeconds',
             'director',
             'rating'
         ])
-        dto.images = movie.imageFileIds.map((id) => `${Routes.Http.StorageFiles}/${id.toString()}`)
+        dto.images = movie.imageIds.map((id) => `${Routes.Http.StorageFiles}/${id.toString()}`)
 
         return dto
     }

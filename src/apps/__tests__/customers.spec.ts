@@ -1,9 +1,8 @@
-import { expect } from '@jest/globals'
 import { CustomerDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
-import { biuldCustomerCreateDto, createCustomer } from './common.fixture'
+import { buildCustomerCreateDto, createCustomer } from './common.fixture'
 import { Fixture } from './customers.fixture'
-import { Errors } from './utils'
+import { Errors } from './helpers'
 
 describe('Customers', () => {
     let fix: Fixture
@@ -20,20 +19,20 @@ describe('Customers', () => {
     describe('POST /customers', () => {
         /* 고객을 생성해야 한다 */
         it('Should create a customer', async () => {
-            const { createDto, expectedDto } = biuldCustomerCreateDto()
+            const { createDto, expectedDto } = buildCustomerCreateDto()
 
             await fix.httpClient.post('/customers').body(createDto).created(expectedDto)
         })
 
         /* 이메일이 이미 존재하면 CONFLICT(409)를 반환해야 한다 */
         it('Should return CONFLICT(409) if the email already exists', async () => {
-            const { createDto } = biuldCustomerCreateDto()
+            const { createDto } = buildCustomerCreateDto()
 
             await fix.httpClient.post('/customers').body(createDto).created()
             await fix.httpClient
                 .post('/customers')
                 .body(createDto)
-                .conflict({ ...Errors.Customer.emailAlreadyExists, email: createDto.email })
+                .conflict({ ...Errors.Customer.EmailAlreadyExists, email: createDto.email })
         })
 
         /* 필수 필드가 누락되면 BAD_REQUEST(400)를 반환해야 한다 */
@@ -57,7 +56,7 @@ describe('Customers', () => {
             const updateDto = {
                 name: 'update-name',
                 email: 'new@mail.com',
-                birthdate: new Date('1900-12-31')
+                birthDate: new Date('1900-12-31')
             }
             const expected = { ...customer, ...updateDto }
 
@@ -84,6 +83,7 @@ describe('Customers', () => {
         /* 고객을 삭제해야 한다 */
         it('Should delete the customer', async () => {
             await fix.httpClient.delete(`/customers/${customer.id}`).ok()
+
             await fix.httpClient.get(`/customers/${customer.id}`).notFound({
                 ...Errors.Mongoose.MultipleDocumentsNotFound,
                 notFoundIds: [customer.id]

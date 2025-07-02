@@ -1,4 +1,3 @@
-import { expect } from '@jest/globals'
 import { Fixture, HardDeleteSample, SoftDeleteSample } from './mongoose.delete.fixture'
 
 describe('Mongoose Delete', () => {

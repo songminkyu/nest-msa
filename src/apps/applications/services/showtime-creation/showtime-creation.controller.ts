@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { CommonQueryDto } from 'common'
 import { Messages } from 'shared'
-import { CreateShowtimeBatchDto } from './dtos'
+import { BulkCreateShowtimesDto } from './dtos'
 import { ShowtimeCreationService } from './showtime-creation.service'
 
 @Controller()
@@ -24,8 +24,8 @@ export class ShowtimeCreationController {
         return this.service.searchShowtimes(theaterIds)
     }
 
-    @MessagePattern(Messages.ShowtimeCreation.createBatchShowtimes)
-    createBatchShowtimes(@Payload() createDto: CreateShowtimeBatchDto) {
-        return this.service.createBatchShowtimes(createDto)
+    @MessagePattern(Messages.ShowtimeCreation.requestShowtimeCreation)
+    requestShowtimeCreation(@Payload() createDto: BulkCreateShowtimesDto) {
+        return this.service.requestShowtimeCreation(createDto)
     }
 }

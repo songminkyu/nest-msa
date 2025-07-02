@@ -2,44 +2,7 @@
 
 구현 과정에서 적용한 규칙을 정리했습니다.
 
-## 1. Naming Rules
-
-### 1.1. find vs get
-
-함수명이 find...인 경우와 get...인 경우에는, 요청한 리소스가 없을 때 처리 방식이 다릅니다.
-
-```ts
-// 해당 Seed가 없으면 null을 반환합니다.
-findSeed(seedId: string)
-
-// 해당 Seed가 없으면 예외를 던집니다.
-getSeed(seedId: string)
-```
-
-find는 **찾는 대상이 없을 수도 있다**는 의미이므로 `null`을 반환합니다.
-
-그러나 get은 **반드시 존재해야 하는 대상을 가져온다**는 의미이므로, 해당 리소스가 없으면 예외를 던지는 것이 적절합니다.
-
-### 1.2. find vs search
-
-- Search는 주로 조건이나 키워드를 이용해 여러 항목 중에서 원하는 항목을 골라내는 의미로 많이 사용됩니다.
-- 예: 영화 검색(Search Movies), 극장 검색(Search Theaters)
-- Find는 특정 항목 하나를 정확히 찾을 때 자주 사용합니다. ID나 명확한 식별자를 이용하여 특정 대상을 정확히 지정할 때 적합합니다.
-- 예: 고객 ID로 고객 찾기(Find Customer by ID)
-
-### 1.3. 함수명에 전달인자 언급 피하기
-
-전달인자를 함수명에 반영하면 함수가 유연성을 잃고, 읽기도 어렵습니다.
-
-```ts
-// 함수명에 전달인자 정보를 직접 쓰는 것은 피합니다.
-findTheatersForMovie(movieId)
-
-// 대신 아래처럼 객체 형태로 받습니다.
-findTheaters({ movieId })
-```
-
-## 2. TypeORM과 도메인의 Entity 관계
+## 1. TypeORM과 도메인의 Entity 관계
 
 다음은 일반적인 엔티티를 구현한 예시 코드입니다.
 
@@ -68,7 +31,7 @@ export class Seed extends TypeormEntity {
 
 결과적으로, 도메인 객체에 `TypeORM` 코드가 일부 추가된 것은 양쪽을 편리하게 연결하기 위한 방식입니다. `TypeORM`은 엔티티에 의존하지만, 엔티티가 `TypeORM`에 의존하지 않도록 하여, `DDD` 관점에서도 크게 문제되지 않는 구조를 유지합니다.
 
-## 3. import
+## 2. import
 
 아래와 같은 폴더/파일 구조를 가정합니다.
 
@@ -119,7 +82,7 @@ src
 > index.ts에서 여러 모듈을 하나로 묶어서 export해주는 방식을 Barrel import라고 합니다.\
 > 이 프로젝트는 index.ts를 폴더 마다 두고 있는데, 이렇게 하면 순환 참조를 더 빨리 발견할 수 있습니다.
 
-## 4. testlib와 common의 순환 참조
+## 3. testlib와 common의 순환 참조
 
 `src/libs` 폴더에는 `testlib`와 `common`이 있습니다. 언뜻 보면 서로를 참조하는 순환 구조처럼 보일 수 있습니다.
 
@@ -147,7 +110,7 @@ CommonTest --> TestLibClass : import
 @enduml
 ```
 
-## 5. 테스트에서 dynamic import
+## 4. 테스트에서 dynamic import
 
 여러 테스트에서 같은 NATS 서버를 공유하기 때문에, 각 테스트마다 고유한 subject를 생성하기 위해 process.env.TEST_ID를 사용합니다.
 
@@ -169,7 +132,7 @@ describe('Customers', () => {
 })
 ```
 
-## 6. entry file
+## 5. entry file
 
 각 프로젝트의 루트에는 다음 파일들이 존재합니다.
 
@@ -209,7 +172,7 @@ describe('Customers', () => {
     }
 ```
 
-## 7. 테스트 코드를 .spec.ts와 .fixture.ts로 분리
+## 6. 테스트 코드를 .spec.ts와 .fixture.ts로 분리
 
 .spec.ts에 Fixture 설정 코드를 모두 넣으면, 실제 테스트 로직이 무엇을 검증하는지 파악하기가 어렵습니다. 따라서 테스트 로직은 .spec.ts에 집중하고, 테스트에 필요한 리소스나 설정은 .fixture.ts에 둡니다.
 

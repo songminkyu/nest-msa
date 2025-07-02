@@ -1,9 +1,14 @@
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { MoviesClient, ShowtimesClient, TheatersClient, TicketsClient } from 'apps/cores'
-import { ShowtimeCreationValidatorService, ShowtimeCreationWorkerService } from './services'
+import {
+    ShowtimeBulkCreatorService,
+    ShowtimeBulkValidatorService,
+    ShowtimeCreationWorkerService
+} from './services'
 import { ShowtimeCreationClient } from './showtime-creation.client'
 import { ShowtimeCreationController } from './showtime-creation.controller'
+import { ShowtimeCreationEvents } from './showtime-creation.events'
 import { ShowtimeCreationService } from './showtime-creation.service'
 
 @Module({
@@ -14,9 +19,11 @@ import { ShowtimeCreationService } from './showtime-creation.service'
         ShowtimesClient,
         TicketsClient,
         ShowtimeCreationClient,
+        ShowtimeCreationEvents,
         ShowtimeCreationService,
         ShowtimeCreationWorkerService,
-        ShowtimeCreationValidatorService
+        ShowtimeBulkValidatorService,
+        ShowtimeBulkCreatorService
     ],
     controllers: [ShowtimeCreationController]
 })

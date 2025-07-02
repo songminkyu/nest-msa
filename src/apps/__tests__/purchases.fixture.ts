@@ -7,7 +7,7 @@ import {
     TheaterDto,
     TicketDto
 } from 'apps/cores'
-import { DateTimeRange, DateUtil, pickIds } from 'common'
+import { DateUtil, pickIds } from 'common'
 import { Rules } from 'shared'
 import {
     buildShowtimeCreateDto,
@@ -18,13 +18,14 @@ import {
     createTheater,
     createTickets
 } from './common.fixture'
-import { CommonFixture, createCommonFixture } from './utils'
+import { CommonFixture, createCommonFixture } from './helpers'
 
 const createShowtime = async (fix: Fixture, startTime: Date) => {
     const { createDto } = buildShowtimeCreateDto({
         movieId: fix.movie.id,
         theaterId: fix.theater.id,
-        timeRange: DateTimeRange.create({ start: startTime, minutes: 1 })
+        startTime,
+        endTime: DateUtil.addMinutes(startTime, 1)
     })
 
     const showtimes = await createShowtimes(fix, [createDto])
@@ -60,7 +61,7 @@ export const setupPurchaseData = async (
 ) => {
     const {
         holdCount: itemCount = Rules.Ticket.maxTicketsPerPurchase,
-        minutesFromNow = Rules.Ticket.purchaseDeadlineMinutes + 1
+        minutesFromNow = Rules.Ticket.purchaseDeadlineInMinutes + 1
     } = opts || {}
 
     const showtime = await createShowtime(fix, DateUtil.addMinutes(new Date(), minutesFromNow))
@@ -73,7 +74,7 @@ export const setupPurchaseData = async (
     await holdTickets(fix, showtime.id, heldTickets)
 
     const purchaseItems = heldTickets.map((ticket) => ({
-        type: PurchaseItemType.ticket,
+        type: PurchaseItemType.Ticket,
         ticketId: ticket.id
     }))
 

@@ -37,7 +37,7 @@ describe('Ticket Holding', () => {
         /* 시간이 만료되면 티켓을 다시 선점할 수 있어야 한다 */
         it('Should allow re-holding tickets after the hold period expires', async () => {
             const { Rules } = await import('shared')
-            Rules.Ticket.holdExpirationTime = 1000
+            Rules.Ticket.holdDurationInMs = 1000
 
             const initialHold = await holdTickets(fix, { customerId: testObjectId(0x1) })
             expect(initialHold).toBeTruthy()
@@ -45,7 +45,7 @@ describe('Ticket Holding', () => {
             const holdBeforeExpiry = await holdTickets(fix, { customerId: testObjectId(0x2) })
             expect(holdBeforeExpiry).toBeFalsy()
 
-            await sleep(Rules.Ticket.holdExpirationTime + 500)
+            await sleep(Rules.Ticket.holdDurationInMs + 500)
 
             const holdAfterExpiry = await holdTickets(fix, { customerId: testObjectId(0x2) })
             expect(holdAfterExpiry).toBeTruthy()
@@ -125,14 +125,14 @@ describe('Ticket Holding', () => {
         /* 만료된 티켓은 반환되지 않아야 한다 */
         it('Should not return expired tickets', async () => {
             const { Rules } = await import('shared')
-            Rules.Ticket.holdExpirationTime = 1000
+            Rules.Ticket.holdDurationInMs = 1000
 
             await holdTickets(fix, { showtimeId, customerId, ticketIds })
 
             const beforeExpiry = await searchHeldTicketIds(fix, showtimeId, customerId)
             expect(beforeExpiry).toEqual(ticketIds)
 
-            await sleep(Rules.Ticket.holdExpirationTime + 500)
+            await sleep(Rules.Ticket.holdDurationInMs + 500)
 
             const afterExpiry = await searchHeldTicketIds(fix, showtimeId, customerId)
             expect(afterExpiry).toEqual([])

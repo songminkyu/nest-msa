@@ -1,4 +1,3 @@
-import { expect } from '@jest/globals'
 import { MongooseErrors, OrderDirection, pickIds, pickItems } from 'common'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
 import {
@@ -101,7 +100,7 @@ describe('MongooseRepository', () => {
             const skip = 10
             const take = 5
             const { items, ...paginated } = await fix.repository.findWithPagination({
-                pagination: { skip, take, orderby: { name: 'name', direction: OrderDirection.asc } }
+                pagination: { skip, take, orderby: { name: 'name', direction: OrderDirection.Asc } }
             })
 
             sortByName(samples)
@@ -114,7 +113,7 @@ describe('MongooseRepository', () => {
             const { items } = await fix.repository.findWithPagination({
                 pagination: {
                     take: samples.length,
-                    orderby: { name: 'name', direction: OrderDirection.asc }
+                    orderby: { name: 'name', direction: OrderDirection.Asc }
                 }
             })
 
@@ -127,7 +126,7 @@ describe('MongooseRepository', () => {
             const { items } = await fix.repository.findWithPagination({
                 pagination: {
                     take: samples.length,
-                    orderby: { name: 'name', direction: OrderDirection.desc }
+                    orderby: { name: 'name', direction: OrderDirection.Desc }
                 }
             })
 
@@ -152,8 +151,8 @@ describe('MongooseRepository', () => {
         /* QueryHelper를 사용해 조건을 설정해야 한다 */
         it('Should apply conditions using QueryHelper', async () => {
             const { items } = await fix.repository.findWithPagination({
-                callback: (helpers) => {
-                    helpers.setQuery({ name: /Sample-00/i })
+                configureQuery: (queryHelper) => {
+                    queryHelper.setQuery({ name: /Sample-00/i })
                 },
                 pagination: { take: 10 }
             })

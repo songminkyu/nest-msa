@@ -6,6 +6,7 @@ import {
     getChecksum,
     jsonToObject,
     notUsed,
+    padNumber,
     Path,
     pickIds,
     pickItems,
@@ -234,6 +235,26 @@ describe('common/utils/etc', () => {
         it('Should return false for an invalid email address', () => {
             expect(validateEmail('plainaddress')).toBe(false)
             expect(validateEmail('user@domain')).toBe(false)
+        })
+    })
+
+    describe('padNumber', () => {
+        /* padNumber(5, 3)을 호출하면 '005'가 반환되어야 한다 */
+        it("Should return '005' when padding 5 to length 3", () => {
+            const result = padNumber(5, 3)
+            expect(result).toEqual('005')
+        })
+
+        /* 음수는 부호를 포함하여 길이를 계산해 0을 채워야 한다 */
+        it('Should pad negative numbers while keeping the sign', () => {
+            const result = padNumber(-5, 3)
+            expect(result).toEqual('0-5')
+        })
+
+        /* 지정된 길이 이상인 경우 그대로 문자열을 반환해야 한다 */
+        it('Should return the string representation if number length is sufficient', () => {
+            expect(padNumber(123, 3)).toEqual('123')
+            expect(padNumber(1234, 3)).toEqual('1234')
         })
     })
 })

@@ -59,14 +59,14 @@ export class HttpTestClient {
         return this
     }
 
-    attachs(
-        attachs: Array<{
+    attachments(
+        items: Array<{
             name: string
             file: string | Buffer
             options?: string | { filename?: string; contentType?: string }
         }>
     ): this {
-        attachs.forEach(({ name, file, options }) => {
+        items.forEach(({ name, file, options }) => {
             this.agent.attach(name, file, options)
         })
         return this
@@ -119,7 +119,7 @@ export class HttpTestClient {
                     if (1 < lines.length) {
                         /**
                          * id: 1
-                         * data: {"batchId":"6712d234a78adbff65ae552d","status":"processing"}
+                         * data: {"transactionId":"6712d234a78adbff65ae552d","status":"processing"}
                          */
                         const message = this.parseEventMessage(data)
 
@@ -200,7 +200,7 @@ export class HttpTestClient {
     conflict = (expected?: any) => this.send(HttpStatus.CONFLICT, expected)
     notFound = (expected?: any) => this.send(HttpStatus.NOT_FOUND, expected)
     payloadTooLarge = (expected?: any) => this.send(HttpStatus.PAYLOAD_TOO_LARGE, expected)
-    unsupportedMediaTypeException = (expected?: any) =>
+    unsupportedMediaType = (expected?: any) =>
         this.send(HttpStatus.UNSUPPORTED_MEDIA_TYPE, expected)
     internalServerError = (expected?: any) => this.send(HttpStatus.INTERNAL_SERVER_ERROR, expected)
 }
