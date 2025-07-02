@@ -72,12 +72,12 @@ export class TicketPurchaseProcessor {
 
     private validatePurchaseTime(showtimes: ShowtimeDto[]) {
         for (const { startTime } of showtimes) {
-            const cutoffTime = DateUtil.addMinutes(new Date(), Rules.Ticket.purchaseDeadlineMinutes)
+            const cutoffTime = DateUtil.addMinutes(new Date(), Rules.Ticket.purchaseDeadlineInMinutes)
 
             if (startTime.getTime() < cutoffTime.getTime()) {
                 throw new BadRequestException({
                     ...TicketPurchaseErrors.DeadlineExceeded,
-                    deadlineMinutes: Rules.Ticket.purchaseDeadlineMinutes,
+                    purchaseDeadlineInMinutes: Rules.Ticket.purchaseDeadlineInMinutes,
                     startTime: startTime.toString(),
                     cutoffTime: cutoffTime.toString()
                 })

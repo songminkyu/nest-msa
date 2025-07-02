@@ -1,8 +1,8 @@
 import { PurchaseDto, PurchaseItemDto, PurchaseItemType, TicketDto, TicketStatus } from 'apps/cores'
 import { Rules } from 'shared'
 import { nullObjectId } from 'testlib'
-import { Fixture, setupPurchaseData } from './purchases.fixture'
 import { Errors } from './helpers'
+import { Fixture, setupPurchaseData } from './purchases.fixture'
 
 describe('Purchases', () => {
     let fix: Fixture
@@ -104,7 +104,7 @@ describe('Purchases', () => {
         /* 구매 가능 시간을 초과하면 BAD_REQUEST(400)를 반환해야 한다 */
         it('Should return BAD_REQUEST(400) if the purchase deadline is exceeded', async () => {
             const { purchaseItems } = await setupPurchaseData(fix, {
-                minutesFromNow: Rules.Ticket.purchaseDeadlineMinutes
+                minutesFromNow: Rules.Ticket.purchaseDeadlineInMinutes
             })
 
             await fix.httpClient
@@ -112,7 +112,7 @@ describe('Purchases', () => {
                 .body({ customerId: fix.customer.id, totalPrice: 1, purchaseItems })
                 .badRequest({
                     ...Errors.TicketPurchase.DeadlineExceeded,
-                    deadlineMinutes: expect.any(Number),
+                    purchaseDeadlineInMinutes: expect.any(Number),
                     cutoffTime: expect.any(String),
                     startTime: expect.any(String)
                 })

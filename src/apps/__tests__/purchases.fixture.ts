@@ -61,7 +61,7 @@ export const setupPurchaseData = async (
 ) => {
     const {
         holdCount: itemCount = Rules.Ticket.maxTicketsPerPurchase,
-        minutesFromNow = Rules.Ticket.purchaseDeadlineMinutes + 1
+        minutesFromNow = Rules.Ticket.purchaseDeadlineInMinutes + 1
     } = opts || {}
 
     const showtime = await createShowtime(fix, DateUtil.addMinutes(new Date(), minutesFromNow))

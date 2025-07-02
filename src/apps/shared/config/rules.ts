@@ -13,7 +13,7 @@ export const Rules = {
         Ticket purchase deadline (how many minutes before the show it can be purchased)
         티켓 구매 가능 시간 (상영 시작 전 몇 분까지 구매 가능한지)
         */
-        purchaseDeadlineMinutes: 30,
+        purchaseDeadlineInMinutes: 30,
 
         /*
         Maximum number of tickets that can be purchased at once
@@ -32,6 +32,6 @@ export const Rules = {
         The minimum unit of time used to divide showtimes (in minutes)
         상영 시간을 나누는 최소 단위 (분 단위)
         */
-        slotMinutes: 10
+        timeslotInMinutes: 10
     }
 }
