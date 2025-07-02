@@ -12,7 +12,7 @@ on:
 jobs:
     test-coverage:
         runs-on: ubuntu-24.04-arm
-        container: node:22-bookworm
+        container: node:24-bookworm
         env:
             WORKSPACE_ROOT: ${{ github.workspace }}
             PROJECT_NAME: ${{ github.event.repository.name }}
