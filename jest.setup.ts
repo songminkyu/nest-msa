@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import dotenv from 'dotenv'
-dotenv.config({ path: ['.env.test', '.env.infra'] })
+dotenv.config({ path: ['.env.test'], quiet: true })
 process.env.NODE_ENV = 'test'
 
 function generateTestId() {
