@@ -26,15 +26,10 @@ class DefaultCommonQueryPipe extends CommonQueryPipe {
 }
 
 @Controller()
+@UsePipes(DefaultCommonQueryPipe)
 class SamplesController {
     @Get('pagination')
     async getPagination(@Query() query: CommonQueryDto) {
-        return { response: query }
-    }
-
-    @Get('pagination/limited')
-    @UsePipes(DefaultCommonQueryPipe)
-    async getLimitedPagination(@Query() query: CommonQueryDto) {
         return { response: query }
     }
 

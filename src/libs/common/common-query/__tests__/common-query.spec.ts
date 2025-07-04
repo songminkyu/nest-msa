@@ -58,7 +58,7 @@ describe('CommonQuery', () => {
         const take = maxTake + 1
 
         await fix.httpClient
-            .get('/pagination/limited')
+            .get('/pagination')
             .query({ take })
             .badRequest({ ...CommonErrors.CommonQuery.MaxTakeExceeded, take, maxTake })
     })
@@ -66,7 +66,7 @@ describe('CommonQuery', () => {
     /* 'take' 값이 지정되지 않은 경우 기본값이 사용되어야 한다 */
     it("should use the default value if the 'take' value is not specified", async () => {
         await fix.httpClient
-            .get('/pagination/limited')
+            .get('/pagination')
             .query({})
             .ok({ response: { take: maxTake } })
     })
