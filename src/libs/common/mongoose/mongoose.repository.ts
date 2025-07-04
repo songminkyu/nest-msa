@@ -169,6 +169,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
             rollback()
             throw error
         } finally {
+            // TODO
             /* istanbul ignore else */
             if (session) {
                 /* istanbul ignore else */

@@ -7,7 +7,6 @@ export abstract class CommonQueryPipe implements PipeTransform {
     abstract get maxTake(): number
 
     transform(value: any, metadata: ArgumentMetadata) {
-        /* istanbul ignore else */
         if (metadata.type === 'query' && value instanceof CommonQueryDto) {
             if (value.take) {
                 if (this.maxTake < value.take) {
