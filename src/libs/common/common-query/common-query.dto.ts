@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common'
 import { Transform } from 'class-transformer'
 import { IsInt, IsOptional, Min } from 'class-validator'
-import { PaginationErrors } from './errors'
+import { CommonQueryErrors } from './errors'
 import { OrderDirection, OrderOption } from './types'
 
 export class CommonQueryDto {
@@ -31,13 +31,13 @@ export class CommonQueryDto {
         const parts = value.split(':')
 
         if (parts.length !== 2) {
-            throw new BadRequestException(PaginationErrors.FormatInvalid)
+            throw new BadRequestException(CommonQueryErrors.FormatInvalid)
         }
 
         const [name, direction] = parts
 
         if (!Object.values(OrderDirection).includes(direction)) {
-            throw new BadRequestException(PaginationErrors.DirectionInvalid)
+            throw new BadRequestException(CommonQueryErrors.DirectionInvalid)
         }
 
         return { name, direction }

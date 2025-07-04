@@ -1,12 +1,12 @@
 import { CommonErrors } from 'common'
 import { withTestId } from 'testlib'
-import type { Fixture } from './pagination.fixture'
+import type { Fixture } from './common-query.fixture'
 
-describe('Pagination', () => {
+describe('CommonQuery', () => {
     let fix: Fixture
 
     beforeEach(async () => {
-        const { createFixture } = await import('./pagination.fixture')
+        const { createFixture } = await import('./common-query.fixture')
         fix = await createFixture()
     })
 
@@ -14,8 +14,8 @@ describe('Pagination', () => {
         await fix?.teardown()
     })
 
-    /* HttpController에서 PaginationOptionDto을 처리해야 한다 */
-    it('Should handle PaginationOptionDto in HttpController', async () => {
+    /* HttpController에서 CommonQueryDto을 처리해야 한다 */
+    it('Should handle CommonQueryDto in HttpController', async () => {
         const skip = 2
         const take = 3
         await fix.httpClient
@@ -24,8 +24,8 @@ describe('Pagination', () => {
             .ok({ response: { orderby: { direction: 'asc', name: 'name' }, skip, take } })
     })
 
-    /* RpcController에서 PaginationOptionDto을 처리해야 한다 */
-    it('Should handle PaginationOptionDto in RpcController', async () => {
+    /* RpcController에서 CommonQueryDto을 처리해야 한다 */
+    it('Should handle CommonQueryDto in RpcController', async () => {
         const skip = 2
         const take = 3
         const input = { orderby: { direction: 'asc', name: 'name' }, skip, take }
@@ -40,7 +40,7 @@ describe('Pagination', () => {
         await fix.httpClient
             .get('/pagination')
             .query({ orderby: 'wrong' })
-            .badRequest(CommonErrors.Pagination.FormatInvalid)
+            .badRequest(CommonErrors.CommonQuery.FormatInvalid)
     })
 
     /* 정렬 방향이 잘못되었을 때 BadRequest를 반환해야 한다 */
@@ -48,7 +48,7 @@ describe('Pagination', () => {
         await fix.httpClient
             .get('/pagination')
             .query({ orderby: 'name:wrong' })
-            .badRequest(CommonErrors.Pagination.DirectionInvalid)
+            .badRequest(CommonErrors.CommonQuery.DirectionInvalid)
     })
 
     /* 'take' 값이 지정된 제한을 초과하면 BadRequest를 반환해야 한다 */
@@ -58,7 +58,7 @@ describe('Pagination', () => {
         await fix.httpClient
             .get('/pagination/limited')
             .query({ take })
-            .badRequest({ ...CommonErrors.Pagination.TakeLimitExceeded, take, takeLimit: 50 })
+            .badRequest({ ...CommonErrors.CommonQuery.TakeLimitExceeded, take, takeLimit: 50 })
     })
 
     /* 'take' 값이 지정되지 않은 경우 기본값이 사용되어야 한다 */

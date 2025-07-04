@@ -7,7 +7,7 @@ import {
     Payload,
     Transport
 } from '@nestjs/microservices'
-import { CommonQueryDto, PaginationPipe } from 'common'
+import { CommonQueryDto, CommonQueryPipe } from 'common'
 import {
     createHttpTestContext,
     getNatsTestConnection,
@@ -17,7 +17,7 @@ import {
 } from 'testlib'
 
 @Injectable()
-class DefaultPaginationPipe extends PaginationPipe {
+class DefaultCommonQueryPipe extends CommonQueryPipe {
     get takeLimit(): number {
         return 50
     }
@@ -31,7 +31,7 @@ class SamplesController {
     }
 
     @Get('pagination/limited')
-    @UsePipes(DefaultPaginationPipe)
+    @UsePipes(DefaultCommonQueryPipe)
     async getLimitedPagination(@Query() query: CommonQueryDto) {
         return { response: query }
     }

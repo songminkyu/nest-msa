@@ -19,7 +19,7 @@ import { RecommendationClient } from 'apps/applications'
 import { CreateMovieDto, MoviesClient, SearchMoviesDto, UpdateMovieDto } from 'apps/cores'
 import { MulterExceptionFilter } from './filters'
 import { CustomerOptionalJwtAuthGuard } from './guards'
-import { DefaultPaginationPipe } from './pipes'
+import { DefaultCommonQueryPipe } from './pipes'
 import { CustomerAuthRequest } from './types'
 
 @Controller('movies')
@@ -69,7 +69,7 @@ export class MoviesController {
         return this.moviesService.deleteMovies([movieId])
     }
 
-    @UsePipes(DefaultPaginationPipe)
+    @UsePipes(DefaultCommonQueryPipe)
     @Get()
     async searchMoviesPage(@Query() searchDto: SearchMoviesDto) {
         return this.moviesService.searchMoviesPage(searchDto)

@@ -21,7 +21,7 @@ import {
 } from 'apps/cores'
 import { Assert } from 'common'
 import { CustomerJwtAuthGuard, CustomerLocalAuthGuard, Public } from './guards'
-import { DefaultPaginationPipe } from './pipes'
+import { DefaultCommonQueryPipe } from './pipes'
 import { CustomerAuthRequest } from './types'
 
 @Controller('customers')
@@ -54,7 +54,7 @@ export class CustomersController {
         return this.customersService.deleteCustomers([customerId])
     }
 
-    @UsePipes(DefaultPaginationPipe)
+    @UsePipes(DefaultCommonQueryPipe)
     @Get()
     async searchCustomersPage(@Query() searchDto: SearchCustomersDto) {
         return this.customersService.searchCustomersPage(searchDto)

@@ -16,7 +16,7 @@ import { BulkCreateShowtimesDto, ShowtimeCreationClient } from 'apps/application
 import { CommonQueryDto } from 'common'
 import { Observable, Subject } from 'rxjs'
 import { Events } from 'shared'
-import { DefaultPaginationPipe } from './pipes'
+import { DefaultCommonQueryPipe } from './pipes'
 
 @Controller('showtime-creation')
 export class ShowtimeCreationController implements OnModuleDestroy {
@@ -28,13 +28,13 @@ export class ShowtimeCreationController implements OnModuleDestroy {
         this.eventStream.complete()
     }
 
-    @UsePipes(DefaultPaginationPipe)
+    @UsePipes(DefaultCommonQueryPipe)
     @Get('theaters')
     async searchTheatersPage(@Query() searchDto: CommonQueryDto) {
         return this.showtimeCreationService.searchTheatersPage(searchDto)
     }
 
-    @UsePipes(DefaultPaginationPipe)
+    @UsePipes(DefaultCommonQueryPipe)
     @Get('movies')
     async searchMoviesPage(@Query() searchDto: CommonQueryDto) {
         return this.showtimeCreationService.searchMoviesPage(searchDto)

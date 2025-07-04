@@ -37,26 +37,48 @@ describe('DateTimeRange', () => {
         expect(errors[0].constraints?.isDate).toBeDefined()
     })
 
-    it('create', () => {
-        expect(
-            DateTimeRange.create({ start: new Date('2023-01-01'), end: new Date('2023-01-02') })
-        ).toEqual({ start: new Date('2023-01-01'), end: new Date('2023-01-02') })
-
-        expect(DateTimeRange.create({ start: new Date('2023-01-01'), days: 2 })).toEqual({
-            start: new Date('2023-01-01'),
-            end: new Date('2023-01-03')
+    describe('create', () => {
+        /* start와 end가 주어졌을 때 DateTimeRange 생성해야 한다 */
+        it('Should create DateTimeRange with start and end', () => {
+            const result = DateTimeRange.create({
+                start: new Date('2023-01-01'),
+                end: new Date('2023-01-02')
+            })
+            expect(result).toEqual({ start: new Date('2023-01-01'), end: new Date('2023-01-02') })
         })
 
-        expect(DateTimeRange.create({ start: new Date('2023-01-01T12:00'), minutes: 30 })).toEqual({
-            start: new Date('2023-01-01T12:00'),
-            end: new Date('2023-01-01T12:30')
+        /* start와 days가 주어졌을 때 DateTimeRange 생성해야 한다 */
+        it('Should create DateTimeRange with start and days', () => {
+            const result = DateTimeRange.create({
+                start: new Date('2023-01-01'),
+                days: 2
+            })
+            expect(result).toEqual({ start: new Date('2023-01-01'), end: new Date('2023-01-03') })
         })
 
-        const throwException = () => {
-            DateTimeRange.create({})
-        }
+        /* start와 minutes가 주어졌을 때 DateTimeRange 생성해야 한다*/
+        it('Should create DateTimeRange with start and minutes', () => {
+            const result = DateTimeRange.create({
+                start: new Date('2023-01-01T12:00'),
+                minutes: 30
+            })
+            expect(result).toEqual({
+                start: new Date('2023-01-01T12:00'),
+                end: new Date('2023-01-01T12:30')
+            })
+        })
 
-        expect(throwException).toThrow('Invalid options provided.')
+        /* start나 end가 제공되지 않았을 때 에러를 던져야 한다 */
+        it('Should throw error if no start or end is provided', () => {
+            const throwException = () => DateTimeRange.create({})
+            expect(throwException).toThrow('Invalid options provided.')
+        })
+
+        /* start만 제공되고 minutes이나 days 날짜가 없을 때 에러를 던져야 한다 */
+        it('Should throw error if only start is provided without minutes or days', () => {
+            const throwException = () => DateTimeRange.create({ start: new Date() })
+            expect(throwException).toThrow('Invalid options provided.')
+        })
     })
 })
 

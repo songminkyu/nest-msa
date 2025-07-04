@@ -12,6 +12,14 @@ describe('DateUtil', () => {
             expect(date.getMinutes()).toEqual(30)
         })
 
+        /* YYYYMMDD 형식 문자열을 Date 객체로 변환 */
+        it('Should convert a YYYYMMDD format string to a Date object', () => {
+            const date = DateUtil.fromYMD('19990102')
+            expect(date.getFullYear()).toEqual(1999)
+            expect(date.getMonth()).toEqual(0) // 1월은 0이다.
+            expect(date.getDate()).toEqual(2)
+        })
+
         /* 잘못된 형식 입력 시 예외를 던져야 한다 */
         it('Should throw an exception for invalid format input', () => {
             expect(() => DateUtil.fromYMD('')).toThrow()

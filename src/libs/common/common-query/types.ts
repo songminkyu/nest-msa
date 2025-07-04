@@ -12,6 +12,7 @@ export class OrderOption {
     @IsEnum(OrderDirection)
     direction: OrderDirection
 }
+
 export class PaginationResult<E> {
     @IsInt()
     skip: number

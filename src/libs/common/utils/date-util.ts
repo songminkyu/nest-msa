@@ -88,8 +88,6 @@ export class DateUtil {
         if (dateString.length === 12) {
             hours = parseInt(dateString.substring(8, 10), 10)
             minutes = parseInt(dateString.substring(10, 12), 10)
-        } else {
-            // TODO
         }
 
         return new Date(year, month, day, hours, minutes)

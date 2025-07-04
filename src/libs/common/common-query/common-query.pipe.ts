@@ -1,9 +1,9 @@
 import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from '@nestjs/common'
 import { CommonQueryDto } from './common-query.dto'
-import { PaginationErrors } from './errors'
+import { CommonQueryErrors } from './errors'
 
 @Injectable()
-export abstract class PaginationPipe implements PipeTransform {
+export abstract class CommonQueryPipe implements PipeTransform {
     abstract get takeLimit(): number
 
     transform(value: any, metadata: ArgumentMetadata) {
@@ -16,21 +16,15 @@ export abstract class PaginationPipe implements PipeTransform {
                 if (value.take) {
                     if (this.takeLimit < value.take) {
                         throw new BadRequestException({
-                            ...PaginationErrors.TakeLimitExceeded,
+                            ...CommonQueryErrors.TakeLimitExceeded,
                             take: value.take,
                             takeLimit: this.takeLimit
                         })
-                    } else {
-                        // TODO
                     }
                 } else {
                     value.take = this.takeLimit
                 }
-            } else {
-                // TODO
             }
-        } else {
-            // TODO
         }
 
         return value
