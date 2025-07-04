@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common'
 import { escapeRegExp, uniq } from 'lodash'
-import { FilterQuery, Types } from 'mongoose'
+import { FilterQuery, HydratedDocument, Types } from 'mongoose'
 import { Expect } from '../validator'
 import { MongooseErrors } from './errors'
 
@@ -52,16 +52,16 @@ export class QueryBuilder<T> {
     addRange(field: string, range?: { start?: Date; end?: Date }): this {
         if (range) {
             const { start, end } = range
+
             if (start && end) {
                 this.query[field] = { $gte: start, $lte: end }
             } else if (start) {
                 this.query[field] = { $gte: start }
             } else if (end) {
                 this.query[field] = { $lte: end }
-            } else {
-                // TODO
             }
         }
+
         return this
     }
 
@@ -72,4 +72,29 @@ export class QueryBuilder<T> {
 
         return this.query
     }
+}
+
+/**
+ * Converts a Mongoose document to a DTO.
+ * Mongoose 문서를 Dto로 변환한다
+ * @param doc       The Mongoose Document to convert
+ * @param DtoClass  The DTO class to instantiate (new () => DTO)
+ * @param keys      The list of keys to include in the DTO
+ * @returns         A new DTO instance
+ */
+export function mapDocToDto<
+    DOC extends object,
+    DTO extends object,
+    K extends keyof DOC & keyof DTO
+>(doc: HydratedDocument<DOC>, DtoClass: new () => DTO, keys: K[]): DTO {
+    type SchemaJson<T> = { [K in keyof T]: T[K] extends Types.ObjectId ? string : T[K] }
+
+    const json = doc.toJSON<SchemaJson<DOC>>()
+    const dto = new DtoClass()
+
+    for (const key of keys) {
+        dto[key] = json[key] as DTO[K]
+    }
+
+    return dto
 }

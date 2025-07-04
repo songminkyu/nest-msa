@@ -36,6 +36,7 @@ describe('Mongoose Schema Examples', () => {
             ['key1', 'value1'],
             ['key2', 2]
         ])
+        doc.optional = undefined
         await doc.save()
 
         const found = await fix.model.findOne({ _id: doc._id }).exec()

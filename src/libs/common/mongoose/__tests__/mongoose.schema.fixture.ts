@@ -1,12 +1,11 @@
-import { getModelToken, MongooseModule, Prop, Schema as NestSchema } from '@nestjs/mongoose'
+import { getModelToken, MongooseModule, Schema as NestSchema, Prop } from '@nestjs/mongoose'
 import { createMongooseSchema, MongooseSchema } from 'common'
-import { Schema, Types, mongo } from 'mongoose'
-import { Model } from 'mongoose'
+import { Model, mongo, Schema, Types } from 'mongoose'
 import { createTestContext, getMongoTestConnection, withTestId } from 'testlib'
 
 @NestSchema({
     toJSON: {
-        transform: function (doc, ret) {
+        transform: function (_doc, ret) {
             /*
             Even if stored as Buffer, it is recognized as mongo.Binary when loaded.
             Buffer로 저장해도 로드하면 mongo.Binary 타입이다.
@@ -70,6 +69,9 @@ export class SchemaTypeSample extends MongooseSchema {
 
     @Prop({ type: Schema.Types.Decimal128 })
     decimal: Types.Decimal128
+
+    @Prop()
+    optional?: boolean
 }
 
 export interface Fixture {
@@ -86,7 +88,7 @@ export async function createFixture() {
         metadata: {
             imports: [
                 MongooseModule.forRootAsync({
-                    useFactory: () => ({ uri, dbName: withTestId('test') })
+                    useFactory: () => ({ uri, dbName: withTestId('mongoose-schema') })
                 }),
                 MongooseModule.forFeature([{ name: 'schema', schema }])
             ]

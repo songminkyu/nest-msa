@@ -1,6 +1,15 @@
 import { BadRequestException } from '@nestjs/common'
-import { QueryBuilder, newObjectId, objectId, objectIds } from 'common'
-import { Types } from 'mongoose'
+import { Prop, Schema } from '@nestjs/mongoose'
+import {
+    createMongooseSchema,
+    mapDocToDto,
+    MongooseSchema,
+    newObjectId,
+    objectId,
+    objectIds,
+    QueryBuilder
+} from 'common'
+import { model, Types } from 'mongoose'
 
 it('newObjectId', async () => {
     const objectIdValue = newObjectId()
@@ -168,6 +177,12 @@ describe('QueryBuilder', () => {
             builder.addRange('createdAt', undefined)
             expect(builder.build({ allowEmpty: true })).toEqual({})
         })
+
+        /* 빈 객체면 쿼리에 추가하지 않아야 한다 */
+        it('Should not add anything if the value is empty object', () => {
+            builder.addRange('createdAt', {})
+            expect(builder.build({ allowEmpty: true })).toEqual({})
+        })
     })
 
     describe('build', () => {
@@ -185,6 +200,39 @@ describe('QueryBuilder', () => {
         /* allowEmpty가 true면 빈 쿼리를 허용한다 */
         it('Should allow an empty query if allowEmpty is true', () => {
             expect(builder.build({ allowEmpty: true })).toEqual({})
+        })
+    })
+})
+
+describe('mapDocToDto', () => {
+    @Schema({ toJSON: { virtuals: true } })
+    class Sample extends MongooseSchema {
+        @Prop()
+        name: string
+
+        @Prop()
+        optional?: boolean
+    }
+
+    class SampleDto {
+        id: string
+        name: string
+        optional?: boolean
+    }
+
+    const sampleSchema = createMongooseSchema(Sample)
+    const SampleModel = model<Sample>('SampleForTest', sampleSchema)
+
+    /* 문서를 DTO로 변환해야 합니다 */
+    it('Should convert a document to a DTO', () => {
+        const doc = new SampleModel({ name: 'name', optional: undefined })
+
+        const dto = mapDocToDto(doc, SampleDto, ['id', 'name', 'optional'])
+
+        expect(dto).toEqual({
+            id: expect.any(String),
+            name: 'name',
+            optional: undefined
         })
     })
 })

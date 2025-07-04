@@ -32,7 +32,7 @@ export async function createFixture<T>(cls: Type<T>) {
         metadata: {
             imports: [
                 MongooseModule.forRootAsync({
-                    useFactory: () => ({ uri, dbName: withTestId('test') })
+                    useFactory: () => ({ uri, dbName: withTestId('mongoose-delete') })
                 }),
                 MongooseModule.forFeature([{ name: 'schema', schema }])
             ]

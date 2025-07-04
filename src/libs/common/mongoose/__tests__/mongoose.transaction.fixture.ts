@@ -31,7 +31,7 @@ export async function createFixture() {
         metadata: {
             imports: [
                 MongooseModule.forRootAsync({
-                    useFactory: () => ({ uri, dbName: withTestId('test') })
+                    useFactory: () => ({ uri, dbName: withTestId('mongoose-transaction') })
                 }),
                 MongooseModule.forFeature([{ name: Sample.name, schema: SampleSchema }])
             ],
