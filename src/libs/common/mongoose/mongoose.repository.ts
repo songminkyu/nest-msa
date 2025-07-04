@@ -5,7 +5,6 @@ import { CommonQueryDto, PaginationResult } from '../query'
 import { Assert, Expect } from '../validator'
 import { MongooseErrors } from './errors'
 import { objectId, objectIds } from './mongoose.util'
-import { Logger } from 'winston'
 
 export class DeleteResult {
     deletedCount: number
