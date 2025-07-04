@@ -21,7 +21,7 @@ export class DateTimeRange {
                 return { start, end: DateUtil.addMinutes(start, minutes) }
             } else if (days) {
                 return { start, end: DateUtil.addDays(start, days) }
-            }else{
+            } else {
                 // TODO
             }
         }
