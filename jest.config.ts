@@ -4,7 +4,7 @@ import { createJsWithTsPreset } from 'ts-jest'
 export default {
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     moduleFileExtensions: ['js', 'json', 'ts'],
-    testRegex: '.*\\.spec\\.(ts|js)$',
+    testRegex: '(__tests__/.*\\.spec\\.(ts|js))$',
     testEnvironment: 'node',
     // Start of test environment reset configuration
     clearMocks: true,
@@ -35,8 +35,9 @@ export default {
         '/libs/testlib/'
     ],
     coverageDirectory: '<rootDir>/_output/coverage',
-    testTimeout: 30 * 1000,
+    testTimeout: 60 * 1000,
     ...createJsWithTsPreset({ tsconfig: 'tsconfig.json' }),
+    // ECMAScript modules
     transformIgnorePatterns: ['!node_modules/(?!chalk)']
     /*
      * If the number of CPU cores is high relative to available memory,

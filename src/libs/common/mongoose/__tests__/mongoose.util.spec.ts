@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common'
+import { BadRequestException, Logger } from '@nestjs/common'
 import { Prop, Schema } from '@nestjs/mongoose'
 import {
     createMongooseSchema,
@@ -119,6 +119,8 @@ describe('QueryBuilder', () => {
 
         /* 중복된 ID가 있으면 중복을 제거해야 한다 */
         it('Should remove duplicates if there are repeated IDs', () => {
+            jest.spyOn(Logger, 'error').mockImplementationOnce(() => {})
+
             const id = new Types.ObjectId().toString()
             const ids = [id, new Types.ObjectId().toString(), id]
 

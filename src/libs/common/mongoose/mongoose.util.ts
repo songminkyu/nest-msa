@@ -32,10 +32,11 @@ export class QueryBuilder<T> {
     addIn(field: string, ids?: string[] | undefined): this {
         if (ids && ids.length > 0) {
             const uniqueIds = uniq(ids)
+
             Expect.equalLength(
                 uniqueIds,
                 ids,
-                `Duplicate ${String(field)} IDs detected and removed: ${ids}`
+                `Duplicate ${String(field)} detected and removed: ${ids}`
             )
             this.query[field] = { $in: objectIds(uniqueIds) }
         }
