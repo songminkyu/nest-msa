@@ -12,11 +12,27 @@ describe('MongooseRepository.withTransaction', () => {
         await fix?.teardown()
     })
 
-    it('Commit a transaction', async () => {
+    /* 트랜잭션을 커밋해야 한다. */
+    it('Should commit a transaction', async () => {
         const newDoc = await fix.repository.withTransaction(async (session) => {
             const doc = fix.repository.newDocument()
             doc.name = 'name'
             return doc.save({ session })
+        })
+
+        const found = await fix.repository.findById(newDoc.id)
+        expect(found?.toJSON()).toEqual(newDoc.toJSON())
+    })
+
+    /* 트랜잭션을 롤백해야 한다. */
+    it('Should roll back a transaction', async () => {
+        const newDoc = fix.repository.newDocument()
+        newDoc.name = 'name'
+        await newDoc.save()
+
+        await fix.repository.withTransaction(async (session, rollback) => {
+            await fix.repository.deleteById(newDoc.id, session)
+            rollback()
         })
 
         const found = await fix.repository.findById(newDoc.id)
@@ -37,19 +53,5 @@ describe('MongooseRepository.withTransaction', () => {
 
         const { total } = await fix.repository.findWithPagination({ pagination: { take: 1 } })
         expect(total).toEqual(0)
-    })
-
-    it('Rollback a transaction', async () => {
-        const newDoc = fix.repository.newDocument()
-        newDoc.name = 'name'
-        await newDoc.save()
-
-        await fix.repository.withTransaction(async (session, rollback) => {
-            await fix.repository.deleteById(newDoc.id, session)
-            rollback()
-        })
-
-        const found = await fix.repository.findById(newDoc.id)
-        expect(found?.toJSON()).toEqual(newDoc.toJSON())
     })
 })

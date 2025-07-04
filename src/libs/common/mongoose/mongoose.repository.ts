@@ -5,6 +5,7 @@ import { CommonQueryDto, PaginationResult } from '../query'
 import { Assert, Expect } from '../validator'
 import { MongooseErrors } from './errors'
 import { objectId, objectIds } from './mongoose.util'
+import { Logger } from 'winston'
 
 export class DeleteResult {
     deletedCount: number
@@ -115,10 +116,6 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
     }) {
         const { configureQuery, pagination, session } = args
 
-        if (!pagination.take) {
-            throw new BadRequestException(MongooseErrors.TakeMissing)
-        }
-
         const queryHelper = this.model.find({}, null, { session })
 
         let take = 0
@@ -131,7 +128,7 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
             }
             queryHelper.limit(take)
         } else {
-            // TODO
+            throw new BadRequestException(MongooseErrors.TakeMissing)
         }
 
         if (pagination.skip) {
@@ -160,9 +157,10 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         let rollbackRequested = false
         const rollback = () => (rollbackRequested = true)
 
-        const session = await this.model.startSession()
+        let session: ClientSession | undefined
 
         try {
+            session = await this.model.startSession()
             session.startTransaction()
 
             const result = await callback(session, rollback)
@@ -172,17 +170,19 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
             rollback()
             throw error
         } finally {
-            if (session.inTransaction()) {
-                if (rollbackRequested) {
-                    await session.abortTransaction()
-                } else {
-                    await session.commitTransaction()
+            /* istanbul ignore else */
+            if (session) {
+                /* istanbul ignore else */
+                if (session.inTransaction()) {
+                    if (rollbackRequested) {
+                        await session.abortTransaction()
+                    } else {
+                        await session.commitTransaction()
+                    }
                 }
-            } else {
-                // TODO
-            }
 
-            await session.endSession()
+                await session.endSession()
+            }
         }
     }
 }
