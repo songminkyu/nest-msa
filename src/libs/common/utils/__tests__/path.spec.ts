@@ -76,6 +76,9 @@ describe('Path', () => {
         const subDir2 = Path.join(tempDir, 'subdir2')
         await Path.mkdir(subDir2)
 
+        const srcFilePath = Path.join(tempDir, 'file.txt')
+        await fs.writeFile(srcFilePath, 'hello world')
+
         const subDirs = await Path.subdirs(tempDir)
         expect(subDirs).toEqual(['subdir1', 'subdir2'])
     })

@@ -1,1 +1,1 @@
-export * from './default-common-query.pipe';
+export * from './default-common-query.pipe'
