@@ -1,7 +1,7 @@
 export const CommonQueryErrors = {
-    TakeLimitExceeded: {
-        code: 'ERR_PAGINATION_TAKE_LIMIT_EXCEEDED',
-        message: "The 'take' parameter exceeds the maximum allowed limit"
+    MaxTakeExceeded: {
+        code: 'ERR_PAGINATION_MAX_TAKE_EXCEEDED',
+        message: "The 'take' parameter exceeds the maximum allowed value"
     },
     FormatInvalid: {
         code: 'ERR_PAGINATION_ORDERBY_FORMAT_INVALID',

@@ -4,25 +4,21 @@ import { CommonQueryErrors } from './errors'
 
 @Injectable()
 export abstract class CommonQueryPipe implements PipeTransform {
-    abstract get takeLimit(): number
+    abstract get maxTake(): number
 
     transform(value: any, metadata: ArgumentMetadata) {
         if (metadata.type === 'query') {
             if (value instanceof CommonQueryDto) {
-                if (!value.skip) {
-                    value.skip = 0
-                }
-
                 if (value.take) {
-                    if (this.takeLimit < value.take) {
+                    if (this.maxTake < value.take) {
                         throw new BadRequestException({
-                            ...CommonQueryErrors.TakeLimitExceeded,
+                            ...CommonQueryErrors.MaxTakeExceeded,
                             take: value.take,
-                            takeLimit: this.takeLimit
+                            maxTake: this.maxTake
                         })
                     }
                 } else {
-                    value.take = this.takeLimit
+                    value.take = this.maxTake
                 }
             }
         }

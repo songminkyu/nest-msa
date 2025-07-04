@@ -16,10 +16,12 @@ import {
     withTestId
 } from 'testlib'
 
+export const maxTakeValue = 50
+
 @Injectable()
 class DefaultCommonQueryPipe extends CommonQueryPipe {
-    get takeLimit(): number {
-        return 50
+    get maxTake(): number {
+        return maxTakeValue
     }
 }
 
@@ -37,7 +39,7 @@ class SamplesController {
     }
 
     @MessagePattern(withTestId('getRpcPagination'))
-    handleRpcPagination(@Payload() query: CommonQueryDto) {
+    getRpcPagination(@Payload() query: CommonQueryDto) {
         return { response: query }
     }
 }

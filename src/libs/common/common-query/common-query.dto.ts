@@ -2,7 +2,7 @@ import { BadRequestException } from '@nestjs/common'
 import { Transform } from 'class-transformer'
 import { IsInt, IsOptional, Min } from 'class-validator'
 import { CommonQueryErrors } from './errors'
-import { OrderDirection, OrderOption } from './types'
+import { OrderDirection, OrderBy } from './types'
 
 export class CommonQueryDto {
     @IsOptional()
@@ -42,5 +42,5 @@ export class CommonQueryDto {
 
         return { name, direction }
     })
-    orderby?: OrderOption
+    orderby?: OrderBy
 }

@@ -2,7 +2,7 @@ import { sleep } from 'common'
 import { withTestId } from 'testlib'
 import type { Fixture } from './queue-group.fixture'
 
-describe('ClientProxyService', () => {
+describe('Queue Group of NATS', () => {
     let fix: Fixture
     let queueSpy: jest.SpyInstance
     let broadcastSpy: jest.SpyInstance

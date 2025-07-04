@@ -8,7 +8,7 @@ export class DefaultCommonQueryPipe extends CommonQueryPipe {
         super()
     }
 
-    get takeLimit(): number {
+    get maxTake(): number {
         return this.config.http.paginationDefaultSize
     }
 }

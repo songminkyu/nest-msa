@@ -1,13 +1,15 @@
 import { CommonErrors } from 'common'
 import { withTestId } from 'testlib'
-import type { Fixture } from './common-query.fixture'
+import { type Fixture } from './common-query.fixture'
 
 describe('CommonQuery', () => {
     let fix: Fixture
+    let maxTake = 0
 
     beforeEach(async () => {
-        const { createFixture } = await import('./common-query.fixture')
+        const { createFixture, maxTakeValue } = await import('./common-query.fixture')
         fix = await createFixture()
+        maxTake = maxTakeValue
     })
 
     afterEach(async () => {
@@ -53,12 +55,12 @@ describe('CommonQuery', () => {
 
     /* 'take' 값이 지정된 제한을 초과하면 BadRequest를 반환해야 한다 */
     it("should return BadRequest when the 'take' value exceeds the specified limit", async () => {
-        const take = 51
+        const take = maxTake + 1
 
         await fix.httpClient
             .get('/pagination/limited')
             .query({ take })
-            .badRequest({ ...CommonErrors.CommonQuery.TakeLimitExceeded, take, takeLimit: 50 })
+            .badRequest({ ...CommonErrors.CommonQuery.MaxTakeExceeded, take, maxTake })
     })
 
     /* 'take' 값이 지정되지 않은 경우 기본값이 사용되어야 한다 */
@@ -66,6 +68,6 @@ describe('CommonQuery', () => {
         await fix.httpClient
             .get('/pagination/limited')
             .query({})
-            .ok({ response: { skip: 0, take: 50 } })
+            .ok({ response: { take: maxTake } })
     })
 })

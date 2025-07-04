@@ -5,7 +5,7 @@ export enum OrderDirection {
     Desc = 'desc'
 }
 
-export class OrderOption {
+export class OrderBy {
     @IsString()
     name: string
 
