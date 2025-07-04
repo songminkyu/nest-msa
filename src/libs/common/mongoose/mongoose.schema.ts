@@ -110,6 +110,8 @@ export function mapDocToDto<
     for (const key of keys) {
         if (json[key] !== undefined) {
             dto[key] = json[key] as DTO[K]
+        } else {
+            // TODO
         }
     }
     return dto

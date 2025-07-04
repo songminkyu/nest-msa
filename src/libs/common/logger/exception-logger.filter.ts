@@ -29,11 +29,15 @@ export class ExceptionLoggerFilter extends BaseExceptionFilter {
             const http = host.switchToHttp()
             const { method, url, body } = http.getRequest<Request>()
 
+            const common = {
+                contextType,
+                request: { method, url, body }
+            }
+
             if (exception instanceof HttpException) {
                 const log = {
-                    contextType,
+                    ...common,
                     statusCode: exception.getStatus(),
-                    request: { method, url, body },
                     response: exception.getResponse(),
                     stack: exception.stack
                 } as HttpErrorLog
@@ -41,25 +45,37 @@ export class ExceptionLoggerFilter extends BaseExceptionFilter {
                 Logger.warn('fail', log)
             } else if (exception instanceof Error) {
                 const log = {
-                    contextType,
+                    ...common,
                     statusCode: 500,
-                    request: { method, url, body },
                     response: { message: exception.message },
                     stack: exception.stack
                 } as HttpErrorLog
 
                 Logger.error('error', log)
+            } else {
+                const log = {
+                    ...common,
+                    statusCode: 500,
+                    response: { message: exception },
+                    stack: 'undefined'
+                } as HttpErrorLog
+
+                Logger.fatal('fatal', log)
             }
 
             super.catch(exception, host)
         } else if (contextType === 'rpc') {
             const ctx = host.switchToRpc()
 
+            const common = {
+                contextType,
+                context: ctx.getContext(),
+                data: ctx.getData()
+            }
+
             if (exception instanceof HttpException) {
                 const log = {
-                    contextType,
-                    context: ctx.getContext(),
-                    data: ctx.getData(),
+                    ...common,
                     response: exception.getResponse(),
                     stack: exception.stack
                 } as RpcErrorLog
@@ -69,14 +85,22 @@ export class ExceptionLoggerFilter extends BaseExceptionFilter {
                 return throwError(() => exception)
             } else if (exception instanceof Error) {
                 const log = {
-                    contextType,
-                    context: ctx.getContext(),
-                    data: ctx.getData(),
+                    ...common,
                     response: { message: exception.message },
                     stack: exception.stack
                 } as RpcErrorLog
 
                 Logger.error('error', log)
+
+                return throwError(() => new RpcException(exception))
+            } else {
+                const log = {
+                    ...common,
+                    response: { message: exception },
+                    stack: 'undefined'
+                } as RpcErrorLog
+
+                Logger.fatal('fatal', log)
 
                 return throwError(() => new RpcException(exception))
             }

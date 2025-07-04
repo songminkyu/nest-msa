@@ -58,6 +58,8 @@ export class QueryBuilder<T> {
                 this.query[field] = { $gte: start }
             } else if (end) {
                 this.query[field] = { $lte: end }
+            } else {
+                // TODO
             }
         }
         return this

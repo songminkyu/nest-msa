@@ -41,6 +41,20 @@ describe('ExceptionLoggerFilter', () => {
         })
     })
 
+    /* HttpController에서 Error가 아닌 것을 던지면 Logger.fatal()으로 기록해야 한다 */
+    it('Should log non-error events in an HttpController via Logger.fatal()', async () => {
+        await fix.httpClient.get('/fatal').internalServerError()
+
+        expect(fix.spyFatal).toHaveBeenCalledTimes(1)
+        expect(fix.spyFatal).toHaveBeenCalledWith('fatal', {
+            statusCode: 500,
+            contextType: 'http',
+            request: { method: 'GET', url: '/fatal' },
+            response: { message: 'fatal error message' },
+            stack: expect.any(String)
+        })
+    })
+
     /* RpcController에서 HttpException을 던지면 Logger.warn()으로 기록해야 한다 */
     it('Should log HttpExceptions in an RpcController via Logger.warn()', async () => {
         const subject = withTestId('exception')
@@ -74,6 +88,21 @@ describe('ExceptionLoggerFilter', () => {
             context: { args: [subject] },
             data: {},
             response: { message: 'error message' },
+            stack: expect.any(String)
+        })
+    })
+
+    /* RpcController에서 Error가 아닌 것을 던지면 Logger.fatal()으로 기록해야 한다 */
+    it('Should log non-error events in an RpcController via Logger.fatal()', async () => {
+        const subject = withTestId('fatal')
+        await fix.rpcClient.error(subject, {}, Error('fatal error message'))
+
+        expect(fix.spyFatal).toHaveBeenCalledTimes(1)
+        expect(fix.spyFatal).toHaveBeenCalledWith('fatal', {
+            contextType: 'rpc',
+            context: { args: [subject] },
+            data: {},
+            response: { message: 'fatal error message' },
             stack: expect.any(String)
         })
     })

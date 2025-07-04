@@ -67,6 +67,8 @@ export class Path {
 
             if (await this.isDirectory(itemPath)) {
                 res.push(item)
+            } else {
+                // TODO
             }
         }
 

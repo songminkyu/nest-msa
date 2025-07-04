@@ -22,6 +22,11 @@ class TestController {
         throw new Error('error message')
     }
 
+    @Get('fatal')
+    getHttpFatalError() {
+        throw 'fatal error message'
+    }
+
     @MessagePattern(withTestId('exception'))
     getRpcException() {
         throw new NotFoundException({ code: 'ERR_CODE', message: 'message' })
@@ -31,6 +36,11 @@ class TestController {
     getRpcError() {
         throw new Error('error message')
     }
+
+    @MessagePattern(withTestId('fatal'))
+    getRpcFatalError() {
+        throw 'fatal error message'
+    }
 }
 
 export interface Fixture {
@@ -39,6 +49,7 @@ export interface Fixture {
     rpcClient: RpcTestClient
     spyWarn: jest.SpyInstance
     spyError: jest.SpyInstance
+    spyFatal: jest.SpyInstance
 }
 
 export async function createFixture() {
@@ -59,7 +70,7 @@ export async function createFixture() {
     const { Logger } = await import('@nestjs/common')
     const spyWarn = jest.spyOn(Logger, 'warn')
     const spyError = jest.spyOn(Logger, 'error')
-
+    const spyFatal = jest.spyOn(Logger, 'fatal')
     const rpcClient = RpcTestClient.create(brokerOptions)
 
     const teardown = async () => {
@@ -67,5 +78,5 @@ export async function createFixture() {
         await testContext.close()
     }
 
-    return { teardown, httpClient, rpcClient, spyWarn, spyError }
+    return { teardown, httpClient, rpcClient, spyWarn, spyError, spyFatal }
 }

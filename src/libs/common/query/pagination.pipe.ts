@@ -20,11 +20,17 @@ export abstract class PaginationPipe implements PipeTransform {
                             take: value.take,
                             takeLimit: this.takeLimit
                         })
+                    } else {
+                        // TODO
                     }
                 } else {
                     value.take = this.takeLimit
                 }
+            } else {
+                // TODO
             }
+        } else {
+            // TODO
         }
 
         return value

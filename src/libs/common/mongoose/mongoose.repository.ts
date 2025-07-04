@@ -130,6 +130,8 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
                 throw new BadRequestException({ ...MongooseErrors.TakeInvalid, take })
             }
             queryHelper.limit(take)
+        } else {
+            // TODO
         }
 
         if (pagination.skip) {
@@ -176,6 +178,8 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
                 } else {
                     await session.commitTransaction()
                 }
+            } else {
+                // TODO
             }
 
             await session.endSession()
