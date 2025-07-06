@@ -1,4 +1,4 @@
-> 🇺🇸 [View in English](../README.md)
+[English](../README.md) | 한국어
 
 # NEST-MSA
 
@@ -108,7 +108,6 @@ ENV LANG=ko_KR.UTF-8 \
 ### 4.1 통합 테스트 실행 방법
 
 1. VSCode에서 `Jest Runner` 확장을 설치합니다. 테스트 코드 상단에 `Run | Debug` 버튼이 나타납니다.
-
     - **Run**: 테스트 실행 (로그 출력 없음)
     - **Debug**: 디버거 연결 후 실행 (로그 출력 가능)
     - 버튼이 보이지 않는 경우: Code Lens 옵션 활성화 필요
