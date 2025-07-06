@@ -55,7 +55,7 @@ describe('Recommendation', () => {
             ])
         })
 
-        /* 고객이 가장 많이 관람한 genre와 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다 */
+        // 고객이 가장 많이 관람한 genre와 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다
         it('Should return a list of recommended movies sorted by the most watched genre and the latest release date', async () => {
             const { body } = await fix.httpClient
                 .get('/movies/recommended')
@@ -71,7 +71,7 @@ describe('Recommendation', () => {
             ])
         })
 
-        /* 로그인을 하지 않으면 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다 */
+        // 로그인을 하지 않으면 최신 개봉일 순서로 추천 영화 목록을 반환해야 한다
         it('Should return a list of recommended movies by the latest release date if the user is not logged in', async () => {
             const { body } = await fix.httpClient.get('/movies/recommended').ok()
 

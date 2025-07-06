@@ -7,7 +7,7 @@ import {
     Payload,
     Transport
 } from '@nestjs/microservices'
-import { CommonQueryDto, PaginationPipe } from 'common'
+import { CommonQueryDto, CommonQueryPipe } from 'common'
 import {
     createHttpTestContext,
     getNatsTestConnection,
@@ -16,28 +16,25 @@ import {
     withTestId
 } from 'testlib'
 
+export const maxTakeValue = 50
+
 @Injectable()
-class DefaultPaginationPipe extends PaginationPipe {
-    get takeLimit(): number {
-        return 50
+class DefaultCommonQueryPipe extends CommonQueryPipe {
+    get maxTake(): number {
+        return maxTakeValue
     }
 }
 
 @Controller()
+@UsePipes(DefaultCommonQueryPipe)
 class SamplesController {
     @Get('pagination')
     async getPagination(@Query() query: CommonQueryDto) {
         return { response: query }
     }
 
-    @Get('pagination/limited')
-    @UsePipes(DefaultPaginationPipe)
-    async getLimitedPagination(@Query() query: CommonQueryDto) {
-        return { response: query }
-    }
-
     @MessagePattern(withTestId('getRpcPagination'))
-    handleRpcPagination(@Payload() query: CommonQueryDto) {
+    getRpcPagination(@Payload() query: CommonQueryDto) {
         return { response: query }
     }
 }

@@ -13,7 +13,7 @@ describe('Mongoose Schema Examples', () => {
         await fix?.teardown()
     })
 
-    /* Mongoose의 모든 기본 데이터 타입 저장 및 조회 검증 */
+    // Mongoose의 모든 기본 데이터 타입 저장 및 조회 검증
     it('Validate storing and retrieving all default Mongoose data types', async () => {
         const doc = new fix.model()
         doc.sn = 1234567
@@ -36,6 +36,7 @@ describe('Mongoose Schema Examples', () => {
             ['key1', 'value1'],
             ['key2', 2]
         ])
+        doc.optional = undefined
         await doc.save()
 
         const found = await fix.model.findOne({ _id: doc._id }).exec()

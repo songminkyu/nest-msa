@@ -24,7 +24,7 @@ describe('MongooseRepository', () => {
     })
 
     describe('save', () => {
-        /* 새 문서를 성공적으로 생성해야 한다 */
+        // 새 문서를 성공적으로 생성해야 한다
         it('Should successfully create a new document', async () => {
             const newDoc = fix.repository.newDocument()
             newDoc.name = 'document name'
@@ -34,14 +34,14 @@ describe('MongooseRepository', () => {
             expect(toDto(foundDoc!)).toEqual(toDto(newDoc))
         })
 
-        /* 필수 필드가 누락된 경우 예외를 던져야 한다 */
+        // 필수 필드가 누락된 경우 예외를 던져야 한다
         it('Should throw an exception if required fields are missing', async () => {
             const doc = fix.repository.newDocument()
             const promise = doc.save()
             await expect(promise).rejects.toThrow()
         })
 
-        /* 문서를 성공적으로 업데이트해야 한다 */
+        // 문서를 성공적으로 업데이트해야 한다
         it('Should successfully update a document', async () => {
             const newDoc = fix.repository.newDocument()
             newDoc.name = 'name1'
@@ -58,7 +58,7 @@ describe('MongooseRepository', () => {
     })
 
     describe('saveMany', () => {
-        /* 여러 문서를 성공적으로 생성해야 한다 */
+        // 여러 문서를 성공적으로 생성해야 한다
         it('Should successfully create multiple documents', async () => {
             const docs = [
                 { name: 'document-1' },
@@ -75,7 +75,7 @@ describe('MongooseRepository', () => {
             expect(res).toBeTruthy()
         })
 
-        /* 필수 필드가 누락된 경우 예외를 던져야 한다 */
+        // 필수 필드가 누락된 경우 예외를 던져야 한다
         it('Should throw an exception if required fields are missing in any of the documents', async () => {
             const docs = [fix.repository.newDocument(), fix.repository.newDocument()]
 
@@ -95,7 +95,7 @@ describe('MongooseRepository', () => {
             samples = toDtos(docs)
         })
 
-        /* 페이지네이션을 올바르게 설정해야 한다 */
+        // 페이지네이션을 올바르게 설정해야 한다
         it('Should correctly handle pagination', async () => {
             const skip = 10
             const take = 5
@@ -108,7 +108,7 @@ describe('MongooseRepository', () => {
             expect(paginated).toEqual({ total: samples.length, skip, take })
         })
 
-        /* 오름차순으로 정렬해야 한다 */
+        // 오름차순으로 정렬해야 한다
         it('Should sort in ascending order', async () => {
             const { items } = await fix.repository.findWithPagination({
                 pagination: {
@@ -121,7 +121,7 @@ describe('MongooseRepository', () => {
             expect(toDtos(items)).toEqual(samples)
         })
 
-        /* 내림차순으로 정렬해야 한다 */
+        // 내림차순으로 정렬해야 한다
         it('Should sort in descending order', async () => {
             const { items } = await fix.repository.findWithPagination({
                 pagination: {
@@ -134,21 +134,21 @@ describe('MongooseRepository', () => {
             expect(toDtos(items)).toEqual(samples)
         })
 
-        /* take 값이 양수가 아니면 예외를 던져야 한다 */
+        // take 값이 양수가 아니면 예외를 던져야 한다
         it('Should throw an exception if the take value is not positive', async () => {
             const promise = fix.repository.findWithPagination({ pagination: { take: -1 } })
 
             await expect(promise).rejects.toThrow(fix.BadRequestException)
         })
 
-        /* take 값이 지정되지 않은 경우 예외를 던져야 한다 */
+        // take 값이 지정되지 않은 경우 예외를 던져야 한다
         it('Should throw an exception if the take value is not defined', async () => {
             const promise = fix.repository.findWithPagination({ pagination: {} })
 
             await expect(promise).rejects.toThrow(fix.BadRequestException)
         })
 
-        /* QueryHelper를 사용해 조건을 설정해야 한다 */
+        // QueryHelper를 사용해 조건을 설정해야 한다
         it('Should apply conditions using QueryHelper', async () => {
             const { items } = await fix.repository.findWithPagination({
                 configureQuery: (queryHelper) => {
@@ -182,13 +182,13 @@ describe('MongooseRepository', () => {
             samples = toDtos(docs)
         })
 
-        /* ID들이 존재하면 true를 반환해야 한다 */
+        // ID들이 존재하면 true를 반환해야 한다
         it('Should return true if all IDs exist', async () => {
             const exists = await fix.repository.existByIds(pickIds(samples))
             expect(exists).toBeTruthy()
         })
 
-        /* 존재하지 않는 ID가 있으면 false를 반환해야 한다 */
+        // 존재하지 않는 ID가 있으면 false를 반환해야 한다
         it('Should return false if any of the IDs do not exist', async () => {
             const exists = await fix.repository.existByIds([nullObjectId])
             expect(exists).toBeFalsy()
@@ -203,14 +203,14 @@ describe('MongooseRepository', () => {
             sample = toDto(doc)
         })
 
-        /* ID로 문서를 찾아야 한다 */
+        // ID로 문서를 찾아야 한다
         it('Should find a document by ID', async () => {
             const doc = await fix.repository.findById(sample.id)
 
             expect(toDto(doc!)).toEqual(sample)
         })
 
-        /* 존재하지 않는 ID의 경우 null을 반환해야 한다 */
+        // 존재하지 않는 ID의 경우 null을 반환해야 한다
         it('Should return null if the document does not exist', async () => {
             const doc = await fix.repository.findById(nullObjectId)
 
@@ -226,7 +226,7 @@ describe('MongooseRepository', () => {
             samples = toDtos(docs)
         })
 
-        /* 여러 ID로 문서를 찾아야 한다 */
+        // 여러 ID로 문서를 찾아야 한다
         it('Should find multiple documents by their IDs', async () => {
             const ids = pickIds(samples)
             const docs = await fix.repository.findByIds(ids)
@@ -234,7 +234,7 @@ describe('MongooseRepository', () => {
             expectEqualUnsorted(toDtos(docs), samples)
         })
 
-        /* 존재하지 않는 ID는 무시해야 한다 */
+        // 존재하지 않는 ID는 무시해야 한다
         it('Should ignore any non-existent IDs', async () => {
             const docs = await fix.repository.findByIds([nullObjectId])
             expect(docs).toHaveLength(0)
@@ -249,14 +249,14 @@ describe('MongooseRepository', () => {
             sample = toDto(doc)
         })
 
-        /* ID로 문서를 찾아야 한다 */
+        // ID로 문서를 찾아야 한다
         it('Should get a document by ID', async () => {
             const doc = await fix.repository.getById(sample.id)
 
             expect(toDto(doc)).toEqual(sample)
         })
 
-        /* 존재하지 않는 ID의 경우 예외를 던져야 한다 */
+        // 존재하지 않는 ID의 경우 예외를 던져야 한다
         it('Should throw an exception if the document does not exist', async () => {
             const promise = fix.repository.getById(nullObjectId)
 
@@ -272,7 +272,7 @@ describe('MongooseRepository', () => {
             samples = toDtos(docs)
         })
 
-        /* 여러 ID로 문서를 찾아야 한다 */
+        // 여러 ID로 문서를 찾아야 한다
         it('Should get multiple documents by their IDs', async () => {
             const ids = pickIds(samples)
             const docs = await fix.repository.getByIds(ids)
@@ -280,7 +280,7 @@ describe('MongooseRepository', () => {
             expectEqualUnsorted(toDtos(docs), samples)
         })
 
-        /* 하나라도 존재하지 않는 ID가 있으면 예외를 던져야 한다 */
+        // 하나라도 존재하지 않는 ID가 있으면 예외를 던져야 한다
         it('Should throw an exception if any ID does not exist', async () => {
             const promise = fix.repository.getByIds([nullObjectId])
 
@@ -296,7 +296,7 @@ describe('MongooseRepository', () => {
             sample = toDto(doc)
         })
 
-        /* ID로 문서를 찾아 삭제해야 한다 */
+        // ID로 문서를 찾아 삭제해야 한다
         it('Should delete a document by ID', async () => {
             await fix.repository.deleteById(sample.id)
             const doc = await fix.repository.findById(sample.id)
@@ -304,7 +304,7 @@ describe('MongooseRepository', () => {
             expect(doc).toBeNull()
         })
 
-        /* 존재하지 않는 ID의 경우 예외를 던져야 한다 */
+        // 존재하지 않는 ID의 경우 예외를 던져야 한다
         it('Should throw an exception if the document does not exist', async () => {
             const promise = fix.repository.deleteById(nullObjectId)
 
@@ -320,7 +320,7 @@ describe('MongooseRepository', () => {
             samples = toDtos(docs)
         })
 
-        /* 여러 문서를 한 번에 삭제해야 한다 */
+        // 여러 문서를 한 번에 삭제해야 한다
         it('Should delete multiple documents at once', async () => {
             const ids = pickIds(samples.slice(0, 10))
 
@@ -332,7 +332,7 @@ describe('MongooseRepository', () => {
             expect(docs).toHaveLength(0)
         })
 
-        /* 존재하지 않는 IDs의 경우 예외를 던져야 한다 */
+        // 존재하지 않는 IDs의 경우 예외를 던져야 한다
         it('Should throw an exception if any of the IDs do not exist', async () => {
             const promise = fix.repository.deleteByIds([nullObjectId])
 

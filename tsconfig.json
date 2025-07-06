@@ -1,5 +1,14 @@
 {
     "compilerOptions": {
+        "target": "ESNext",
+        "lib": [
+            "ESNext"
+        ],
+        "strict": false,
+        "types": [
+            "jest"
+        ],
+        "allowJs": true,
         "module": "commonjs",
         "declaration": true,
         "removeComments": true,
@@ -13,9 +22,9 @@
         "strictBindCallApply": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
-        "target": "es2024",
         "resolveJsonModule": true,
         "esModuleInterop": true,
+        "isolatedModules": false,
         "sourceMap": true,
         "baseUrl": ".",
         "outDir": "./_output/build",

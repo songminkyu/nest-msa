@@ -16,7 +16,7 @@ describe('Ticket Holding', () => {
     })
 
     describe('holdTickets', () => {
-        /* 티켓을 정해진 시간 동안 선점해야 한다 */
+        // 티켓을 정해진 시간 동안 선점해야 한다
         it('Should hold tickets for a specified period', async () => {
             const firstCustomerHold = await holdTickets(fix, { customerId: testObjectId(0x1) })
             expect(firstCustomerHold).toBeTruthy()
@@ -25,7 +25,7 @@ describe('Ticket Holding', () => {
             expect(secondCustomerHold).toBeFalsy()
         })
 
-        /* 고객은 자신이 선점한 티켓을 다시 선점할 수 있다 */
+        // 고객은 자신이 선점한 티켓을 다시 선점할 수 있다
         it('Should allow a customer to hold tickets they already hold', async () => {
             const firstHold = await holdTickets(fix)
             expect(firstHold).toBeTruthy()
@@ -34,7 +34,7 @@ describe('Ticket Holding', () => {
             expect(secondHold).toBeTruthy()
         })
 
-        /* 시간이 만료되면 티켓을 다시 선점할 수 있어야 한다 */
+        // 시간이 만료되면 티켓을 다시 선점할 수 있어야 한다
         it('Should allow re-holding tickets after the hold period expires', async () => {
             const { Rules } = await import('shared')
             Rules.Ticket.holdDurationInMs = 1000
@@ -51,7 +51,7 @@ describe('Ticket Holding', () => {
             expect(holdAfterExpiry).toBeTruthy()
         })
 
-        /* 동일 고객이 새로운 티켓을 선점하면 기존 티켓은 해제되어야 한다 */
+        // 동일 고객이 새로운 티켓을 선점하면 기존 티켓은 해제되어야 한다
         it('Should release previously held tickets if the same customer holds new tickets', async () => {
             const oldTickets = [testObjectId(0x30), testObjectId(0x31)]
             const newTickets = [testObjectId(0x40), testObjectId(0x41)]
@@ -75,7 +75,7 @@ describe('Ticket Holding', () => {
             expect(competitorHold).toBeTruthy()
         })
 
-        /* 서로 다른 고객이 동시에 선점 요청을 해도 중복 선점되면 안 된다 */
+        // 서로 다른 고객이 동시에 선점 요청을 해도 중복 선점되면 안 된다
         it(
             'should not allow duplicate holds even if different customers request holds simultaneously',
             async () => {
@@ -113,7 +113,7 @@ describe('Ticket Holding', () => {
         const ticketIds = [testObjectId(0x30), testObjectId(0x31)]
         const showtimeId = testObjectId(0x40)
 
-        /* 선점한 티켓을 반환해야 한다 */
+        // 선점한 티켓을 반환해야 한다
         it('Should return held tickets', async () => {
             await holdTickets(fix, { showtimeId, customerId, ticketIds })
 
@@ -122,7 +122,7 @@ describe('Ticket Holding', () => {
             expect(heldTickets).toEqual(ticketIds)
         })
 
-        /* 만료된 티켓은 반환되지 않아야 한다 */
+        // 만료된 티켓은 반환되지 않아야 한다
         it('Should not return expired tickets', async () => {
             const { Rules } = await import('shared')
             Rules.Ticket.holdDurationInMs = 1000
@@ -145,7 +145,7 @@ describe('Ticket Holding', () => {
         const ticketIds = [testObjectId(0x30), testObjectId(0x31)]
         const showtimeId = testObjectId(0x1)
 
-        /* 고객이 선점한 티켓을 해제해야 한다 */
+        // 고객이 선점한 티켓을 해제해야 한다
         it('Should release tickets held by the customer', async () => {
             const firstHold = await holdTickets(fix, { customerId, showtimeId, ticketIds })
             expect(firstHold).toBeTruthy()

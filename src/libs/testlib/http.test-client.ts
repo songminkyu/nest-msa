@@ -171,10 +171,8 @@ export class HttpTestClient {
     }
 
     async send(status: number, expected?: any): Promise<superagent.Response> {
-        /*
-        Without ok(() => true), status codes 400 and above will throw an exception.
-        ok(() => true)를 하지 않으면 400 이상 상태 코드는 예외를 던진다.
-        */
+        // Without ok(() => true), status codes 400 and above will throw an exception.
+        // ok(() => true)를 하지 않으면 400 이상 상태 코드는 예외를 던진다.
         const res = await this.agent.ok(() => true)
 
         if (res.status !== status) {

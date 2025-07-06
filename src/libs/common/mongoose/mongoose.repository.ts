@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException, OnModuleInit } from '@nestjs/common'
 import { differenceWith, uniq } from 'lodash'
 import { ClientSession, HydratedDocument, Model, QueryWithHelpers } from 'mongoose'
-import { CommonQueryDto, PaginationResult } from '../query'
+import { CommonQueryDto, PaginationResult } from '../common-query'
 import { Assert, Expect } from '../validator'
 import { MongooseErrors } from './errors'
 import { objectId, objectIds } from './mongoose.util'
@@ -16,17 +16,17 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
     constructor(protected model: Model<Doc>) {}
 
     async onModuleInit() {
-        /*
-        Since document.save() internally calls createCollection(),
-        calling save() at the same time can cause a "Collection namespace is already in use" error.
-        This issue often occurs in unit test environments due to frequent re-initialization.
-
-        document.save()가 내부적으로 createCollection()을 호출한다.
-        동시에 save()를 호출하면 "Collection namespace is already in use" 오류가 발생할 수 있다.
-        이 문제는 주로 단위 테스트 환경에서 빈번한 초기화로 인해 발생한다.
-
-        https://mongoosejs.com/docs/api/model.html#Model.createCollection()
-        */
+        /**
+         * Since document.save() internally calls createCollection(),
+         * calling save() at the same time can cause a "Collection namespace is already in use" error.
+         * This issue often occurs in unit test environments due to frequent re-initialization.
+         *
+         * document.save()가 내부적으로 createCollection()을 호출한다.
+         * 동시에 save()를 호출하면 "Collection namespace is already in use" 오류가 발생할 수 있다.
+         * 이 문제는 주로 단위 테스트 환경에서 빈번한 초기화로 인해 발생한다.
+         *
+         * https://mongoosejs.com/docs/api/model.html#Model.createCollection()
+         */
         await this.model.createCollection()
         await this.model.createIndexes()
     }
@@ -115,10 +115,6 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
     }) {
         const { configureQuery, pagination, session } = args
 
-        if (!pagination.take) {
-            throw new BadRequestException(MongooseErrors.TakeMissing)
-        }
-
         const queryHelper = this.model.find({}, null, { session })
 
         let take = 0
@@ -130,6 +126,8 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
                 throw new BadRequestException({ ...MongooseErrors.TakeInvalid, take })
             }
             queryHelper.limit(take)
+        } else {
+            throw new BadRequestException(MongooseErrors.TakeMissing)
         }
 
         if (pagination.skip) {
@@ -158,9 +156,10 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
         let rollbackRequested = false
         const rollback = () => (rollbackRequested = true)
 
-        const session = await this.model.startSession()
+        let session: ClientSession | undefined
 
         try {
+            session = await this.model.startSession()
             session.startTransaction()
 
             const result = await callback(session, rollback)
@@ -170,15 +169,17 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
             rollback()
             throw error
         } finally {
-            if (session.inTransaction()) {
-                if (rollbackRequested) {
-                    await session.abortTransaction()
-                } else {
-                    await session.commitTransaction()
+            if (session) {
+                if (session.inTransaction()) {
+                    if (rollbackRequested) {
+                        await session.abortTransaction()
+                    } else {
+                        await session.commitTransaction()
+                    }
                 }
-            }
 
-            await session.endSession()
+                await session.endSession()
+            }
         }
     }
 }

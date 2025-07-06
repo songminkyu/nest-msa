@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common'
-import { PaginationPipe } from 'common'
+import { CommonQueryPipe } from 'common'
 import { AppConfigService } from 'shared'
 
 @Injectable()
-export class DefaultPaginationPipe extends PaginationPipe {
+export class DefaultCommonQueryPipe extends CommonQueryPipe {
     constructor(protected config: AppConfigService) {
         super()
     }
 
-    get takeLimit(): number {
+    get maxTake(): number {
         return this.config.http.paginationDefaultSize
     }
 }

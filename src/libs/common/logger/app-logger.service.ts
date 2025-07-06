@@ -28,4 +28,8 @@ export class AppLoggerService implements LoggerService {
     verbose(message: any, ...optionalParams: any[]) {
         this.logger.verbose(message, optionalParams)
     }
+
+    fatal(message: any, ...optionalParams: any[]) {
+        this.logger.error(message, optionalParams)
+    }
 }

@@ -1,1 +1,1 @@
-export * from './default-pagination.pipe'
+export * from './default-common-query.pipe'

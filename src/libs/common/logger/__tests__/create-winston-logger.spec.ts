@@ -2,7 +2,7 @@ import { createWinstonLogger, Path, sleep } from 'common'
 import { readFile } from 'fs/promises'
 import winston from 'winston'
 
-describe('logger', () => {
+describe('createWinstonLogger', () => {
     let winston: winston.Logger
     let tempDir: string
 

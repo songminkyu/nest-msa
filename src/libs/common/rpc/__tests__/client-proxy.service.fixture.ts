@@ -32,14 +32,14 @@ class SendTestController {
 
 @Controller()
 class EmitTestController {
-    /*
-    ReplaySubject is configured with a buffer size of 1 to store the last event.
-    If the event is emitted before the httpClient’s SSE request is established,
-    it replays the latest event to ensure the test passes without a timeout.
-
-    ReplaySubject는 버퍼 크기 1로 설정되어 마지막 이벤트를 저장합니다.
-    httpClient의 sse 요청보다 이벤트가 먼저 실행될 경우, 해당 마지막 이벤트를 재생하여
-    타임아웃 발생 없이 테스트가 성공하도록 합니다.
+    /**
+     * ReplaySubject is configured with a buffer size of 1 to store the last event.
+     * If the event is emitted before the httpClient’s SSE request is established,
+     * it replays the latest event to ensure the test passes without a timeout.
+     *
+     * ReplaySubject는 버퍼 크기 1로 설정되어 마지막 이벤트를 저장합니다.
+     * httpClient의 sse 요청보다 이벤트가 먼저 실행될 경우, 해당 마지막 이벤트를 재생하여
+     * 타임아웃 발생 없이 테스트가 성공하도록 합니다.
      */
     private eventSubject = new ReplaySubject<MessageEvent>(1)
 

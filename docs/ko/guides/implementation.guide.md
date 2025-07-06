@@ -197,3 +197,17 @@ export async function getProviders(coresContext: TestContext) {
     return { customersClient, moviesClient }
 }
 ```
+
+## 7. 주석
+
+```ts
+// 한 줄은 이렇게 한다.
+
+/**
+ * 두 줄 이상은 이렇게 한다.
+ */
+
+/*
+이런 형태는 사용하지 않는다. 편집기에서 자동 정렬이 안 된다.
+*/
+```

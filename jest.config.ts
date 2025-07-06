@@ -1,11 +1,11 @@
 import type { Config } from 'jest'
+import { createJsWithTsPreset } from 'ts-jest'
 
-const config: Config = {
+export default {
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     moduleFileExtensions: ['js', 'json', 'ts'],
-    testRegex: '.*\\.spec\\.(ts|js)$',
+    testRegex: '(__tests__/.*\\.spec\\.(ts|js))$',
     testEnvironment: 'node',
-    transform: { '^.+\\.ts$': 'ts-jest' },
     // Start of test environment reset configuration
     clearMocks: true,
     resetMocks: true,
@@ -35,13 +35,14 @@ const config: Config = {
         '/libs/testlib/'
     ],
     coverageDirectory: '<rootDir>/_output/coverage',
-    testTimeout: 30 * 1000
+    testTimeout: 60 * 1000,
+    ...createJsWithTsPreset({ tsconfig: 'tsconfig.json' }),
+    // ECMAScript modules
+    transformIgnorePatterns: ['!node_modules/(?!chalk)']
     /*
      * If the number of CPU cores is high relative to available memory,
      * it is recommended to set maxWorkers to roughly (RAM / 4).
      * For example: 8GB RAM → maxWorkers: 2
      */
     // maxWorkers: 2
-}
-
-export default config
+} satisfies Config

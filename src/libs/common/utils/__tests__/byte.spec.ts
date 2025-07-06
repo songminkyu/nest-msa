@@ -2,7 +2,7 @@ import { Byte } from 'common'
 
 describe('Byte', () => {
     describe('fromString', () => {
-        /* 유효한 크기 문자열을 바이트 단위 숫자로 변환해야 한다 */
+        // 유효한 크기 문자열을 바이트 단위 숫자로 변환해야 한다
         it('Should convert a valid size string to a number in bytes', () => {
             expect(Byte.fromString('1024B')).toEqual(1024)
             expect(Byte.fromString('1KB')).toEqual(1024)
@@ -17,7 +17,7 @@ describe('Byte', () => {
             )
         })
 
-        /* 소문자 단위의 문자열을 바이트로 변환해야 한다 */
+        // 소문자 단위의 문자열을 바이트로 변환해야 한다
         it('Should convert lowercase unit strings to bytes', () => {
             expect(Byte.fromString('1024b')).toEqual(1024)
             expect(Byte.fromString('1kb')).toEqual(1024)
@@ -26,7 +26,7 @@ describe('Byte', () => {
             expect(Byte.fromString('1tb')).toEqual(1024 * 1024 * 1024 * 1024)
         })
 
-        /* 잘못된 형식인 경우 예외를 던져야 한다 */
+        // 잘못된 형식인 경우 예외를 던져야 한다
         it('Should throw an exception for invalid formats', () => {
             expect(() => Byte.fromString('invalid')).toThrow()
             expect(() => Byte.fromString('123')).toThrow()
@@ -36,7 +36,7 @@ describe('Byte', () => {
     })
 
     describe('toString', () => {
-        /* 바이트 값을 사람이 읽기 쉬운 문자열로 변환해야 한다 */
+        // 바이트 값을 사람이 읽기 쉬운 문자열로 변환해야 한다
         it('Should convert byte values into a human-readable string', () => {
             expect(Byte.toString(0)).toEqual('0B')
             expect(Byte.toString(1024)).toEqual('1KB')

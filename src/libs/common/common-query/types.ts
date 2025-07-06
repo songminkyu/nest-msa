@@ -5,13 +5,14 @@ export enum OrderDirection {
     Desc = 'desc'
 }
 
-export class OrderOption {
+export class OrderBy {
     @IsString()
     name: string
 
     @IsEnum(OrderDirection)
     direction: OrderDirection
 }
+
 export class PaginationResult<E> {
     @IsInt()
     skip: number

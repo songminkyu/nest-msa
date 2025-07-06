@@ -41,7 +41,7 @@ export const TestFiles = {
     }
 }
 
-/* size update */
+// size update
 for (const key in TestFiles) {
     if (TestFiles.hasOwnProperty(key)) {
         const file = (TestFiles as any)[key]

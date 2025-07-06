@@ -13,7 +13,7 @@ describe('LatLong', () => {
         await fix?.teardown()
     })
 
-    /* 두 위경도 간의 거리를 미터 단위로 계산해야 한다 */
+    // 두 위경도 간의 거리를 미터 단위로 계산해야 한다
     it('Should calculate the distance in meters between two coordinates', () => {
         const seoul: LatLong = { latitude: 37.5665, longitude: 126.978 }
         const busan: LatLong = { latitude: 35.1796, longitude: 129.0756 }
@@ -27,7 +27,7 @@ describe('LatLong', () => {
         expect(actualDistance).toBeLessThan(expectedDistance + tolerance)
     })
 
-    /* 유효한 위경도 쿼리를 처리해야 한다 */
+    // 유효한 위경도 쿼리를 처리해야 한다
     it('Should handle a valid lat-long query', async () => {
         await fix.httpClient
             .get('/latLong')
@@ -35,7 +35,7 @@ describe('LatLong', () => {
             .ok({ latitude: 37.123, longitude: 128.678 })
     })
 
-    /* latLong 값이 없으면 BadRequestException을 던져야 한다 */
+    // latLong 값이 없으면 BadRequestException을 던져야 한다
     it('Should throw a BadRequestException if no latLong value is provided', async () => {
         await fix.httpClient.get('/latLong').badRequest({
             code: 'ERR_LATLONG_REQUIRED',
@@ -43,7 +43,7 @@ describe('LatLong', () => {
         })
     })
 
-    /* 잘못된 형식인 경우 BadRequestException을 던져야 한다 */
+    // 잘못된 형식인 경우 BadRequestException을 던져야 한다
     it('Should throw a BadRequestException if the latLong format is invalid', async () => {
         await fix.httpClient.get('/latLong').query({ location: '37.123' }).badRequest({
             code: 'ERR_LATLONG_FORMAT_INVALID',
@@ -51,7 +51,7 @@ describe('LatLong', () => {
         })
     })
 
-    /* 범위를 벗어난 값인 경우 BadRequestException을 던져야 한다 */
+    // 범위를 벗어난 값인 경우 BadRequestException을 던져야 한다
     it('Should throw a BadRequestException if values are out of range', async () => {
         await fix.httpClient
             .get('/latLong')

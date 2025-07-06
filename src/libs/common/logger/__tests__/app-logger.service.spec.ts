@@ -54,4 +54,11 @@ describe('AppLoggerService', () => {
 
         expect(spy).toHaveBeenCalledWith(message, [])
     })
+
+    it('fatal', () => {
+        const spy = jest.spyOn(winstonLogger, 'error')
+        appLoggerService.fatal(message)
+
+        expect(spy).toHaveBeenCalledWith(message, [])
+    })
 })

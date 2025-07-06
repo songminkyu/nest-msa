@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes } from '@nestjs/common'
 import { CreateTheaterDto, SearchTheatersDto, TheatersClient, UpdateTheaterDto } from 'apps/cores'
-import { DefaultPaginationPipe } from './pipes'
+import { DefaultCommonQueryPipe } from './pipes'
 
 @Controller('theaters')
 export class TheatersController {
@@ -30,7 +30,7 @@ export class TheatersController {
         return this.theatersService.deleteTheaters([theaterId])
     }
 
-    @UsePipes(DefaultPaginationPipe)
+    @UsePipes(DefaultCommonQueryPipe)
     @Get()
     async searchTheatersPage(@Query() searchDto: SearchTheatersDto) {
         return this.theatersService.searchTheatersPage(searchDto)
