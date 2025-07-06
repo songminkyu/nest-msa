@@ -1,7 +1,7 @@
 import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
-import { MovieRecommendationEngine } from '..'
+import { MovieRecommender } from '..'
 
-describe('MovieRecommendationEngine', () => {
+describe('MovieRecommender', () => {
     describe('generateRecommendedMovies', () => {
         const createDto = (id: string, genres: MovieGenre[], releaseDate: Date) => ({
             id,
@@ -24,7 +24,7 @@ describe('MovieRecommendationEngine', () => {
             ]
             const watchedMovies: MovieDto[] = []
 
-            const result = MovieRecommendationEngine.recommend(showingMovies, watchedMovies)
+            const result = MovieRecommender.recommend(showingMovies, watchedMovies)
 
             expect(result.map((movie) => movie.id)).toEqual(['2', '1', '3'])
         })
@@ -42,7 +42,7 @@ describe('MovieRecommendationEngine', () => {
                 createDto('6', [MovieGenre.Drama], new Date('2023-05-01'))
             ]
 
-            const result = MovieRecommendationEngine.recommend(showingMovies, watchedMovies)
+            const result = MovieRecommender.recommend(showingMovies, watchedMovies)
 
             expect(result.map((movie) => movie.id)).toEqual(['1', '2', '3'])
         })
@@ -58,7 +58,7 @@ describe('MovieRecommendationEngine', () => {
                 createDto('2', [MovieGenre.Drama], new Date('2023-10-01'))
             ]
 
-            const result = MovieRecommendationEngine.recommend(showingMovies, watchedMovies)
+            const result = MovieRecommender.recommend(showingMovies, watchedMovies)
 
             expect(result.map((movie) => movie.id)).toEqual(['1', '3'])
         })

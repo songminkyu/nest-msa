@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { OrderDirection } from 'common'
 import { MovieDto, MoviesClient, ShowtimesClient, WatchRecordsClient } from 'apps/cores'
-import { MovieRecommendationEngine } from './domain'
+import { MovieRecommender } from './domain'
 
 @Injectable()
 export class RecommendationService {
@@ -27,7 +27,7 @@ export class RecommendationService {
             watchedMovies = await this.moviesService.getMoviesByIds(movieIds)
         }
 
-        const recommendedMovies = MovieRecommendationEngine.recommend(showingMovies, watchedMovies)
+        const recommendedMovies = MovieRecommender.recommend(showingMovies, watchedMovies)
         return recommendedMovies
     }
 }
