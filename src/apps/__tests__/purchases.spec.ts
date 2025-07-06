@@ -135,7 +135,7 @@ describe('Purchases', () => {
         it('Should return InternalServerError(500) if an error occurs in the purchase completion phase', async () => {
             const { purchaseItems } = await setupPurchaseData(fix)
 
-            jest.spyOn(fix.ticketsService, 'updateTicketStatus').mockImplementation(() => {
+            jest.spyOn(fix.ticketsService, 'updateTicketStatus').mockImplementationOnce(() => {
                 throw new Error('purchase error')
             })
 

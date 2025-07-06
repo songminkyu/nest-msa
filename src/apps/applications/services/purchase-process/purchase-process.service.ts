@@ -20,7 +20,6 @@ export class PurchaseProcessService {
             return purchase
         } catch (error) {
             await this.ticketProcessor.rollbackPurchase(createDto)
-            // TODO
             throw error
         }
     }

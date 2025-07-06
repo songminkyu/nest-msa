@@ -133,7 +133,6 @@ export class TicketPurchaseProcessor {
 
         await this.ticketsService.updateTicketStatus(ticketIds, TicketStatus.Available)
 
-        // TODO
         await this.events.emitTicketPurchaseCanceled(createDto.customerId, ticketIds)
 
         return true
