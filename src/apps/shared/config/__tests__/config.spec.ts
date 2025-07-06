@@ -19,7 +19,7 @@ describe('AppConfigService', () => {
         await module?.close()
     })
 
-    it('for coverage', () => {
+    it('dummy test for coverage', () => {
         expect(configService.services).not.toBeUndefined()
     })
 })

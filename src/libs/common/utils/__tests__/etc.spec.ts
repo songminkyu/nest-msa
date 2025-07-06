@@ -256,7 +256,7 @@ describe('padNumber', () => {
     })
 })
 
-describe('for coverage', () => {
+describe('dummy test for coverage', () => {
     notUsed()
     comment()
 })

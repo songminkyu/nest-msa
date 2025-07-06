@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { InjectModel, MongooseModule, Prop, Schema } from '@nestjs/mongoose'
+import { getModelToken, InjectModel, MongooseModule, Prop, Schema } from '@nestjs/mongoose'
 import { createMongooseSchema, MongooseRepository, MongooseSchema } from 'common'
 import { Model } from 'mongoose'
 import { createTestContext, getMongoTestConnection, withTestId } from 'testlib'
@@ -22,6 +22,7 @@ class SamplesRepository extends MongooseRepository<Sample> {
 export interface Fixture {
     teardown: () => Promise<void>
     repository: SamplesRepository
+    model: Model<Sample>
 }
 
 export async function createFixture() {
@@ -40,10 +41,10 @@ export async function createFixture() {
     })
 
     const repository = testContext.module.get(SamplesRepository)
-
+    const model = testContext.module.get(getModelToken(Sample.name))
     const teardown = async () => {
         await testContext?.close()
     }
 
-    return { teardown, repository }
+    return { teardown, repository, model }
 }

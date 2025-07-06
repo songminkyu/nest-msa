@@ -54,4 +54,27 @@ describe('MongooseRepository.withTransaction', () => {
         const { total } = await fix.repository.findWithPagination({ pagination: { take: 1 } })
         expect(total).toEqual(0)
     })
+
+    it('dummy test for coverage', async () => {
+        jest.spyOn(fix.model, 'startSession').mockImplementation(() => {
+            throw new Error()
+        })
+
+        const promise = fix.repository.withTransaction(async (_session) => {})
+
+        await expect(promise).rejects.toThrow()
+    })
+
+    it('dummy test for coverage', async () => {
+        jest.spyOn(fix.model, 'startSession').mockResolvedValue({
+            startTransaction: jest.fn().mockImplementation(() => {
+                throw new Error()
+            }),
+            inTransaction: jest.fn().mockReturnValue(false)
+        } as any)
+
+        const promise = fix.repository.withTransaction(async (_session) => {})
+
+        await expect(promise).rejects.toThrow()
+    })
 })

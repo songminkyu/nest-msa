@@ -119,7 +119,7 @@ describe('QueryBuilder', () => {
 
         /* 중복된 ID가 있으면 중복을 제거해야 한다 */
         it('Should remove duplicates if there are repeated IDs', () => {
-            jest.spyOn(Logger, 'error').mockImplementationOnce(() => {})
+            jest.spyOn(Logger, 'error').mockImplementation(() => {})
 
             const id = new Types.ObjectId().toString()
             const ids = [id, new Types.ObjectId().toString(), id]
