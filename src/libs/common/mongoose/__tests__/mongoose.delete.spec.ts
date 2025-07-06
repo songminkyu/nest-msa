@@ -13,12 +13,12 @@ describe('Mongoose Delete', () => {
             await fix?.teardown()
         })
 
-        /* deletedAt의 초기값은 null이다 */
+        // deletedAt의 초기값은 null이다
         it('Initially, deletedAt should be null', async () => {
             expect(fix.doc).toMatchObject({ deletedAt: null })
         })
 
-        /* deleteOne으로 삭제하면 삭제된 시간이 deletedAt에 기록되어야 한다 */
+        // deleteOne으로 삭제하면 삭제된 시간이 deletedAt에 기록되어야 한다
         it('Should record the deletion time in deletedAt when using deleteOne', async () => {
             await fix.model.deleteOne({ _id: fix.doc._id })
 
@@ -30,7 +30,7 @@ describe('Mongoose Delete', () => {
             expect(found?.deletedAt).toEqual(expect.any(Date))
         })
 
-        /* deleteMany로 삭제하면 삭제된 시간이 deletedAt에 기록되어야 한다 */
+        // deleteMany로 삭제하면 삭제된 시간이 deletedAt에 기록되어야 한다
         it('Should record the deletion time in deletedAt when using deleteMany', async () => {
             const doc2 = new fix.model()
             doc2.name = 'name'
@@ -43,7 +43,7 @@ describe('Mongoose Delete', () => {
             expect(found[1]).toMatchObject({ deletedAt: expect.any(Date) })
         })
 
-        /* 삭제된 문서는 aggregate에서 검색되지 않아야 한다' */
+        // 삭제된 문서는 aggregate에서 검색되지 않아야 한다'
         it('Should not be returned from aggregate if the document is deleted', async () => {
             await fix.model.deleteOne({ _id: fix.doc._id })
 
@@ -65,7 +65,7 @@ describe('Mongoose Delete', () => {
             await fix?.teardown()
         })
 
-        /* 데이터를 완전히 삭제해야 한다 */
+        // 데이터를 완전히 삭제해야 한다
         it('Should completely remove the document', async () => {
             expect(fix.doc).not.toHaveProperty('deletedAt')
         })

@@ -17,14 +17,14 @@ describe('Theaters', () => {
     })
 
     describe('POST /theaters', () => {
-        /* 극장을 생성해야 한다 */
+        // 극장을 생성해야 한다
         it('Should create a theater', async () => {
             const { createDto, expectedDto } = buildTheaterCreateDto()
 
             await fix.httpClient.post('/theaters').body(createDto).created(expectedDto)
         })
 
-        /* 필수 필드가 누락되면 BAD_REQUEST(400)를 반환해야 한다 */
+        // 필수 필드가 누락되면 BAD_REQUEST(400)를 반환해야 한다
         it('Should return BAD_REQUEST(400) if required fields are missing', async () => {
             await fix.httpClient
                 .post('/theaters')
@@ -40,7 +40,7 @@ describe('Theaters', () => {
             theater = await createTheater(fix)
         })
 
-        /* 극장 정보를 업데이트해야 한다 */
+        // 극장 정보를 업데이트해야 한다
         it('Should update theater information', async () => {
             const updateDto = {
                 name: 'update-name',
@@ -57,7 +57,7 @@ describe('Theaters', () => {
             await fix.httpClient.patch(`/theaters/${theater.id}`).body({}).ok(theater)
         })
 
-        /* 극장이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        // 극장이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다
         it('Should return NOT_FOUND(404) if the theater does not exist', async () => {
             await fix.httpClient
                 .patch(`/theaters/${nullObjectId}`)
@@ -73,7 +73,7 @@ describe('Theaters', () => {
             theater = await createTheater(fix)
         })
 
-        /* 극장을 삭제해야 한다 */
+        // 극장을 삭제해야 한다
         it('Should delete the theater', async () => {
             await fix.httpClient.delete(`/theaters/${theater.id}`).ok()
             await fix.httpClient.get(`/theaters/${theater.id}`).notFound({
@@ -82,7 +82,7 @@ describe('Theaters', () => {
             })
         })
 
-        /* 극장이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        // 극장이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다
         it('Should return NOT_FOUND(404) if the theater does not exist', async () => {
             await fix.httpClient.delete(`/theaters/${nullObjectId}`).notFound({
                 ...Errors.Mongoose.MultipleDocumentsNotFound,
@@ -98,12 +98,12 @@ describe('Theaters', () => {
             theater = await createTheater(fix)
         })
 
-        /* 극장 정보를 가져와야 한다 */
+        // 극장 정보를 가져와야 한다
         it('Should retrieve theater information', async () => {
             await fix.httpClient.get(`/theaters/${theater.id}`).ok(theater)
         })
 
-        /* 극장이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        // 극장이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다
         it('Should return NOT_FOUND(404) if the theater does not exist', async () => {
             await fix.httpClient.get(`/theaters/${nullObjectId}`).notFound({
                 ...Errors.Mongoose.MultipleDocumentsNotFound,
@@ -125,7 +125,7 @@ describe('Theaters', () => {
             ])
         })
 
-        /* 기본 페이지네이션 설정으로 극장을 가져와야 한다 */
+        // 기본 페이지네이션 설정으로 극장을 가져와야 한다
         it('Should fetch theaters with default pagination settings', async () => {
             const { body } = await fix.httpClient.get('/theaters').ok()
             const { items, ...paginated } = body
@@ -138,7 +138,7 @@ describe('Theaters', () => {
             expectEqualUnsorted(items, theaters)
         })
 
-        /* 잘못된 필드로 검색하면 BAD_REQUEST(400)를 반환해야 한다 */
+        // 잘못된 필드로 검색하면 BAD_REQUEST(400)를 반환해야 한다
         it('Should return BAD_REQUEST(400) if searching with an invalid field', async () => {
             await fix.httpClient
                 .get('/theaters')
@@ -146,7 +146,7 @@ describe('Theaters', () => {
                 .badRequest({ ...Errors.RequestValidation.Failed, details: expect.any(Array) })
         })
 
-        /* 이름의 일부로 극장을 검색할 수 있어야 한다 */
+        // 이름의 일부로 극장을 검색할 수 있어야 한다
         it('Should allow searching theaters by partial name', async () => {
             const partialName = 'Theater-a'
             const { body } = await fix.httpClient.get('/theaters').query({ name: partialName }).ok()

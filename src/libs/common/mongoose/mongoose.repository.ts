@@ -16,17 +16,17 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
     constructor(protected model: Model<Doc>) {}
 
     async onModuleInit() {
-        /*
-        Since document.save() internally calls createCollection(),
-        calling save() at the same time can cause a "Collection namespace is already in use" error.
-        This issue often occurs in unit test environments due to frequent re-initialization.
-
-        document.save()가 내부적으로 createCollection()을 호출한다.
-        동시에 save()를 호출하면 "Collection namespace is already in use" 오류가 발생할 수 있다.
-        이 문제는 주로 단위 테스트 환경에서 빈번한 초기화로 인해 발생한다.
-
-        https://mongoosejs.com/docs/api/model.html#Model.createCollection()
-        */
+        /**
+         * Since document.save() internally calls createCollection(),
+         * calling save() at the same time can cause a "Collection namespace is already in use" error.
+         * This issue often occurs in unit test environments due to frequent re-initialization.
+         *
+         * document.save()가 내부적으로 createCollection()을 호출한다.
+         * 동시에 save()를 호출하면 "Collection namespace is already in use" 오류가 발생할 수 있다.
+         * 이 문제는 주로 단위 테스트 환경에서 빈번한 초기화로 인해 발생한다.
+         *
+         * https://mongoosejs.com/docs/api/model.html#Model.createCollection()
+         */
         await this.model.createCollection()
         await this.model.createIndexes()
     }

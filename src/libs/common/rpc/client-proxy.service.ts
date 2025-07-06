@@ -49,18 +49,14 @@ export class ClientProxyService implements OnModuleDestroy {
     }
 
     send<T>(cmd: string, payload: any): Observable<T> {
-        /*
-        send does not allow a null payload
-        send는 null payload를 허용하지 않음
-        */
+        // send does not allow a null payload
+        // send는 null payload를 허용하지 않음
         return this.proxy.send(cmd, payload ?? '')
     }
 
     emit(event: string, payload: any): Promise<void> {
-        /*
-        emit does not allow a null payload
-        emit는 null payload를 허용하지 않음
-        */
+        // emit does not allow a null payload
+        // emit는 null payload를 허용하지 않음
         return waitProxyValue(this.proxy.emit<void>(event, payload ?? ''))
     }
 }

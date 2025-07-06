@@ -26,8 +26,6 @@ export class Theater extends MongooseSchema {
 export type TheaterDocument = HydratedDocument<Theater>
 export const TheaterSchema = createMongooseSchema(Theater)
 
-/*
-Creates a text index on the 'name' field to enable searching by theater name.
-'name' 필드에 대해 텍스트 인덱스를 생성해서 극장 이름에 대한 검색을 가능하게 합니다.
-*/
+// Creates a text index on the 'name' field to enable searching by theater name.
+// 'name' 필드에 대해 텍스트 인덱스를 생성해서 극장 이름에 대한 검색을 가능하게 합니다.
 TheaterSchema.index({ name: 'text' })

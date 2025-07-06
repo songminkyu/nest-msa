@@ -58,7 +58,9 @@ export class ShowtimeCreationController implements OnModuleDestroy {
     }
 
     @EventPattern(Events.ShowtimeCreation.statusChanged, {
-        queue: false // 모든 인스턴스에 이벤트 브로드캐스팅 설정
+        // It broadcasts events to all instances.
+        // 모든 인스턴스에 이벤트를 브로드캐스팅한다.
+        queue: false
     })
     handleEvent(data: any) {
         this.eventStream.next({ data })

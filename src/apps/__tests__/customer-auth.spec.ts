@@ -22,7 +22,7 @@ describe('Customer Authentication', () => {
     })
 
     describe('POST /login', () => {
-        /* 로그인에 성공하면 인증 토큰을 반환해야 한다 */
+        // 로그인에 성공하면 인증 토큰을 반환해야 한다
         it('Should return an authentication token upon successful login', async () => {
             await fix.httpClient
                 .post('/customers/login')
@@ -33,7 +33,7 @@ describe('Customer Authentication', () => {
                 })
         })
 
-        /* 비밀번호가 틀리면 UNAUTHORIZED(401)를 반환해야 한다 */
+        // 비밀번호가 틀리면 UNAUTHORIZED(401)를 반환해야 한다
         it('Should return UNAUTHORIZED(401) if the password is incorrect', async () => {
             await fix.httpClient
                 .post('/customers/login')
@@ -41,7 +41,7 @@ describe('Customer Authentication', () => {
                 .unauthorized(Errors.Auth.Unauthorized)
         })
 
-        /* 이메일이 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다 */
+        // 이메일이 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다
         it('Should return UNAUTHORIZED(401) if the email does not exist', async () => {
             await fix.httpClient
                 .post('/customers/login')
@@ -49,14 +49,14 @@ describe('Customer Authentication', () => {
                 .unauthorized(Errors.Auth.Unauthorized)
         })
 
-        /* customer가 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다 */
+        // customer가 존재하지 않으면 UNAUTHORIZED(401)를 반환해야 한다
         it('Should return UNAUTHORIZED(401) if the customer does not exist', async () => {
-            /*
-            Mocking the following code in CustomersRepository. This test is for code coverage.
-            CustomersRepository의 아래 코드를 모의하는 것이다. 코드 커버리지를 위해 작성한 테스트다.
-
-            this.model.findById(customerId).select('+password').exec()
-            */
+            /**
+             * Mocking the following code in CustomersRepository. This test is for code coverage.
+             * CustomersRepository의 아래 코드를 모의하는 것이다. 코드 커버리지를 위해 작성한 테스트다.
+             *
+             * this.model.findById(customerId).select('+password').exec()
+             */
             const model = fix.coresContext.module.get(getModelToken(Customer.name))
 
             jest.spyOn(model, 'findById').mockReturnValue({
@@ -86,7 +86,7 @@ describe('Customer Authentication', () => {
             refreshToken = body.refreshToken
         })
 
-        /* 유효한 refreshToken을 제공하면 새로운 인증 토큰을 반환해야 한다 */
+        // 유효한 refreshToken을 제공하면 새로운 인증 토큰을 반환해야 한다
         it('Should return a new authentication token if a valid refreshToken is provided', async () => {
             const { body } = await fix.httpClient
                 .post('/customers/refresh')
@@ -97,7 +97,7 @@ describe('Customer Authentication', () => {
             expect(body.refreshToken).not.toEqual(refreshToken)
         })
 
-        /* 잘못된 refreshToken을 제공하면 UNAUTHORIZED(401)를 반환해야 한다 */
+        // 잘못된 refreshToken을 제공하면 UNAUTHORIZED(401)를 반환해야 한다
         it('Should return UNAUTHORIZED(401) if an invalid refreshToken is provided', async () => {
             await fix.httpClient
                 .post('/customers/refresh')
@@ -121,7 +121,7 @@ describe('Customer Authentication', () => {
             accessToken = body.accessToken
         })
 
-        /* 유효한 accessToken을 제공하면 접근이 허용되어야 한다 */
+        // 유효한 accessToken을 제공하면 접근이 허용되어야 한다
         it('Should allow access if a valid accessToken is provided', async () => {
             await fix.httpClient
                 .get(`/customers/${customer.id}`)
@@ -129,7 +129,7 @@ describe('Customer Authentication', () => {
                 .ok()
         })
 
-        /* 잘못된 accessToken을 제공하면 UNAUTHORIZED(401)를 반환해야 한다 */
+        // 잘못된 accessToken을 제공하면 UNAUTHORIZED(401)를 반환해야 한다
         it('Should return UNAUTHORIZED(401) if the accessToken is invalid', async () => {
             await fix.httpClient
                 .get(`/customers/${customer.id}`)

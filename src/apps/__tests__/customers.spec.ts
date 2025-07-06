@@ -17,14 +17,14 @@ describe('Customers', () => {
     })
 
     describe('POST /customers', () => {
-        /* 고객을 생성해야 한다 */
+        // 고객을 생성해야 한다
         it('Should create a customer', async () => {
             const { createDto, expectedDto } = buildCustomerCreateDto()
 
             await fix.httpClient.post('/customers').body(createDto).created(expectedDto)
         })
 
-        /* 이메일이 이미 존재하면 CONFLICT(409)를 반환해야 한다 */
+        // 이메일이 이미 존재하면 CONFLICT(409)를 반환해야 한다
         it('Should return CONFLICT(409) if the email already exists', async () => {
             const { createDto } = buildCustomerCreateDto()
 
@@ -35,7 +35,7 @@ describe('Customers', () => {
                 .conflict({ ...Errors.Customer.EmailAlreadyExists, email: createDto.email })
         })
 
-        /* 필수 필드가 누락되면 BAD_REQUEST(400)를 반환해야 한다 */
+        // 필수 필드가 누락되면 BAD_REQUEST(400)를 반환해야 한다
         it('Should return BAD_REQUEST(400) if required fields are missing', async () => {
             await fix.httpClient
                 .post('/customers')
@@ -51,7 +51,7 @@ describe('Customers', () => {
             customer = await createCustomer(fix)
         })
 
-        /* 고객 정보를 업데이트해야 한다 */
+        // 고객 정보를 업데이트해야 한다
         it('Should update customer information', async () => {
             const updateDto = {
                 name: 'update-name',
@@ -68,7 +68,7 @@ describe('Customers', () => {
             await fix.httpClient.patch(`/customers/${customer.id}`).body({}).ok(customer)
         })
 
-        /* 고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        // 고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다
         it('Should return NOT_FOUND(404) if the customer does not exist', async () => {
             await fix.httpClient
                 .patch(`/customers/${nullObjectId}`)
@@ -84,7 +84,7 @@ describe('Customers', () => {
             customer = await createCustomer(fix)
         })
 
-        /* 고객을 삭제해야 한다 */
+        // 고객을 삭제해야 한다
         it('Should delete the customer', async () => {
             await fix.httpClient.delete(`/customers/${customer.id}`).ok()
 
@@ -94,7 +94,7 @@ describe('Customers', () => {
             })
         })
 
-        /* 고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        // 고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다
         it('Should return NOT_FOUND(404) if the customer does not exist', async () => {
             await fix.httpClient.delete(`/customers/${nullObjectId}`).notFound({
                 ...Errors.Mongoose.MultipleDocumentsNotFound,
@@ -110,12 +110,12 @@ describe('Customers', () => {
             customer = await createCustomer(fix)
         })
 
-        /* 고객 정보를 가져와야 한다 */
+        // 고객 정보를 가져와야 한다
         it('Should retrieve customer information', async () => {
             await fix.httpClient.get(`/customers/${customer.id}`).ok(customer)
         })
 
-        /* 고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
+        // 고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다
         it('Should return NOT_FOUND(404) if the customer does not exist', async () => {
             await fix.httpClient.get(`/customers/${nullObjectId}`).notFound({
                 ...Errors.Mongoose.MultipleDocumentsNotFound,
@@ -137,7 +137,7 @@ describe('Customers', () => {
             ])
         })
 
-        /* 기본 페이지네이션 설정으로 고객을 가져와야 한다 */
+        // 기본 페이지네이션 설정으로 고객을 가져와야 한다
         it('Should fetch customers with default pagination settings', async () => {
             const { body } = await fix.httpClient.get('/customers').ok()
             const { items, ...paginated } = body
@@ -150,7 +150,7 @@ describe('Customers', () => {
             expectEqualUnsorted(items, customers)
         })
 
-        /* 잘못된 필드로 검색하면 BAD_REQUEST(400)를 반환해야 한다 */
+        // 잘못된 필드로 검색하면 BAD_REQUEST(400)를 반환해야 한다
         it('Should return BAD_REQUEST(400) when searching with invalid fields', async () => {
             await fix.httpClient
                 .get('/customers')
@@ -158,7 +158,7 @@ describe('Customers', () => {
                 .badRequest({ ...Errors.RequestValidation.Failed, details: expect.any(Array) })
         })
 
-        /* 이름의 일부로 고객을 검색할 수 있어야 한다 */
+        // 이름의 일부로 고객을 검색할 수 있어야 한다
         it('Should allow searching customers by partial name', async () => {
             const partialName = 'customer-a'
             const { body } = await fix.httpClient
@@ -169,7 +169,7 @@ describe('Customers', () => {
             expectEqualUnsorted(body.items, [customers[0], customers[1]])
         })
 
-        /* 이메일의 일부로 고객을 검색할 수 있어야 한다 */
+        // 이메일의 일부로 고객을 검색할 수 있어야 한다
         it('Should allow searching customers by partial email', async () => {
             const partialEmail = 'user-b'
             const { body } = await fix.httpClient

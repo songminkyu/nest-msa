@@ -17,7 +17,7 @@ describe('@MethodLog()', () => {
         spyDebug = jest.spyOn(Logger.prototype, 'debug').mockImplementation(() => {})
     })
 
-    /* 동기 메서드의 시작과 종료를 로깅해야 한다 */
+    // 동기 메서드의 시작과 종료를 로깅해야 한다
     it('Should log the start and end of a synchronous method', async () => {
         service.syncMethod('value')
 
@@ -34,7 +34,7 @@ describe('@MethodLog()', () => {
         )
     })
 
-    /* 비동기 메서드의 시작과 완료를 로깅해야 한다 */
+    // 비동기 메서드의 시작과 완료를 로깅해야 한다
     it('Should log the start and end of an asynchronous method', async () => {
         await service.asyncMethod('value')
 
@@ -51,7 +51,7 @@ describe('@MethodLog()', () => {
         )
     })
 
-    /* Observable 메서드의 시작과 완료를 로깅해야 한다 */
+    // Observable 메서드의 시작과 완료를 로깅해야 한다
     it('Should log the start and end of an Observable method', async () => {
         await lastValueFrom(service.observableMethod('value'))
 
@@ -68,7 +68,7 @@ describe('@MethodLog()', () => {
         )
     })
 
-    /* 동기 메서드 실행 중 발생한 오류를 로깅해야 한다 */
+    // 동기 메서드 실행 중 발생한 오류를 로깅해야 한다
     it('Should log an error if a synchronous method throws an exception', () => {
         expect(() => service.throwSyncError('value')).toThrow('value')
 
@@ -84,7 +84,7 @@ describe('@MethodLog()', () => {
         )
     })
 
-    /* 비동기 메서드 실행 중 발생한 오류를 로깅해야 한다 */
+    // 비동기 메서드 실행 중 발생한 오류를 로깅해야 한다
     it('Should log an error if an asynchronous method throws an exception', async () => {
         await expect(service.throwAsyncError('value')).rejects.toThrow()
 
@@ -100,7 +100,7 @@ describe('@MethodLog()', () => {
         )
     })
 
-    /* Observable 메서드 실행 중 발생한 오류를 로깅해야 한다 */
+    // Observable 메서드 실행 중 발생한 오류를 로깅해야 한다
     it('Should log an error if an Observable method throws an exception', async () => {
         await expect(lastValueFrom(service.throwObservableError('value'))).rejects.toThrow()
 
@@ -116,7 +116,7 @@ describe('@MethodLog()', () => {
         )
     })
 
-    /* 지정된 로깅 레벨로 메서드를 기록해야 한다 */
+    // 지정된 로깅 레벨로 메서드를 기록해야 한다
     it('Should log methods according to the specified logging level', () => {
         service.debugLog()
 
@@ -133,7 +133,7 @@ describe('@MethodLog()', () => {
         )
     })
 
-    /* excludeArgs로 설정한 전달인자는 기록하지 않아야 한다 */
+    // excludeArgs로 설정한 전달인자는 기록하지 않아야 한다
     it('Should not log arguments specified in excludeArgs', () => {
         service.excludeArgs('1', '2')
 
@@ -150,7 +150,7 @@ describe('@MethodLog()', () => {
         )
     })
 
-    /* 다른 데코레이터와 함께 사용해도 정상적으로 로깅되어야 한다 */
+    // 다른 데코레이터와 함께 사용해도 정상적으로 로깅되어야 한다
     it('Should log correctly even when used with other decorators', () => {
         service.nestedDecorator()
 

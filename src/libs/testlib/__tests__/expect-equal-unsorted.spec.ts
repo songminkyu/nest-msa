@@ -1,7 +1,7 @@
 import { expectEqualUnsorted } from 'testlib'
 
 describe('expectEqualUnsorted', () => {
-    /* 객체 배열을 순서에 상관없이 비교해야 한다 */
+    // 객체 배열을 순서에 상관없이 비교해야 한다
     it('Should compare arrays of objects regardless of order', () => {
         const actual = [
             { id: 1, name: 'John', age: 30 },
@@ -15,7 +15,7 @@ describe('expectEqualUnsorted', () => {
         expect(() => expectEqualUnsorted(actual, expected)).not.toThrow()
     })
 
-    /* 중첩된 객체 배열을 비교해야 한다 */
+    // 중첩된 객체 배열을 비교해야 한다
     it('Should compare nested arrays of objects', () => {
         const actual = [
             { id: 1, name: 'John', address: { city: 'New York', zip: '-' } },
@@ -29,7 +29,7 @@ describe('expectEqualUnsorted', () => {
         expect(() => expectEqualUnsorted(actual, expected)).toThrow()
     })
 
-    /* expect.anything() 필드를 무시해야 한다 */
+    // expect.anything() 필드를 무시해야 한다
     it('Should ignore fields with expect.anything()', () => {
         const actual = [
             { id: expect.anything(), name: 'Jane', age: 25 },
@@ -43,7 +43,7 @@ describe('expectEqualUnsorted', () => {
         expect(() => expectEqualUnsorted(actual, expected)).not.toThrow()
     })
 
-    /* 배열이 다르면 예외를 던져야 한다 */
+    // 배열이 다르면 예외를 던져야 한다
     it('Should throw if the arrays differ', () => {
         const actual = [
             { id: 1, name: 'John', age: 30 },
@@ -57,13 +57,13 @@ describe('expectEqualUnsorted', () => {
         expect(() => expectEqualUnsorted(actual, expected)).toThrow()
     })
 
-    /* actual 또는 expected가 undefined이면 예외를 던져야 한다 */
+    // actual 또는 expected가 undefined이면 예외를 던져야 한다
     it('Should throw if actual or expected is undefined', () => {
         expect(() => expectEqualUnsorted(undefined, [])).toThrow('actual or expected undefined')
         expect(() => expectEqualUnsorted([], undefined)).toThrow('actual or expected undefined')
     })
 
-    /* 빈 배열을 처리해야 한다 */
+    // 빈 배열을 처리해야 한다
     it('Should handle empty arrays', () => {
         expect(() => expectEqualUnsorted([], [])).not.toThrow()
     })

@@ -92,10 +92,8 @@ export function MethodLog(options: MethodLogOptions = {}): MethodDecorator {
             }
         }
 
-        /*
-        Copy all metadata from the original method to the wrapped method so that other decorators are unaffected
-        다른 데코레이터가 영향을 받지 않도록 원본 메서드에 설정된 모든 메타데이터를 wrappedMethod로 복사
-        */
+        // Copy all metadata from the original method to the wrapped method so that other decorators are unaffected
+        // 다른 데코레이터가 영향을 받지 않도록 원본 메서드에 설정된 모든 메타데이터를 wrappedMethod로 복사
         const metadataKeys = Reflect.getMetadataKeys(originalMethod)
         for (const key of metadataKeys) {
             const metadata = Reflect.getMetadata(key, originalMethod)
