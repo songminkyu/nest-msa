@@ -53,6 +53,10 @@ describe('Theaters', () => {
             await fix.httpClient.get(`/theaters/${theater.id}`).ok(expected)
         })
 
+        it('dummy test for coverage', async () => {
+            await fix.httpClient.patch(`/theaters/${theater.id}`).body({}).ok(theater)
+        })
+
         /* 극장이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
         it('Should return NOT_FOUND(404) if the theater does not exist', async () => {
             await fix.httpClient

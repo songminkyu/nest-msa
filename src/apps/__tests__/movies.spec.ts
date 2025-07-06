@@ -64,6 +64,10 @@ describe('Movies', () => {
             await fix.httpClient.get(`/movies/${movie.id}`).ok(expected)
         })
 
+        it('dummy test for coverage', async () => {
+            await fix.httpClient.patch(`/movies/${movie.id}`).body({}).ok(movie)
+        })
+
         /* 영화가 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
         it('Should return NOT_FOUND(404) if the movie does not exist', async () => {
             await fix.httpClient

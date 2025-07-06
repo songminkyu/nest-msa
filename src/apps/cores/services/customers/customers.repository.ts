@@ -24,6 +24,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
 
     async updateCustomer(customerId: string, updateDto: UpdateCustomerDto) {
         const customer = await this.getById(customerId)
+
         if (updateDto.name) customer.name = updateDto.name
         if (updateDto.email) customer.email = updateDto.email
         if (updateDto.birthDate) customer.birthDate = updateDto.birthDate

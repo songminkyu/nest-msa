@@ -117,10 +117,10 @@ export class HttpTestClient {
                     const lines = data.trim().split('\n')
 
                     if (1 < lines.length) {
-                        /**
-                         * id: 1
-                         * data: {"transactionId":"6712d234a78adbff65ae552d","status":"processing"}
-                         */
+                        /*
+                        id: 1
+                        data: {"transactionId":"6712d234a78adbff65ae552d","status":"processing"}
+                        */
                         const message = this.parseEventMessage(data)
 
                         if (message.event !== 'error' && message.data) {
@@ -129,9 +129,9 @@ export class HttpTestClient {
                             errorHandler(message)
                         }
                     } else if (0 < lines[0].length) {
-                        /**
-                         * {"message":"Cannot GET /showtime-creation/events2","error":"Not Found","statusCode":404}
-                         */
+                        /*
+                        {"message":"Cannot GET /showtime-creation/events2","error":"Not Found","statusCode":404}
+                        */
                         errorHandler(data)
                     }
                 })

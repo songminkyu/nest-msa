@@ -64,6 +64,10 @@ describe('Customers', () => {
             await fix.httpClient.get(`/customers/${customer.id}`).ok(expected)
         })
 
+        it('dummy test for coverage', async () => {
+            await fix.httpClient.patch(`/customers/${customer.id}`).body({}).ok(customer)
+        })
+
         /* 고객이 존재하지 않으면 NOT_FOUND(404)를 반환해야 한다 */
         it('Should return NOT_FOUND(404) if the customer does not exist', async () => {
             await fix.httpClient

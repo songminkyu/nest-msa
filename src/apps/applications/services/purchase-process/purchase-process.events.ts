@@ -14,6 +14,7 @@ export class PurchaseProcessEvents {
     }
 
     emitTicketPurchaseCanceled(customerId: string, ticketIds: string[]) {
+        // TODO
         return this.proxy.emit(Events.PurchaseProcess.TicketPurchaseCanceled, {
             customerId,
             ticketIds
