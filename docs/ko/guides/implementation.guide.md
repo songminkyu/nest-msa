@@ -211,3 +211,18 @@ export async function getProviders(coresContext: TestContext) {
 이런 형태는 사용하지 않는다. 편집기에서 자동 정렬이 안 된다.
 */
 ```
+
+## 8. ESM modules
+
+NestJS는 CommonJS 모듈 시스템을 사용하지만, Node.js >= 22에서는 CommonJS와 ESM을 동시에 지원하므로 호환성 문제가 발생하지 않습니다.
+
+그러나 Jest는 아직 ESM 모듈을 완전히 지원하지 않기 때문에, ESM 전용 모듈을 사용할 때 문제가 발생할 수 있습니다. 예를 들어, chalk와 같은 ESM 전용 모듈을 사용할 경우 jest.config.ts에서 해당 모듈을 등록해야 합니다.
+
+```ts
+{
+    // ECMAScript modules
+    transformIgnorePatterns: ['!node_modules/(?!chalk)']
+}
+```
+
+이와 관련된 설정은 [ts-jest 예제](https://github.com/kulshekhar/ts-jest/tree/main/examples/js-with-ts)를 참고하세요.
