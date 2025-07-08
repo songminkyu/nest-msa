@@ -4,10 +4,13 @@ import { MongooseRepository, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
 import { CreateTheaterDto, SearchTheatersDto, UpdateTheaterDto } from './dtos'
 import { Theater } from './models'
+import { MongooseConfigModule } from 'shared'
 
 @Injectable()
 export class TheatersRepository extends MongooseRepository<Theater> {
-    constructor(@InjectModel(Theater.name) model: Model<Theater>) {
+    constructor(
+        @InjectModel(Theater.name, MongooseConfigModule.connectionName) model: Model<Theater>
+    ) {
         super(model)
     }
 

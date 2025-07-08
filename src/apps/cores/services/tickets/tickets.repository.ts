@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, objectIds, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
-import { TicketSalesForShowtimeDto, CreateTicketDto, SearchTicketsDto } from './dtos'
+import { MongooseConfigModule } from 'shared'
+import { CreateTicketDto, SearchTicketsDto, TicketSalesForShowtimeDto } from './dtos'
 import { Ticket, TicketStatus } from './models'
 
 @Injectable()
 export class TicketsRepository extends MongooseRepository<Ticket> {
-    constructor(@InjectModel(Ticket.name) model: Model<Ticket>) {
+    constructor(
+        @InjectModel(Ticket.name, MongooseConfigModule.connectionName) model: Model<Ticket>
+    ) {
         super(model)
     }
 

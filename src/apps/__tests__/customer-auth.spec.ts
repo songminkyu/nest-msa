@@ -3,6 +3,7 @@ import { Customer, CustomerDto } from 'apps/cores'
 import { createCustomer } from './common.fixture'
 import { Fixture } from './customer-auth.fixture'
 import { Errors } from './helpers'
+import { MongooseConfigModule } from 'shared'
 
 describe('Customer Authentication', () => {
     let fix: Fixture
@@ -57,7 +58,9 @@ describe('Customer Authentication', () => {
              *
              * this.model.findById(customerId).select('+password').exec()
              */
-            const model = fix.coresContext.module.get(getModelToken(Customer.name))
+            const model = fix.coresContext.module.get(
+                getModelToken(Customer.name, MongooseConfigModule.connectionName)
+            )
 
             jest.spyOn(model, 'findById').mockReturnValue({
                 select: jest.fn().mockReturnValue({

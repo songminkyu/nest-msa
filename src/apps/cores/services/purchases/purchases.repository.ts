@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId } from 'common'
 import { Model } from 'mongoose'
+import { MongooseConfigModule } from 'shared'
 import { CreatePurchaseDto } from './dtos'
 import { Purchase } from './models'
 
 @Injectable()
 export class PurchasesRepository extends MongooseRepository<Purchase> {
-    constructor(@InjectModel(Purchase.name) model: Model<Purchase>) {
+    constructor(
+        @InjectModel(Purchase.name, MongooseConfigModule.connectionName) model: Model<Purchase>
+    ) {
         super(model)
     }
 

@@ -1,10 +1,10 @@
-import { getRedisConnectionToken } from '@nestjs-modules/ioredis'
 import { Type } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { ApplicationsModule, configureApplications } from 'apps/applications'
 import { configureCores, CoresModule } from 'apps/cores'
 import { configureGateway, GatewayModule } from 'apps/gateway'
 import { configureInfrastructures, InfrastructuresModule } from 'apps/infrastructures'
+import { RedisConfigModule } from 'shared'
 import {
     createHttpTestContext,
     createTestContext,
@@ -101,16 +101,14 @@ export const createCommonFixture = async ({
     const httpClient = gatewayContext.httpClient
 
     const close = async () => {
-        const redisToken = getRedisConnectionToken()
-
         await gatewayContext.close()
 
         await appsContext.close()
-        const appsRedis = appsContext.module.get(redisToken)
+        const appsRedis = appsContext.module.get(RedisConfigModule.moduleName)
         await appsRedis.quit()
 
         await coresContext.close()
-        const coresRedis = coresContext.module.get(redisToken)
+        const coresRedis = coresContext.module.get(RedisConfigModule.moduleName)
         await coresRedis.quit()
 
         await infrasContext.close()
