@@ -2,3 +2,6 @@
 desktop.ini
 /_output
 /node_modules/
+# The file is too large to save, so it will be created in the reset-infra.sh instead.
+/src/apps/__tests__/helpers/res/large.txt
+/src/apps/__tests__/helpers/res/oversized.txt
