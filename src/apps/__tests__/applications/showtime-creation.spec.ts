@@ -1,6 +1,6 @@
 import { Seatmap, ShowtimeDto } from 'apps/cores'
 import { expectEqualUnsorted, nullDate, nullObjectId } from 'testlib'
-import { createShowtimes } from './common.fixture'
+import { createShowtimes } from '../common.fixture'
 import { createShowtimeDtos, Fixture, monitorEvents } from './showtime-creation.fixture'
 
 describe('Showtime Creation', () => {

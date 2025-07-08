@@ -5,8 +5,8 @@ import {
     createMovie,
     createShowtimes,
     createWatchRecord
-} from './common.fixture'
-import { CommonFixture, createCommonFixture } from './helpers'
+} from '../common.fixture'
+import { CommonFixture, createCommonFixture } from '../helpers'
 
 export const createWatchedMovies = async (fix: Fixture, dtos: Partial<MovieDto>[]) => {
     const watchedMovies = await Promise.all(

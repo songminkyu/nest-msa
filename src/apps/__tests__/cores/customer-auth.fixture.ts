@@ -1,14 +1,11 @@
-import { CustomerJwtAuthGuard } from 'apps/gateway'
-import { CommonFixture, createCommonFixture } from './helpers'
+import { CommonFixture, createCommonFixture } from '../helpers'
 
 export interface Fixture extends CommonFixture {
     teardown: () => Promise<void>
 }
 
 export const createFixture = async () => {
-    const commonFixture = await createCommonFixture({
-        gateway: { ignoreGuards: [CustomerJwtAuthGuard] }
-    })
+    const commonFixture = await createCommonFixture()
 
     const teardown = async () => {
         await commonFixture?.close()

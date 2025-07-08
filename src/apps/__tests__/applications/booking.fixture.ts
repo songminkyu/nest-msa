@@ -8,8 +8,8 @@ import {
     createShowtimes,
     createTheater,
     createTickets
-} from './common.fixture'
-import { CommonFixture, createCommonFixture } from './helpers'
+} from '../common.fixture'
+import { CommonFixture, createCommonFixture } from '../helpers'
 
 const createTheaters = async (fix: CommonFixture) => {
     const theaters = await Promise.all([

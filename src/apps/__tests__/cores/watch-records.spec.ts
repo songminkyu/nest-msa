@@ -1,6 +1,6 @@
 import { WatchRecordDto } from 'apps/cores'
 import { expectEqualUnsorted, testObjectId } from 'testlib'
-import { buildWatchRecordCreateDto, createWatchRecord } from './common.fixture'
+import { buildWatchRecordCreateDto, createWatchRecord } from '../common.fixture'
 import { Fixture } from './watch-records.fixture'
 
 describe('WatchRecords', () => {

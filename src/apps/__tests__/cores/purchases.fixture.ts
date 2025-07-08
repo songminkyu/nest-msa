@@ -17,8 +17,8 @@ import {
     createShowtimes,
     createTheater,
     createTickets
-} from './common.fixture'
-import { CommonFixture, createCommonFixture } from './helpers'
+} from '../common.fixture'
+import { CommonFixture, createCommonFixture } from '../helpers'
 
 const createShowtime = async (fix: Fixture, startTime: Date) => {
     const { createDto } = buildShowtimeCreateDto({

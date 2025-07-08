@@ -1,7 +1,7 @@
 import { TicketDto, TicketStatus } from 'apps/cores'
 import { pickIds } from 'common'
 import { expectEqualUnsorted, testObjectId } from 'testlib'
-import { buildTicketCreateDto, createTickets } from './common.fixture'
+import { buildTicketCreateDto, createTickets } from '../common.fixture'
 import { buildTicketCreateDtos, Fixture } from './tickets.fixture'
 
 describe('Tickets', () => {

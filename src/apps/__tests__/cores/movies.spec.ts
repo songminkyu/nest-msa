@@ -1,9 +1,9 @@
 import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
 import { Path, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, objectToFields } from 'testlib'
-import { buildMovieCreateDto, createMovie } from './common.fixture'
+import { buildMovieCreateDto, createMovie } from '../common.fixture'
 import { Fixture } from './movies.fixture'
-import { Errors } from './helpers'
+import { Errors } from '../helpers'
 
 describe('Movies', () => {
     let fix: Fixture
