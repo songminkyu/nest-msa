@@ -1,14 +1,14 @@
 import { Controller, Get, Inject, Injectable, Module } from '@nestjs/common'
-import { getConnectionToken } from '@nestjs/mongoose'
 import { HealthCheckService, MongooseHealthIndicator, TerminusModule } from '@nestjs/terminus'
 import mongoose from 'mongoose'
+import { MongooseConfigModule } from 'shared'
 
 @Injectable()
 class HealthService {
     constructor(
         private health: HealthCheckService,
         private mongoose: MongooseHealthIndicator,
-        @Inject(getConnectionToken()) private mongoConn: mongoose.Connection
+        @Inject(MongooseConfigModule.moduleName) private mongoConn: mongoose.Connection
     ) {}
 
     check() {

@@ -39,7 +39,7 @@ export default {
     ...createJsWithTsPreset({ tsconfig: 'tsconfig.json' }),
     // ECMAScript modules
     transformIgnorePatterns: ['!node_modules/(?!chalk)']
-    /*
+    /**
      * If the number of CPU cores is high relative to available memory,
      * it is recommended to set maxWorkers to roughly (RAM / 4).
      * For example: 8GB RAM → maxWorkers: 2

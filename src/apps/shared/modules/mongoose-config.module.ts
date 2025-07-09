@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common'
-import { MongooseModule } from '@nestjs/mongoose'
+import { getConnectionToken, MongooseModule } from '@nestjs/mongoose'
 import { AppConfigService, uniqueWhenTesting } from '../config'
 
 @Module({
     imports: [
         MongooseModule.forRootAsync({
+            connectionName: MongooseConfigModule.connectionName,
             useFactory: async (config: AppConfigService) => {
                 const { user, password, host1, host2, host3, port, replica, database } =
                     config.mongo
@@ -25,4 +26,12 @@ import { AppConfigService, uniqueWhenTesting } from '../config'
         })
     ]
 })
-export class MongooseConfigModule {}
+export class MongooseConfigModule {
+    static get moduleName() {
+        return getConnectionToken(this.connectionName)
+    }
+
+    static get connectionName() {
+        return 'mongo-connection'
+    }
+}

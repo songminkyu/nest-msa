@@ -1,10 +1,9 @@
-import { getRedisConnectionToken } from '@nestjs-modules/ioredis'
 import { Controller, Get, Inject, Injectable, Module } from '@nestjs/common'
-import { getConnectionToken } from '@nestjs/mongoose'
 import { HealthCheckService, MongooseHealthIndicator, TerminusModule } from '@nestjs/terminus'
 import { RedisHealthIndicator } from 'common'
 import Redis from 'ioredis'
 import mongoose from 'mongoose'
+import { MongooseConfigModule, RedisConfigModule } from 'shared'
 
 @Injectable()
 class HealthService {
@@ -12,8 +11,8 @@ class HealthService {
         private health: HealthCheckService,
         private mongoose: MongooseHealthIndicator,
         private redis: RedisHealthIndicator,
-        @Inject(getConnectionToken()) private mongoConn: mongoose.Connection,
-        @Inject(getRedisConnectionToken()) private redisConn: Redis
+        @Inject(MongooseConfigModule.moduleName) private mongoConn: mongoose.Connection,
+        @Inject(RedisConfigModule.moduleName) private redisConn: Redis
     ) {}
 
     check() {

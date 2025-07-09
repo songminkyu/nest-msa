@@ -1,4 +1,3 @@
-import { getRedisConnectionToken } from '@nestjs-modules/ioredis'
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import Redis from 'ioredis'
@@ -21,7 +20,7 @@ import {
                 prefix: `{queue:${uniqueWhenTesting(ProjectName)}}`,
                 connection: redis
             }),
-            inject: [getRedisConnectionToken()]
+            inject: [RedisConfigModule.moduleName]
         }),
         ShowtimeCreationModule,
         RecommendationModule,

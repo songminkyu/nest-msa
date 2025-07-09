@@ -18,18 +18,21 @@ export async function createFixture() {
 
     const module = await createTestingModule({
         imports: [
-            RedisModule.forRoot({
-                type: 'cluster',
-                nodes,
-                options: { redisOptions: { password } }
-            }),
-            CacheModule.register({ prefix: withTestId('cache') })
+            RedisModule.forRoot(
+                {
+                    type: 'cluster',
+                    nodes,
+                    options: { redisOptions: { password } }
+                },
+                'name'
+            ),
+            CacheModule.register({ prefix: withTestId('cache'), redisName: 'name' })
         ],
         providers: [TestCacheService]
     })
 
-    const cacheService = module.get(CacheService.getToken())
-    const redis = module.get(getRedisConnectionToken())
+    const cacheService = module.get(CacheService.getServiceName())
+    const redis = module.get(getRedisConnectionToken('name'))
 
     const teardown = async () => {
         await module.close()

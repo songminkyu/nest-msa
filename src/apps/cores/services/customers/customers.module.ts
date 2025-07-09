@@ -2,7 +2,13 @@ import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { PassportModule } from '@nestjs/passport'
 import { JwtAuthModule, Time } from 'common'
-import { AppConfigService, ProjectName, uniqueWhenTesting } from 'shared'
+import {
+    AppConfigService,
+    MongooseConfigModule,
+    ProjectName,
+    RedisConfigModule,
+    uniqueWhenTesting
+} from 'shared'
 import { CustomersController } from './customers.controller'
 import { CustomersRepository } from './customers.repository'
 import { CustomersService } from './customers.service'
@@ -11,9 +17,13 @@ import { CustomerAuthenticationService } from './services'
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: Customer.name, schema: CustomerSchema }]),
+        MongooseModule.forFeature(
+            [{ name: Customer.name, schema: CustomerSchema }],
+            MongooseConfigModule.connectionName
+        ),
         PassportModule,
         JwtAuthModule.register({
+            redisName: RedisConfigModule.connectionName,
             prefix: `jwtauth:${uniqueWhenTesting(ProjectName)}`,
             useFactory: ({ auth }: AppConfigService) => ({
                 auth: {

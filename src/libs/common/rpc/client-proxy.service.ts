@@ -35,7 +35,7 @@ async function getProxyValue<T>(observer: Observable<T>): Promise<T> {
 export class ClientProxyService implements OnModuleDestroy {
     constructor(private proxy: ClientProxy) {}
 
-    static getToken(name?: string) {
+    static getServiceName(name?: string) {
         return `ClientProxyService_${name}`
     }
 
@@ -62,7 +62,7 @@ export class ClientProxyService implements OnModuleDestroy {
 }
 
 export function InjectClientProxy(name?: string): ParameterDecorator {
-    return Inject(ClientProxyService.getToken(name))
+    return Inject(ClientProxyService.getServiceName(name))
 }
 
 export interface ClientProxyModuleOptions {
@@ -80,7 +80,7 @@ export class ClientProxyModule {
         const clientName = name ?? 'DefaultClientProxy'
 
         const provider = {
-            provide: ClientProxyService.getToken(name),
+            provide: ClientProxyService.getServiceName(name),
             useFactory: async (proxy: ClientProxy) => {
                 return new ClientProxyService(proxy)
             },

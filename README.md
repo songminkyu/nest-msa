@@ -1,4 +1,4 @@
-> 🇰🇷 [View in Korean](docs/README.ko.md)
+English | [한국어](docs/README.ko.md)
 
 # NEST-MSA
 
@@ -108,7 +108,6 @@ Integration tests efficiently support MSA and TDD-based development by minimizin
 ### 4.1 Running Integration Tests
 
 1. Install the Jest Runner extension in VSCode. You will see Run | Debug buttons at the top of each test file.
-
     - **Run**: Executes tests (no log output)
     - **Debug**: Attaches a debugger before test execution (logs can be viewed)
     - If the buttons are not visible, enable Code Lens in your VSCode settings.

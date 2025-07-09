@@ -40,7 +40,7 @@ export async function createFixture() {
         providers: [TestJwtAuthService]
     })
 
-    const jwtService = module.get(JwtAuthService.getToken())
+    const jwtService = module.get(JwtAuthService.getServiceName())
     const redis = module.get(getRedisConnectionToken())
 
     const teardown = async () => {
