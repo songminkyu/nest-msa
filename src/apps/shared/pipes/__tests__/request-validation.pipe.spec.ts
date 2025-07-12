@@ -1,6 +1,6 @@
 import { HttpTestClient, nullDate } from 'testlib'
 
-describe('AppValidationPipe', () => {
+describe('RequestValidationPipe', () => {
     let teardown = () => {}
     let client: HttpTestClient
 
