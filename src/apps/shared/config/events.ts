@@ -1,6 +1,6 @@
-import { createRouteMap, getProjectName } from './utils'
+import { createMessagePatternMap, getProjectName } from './utils'
 
-export const Events = createRouteMap(
+export const Events = createMessagePatternMap(
     {
         ShowtimeCreation: {
             statusChanged: null

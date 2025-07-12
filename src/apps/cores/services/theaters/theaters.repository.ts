@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
+import { MongooseConfigModule } from 'shared'
 import { CreateTheaterDto, SearchTheatersDto, UpdateTheaterDto } from './dtos'
 import { Theater } from './models'
-import { MongooseConfigModule } from 'shared'
 
 @Injectable()
 export class TheatersRepository extends MongooseRepository<Theater> {

@@ -9,7 +9,7 @@ import {
     ExceptionLoggerFilter,
     SuccessLoggingInterceptor
 } from 'common'
-import { AppConfigService, configSchema, getProjectName } from '../config'
+import { AppConfigService, getProjectName } from '../config'
 import { RequestValidationPipe } from '../pipes/request-validation.pipe'
 
 @Global()
@@ -18,7 +18,7 @@ import { RequestValidationPipe } from '../pipes/request-validation.pipe'
         ConfigModule.forRoot({
             cache: true,
             ignoreEnvFile: true,
-            validationSchema: configSchema,
+            validationSchema: AppConfigService.configSchema,
             validationOptions: { abortEarly: false }
         }),
         ClientProxyModule.registerAsync({

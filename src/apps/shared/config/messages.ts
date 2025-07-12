@@ -1,6 +1,6 @@
-import { createRouteMap, getProjectName } from './utils'
+import { createMessagePatternMap, getProjectName } from './utils'
 
-export const Messages = createRouteMap(
+export const Messages = createMessagePatternMap(
     {
         StorageFiles: {
             saveFiles: null,

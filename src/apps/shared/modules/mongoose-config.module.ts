@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { getConnectionToken, MongooseModule } from '@nestjs/mongoose'
+import { SchemaOptions } from 'mongoose'
 import { AppConfigService } from '../config'
 
 @Module({
@@ -31,5 +32,16 @@ export class MongooseConfigModule {
 
     static get connectionName() {
         return 'mongo-connection'
+    }
+
+    static schemaOptions: SchemaOptions = {
+        // https://mongoosejs.com/docs/guide.html#optimisticConcurrency
+        optimisticConcurrency: true,
+        minimize: false,
+        strict: 'throw',
+        strictQuery: 'throw',
+        timestamps: true,
+        validateBeforeSave: true,
+        toJSON: { virtuals: true, flattenObjectIds: true, versionKey: false }
     }
 }
