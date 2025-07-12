@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
 import { MongooseConfigModule } from 'shared'
-import { CreateShowtimeDto, SearchShowtimesDto } from './dtos'
+import { CreateShowtimeDto, SearchShowtimesPageDto } from './dtos'
 import { Showtime } from './models'
 
 @Injectable()
@@ -11,7 +11,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
     constructor(
         @InjectModel(Showtime.name, MongooseConfigModule.connectionName) model: Model<Showtime>
     ) {
-        super(model)
+        super(model, MongooseConfigModule.maxTake)
     }
 
     async createShowtimes(createDtos: CreateShowtimeDto[]) {
@@ -29,28 +29,28 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         await this.saveMany(showtimes)
     }
 
-    async searchShowtimes(searchDto: SearchShowtimesDto) {
+    async searchShowtimes(searchDto: SearchShowtimesPageDto) {
         const query = this.buildQuery(searchDto)
 
         const showtimes = await this.model.find(query).sort({ startTime: 1 }).exec()
         return showtimes
     }
 
-    async findMovieIds(searchDto: SearchShowtimesDto) {
+    async findMovieIds(searchDto: SearchShowtimesPageDto) {
         const query = this.buildQuery(searchDto)
 
         const movieIds = await this.model.distinct('movieId', query).exec()
         return movieIds.map((id) => id.toString())
     }
 
-    async searchTheaterIds(searchDto: SearchShowtimesDto) {
+    async searchTheaterIds(searchDto: SearchShowtimesPageDto) {
         const query = this.buildQuery(searchDto)
 
         const theaterIds = await this.model.distinct('theaterId', query).exec()
         return theaterIds.map((id) => id.toString())
     }
 
-    async searchShowdates(searchDto: SearchShowtimesDto) {
+    async searchShowdates(searchDto: SearchShowtimesPageDto) {
         const query = this.buildQuery(searchDto)
 
         const showdates = await this.model.aggregate([
@@ -67,7 +67,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         return showdates.map((item) => new Date(item._id))
     }
 
-    private buildQuery(searchDto: SearchShowtimesDto, options: QueryBuilderOptions = {}) {
+    private buildQuery(searchDto: SearchShowtimesPageDto, options: QueryBuilderOptions = {}) {
         const { transactionIds, movieIds, theaterIds, startTimeRange, endTimeRange } = searchDto
 
         const builder = new QueryBuilder<Showtime>()

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { MoviesClient, ShowtimesClient, TheatersClient } from 'apps/cores'
-import { CommonQueryDto, OrderDirection } from 'common'
+import { PaginationDto, OrderDirection } from 'common'
 import { BulkCreateShowtimesDto, RequestShowtimeCreationResponse } from './dtos'
 import { ShowtimeCreationWorkerService } from './services'
 
@@ -13,14 +13,14 @@ export class ShowtimeCreationService {
         private workerService: ShowtimeCreationWorkerService
     ) {}
 
-    async searchMoviesPage(searchDto: CommonQueryDto) {
+    async searchMoviesPage(searchDto: PaginationDto) {
         return this.moviesService.searchMoviesPage({
             ...searchDto,
             orderby: { name: 'releaseDate', direction: OrderDirection.Desc }
         })
     }
 
-    async searchTheatersPage(searchDto: CommonQueryDto) {
+    async searchTheatersPage(searchDto: PaginationDto) {
         return this.theatersService.searchTheatersPage(searchDto)
     }
 

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
 import { MongooseConfigModule } from 'shared'
-import { CreateCustomerDto, SearchCustomersDto, UpdateCustomerDto } from './dtos'
+import { CreateCustomerDto, SearchCustomersPageDto, UpdateCustomerDto } from './dtos'
 import { CustomerErrors } from './errors'
 import { Customer } from './models'
 
@@ -12,7 +12,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
     constructor(
         @InjectModel(Customer.name, MongooseConfigModule.connectionName) model: Model<Customer>
     ) {
-        super(model)
+        super(model, MongooseConfigModule.maxTake)
     }
 
     async createCustomer(createDto: CreateCustomerDto) {
@@ -35,7 +35,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         return customer.save()
     }
 
-    async searchCustomersPage(searchDto: SearchCustomersDto) {
+    async searchCustomersPage(searchDto: SearchCustomersPageDto) {
         const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
@@ -64,7 +64,7 @@ export class CustomersRepository extends MongooseRepository<Customer> {
         return customer.password
     }
 
-    private buildQuery(searchDto: SearchCustomersDto, options: QueryBuilderOptions) {
+    private buildQuery(searchDto: SearchCustomersPageDto, options: QueryBuilderOptions) {
         const { name, email } = searchDto
 
         const builder = new QueryBuilder<Customer>()

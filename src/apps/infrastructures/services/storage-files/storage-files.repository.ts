@@ -12,7 +12,7 @@ export class StorageFilesRepository extends MongooseRepository<StorageFile> {
         @InjectModel(StorageFile.name, MongooseConfigModule.connectionName)
         model: Model<StorageFile>
     ) {
-        super(model)
+        super(model, MongooseConfigModule.maxTake)
     }
 
     async createStorageFile(

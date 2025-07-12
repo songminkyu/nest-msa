@@ -1,7 +1,7 @@
 import { IsOptional } from 'class-validator'
-import { CommonQueryDto } from 'common'
+import { PaginationDto } from 'common'
 
-export class SearchTicketsDto extends CommonQueryDto {
+export class SearchTicketsPageDto extends PaginationDto {
     @IsOptional()
     transactionIds?: string[]
 

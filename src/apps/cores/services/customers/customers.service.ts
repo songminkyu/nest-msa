@@ -5,7 +5,7 @@ import {
     CustomerAuthPayload,
     CreateCustomerDto,
     CustomerDto,
-    SearchCustomersDto,
+    SearchCustomersPageDto,
     UpdateCustomerDto
 } from './dtos'
 import { CustomerErrors } from './errors'
@@ -59,7 +59,7 @@ export class CustomersService {
         return deleteResult
     }
 
-    async searchCustomersPage(searchDto: SearchCustomersDto) {
+    async searchCustomersPage(searchDto: SearchCustomersPageDto) {
         const { items, ...paginated } = await this.repository.searchCustomersPage(searchDto)
         return { ...paginated, items: this.toDtos(items) }
     }

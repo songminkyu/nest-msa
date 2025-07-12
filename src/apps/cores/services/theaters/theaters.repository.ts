@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
 import { MongooseConfigModule } from 'shared'
-import { CreateTheaterDto, SearchTheatersDto, UpdateTheaterDto } from './dtos'
+import { CreateTheaterDto, SearchTheatersPageDto, UpdateTheaterDto } from './dtos'
 import { Theater } from './models'
 
 @Injectable()
@@ -11,7 +11,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
     constructor(
         @InjectModel(Theater.name, MongooseConfigModule.connectionName) model: Model<Theater>
     ) {
-        super(model)
+        super(model, MongooseConfigModule.maxTake)
     }
 
     async createTheater(createDto: CreateTheaterDto) {
@@ -33,7 +33,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return theater.save()
     }
 
-    async searchTheatersPage(searchDto: SearchTheatersDto) {
+    async searchTheatersPage(searchDto: SearchTheatersPageDto) {
         const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
@@ -48,7 +48,7 @@ export class TheatersRepository extends MongooseRepository<Theater> {
         return paginated
     }
 
-    private buildQuery(searchDto: SearchTheatersDto, options: QueryBuilderOptions) {
+    private buildQuery(searchDto: SearchTheatersPageDto, options: QueryBuilderOptions) {
         const { name } = searchDto
 
         const builder = new QueryBuilder<Theater>()

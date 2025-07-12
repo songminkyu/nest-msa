@@ -6,7 +6,7 @@ import {
     TicketSalesForShowtimeDto,
     CreateTicketDto,
     TicketDto,
-    SearchTicketsDto
+    SearchTicketsPageDto
 } from './dtos'
 import { TicketStatus } from './models'
 
@@ -22,7 +22,7 @@ export class TicketsClient {
         return this.proxy.getJson(Messages.Tickets.updateTicketStatus, { ticketIds, status })
     }
 
-    searchTickets(searchDto: SearchTicketsDto): Promise<TicketDto[]> {
+    searchTickets(searchDto: SearchTicketsPageDto): Promise<TicketDto[]> {
         return this.proxy.getJson(Messages.Tickets.searchTickets, searchDto)
     }
 

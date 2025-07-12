@@ -41,11 +41,14 @@ describe('WatchRecords', () => {
         // 기본 페이지네이션 설정으로 관람 기록을 가져와야 한다
         it('Should fetch watch records with default pagination settings', async () => {
             const { items, ...paginated } = await fix.watchRecordsClient.searchWatchRecordsPage({
-                customerId,
-                take: 100
+                customerId
             })
 
-            expect(paginated).toEqual({ skip: 0, take: 100, total: records.length })
+            expect(paginated).toEqual({
+                skip: 0,
+                take: expect.any(Number),
+                total: records.length
+            })
             expectEqualUnsorted(items, records)
         })
     })

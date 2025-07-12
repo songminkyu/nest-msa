@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common'
-import { ClientProxyService, DeleteResult, InjectClientProxy, JwtAuthTokens } from 'common'
+import {
+    ClientProxyService,
+    DeleteResult,
+    InjectClientProxy,
+    JwtAuthTokens,
+    PaginationResult
+} from 'common'
 import { Messages } from 'shared'
 import {
-    CustomerAuthPayload,
     CreateCustomerDto,
+    CustomerAuthPayload,
     CustomerDto,
-    SearchCustomersDto,
+    SearchCustomersPageDto,
     UpdateCustomerDto
 } from './dtos'
 
@@ -29,7 +35,7 @@ export class CustomersClient {
         return this.proxy.getJson(Messages.Customers.deleteCustomers, customerIds)
     }
 
-    searchCustomersPage(searchDto: SearchCustomersDto): Promise<CustomerDto[]> {
+    searchCustomersPage(searchDto: SearchCustomersPageDto): Promise<PaginationResult<CustomerDto>> {
         return this.proxy.getJson(Messages.Customers.searchCustomersPage, searchDto)
     }
 

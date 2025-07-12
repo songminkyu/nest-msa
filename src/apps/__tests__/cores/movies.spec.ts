@@ -178,7 +178,11 @@ describe('Movies', () => {
             const { body } = await fix.httpClient.get('/movies').query({ skip: 0 }).ok()
             const { items, ...paginated } = body
 
-            expect(paginated).toEqual({ skip: 0, take: expect.any(Number), total: movies.length })
+            expect(paginated).toEqual({
+                skip: 0,
+                take: expect.any(Number),
+                total: movies.length
+            })
             expectEqualUnsorted(items, movies)
         })
 

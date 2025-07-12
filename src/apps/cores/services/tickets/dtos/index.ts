@@ -1,5 +1,5 @@
 export * from './create-ticket.dto'
 export * from './create-tickets.result'
-export * from './search-tickets.dto'
+export * from './search-tickets.page.dto'
 export * from './ticket-sales.dto'
 export * from './ticket.dto'

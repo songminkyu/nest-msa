@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException, OnModuleInit } from '@nestjs/common'
 import { differenceWith, uniq } from 'lodash'
 import { ClientSession, HydratedDocument, Model, QueryWithHelpers } from 'mongoose'
-import { CommonQueryDto, PaginationResult } from '../common-query'
+import { PaginationDto, PaginationResult } from '../types'
 import { Assert, Expect } from '../validator'
 import { MongooseErrors } from './errors'
 import { objectId, objectIds } from './mongoose.util'
@@ -13,7 +13,10 @@ export class DeleteResult {
 type SessionArg = ClientSession | undefined
 
 export abstract class MongooseRepository<Doc> implements OnModuleInit {
-    constructor(protected model: Model<Doc>) {}
+    constructor(
+        protected model: Model<Doc>,
+        protected maxTake: number
+    ) {}
 
     async onModuleInit() {
         /**
@@ -110,30 +113,27 @@ export abstract class MongooseRepository<Doc> implements OnModuleInit {
 
     async findWithPagination(args: {
         configureQuery?: (queryHelper: QueryWithHelpers<Array<Doc>, Doc>) => void
-        pagination: CommonQueryDto
+        pagination: PaginationDto
         session?: SessionArg
     }) {
         const { configureQuery, pagination, session } = args
 
+        let take = pagination.take ?? this.maxTake
+        let skip = pagination.skip ?? 0
+
+        if (take <= 0) {
+            throw new BadRequestException({ ...MongooseErrors.TakeInvalid, take })
+        } else if (this.maxTake < take) {
+            throw new BadRequestException({
+                ...MongooseErrors.MaxTakeExceeded,
+                take,
+                maxTake: this.maxTake
+            })
+        }
+
         const queryHelper = this.model.find({}, null, { session })
-
-        let take = 0
-        let skip = 0
-
-        if (pagination.take) {
-            take = pagination.take
-            if (take <= 0) {
-                throw new BadRequestException({ ...MongooseErrors.TakeInvalid, take })
-            }
-            queryHelper.limit(take)
-        } else {
-            throw new BadRequestException(MongooseErrors.TakeMissing)
-        }
-
-        if (pagination.skip) {
-            skip = pagination.skip
-            queryHelper.skip(skip)
-        }
+        queryHelper.limit(take)
+        queryHelper.skip(skip)
 
         if (pagination.orderby) {
             const { name, direction } = pagination.orderby

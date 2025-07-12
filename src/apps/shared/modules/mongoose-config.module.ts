@@ -44,4 +44,8 @@ export class MongooseConfigModule {
         validateBeforeSave: true,
         toJSON: { virtuals: true, flattenObjectIds: true, versionKey: false }
     }
+
+    static get maxTake() {
+        return 50
+    }
 }

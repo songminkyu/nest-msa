@@ -1,7 +1,7 @@
 import { IsOptional, IsString } from 'class-validator'
-import { CommonQueryDto } from 'common'
+import { PaginationDto } from 'common'
 
-export class SearchCustomersDto extends CommonQueryDto {
+export class SearchCustomersPageDto extends PaginationDto {
     @IsOptional()
     @IsString()
     name?: string

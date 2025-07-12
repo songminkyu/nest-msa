@@ -23,10 +23,12 @@ export class SampleDto {
     name: string
 }
 
+export const maxTakeValue = 50
+
 @Injectable()
 class SamplesRepository extends MongooseRepository<Sample> {
     constructor(@InjectModel(Sample.name) model: Model<Sample>) {
-        super(model)
+        super(model, maxTakeValue)
     }
 }
 

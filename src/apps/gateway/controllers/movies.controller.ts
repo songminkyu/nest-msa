@@ -11,15 +11,13 @@ import {
     UploadedFiles,
     UseFilters,
     UseGuards,
-    UseInterceptors,
-    UsePipes
+    UseInterceptors
 } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express'
 import { RecommendationClient } from 'apps/applications'
-import { CreateMovieDto, MoviesClient, SearchMoviesDto, UpdateMovieDto } from 'apps/cores'
+import { CreateMovieDto, MoviesClient, SearchMoviesPageDto, UpdateMovieDto } from 'apps/cores'
 import { MulterExceptionFilter } from './filters'
 import { CustomerOptionalJwtAuthGuard } from './guards'
-import { DefaultCommonQueryPipe } from './pipes'
 import { CustomerAuthRequest } from './types'
 
 @Controller('movies')
@@ -69,9 +67,8 @@ export class MoviesController {
         return this.moviesService.deleteMovies([movieId])
     }
 
-    @UsePipes(DefaultCommonQueryPipe)
     @Get()
-    async searchMoviesPage(@Query() searchDto: SearchMoviesDto) {
+    async searchMoviesPage(@Query() searchDto: SearchMoviesPageDto) {
         return this.moviesService.searchMoviesPage(searchDto)
     }
 }

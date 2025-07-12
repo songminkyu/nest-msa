@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Assert, mapDocToDto } from 'common'
-import { CreateTicketsResult, CreateTicketDto, TicketDto, SearchTicketsDto } from './dtos'
+import { CreateTicketsResult, CreateTicketDto, TicketDto, SearchTicketsPageDto } from './dtos'
 import { TicketDocument, TicketStatus } from './models'
 import { TicketsRepository } from './tickets.repository'
 
@@ -28,7 +28,7 @@ export class TicketsService {
         return this.toDtos(tickets)
     }
 
-    async searchTickets(searchDto: SearchTicketsDto) {
+    async searchTickets(searchDto: SearchTicketsPageDto) {
         const tickets = await this.repository.searchTickets(searchDto)
 
         return this.toDtos(tickets)

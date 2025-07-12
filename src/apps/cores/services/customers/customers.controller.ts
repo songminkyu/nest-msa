@@ -5,7 +5,7 @@ import { CustomersService } from './customers.service'
 import {
     CustomerAuthPayload,
     CreateCustomerDto,
-    SearchCustomersDto,
+    SearchCustomersPageDto,
     UpdateCustomerDto
 } from './dtos'
 
@@ -37,7 +37,7 @@ export class CustomersController {
     }
 
     @MessagePattern(Messages.Customers.searchCustomersPage)
-    searchCustomersPage(@Payload() searchDto: SearchCustomersDto) {
+    searchCustomersPage(@Payload() searchDto: SearchCustomersPageDto) {
         return this.service.searchCustomersPage(searchDto)
     }
 

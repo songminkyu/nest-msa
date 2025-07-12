@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { mapDocToDto } from 'common'
-import { CreateTheaterDto, SearchTheatersDto, TheaterDto, UpdateTheaterDto } from './dtos'
+import { CreateTheaterDto, SearchTheatersPageDto, TheaterDto, UpdateTheaterDto } from './dtos'
 import { TheaterDocument } from './models'
 import { TheatersRepository } from './theaters.repository'
 
@@ -28,7 +28,7 @@ export class TheatersService {
         return deleteResult
     }
 
-    async searchTheatersPage(searchDto: SearchTheatersDto) {
+    async searchTheatersPage(searchDto: SearchTheatersPageDto) {
         const { items, ...paginated } = await this.repository.searchTheatersPage(searchDto)
 
         return { ...paginated, items: this.toDtos(items) }

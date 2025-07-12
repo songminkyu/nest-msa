@@ -11,7 +11,7 @@ export class PaymentsRepository extends MongooseRepository<Payment> {
     constructor(
         @InjectModel(Payment.name, MongooseConfigModule.connectionName) model: Model<Payment>
     ) {
-        super(model)
+        super(model, MongooseConfigModule.maxTake)
     }
 
     async createPayment(createDto: CreatePaymentDto) {
