@@ -1,5 +1,5 @@
 import { ProjectName } from './etc'
-import { createRouteMap, uniqueWhenTesting } from './utils'
+import { createRouteMap, makeName } from './utils'
 
 export const Events = createRouteMap(
     {
@@ -11,5 +11,5 @@ export const Events = createRouteMap(
             TicketPurchaseCanceled: null
         }
     },
-    uniqueWhenTesting(`${ProjectName}.event`)
+    makeName(`${ProjectName}.event`)
 )

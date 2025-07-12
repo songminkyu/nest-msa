@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { getConnectionToken, MongooseModule } from '@nestjs/mongoose'
-import { AppConfigService, uniqueWhenTesting } from '../config'
+import { AppConfigService, makeName } from '../config'
 
 @Module({
     imports: [
@@ -10,7 +10,7 @@ import { AppConfigService, uniqueWhenTesting } from '../config'
                 const { user, password, host1, host2, host3, port, replica, database } =
                     config.mongo
                 const uri = `mongodb://${user}:${password}@${host1}:${port},${host2}:${port},${host3}:${port}/?replicaSet=${replica}`
-                const dbName = uniqueWhenTesting(database)
+                const dbName = makeName(database)
 
                 return {
                     uri,

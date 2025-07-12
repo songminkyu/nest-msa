@@ -1,11 +1,11 @@
-export function uniqueWhenTesting(prefix: string) {
+export function makeName(name: string) {
     const testId = process.env.TEST_ID
 
     if (process.env.NODE_ENV === 'test' && testId !== undefined) {
-        return `${prefix}-${testId}`
+        return `${name}-${testId}`
     }
 
-    return prefix
+    return name
 }
 
 type Paths<T, ParentPath extends string = ''> = {

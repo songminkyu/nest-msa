@@ -7,7 +7,7 @@ import {
     MongooseConfigModule,
     ProjectName,
     RedisConfigModule,
-    uniqueWhenTesting
+    makeName
 } from 'shared'
 import { CustomersController } from './customers.controller'
 import { CustomersRepository } from './customers.repository'
@@ -24,7 +24,7 @@ import { CustomerAuthenticationService } from './services'
         PassportModule,
         JwtAuthModule.register({
             redisName: RedisConfigModule.connectionName,
-            prefix: `jwtauth:${uniqueWhenTesting(ProjectName)}`,
+            prefix: `jwtauth:${makeName(ProjectName)}`,
             useFactory: ({ auth }: AppConfigService) => ({
                 auth: {
                     accessSecret: auth.accessSecret,

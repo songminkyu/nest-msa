@@ -1,5 +1,5 @@
 import { ProjectName } from './etc'
-import { createRouteMap, uniqueWhenTesting } from './utils'
+import { createRouteMap, makeName } from './utils'
 
 export const Messages = createRouteMap(
     {
@@ -88,5 +88,5 @@ export const Messages = createRouteMap(
             holdTickets: null
         }
     },
-    uniqueWhenTesting(`${ProjectName}.message`)
+    makeName(`${ProjectName}.message`)
 )

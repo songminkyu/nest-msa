@@ -1,7 +1,7 @@
 import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import Redis from 'ioredis'
-import { CommonModule, ProjectName, RedisConfigModule, uniqueWhenTesting } from 'shared'
+import { CommonModule, ProjectName, RedisConfigModule, makeName } from 'shared'
 import { HealthModule } from './modules'
 import {
     BookingModule,
@@ -17,7 +17,7 @@ import {
         HealthModule,
         BullModule.forRootAsync('queue', {
             useFactory: (redis: Redis) => ({
-                prefix: `{queue:${uniqueWhenTesting(ProjectName)}}`,
+                prefix: `{queue:${makeName(ProjectName)}}`,
                 connection: redis
             }),
             inject: [RedisConfigModule.moduleName]
