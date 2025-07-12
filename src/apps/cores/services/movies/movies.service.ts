@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { mapDocToDto, pickIds } from 'common'
 import { StorageFileCreateDto, StorageFilesClient } from 'apps/infrastructures'
-import { Routes } from 'shared'
+import { mapDocToDto, pickIds } from 'common'
+import { HttpRoutes } from 'shared'
 import { CreateMovieDto, MovieDto, SearchMoviesDto, UpdateMovieDto } from './dtos'
 import { MovieDocument } from './models'
 import { MoviesRepository } from './movies.repository'
@@ -74,7 +74,7 @@ export class MoviesService {
             'director',
             'rating'
         ])
-        dto.images = movie.imageIds.map((id) => `${Routes.Http.StorageFiles}/${id.toString()}`)
+        dto.images = movie.imageIds.map((id) => `${HttpRoutes.StorageFiles}/${id.toString()}`)
 
         return dto
     }
