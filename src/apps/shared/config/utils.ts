@@ -1,18 +1,4 @@
-export function makeName(name: string) {
-    const testId = process.env.TEST_ID
-
-    if (process.env.NODE_ENV === 'test' && testId !== undefined) {
-        return `${name}-${testId}`
-    }
-
-    return name
-}
-
-type Paths<T, ParentPath extends string = ''> = {
-    [K in keyof T]: T[K] extends object
-        ? Paths<T[K], `${ParentPath}${K & string}.`>
-        : `${ParentPath}${K & string}`
-}
+import { Assert } from 'common'
 
 /**
  * 'createRouteMap' is a function that converts the input object to a string.
@@ -42,6 +28,7 @@ export function createRouteMap<T extends Record<string, any>>(
     parentPath: string = ''
 ): Paths<T> {
     const result: any = {}
+
     for (const key in obj) {
         const currentPath = parentPath ? `${parentPath}.${key}` : key
         const value = obj[key]
@@ -52,5 +39,18 @@ export function createRouteMap<T extends Record<string, any>>(
             result[key] = currentPath
         }
     }
+
     return result as Paths<T>
+}
+
+type Paths<T, ParentPath extends string = ''> = {
+    [K in keyof T]: T[K] extends object
+        ? Paths<T[K], `${ParentPath}${K & string}.`>
+        : `${ParentPath}${K & string}`
+}
+
+export const getProjectName = () => {
+    Assert.defined(process.env.PROJECT_NAME, 'PROJECT_NAME must be defined.')
+
+    return process.env.PROJECT_NAME
 }

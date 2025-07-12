@@ -1,5 +1,4 @@
-import { ProjectName } from './etc'
-import { createRouteMap, makeName } from './utils'
+import { createRouteMap, getProjectName } from './utils'
 
 export const Messages = createRouteMap(
     {
@@ -88,5 +87,5 @@ export const Messages = createRouteMap(
             holdTickets: null
         }
     },
-    makeName(`${ProjectName}.message`)
+    `${getProjectName()}.message`
 )

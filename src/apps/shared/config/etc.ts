@@ -1,7 +1,5 @@
 import { SchemaOptions } from 'mongoose'
 
-export const ProjectName = 'nest-msa'
-
 export class MongooseConfig {
     static schemaOptions: SchemaOptions = {
         // https://mongoosejs.com/docs/guide.html#optimisticConcurrency

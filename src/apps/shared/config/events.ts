@@ -1,5 +1,4 @@
-import { ProjectName } from './etc'
-import { createRouteMap, makeName } from './utils'
+import { createRouteMap, getProjectName } from './utils'
 
 export const Events = createRouteMap(
     {
@@ -11,5 +10,5 @@ export const Events = createRouteMap(
             TicketPurchaseCanceled: null
         }
     },
-    makeName(`${ProjectName}.event`)
+    `${getProjectName()}.event`
 )
