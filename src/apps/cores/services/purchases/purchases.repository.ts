@@ -11,7 +11,7 @@ export class PurchasesRepository extends MongooseRepository<Purchase> {
     constructor(
         @InjectModel(Purchase.name, MongooseConfigModule.connectionName) model: Model<Purchase>
     ) {
-        super(model)
+        super(model, MongooseConfigModule.maxTake)
     }
 
     async createPurchase(createDto: CreatePurchaseDto & { paymentId: string }) {

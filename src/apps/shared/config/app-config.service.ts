@@ -3,58 +3,58 @@ import { ConfigService } from '@nestjs/config'
 import { BaseConfigService } from 'common'
 import Joi from 'joi'
 
-export const configSchema = Joi.object({
-    NODE_ENV: Joi.string().valid('development', 'production', 'test').required(),
-
-    LOG_DIRECTORY: Joi.string().required(),
-    LOG_DAYS_TO_KEEP: Joi.string().required(),
-    LOG_FILE_LEVEL: Joi.string().required(),
-    LOG_CONSOLE_LEVEL: Joi.string().required(),
-
-    REDIS_HOST1: Joi.string().required(),
-    REDIS_HOST2: Joi.string().required(),
-    REDIS_HOST3: Joi.string().required(),
-    REDIS_HOST4: Joi.string().required(),
-    REDIS_HOST5: Joi.string().required(),
-    REDIS_HOST6: Joi.string().required(),
-    REDIS_PASSWORD: Joi.string().optional(),
-    REDIS_PORT: Joi.number().required(),
-
-    MONGO_HOST1: Joi.string().required(),
-    MONGO_HOST2: Joi.string().required(),
-    MONGO_HOST3: Joi.string().required(),
-    MONGO_PORT: Joi.number().required(),
-    MONGO_REPLICA: Joi.string().required(),
-    MONGO_USERNAME: Joi.string().required(),
-    MONGO_PASSWORD: Joi.string().required(),
-    MONGO_DATABASE: Joi.string().required(),
-
-    HTTP_REQUEST_PAYLOAD_LIMIT: Joi.string().required(),
-    HTTP_PAGINATION_DEFAULT_SIZE: Joi.number().required(),
-
-    AUTH_ACCESS_SECRET: Joi.string().required(),
-    AUTH_ACCESS_TOKEN_EXPIRATION: Joi.string().required(),
-    AUTH_REFRESH_SECRET: Joi.string().required(),
-    AUTH_REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
-
-    FILE_UPLOAD_DIRECTORY: Joi.string().required(),
-    FILE_UPLOAD_MAX_FILE_SIZE_BYTES: Joi.number().required(),
-    FILE_UPLOAD_MAX_FILES_PER_UPLOAD: Joi.number().required(),
-    FILE_UPLOAD_ALLOWED_FILE_TYPES: Joi.string().required(),
-
-    NATS_HOST1: Joi.string().required(),
-    NATS_HOST2: Joi.string().required(),
-    NATS_HOST3: Joi.string().required(),
-    NATS_PORT: Joi.number().required(),
-
-    SERVICE_GATEWAY_HTTP_PORT: Joi.number().required(),
-    SERVICE_APPLICATIONS_HTTP_PORT: Joi.number().required(),
-    SERVICE_CORES_HTTP_PORT: Joi.number().required(),
-    SERVICE_INFRASTRUCTURES_HTTP_PORT: Joi.number().required()
-})
-
 @Injectable()
 export class AppConfigService extends BaseConfigService {
+    static configSchema = Joi.object({
+        NODE_ENV: Joi.string().valid('development', 'production', 'test').required(),
+
+        LOG_DIRECTORY: Joi.string().required(),
+        LOG_DAYS_TO_KEEP: Joi.string().required(),
+        LOG_FILE_LEVEL: Joi.string().required(),
+        LOG_CONSOLE_LEVEL: Joi.string().required(),
+
+        REDIS_HOST1: Joi.string().required(),
+        REDIS_HOST2: Joi.string().required(),
+        REDIS_HOST3: Joi.string().required(),
+        REDIS_HOST4: Joi.string().required(),
+        REDIS_HOST5: Joi.string().required(),
+        REDIS_HOST6: Joi.string().required(),
+        REDIS_PASSWORD: Joi.string().optional(),
+        REDIS_PORT: Joi.number().required(),
+
+        MONGO_HOST1: Joi.string().required(),
+        MONGO_HOST2: Joi.string().required(),
+        MONGO_HOST3: Joi.string().required(),
+        MONGO_PORT: Joi.number().required(),
+        MONGO_REPLICA: Joi.string().required(),
+        MONGO_USERNAME: Joi.string().required(),
+        MONGO_PASSWORD: Joi.string().required(),
+        MONGO_DATABASE: Joi.string().required(),
+
+        HTTP_REQUEST_PAYLOAD_LIMIT: Joi.string().required(),
+        HTTP_PAGINATION_DEFAULT_SIZE: Joi.number().required(),
+
+        AUTH_ACCESS_SECRET: Joi.string().required(),
+        AUTH_ACCESS_TOKEN_EXPIRATION: Joi.string().required(),
+        AUTH_REFRESH_SECRET: Joi.string().required(),
+        AUTH_REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
+
+        FILE_UPLOAD_DIRECTORY: Joi.string().required(),
+        FILE_UPLOAD_MAX_FILE_SIZE_BYTES: Joi.number().required(),
+        FILE_UPLOAD_MAX_FILES_PER_UPLOAD: Joi.number().required(),
+        FILE_UPLOAD_ALLOWED_FILE_TYPES: Joi.string().required(),
+
+        NATS_HOST1: Joi.string().required(),
+        NATS_HOST2: Joi.string().required(),
+        NATS_HOST3: Joi.string().required(),
+        NATS_PORT: Joi.number().required(),
+
+        SERVICE_GATEWAY_HTTP_PORT: Joi.number().required(),
+        SERVICE_APPLICATIONS_HTTP_PORT: Joi.number().required(),
+        SERVICE_CORES_HTTP_PORT: Joi.number().required(),
+        SERVICE_INFRASTRUCTURES_HTTP_PORT: Joi.number().required()
+    })
+
     constructor(configService: ConfigService) {
         super(configService)
     }

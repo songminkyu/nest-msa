@@ -15,7 +15,7 @@ const SampleSchema = createMongooseSchema(Sample)
 @Injectable()
 class SamplesRepository extends MongooseRepository<Sample> {
     constructor(@InjectModel(Sample.name) model: Model<Sample>) {
-        super(model)
+        super(model, 1)
     }
 }
 

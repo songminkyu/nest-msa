@@ -51,7 +51,7 @@ describe('MongooseRepository.withTransaction', () => {
 
         await expect(promise).rejects.toThrow()
 
-        const { total } = await fix.repository.findWithPagination({ pagination: { take: 1 } })
+        const { total } = await fix.repository.findWithPagination({ pagination: {} })
         expect(total).toEqual(0)
     })
 

@@ -1,11 +1,10 @@
-import { CommonQueryErrors } from './common-query'
 import { MongooseErrors } from './mongoose'
 import { JwtAuthServiceErrors } from './services'
-import { LatLongErrors } from './types'
+import { LatLongErrors, PaginationErrors } from './types'
 
 export const CommonErrors = {
     Mongoose: MongooseErrors,
-    CommonQuery: CommonQueryErrors,
     LatLong: LatLongErrors,
-    JwtAuth: JwtAuthServiceErrors
+    JwtAuth: JwtAuthServiceErrors,
+    Pagination: PaginationErrors
 }

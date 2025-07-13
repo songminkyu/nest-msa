@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { CommonQueryDto } from 'common'
+import { PaginationDto } from 'common'
 import { Messages } from 'shared'
 import { BulkCreateShowtimesDto } from './dtos'
 import { ShowtimeCreationService } from './showtime-creation.service'
@@ -10,12 +10,12 @@ export class ShowtimeCreationController {
     constructor(private service: ShowtimeCreationService) {}
 
     @MessagePattern(Messages.ShowtimeCreation.searchMoviesPage)
-    searchMoviesPage(@Payload() searchDto: CommonQueryDto) {
+    searchMoviesPage(@Payload() searchDto: PaginationDto) {
         return this.service.searchMoviesPage(searchDto)
     }
 
     @MessagePattern(Messages.ShowtimeCreation.searchTheatersPage)
-    searchTheatersPage(@Payload() searchDto: CommonQueryDto) {
+    searchTheatersPage(@Payload() searchDto: PaginationDto) {
         return this.service.searchTheatersPage(searchDto)
     }
 

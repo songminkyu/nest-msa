@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { Messages } from 'shared'
-import { CreateWatchRecordDto, SearchWatchRecordsDto } from './dtos'
+import { CreateWatchRecordDto, SearchWatchRecordsPageDto } from './dtos'
 import { WatchRecordsService } from './watch-records.service'
 
 @Controller()
@@ -14,7 +14,7 @@ export class WatchRecordsController {
     }
 
     @MessagePattern(Messages.WatchRecords.searchWatchRecordsPage)
-    searchWatchRecordsPage(@Payload() searchDto: SearchWatchRecordsDto) {
+    searchWatchRecordsPage(@Payload() searchDto: SearchWatchRecordsPageDto) {
         return this.service.searchWatchRecordsPage(searchDto)
     }
 }

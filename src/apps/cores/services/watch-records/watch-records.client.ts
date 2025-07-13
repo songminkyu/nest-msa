@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy, PaginationResult } from 'common'
 import { Messages } from 'shared'
-import { CreateWatchRecordDto, WatchRecordDto, SearchWatchRecordsDto } from './dtos'
+import { CreateWatchRecordDto, SearchWatchRecordsPageDto, WatchRecordDto } from './dtos'
 
 @Injectable()
 export class WatchRecordsClient {
@@ -12,7 +12,7 @@ export class WatchRecordsClient {
     }
 
     searchWatchRecordsPage(
-        searchDto: SearchWatchRecordsDto
+        searchDto: SearchWatchRecordsPageDto
     ): Promise<PaginationResult<WatchRecordDto>> {
         return this.proxy.getJson(Messages.WatchRecords.searchWatchRecordsPage, searchDto)
     }

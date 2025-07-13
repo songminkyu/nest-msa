@@ -10,18 +10,16 @@ import {
     Post,
     Query,
     Req,
-    UseGuards,
-    UsePipes
+    UseGuards
 } from '@nestjs/common'
 import {
     CreateCustomerDto,
-    SearchCustomersDto,
     CustomersClient,
+    SearchCustomersPageDto,
     UpdateCustomerDto
 } from 'apps/cores'
 import { Assert } from 'common'
 import { CustomerJwtAuthGuard, CustomerLocalAuthGuard, Public } from './guards'
-import { DefaultCommonQueryPipe } from './pipes'
 import { CustomerAuthRequest } from './types'
 
 @Controller('customers')
@@ -54,9 +52,8 @@ export class CustomersController {
         return this.customersService.deleteCustomers([customerId])
     }
 
-    @UsePipes(DefaultCommonQueryPipe)
     @Get()
-    async searchCustomersPage(@Query() searchDto: SearchCustomersDto) {
+    async searchCustomersPage(@Query() searchDto: SearchCustomersPageDto) {
         return this.customersService.searchCustomersPage(searchDto)
     }
 

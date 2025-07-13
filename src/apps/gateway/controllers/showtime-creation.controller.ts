@@ -8,15 +8,13 @@ import {
     OnModuleDestroy,
     Post,
     Query,
-    Sse,
-    UsePipes
+    Sse
 } from '@nestjs/common'
 import { EventPattern } from '@nestjs/microservices'
 import { BulkCreateShowtimesDto, ShowtimeCreationClient } from 'apps/applications'
-import { CommonQueryDto } from 'common'
+import { PaginationDto } from 'common'
 import { Observable, Subject } from 'rxjs'
 import { Events } from 'shared'
-import { DefaultCommonQueryPipe } from './pipes'
 
 @Controller('showtime-creation')
 export class ShowtimeCreationController implements OnModuleDestroy {
@@ -28,15 +26,13 @@ export class ShowtimeCreationController implements OnModuleDestroy {
         this.eventStream.complete()
     }
 
-    @UsePipes(DefaultCommonQueryPipe)
     @Get('theaters')
-    async searchTheatersPage(@Query() searchDto: CommonQueryDto) {
+    async searchTheatersPage(@Query() searchDto: PaginationDto) {
         return this.showtimeCreationService.searchTheatersPage(searchDto)
     }
 
-    @UsePipes(DefaultCommonQueryPipe)
     @Get('movies')
-    async searchMoviesPage(@Query() searchDto: CommonQueryDto) {
+    async searchMoviesPage(@Query() searchDto: PaginationDto) {
         return this.showtimeCreationService.searchMoviesPage(searchDto)
     }
 

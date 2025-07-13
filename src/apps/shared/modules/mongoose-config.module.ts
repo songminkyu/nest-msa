@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { getConnectionToken, MongooseModule } from '@nestjs/mongoose'
-import { AppConfigService, uniqueWhenTesting } from '../config'
+import { SchemaOptions } from 'mongoose'
+import { AppConfigService } from '../config'
 
 @Module({
     imports: [
@@ -9,12 +10,10 @@ import { AppConfigService, uniqueWhenTesting } from '../config'
             useFactory: async (config: AppConfigService) => {
                 const { user, password, host1, host2, host3, port, replica, database } =
                     config.mongo
-                const uri = `mongodb://${user}:${password}@${host1}:${port},${host2}:${port},${host3}:${port}/?replicaSet=${replica}`
-                const dbName = uniqueWhenTesting(database)
 
                 return {
-                    uri,
-                    dbName,
+                    uri: `mongodb://${user}:${password}@${host1}:${port},${host2}:${port},${host3}:${port}/?replicaSet=${replica}`,
+                    dbName: database,
                     waitQueueTimeoutMS: 5000,
                     writeConcern: { w: 'majority', journal: true, wtimeoutMS: 5000 },
                     bufferCommands: true,
@@ -33,5 +32,20 @@ export class MongooseConfigModule {
 
     static get connectionName() {
         return 'mongo-connection'
+    }
+
+    static schemaOptions: SchemaOptions = {
+        // https://mongoosejs.com/docs/guide.html#optimisticConcurrency
+        optimisticConcurrency: true,
+        minimize: false,
+        strict: 'throw',
+        strictQuery: 'throw',
+        timestamps: true,
+        validateBeforeSave: true,
+        toJSON: { virtuals: true, flattenObjectIds: true, versionKey: false }
+    }
+
+    static get maxTake() {
+        return 50
     }
 }

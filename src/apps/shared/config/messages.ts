@@ -1,7 +1,6 @@
-import { ProjectName } from './etc'
-import { createRouteMap, uniqueWhenTesting } from './utils'
+import { createMessagePatternMap, getProjectName } from './utils'
 
-export const Messages = createRouteMap(
+export const Messages = createMessagePatternMap(
     {
         StorageFiles: {
             saveFiles: null,
@@ -88,5 +87,5 @@ export const Messages = createRouteMap(
             holdTickets: null
         }
     },
-    uniqueWhenTesting(`${ProjectName}.message`)
+    `${getProjectName()}.message`
 )

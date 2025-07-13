@@ -14,7 +14,7 @@ import { FilesInterceptor } from '@nestjs/platform-express'
 import { StorageFilesClient } from 'apps/infrastructures'
 import { IsString } from 'class-validator'
 import { createReadStream } from 'fs'
-import { Routes } from 'shared'
+import { HttpRoutes } from 'shared'
 import { MulterExceptionFilter } from './filters'
 
 class UploadFileDto {
@@ -22,7 +22,7 @@ class UploadFileDto {
     name?: string
 }
 
-@Controller(Routes.Http.StorageFiles)
+@Controller(HttpRoutes.StorageFiles)
 export class StorageFilesController {
     constructor(private storageFilesService: StorageFilesClient) {}
 

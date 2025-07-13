@@ -1,9 +1,9 @@
-import 'reflect-metadata'
 import dotenv from 'dotenv'
+import 'reflect-metadata'
 dotenv.config({ path: ['.env.test'], quiet: true })
 process.env.NODE_ENV = 'test'
 
-function generateTestId() {
+const generateTestId = () => {
     const characters = 'useandom26T198340PX75pxJACKVERYMINDBUSHWOLFGQZbfghjklqvwyzrict'
 
     return Array.from(
@@ -13,5 +13,9 @@ function generateTestId() {
 }
 
 global.beforeEach(async () => {
-    process.env.TEST_ID = generateTestId()
+    const testId = generateTestId()
+
+    process.env.TEST_ID = testId
+    process.env.PROJECT_NAME = `project-${testId}`
+    process.env.MONGO_DATABASE = `mongodb-${testId}`
 })

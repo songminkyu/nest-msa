@@ -11,7 +11,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
     constructor(
         @InjectModel(Showtime.name, MongooseConfigModule.connectionName) model: Model<Showtime>
     ) {
-        super(model)
+        super(model, MongooseConfigModule.maxTake)
     }
 
     async createShowtimes(createDtos: CreateShowtimeDto[]) {

@@ -1,6 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes } from '@nestjs/common'
-import { CreateTheaterDto, SearchTheatersDto, TheatersClient, UpdateTheaterDto } from 'apps/cores'
-import { DefaultCommonQueryPipe } from './pipes'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
+import {
+    CreateTheaterDto,
+    SearchTheatersPageDto,
+    TheatersClient,
+    UpdateTheaterDto
+} from 'apps/cores'
 
 @Controller('theaters')
 export class TheatersController {
@@ -30,9 +34,8 @@ export class TheatersController {
         return this.theatersService.deleteTheaters([theaterId])
     }
 
-    @UsePipes(DefaultCommonQueryPipe)
     @Get()
-    async searchTheatersPage(@Query() searchDto: SearchTheatersDto) {
+    async searchTheatersPage(@Query() searchDto: SearchTheatersPageDto) {
         return this.theatersService.searchTheatersPage(searchDto)
     }
 }

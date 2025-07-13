@@ -11,7 +11,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
     constructor(
         @InjectModel(Ticket.name, MongooseConfigModule.connectionName) model: Model<Ticket>
     ) {
-        super(model)
+        super(model, MongooseConfigModule.maxTake)
     }
 
     async createTickets(createDtos: CreateTicketDto[]) {

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
 import { MongooseConfigModule } from 'shared'
-import { CreateWatchRecordDto, SearchWatchRecordsDto } from './dtos'
+import { CreateWatchRecordDto, SearchWatchRecordsPageDto } from './dtos'
 import { WatchRecord } from './models'
 
 @Injectable()
@@ -12,7 +12,7 @@ export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
         @InjectModel(WatchRecord.name, MongooseConfigModule.connectionName)
         model: Model<WatchRecord>
     ) {
-        super(model)
+        super(model, MongooseConfigModule.maxTake)
     }
 
     async createWatchRecord(createDto: CreateWatchRecordDto) {
@@ -25,7 +25,7 @@ export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
         return watchRecord.save()
     }
 
-    async searchWatchRecordsPage(searchDto: SearchWatchRecordsDto) {
+    async searchWatchRecordsPage(searchDto: SearchWatchRecordsPageDto) {
         const { take, skip, orderby } = searchDto
 
         const paginated = await this.findWithPagination({
@@ -40,7 +40,7 @@ export class WatchRecordsRepository extends MongooseRepository<WatchRecord> {
         return paginated
     }
 
-    private buildQuery(searchDto: SearchWatchRecordsDto, options: QueryBuilderOptions) {
+    private buildQuery(searchDto: SearchWatchRecordsPageDto, options: QueryBuilderOptions) {
         const { customerId } = searchDto
 
         const builder = new QueryBuilder<WatchRecord>()

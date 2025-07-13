@@ -11,12 +11,12 @@ export const MongooseErrors = {
         code: 'ERR_MONGOOSE_MULTIPLE_DOCUMENTS_NOT_FOUND',
         message: 'One or more documents not found'
     },
-    TakeMissing: {
-        code: 'ERR_MONGOOSE_TAKE_MISSING',
-        message: 'take must be specified'
-    },
     TakeInvalid: {
         code: 'ERR_MONGOOSE_TAKE_INVALID',
         message: 'take must be a positive number'
+    },
+    MaxTakeExceeded: {
+        code: 'ERR_MONGOOSE_MAX_TAKE_EXCEEDED',
+        message: "The 'take' parameter exceeds the maximum allowed value"
     }
 }

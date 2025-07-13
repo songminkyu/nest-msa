@@ -1,7 +1,6 @@
-import { ProjectName } from './etc'
-import { createRouteMap, uniqueWhenTesting } from './utils'
+import { createMessagePatternMap, getProjectName } from './utils'
 
-export const Events = createRouteMap(
+export const Events = createMessagePatternMap(
     {
         ShowtimeCreation: {
             statusChanged: null
@@ -11,5 +10,5 @@ export const Events = createRouteMap(
             TicketPurchaseCanceled: null
         }
     },
-    uniqueWhenTesting(`${ProjectName}.event`)
+    `${getProjectName()}.event`
 )

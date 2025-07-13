@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common'
 import { ClientProxyService, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
 import {
-    CreateTicketsResult,
-    TicketSalesForShowtimeDto,
     CreateTicketDto,
+    CreateTicketsResult,
+    SearchTicketsDto,
     TicketDto,
-    SearchTicketsDto
+    TicketSalesForShowtimeDto
 } from './dtos'
 import { TicketStatus } from './models'
 

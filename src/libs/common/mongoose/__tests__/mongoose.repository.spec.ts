@@ -13,10 +13,12 @@ import {
 
 describe('MongooseRepository', () => {
     let fix: Fixture
+    let maxTake = 0
 
     beforeEach(async () => {
-        const { createFixture } = await import('./mongoose.repository.fixture')
+        const { createFixture, maxTakeValue } = await import('./mongoose.repository.fixture')
         fix = await createFixture()
+        maxTake = maxTakeValue
     })
 
     afterEach(async () => {
@@ -141,11 +143,24 @@ describe('MongooseRepository', () => {
             await expect(promise).rejects.toThrow(fix.BadRequestException)
         })
 
-        // take 값이 지정되지 않은 경우 예외를 던져야 한다
-        it('Should throw an exception if the take value is not defined', async () => {
-            const promise = fix.repository.findWithPagination({ pagination: {} })
+        // 'take' 값이 지정된 제한을 초과하면 BadRequest를 반환해야 한다
+        it("should return BadRequest when the 'take' value exceeds the specified limit", async () => {
+            const take = maxTake + 1
+
+            const promise = fix.repository.findWithPagination({ pagination: { take } })
 
             await expect(promise).rejects.toThrow(fix.BadRequestException)
+        })
+
+        // 'take' 값이 지정되지 않은 경우 기본값이 사용되어야 한다
+        it("should use the default value if the 'take' value is not specified", async () => {
+            const { take } = await fix.repository.findWithPagination({
+                pagination: {
+                    orderby: { name: 'name', direction: OrderDirection.Desc }
+                }
+            })
+
+            expect(take).toEqual(maxTake)
         })
 
         // QueryHelper를 사용해 조건을 설정해야 한다
