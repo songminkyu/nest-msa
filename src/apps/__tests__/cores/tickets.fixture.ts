@@ -1,13 +1,13 @@
 import { CreateTicketDto, TicketDto } from 'apps/cores'
-import { buildTicketCreateDto } from '../common.fixture'
+import { buildCreateTicketDto } from '../common.fixture'
 import { CommonFixture, createCommonFixture } from '../__helpers__'
 
-export const buildTicketCreateDtos = (overrides = {}, length: number) => {
+export const buildCreateTicketDtos = (overrides = {}, length: number) => {
     const createDtos: CreateTicketDto[] = []
     const expectedDtos: TicketDto[] = []
 
     for (let i = 0; i < length; i++) {
-        const { createDto, expectedDto } = buildTicketCreateDto(overrides)
+        const { createDto, expectedDto } = buildCreateTicketDto(overrides)
 
         createDtos.push(createDto)
         expectedDtos.push(expectedDto)

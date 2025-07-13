@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { getChecksum, mapDocToDto, Path } from 'common'
 import { HydratedDocument } from 'mongoose'
 import { AppConfigService } from 'shared'
-import { StorageFileCreateDto, StorageFileDto } from './dtos'
+import { CreateStorageFileDto, StorageFileDto } from './dtos'
 import { StorageFile, StorageFileDocument } from './models'
 import { StorageFilesRepository } from './storage-files.repository'
 
@@ -15,7 +15,7 @@ export class StorageFilesService {
         private config: AppConfigService
     ) {}
 
-    async saveFiles(createDtos: StorageFileCreateDto[]) {
+    async saveFiles(createDtos: CreateStorageFileDto[]) {
         const checksumByPath = new Map<string, string>()
 
         for (const createDto of createDtos) {

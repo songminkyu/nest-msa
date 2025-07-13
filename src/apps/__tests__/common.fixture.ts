@@ -22,7 +22,7 @@ export const createCustomerAndLogin = async (fix: CommonFixture) => {
     return { customer, accessToken }
 }
 
-export const buildCustomerCreateDto = (overrides = {}) => {
+export const buildCreateCustomerDto = (overrides = {}) => {
     const createDto = {
         name: 'name',
         email: 'name@mail.com',
@@ -35,13 +35,13 @@ export const buildCustomerCreateDto = (overrides = {}) => {
 }
 
 export const createCustomer = async (fix: CommonFixture, override = {}) => {
-    const { createDto } = buildCustomerCreateDto(override)
+    const { createDto } = buildCreateCustomerDto(override)
 
     const customer = await fix.customersClient.createCustomer(createDto)
     return customer
 }
 
-export const buildMovieCreateDto = (overrides = {}) => {
+export const buildCreateMovieDto = (overrides = {}) => {
     const createDto = {
         title: `MovieTitle`,
         genres: [MovieGenre.Action],
@@ -57,13 +57,13 @@ export const buildMovieCreateDto = (overrides = {}) => {
 }
 
 export const createMovie = async (fix: CommonFixture, override = {}) => {
-    const { createDto } = buildMovieCreateDto(override)
+    const { createDto } = buildCreateMovieDto(override)
 
     const movie = await fix.moviesClient.createMovie(createDto, [TestFiles.image])
     return movie
 }
 
-export const buildTheaterCreateDto = (overrides = {}) => {
+export const buildCreateTheaterDto = (overrides = {}) => {
     const createDto = {
         name: `theater name`,
         location: { latitude: 38.123, longitude: 138.678 },
@@ -75,13 +75,13 @@ export const buildTheaterCreateDto = (overrides = {}) => {
 }
 
 export const createTheater = async (fix: CommonFixture, override = {}) => {
-    const { createDto } = buildTheaterCreateDto(override)
+    const { createDto } = buildCreateTheaterDto(override)
 
     const theater = await fix.theatersClient.createTheater(createDto)
     return theater
 }
 
-export const buildShowtimeCreateDto = (overrides: Partial<CreateShowtimeDto> = {}) => {
+export const buildCreateShowtimeDto = (overrides: Partial<CreateShowtimeDto> = {}) => {
     const createDto = {
         transactionId: nullObjectId,
         movieId: nullObjectId,
@@ -104,7 +104,7 @@ export const createShowtimes = async (fix: CommonFixture, createDtos: CreateShow
     return showtimes
 }
 
-export const buildTicketCreateDto = (overrides = {}) => {
+export const buildCreateTicketDto = (overrides = {}) => {
     const createDto = {
         transactionId: nullObjectId,
         movieId: nullObjectId,
@@ -128,7 +128,7 @@ export const createTickets = async (fix: CommonFixture, createDtos: CreateTicket
     return tickets
 }
 
-export const buildWatchRecordCreateDto = (overrides = {}) => {
+export const buildCreateWatchRecordDto = (overrides = {}) => {
     const createDto = {
         customerId: nullObjectId,
         movieId: nullObjectId,
@@ -141,7 +141,7 @@ export const buildWatchRecordCreateDto = (overrides = {}) => {
 }
 
 export const createWatchRecord = async (fix: CommonFixture, override = {}) => {
-    const { createDto } = buildWatchRecordCreateDto(override)
+    const { createDto } = buildCreateWatchRecordDto(override)
 
     const watchRecord = await fix.watchRecordsClient.createWatchRecord(createDto)
     return watchRecord

@@ -1,8 +1,8 @@
 import { TicketDto, TicketStatus } from 'apps/cores'
 import { pickIds } from 'common'
 import { expectEqualUnsorted, testObjectId } from 'testlib'
-import { buildTicketCreateDto, createTickets } from '../common.fixture'
-import { buildTicketCreateDtos, Fixture } from './tickets.fixture'
+import { buildCreateTicketDto, createTickets } from '../common.fixture'
+import { buildCreateTicketDtos, Fixture } from './tickets.fixture'
 
 describe('Tickets', () => {
     let fix: Fixture
@@ -17,7 +17,7 @@ describe('Tickets', () => {
     })
 
     it('createTickets', async () => {
-        const { createDto, expectedDto } = buildTicketCreateDto()
+        const { createDto, expectedDto } = buildCreateTicketDto()
 
         const tickets = await createTickets(fix, [createDto])
         expectEqualUnsorted(tickets, [expectedDto])
@@ -32,14 +32,14 @@ describe('Tickets', () => {
 
         beforeEach(async () => {
             const allDtos = [
-                buildTicketCreateDto({ transactionId: transactionIds[0] }),
-                buildTicketCreateDto({ transactionId: transactionIds[1] }),
-                buildTicketCreateDto({ movieId: movieIds[0] }),
-                buildTicketCreateDto({ movieId: movieIds[1] }),
-                buildTicketCreateDto({ theaterId: theaterIds[0] }),
-                buildTicketCreateDto({ theaterId: theaterIds[1] }),
-                buildTicketCreateDto({ showtimeId: showtimeIds[0] }),
-                buildTicketCreateDto({ showtimeId: showtimeIds[1] })
+                buildCreateTicketDto({ transactionId: transactionIds[0] }),
+                buildCreateTicketDto({ transactionId: transactionIds[1] }),
+                buildCreateTicketDto({ movieId: movieIds[0] }),
+                buildCreateTicketDto({ movieId: movieIds[1] }),
+                buildCreateTicketDto({ theaterId: theaterIds[0] }),
+                buildCreateTicketDto({ theaterId: theaterIds[1] }),
+                buildCreateTicketDto({ showtimeId: showtimeIds[0] }),
+                buildCreateTicketDto({ showtimeId: showtimeIds[1] })
             ]
             const createDtos = allDtos.map((dto) => dto.createDto)
             expectedDtos = allDtos.map((dto) => dto.expectedDto)
@@ -88,8 +88,8 @@ describe('Tickets', () => {
 
         beforeEach(async () => {
             const createDtos = [
-                buildTicketCreateDto({ transactionId }).createDto,
-                buildTicketCreateDto({ transactionId }).createDto
+                buildCreateTicketDto({ transactionId }).createDto,
+                buildCreateTicketDto({ transactionId }).createDto
             ]
             const { success } = await fix.ticketsClient.createTickets(createDtos)
             expect(success).toBeTruthy()
@@ -119,7 +119,7 @@ describe('Tickets', () => {
         const ticketCount = 50
         const soldCount = 5
 
-        const { createDtos } = buildTicketCreateDtos({ showtimeId }, ticketCount)
+        const { createDtos } = buildCreateTicketDtos({ showtimeId }, ticketCount)
         const tickets = await createTickets(fix, createDtos)
 
         const ticketIds = pickIds(tickets.slice(0, soldCount))

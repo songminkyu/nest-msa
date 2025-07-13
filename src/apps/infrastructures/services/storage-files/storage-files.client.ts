@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { ClientProxyService, DeleteResult, InjectClientProxy } from 'common'
 import { Messages } from 'shared'
-import { StorageFileCreateDto, StorageFileDto } from './dtos'
+import { CreateStorageFileDto, StorageFileDto } from './dtos'
 
 @Injectable()
 export class StorageFilesClient {
     constructor(@InjectClientProxy() private proxy: ClientProxyService) {}
 
-    saveFiles(createDtos: StorageFileCreateDto[]): Promise<StorageFileDto[]> {
+    saveFiles(createDtos: CreateStorageFileDto[]): Promise<StorageFileDto[]> {
         return this.proxy.getJson(Messages.StorageFiles.saveFiles, createDtos)
     }
 

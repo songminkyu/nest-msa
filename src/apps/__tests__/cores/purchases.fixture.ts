@@ -10,8 +10,8 @@ import {
 import { DateUtil, pickIds } from 'common'
 import { Rules } from 'shared'
 import {
-    buildShowtimeCreateDto,
-    buildTicketCreateDto,
+    buildCreateShowtimeDto,
+    buildCreateTicketDto,
     createCustomer,
     createMovie,
     createShowtimes,
@@ -21,7 +21,7 @@ import {
 import { CommonFixture, createCommonFixture } from '../__helpers__'
 
 const createShowtime = async (fix: Fixture, startTime: Date) => {
-    const { createDto } = buildShowtimeCreateDto({
+    const { createDto } = buildCreateShowtimeDto({
         movieId: fix.movie.id,
         theaterId: fix.theater.id,
         startTime,
@@ -33,8 +33,8 @@ const createShowtime = async (fix: Fixture, startTime: Date) => {
 }
 
 const createAllTickets = async (fix: Fixture, showtime: ShowtimeDto) => {
-    const ticketCreateDtos = Seatmap.getAllSeats(fix.theater.seatmap).map((seat) => {
-        const { createDto } = buildTicketCreateDto({
+    const createTicketDtos = Seatmap.getAllSeats(fix.theater.seatmap).map((seat) => {
+        const { createDto } = buildCreateTicketDto({
             movieId: showtime.movieId,
             theaterId: showtime.theaterId,
             showtimeId: showtime.id,
@@ -43,7 +43,7 @@ const createAllTickets = async (fix: Fixture, showtime: ShowtimeDto) => {
         return createDto
     })
 
-    const tickets = await createTickets(fix, ticketCreateDtos)
+    const tickets = await createTickets(fix, createTicketDtos)
     return tickets
 }
 
