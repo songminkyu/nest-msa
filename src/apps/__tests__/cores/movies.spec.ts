@@ -3,7 +3,7 @@ import { Path, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, objectToFields } from 'testlib'
 import { buildMovieCreateDto, createMovie } from '../common.fixture'
 import { Fixture } from './movies.fixture'
-import { Errors } from '../helpers'
+import { Errors } from '../__helpers__'
 
 describe('Movies', () => {
     let fix: Fixture

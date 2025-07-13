@@ -1,7 +1,7 @@
 import { PurchaseDto, PurchaseItemDto, PurchaseItemType, TicketDto, TicketStatus } from 'apps/cores'
 import { Rules } from 'shared'
 import { nullObjectId } from 'testlib'
-import { Errors } from '../helpers'
+import { Errors } from '../__helpers__'
 import { Fixture, setupPurchaseData } from './purchases.fixture'
 
 describe('Purchases', () => {

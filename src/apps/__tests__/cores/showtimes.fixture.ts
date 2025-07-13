@@ -1,7 +1,7 @@
 import { CreateShowtimeDto, ShowtimeDto } from 'apps/cores'
 import { DateUtil } from 'common'
 import { buildShowtimeCreateDto } from '../common.fixture'
-import { CommonFixture, createCommonFixture } from '../helpers'
+import { CommonFixture, createCommonFixture } from '../__helpers__'
 
 export const buildShowtimeCreateDtos = (
     startTimes: Date[],

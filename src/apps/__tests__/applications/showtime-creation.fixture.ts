@@ -2,7 +2,7 @@ import { CreateShowtimeDto, MovieDto, TheaterDto } from 'apps/cores'
 import { DateUtil, jsonToObject, notUsed } from 'common'
 import { HttpTestClient, nullObjectId } from 'testlib'
 import { createMovie, createTheater } from '../common.fixture'
-import { CommonFixture, createCommonFixture } from '../helpers'
+import { CommonFixture, createCommonFixture } from '../__helpers__'
 
 export const createShowtimeDtos = ({
     startTimes,

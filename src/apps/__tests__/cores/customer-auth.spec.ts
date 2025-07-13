@@ -2,7 +2,7 @@ import { getModelToken } from '@nestjs/mongoose'
 import { Customer, CustomerDto } from 'apps/cores'
 import { MongooseConfigModule } from 'shared'
 import { createCustomer } from '../common.fixture'
-import { Errors } from '../helpers'
+import { Errors } from '../__helpers__'
 import { Fixture } from './customer-auth.fixture'
 
 describe('Customer Authentication', () => {
