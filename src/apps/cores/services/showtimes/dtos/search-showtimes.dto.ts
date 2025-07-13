@@ -1,7 +1,7 @@
 import { IsOptional } from 'class-validator'
-import { PaginationDto, PartialDateTimeRange } from 'common'
+import { PartialDateTimeRange } from 'common'
 
-export class SearchShowtimesPageDto extends PaginationDto {
+export class SearchShowtimesDto {
     @IsOptional()
     transactionIds?: string[]
 

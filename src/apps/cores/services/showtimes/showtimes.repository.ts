@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
 import { MongooseConfigModule } from 'shared'
-import { CreateShowtimeDto, SearchShowtimesPageDto } from './dtos'
+import { CreateShowtimeDto, SearchShowtimesDto } from './dtos'
 import { Showtime } from './models'
 
 @Injectable()
@@ -29,28 +29,28 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         await this.saveMany(showtimes)
     }
 
-    async searchShowtimes(searchDto: SearchShowtimesPageDto) {
+    async searchShowtimes(searchDto: SearchShowtimesDto) {
         const query = this.buildQuery(searchDto)
 
         const showtimes = await this.model.find(query).sort({ startTime: 1 }).exec()
         return showtimes
     }
 
-    async findMovieIds(searchDto: SearchShowtimesPageDto) {
+    async findMovieIds(searchDto: SearchShowtimesDto) {
         const query = this.buildQuery(searchDto)
 
         const movieIds = await this.model.distinct('movieId', query).exec()
         return movieIds.map((id) => id.toString())
     }
 
-    async searchTheaterIds(searchDto: SearchShowtimesPageDto) {
+    async searchTheaterIds(searchDto: SearchShowtimesDto) {
         const query = this.buildQuery(searchDto)
 
         const theaterIds = await this.model.distinct('theaterId', query).exec()
         return theaterIds.map((id) => id.toString())
     }
 
-    async searchShowdates(searchDto: SearchShowtimesPageDto) {
+    async searchShowdates(searchDto: SearchShowtimesDto) {
         const query = this.buildQuery(searchDto)
 
         const showdates = await this.model.aggregate([
@@ -67,7 +67,7 @@ export class ShowtimesRepository extends MongooseRepository<Showtime> {
         return showdates.map((item) => new Date(item._id))
     }
 
-    private buildQuery(searchDto: SearchShowtimesPageDto, options: QueryBuilderOptions = {}) {
+    private buildQuery(searchDto: SearchShowtimesDto, options: QueryBuilderOptions = {}) {
         const { transactionIds, movieIds, theaterIds, startTimeRange, endTimeRange } = searchDto
 
         const builder = new QueryBuilder<Showtime>()

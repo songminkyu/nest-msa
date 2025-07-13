@@ -1,7 +1,6 @@
 import { IsOptional } from 'class-validator'
-import { PaginationDto } from 'common'
 
-export class SearchTicketsPageDto extends PaginationDto {
+export class SearchTicketsDto {
     @IsOptional()
     transactionIds?: string[]
 

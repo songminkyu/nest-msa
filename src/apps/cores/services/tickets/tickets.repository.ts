@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository, objectId, objectIds, QueryBuilder, QueryBuilderOptions } from 'common'
 import { Model } from 'mongoose'
 import { MongooseConfigModule } from 'shared'
-import { CreateTicketDto, SearchTicketsPageDto, TicketSalesForShowtimeDto } from './dtos'
+import { CreateTicketDto, SearchTicketsDto, TicketSalesForShowtimeDto } from './dtos'
 import { Ticket, TicketStatus } from './models'
 
 @Injectable()
@@ -39,7 +39,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
         return result
     }
 
-    async searchTickets(searchDto: SearchTicketsPageDto) {
+    async searchTickets(searchDto: SearchTicketsDto) {
         const query = this.buildQuery(searchDto)
 
         const tickets = await this.model.find(query).sort({ transactionId: 1 }).exec()
@@ -70,7 +70,7 @@ export class TicketsRepository extends MongooseRepository<Ticket> {
         return showtimeTicketSalesArray as TicketSalesForShowtimeDto[]
     }
 
-    private buildQuery(searchDto: SearchTicketsPageDto, options: QueryBuilderOptions = {}) {
+    private buildQuery(searchDto: SearchTicketsDto, options: QueryBuilderOptions = {}) {
         const { transactionIds, movieIds, theaterIds, showtimeIds } = searchDto
 
         const builder = new QueryBuilder<Ticket>()
