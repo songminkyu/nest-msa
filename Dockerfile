@@ -1,6 +1,6 @@
 ARG APP_IMAGE
 
-FROM ${APP_IMAGE} AS build
+FROM ${APP_IMAGE:-alpine} AS build
 ARG TARGET_APP
 
 WORKDIR /app
@@ -13,7 +13,7 @@ COPY . .
 
 RUN TARGET_APP=$TARGET_APP npm run build
 
-FROM ${APP_IMAGE}
+FROM ${APP_IMAGE:-alpine}
 ARG TARGET_APP
 
 RUN apk add --no-cache curl
