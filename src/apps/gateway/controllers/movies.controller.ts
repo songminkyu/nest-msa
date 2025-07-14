@@ -32,16 +32,16 @@ export class MoviesController {
     @Post()
     async createMovie(
         @UploadedFiles() files: Express.Multer.File[],
-        @Body() movieCreateDto: CreateMovieDto
+        @Body() createMovieDto: CreateMovieDto
     ) {
-        const fileCreateDtos = files.map((file) => ({
+        const createFileDtos = files.map((file) => ({
             originalName: file.originalname,
             mimeType: file.mimetype,
             size: file.size,
             path: file.path
         }))
 
-        return this.moviesService.createMovie(movieCreateDto, fileCreateDtos)
+        return this.moviesService.createMovie(createMovieDto, createFileDtos)
     }
 
     @Patch(':movieId')

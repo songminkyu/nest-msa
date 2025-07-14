@@ -1,8 +1,8 @@
 import { TheaterDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
-import { buildTheaterCreateDto, createTheater } from '../common.fixture'
+import { buildCreateTheaterDto, createTheater } from '../common.fixture'
 import { Fixture } from './theaters.fixture'
-import { Errors } from '../helpers'
+import { Errors } from '../__helpers__'
 
 describe('Theaters', () => {
     let fix: Fixture
@@ -19,7 +19,7 @@ describe('Theaters', () => {
     describe('POST /theaters', () => {
         // 극장을 생성해야 한다
         it('Should create a theater', async () => {
-            const { createDto, expectedDto } = buildTheaterCreateDto()
+            const { createDto, expectedDto } = buildCreateTheaterDto()
 
             await fix.httpClient.post('/theaters').body(createDto).created(expectedDto)
         })

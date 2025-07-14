@@ -16,6 +16,6 @@ global.beforeEach(async () => {
     const testId = generateTestId()
 
     process.env.TEST_ID = testId
-    process.env.PROJECT_NAME = `project-${testId}`
+    process.env.PROJECT_ID = `project-${testId}`
     process.env.MONGO_DATABASE = `mongodb-${testId}`
 })

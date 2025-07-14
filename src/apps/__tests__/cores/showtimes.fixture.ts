@@ -1,9 +1,9 @@
 import { CreateShowtimeDto, ShowtimeDto } from 'apps/cores'
 import { DateUtil } from 'common'
-import { buildShowtimeCreateDto } from '../common.fixture'
-import { CommonFixture, createCommonFixture } from '../helpers'
+import { buildCreateShowtimeDto } from '../common.fixture'
+import { CommonFixture, createCommonFixture } from '../__helpers__'
 
-export const buildShowtimeCreateDtos = (
+export const buildCreateShowtimeDtos = (
     startTimes: Date[],
     overrides: Partial<CreateShowtimeDto> = {}
 ) => {
@@ -11,7 +11,7 @@ export const buildShowtimeCreateDtos = (
     const expectedDtos: ShowtimeDto[] = []
 
     startTimes.map((startTime) => {
-        const { createDto, expectedDto } = buildShowtimeCreateDto({
+        const { createDto, expectedDto } = buildCreateShowtimeDto({
             startTime,
             endTime: DateUtil.addMinutes(startTime, 1),
             ...overrides

@@ -9,8 +9,8 @@ export class MoviesController {
     constructor(private service: MoviesService) {}
 
     @MessagePattern(Messages.Movies.createMovie)
-    createMovie(@Payload() { movieCreateDto, fileCreateDtos }: CreateMovieAndFilesDto) {
-        return this.service.createMovie(movieCreateDto, fileCreateDtos)
+    createMovie(@Payload() { createMovieDto, createFileDtos }: CreateMovieAndFilesDto) {
+        return this.service.createMovie(createMovieDto, createFileDtos)
     }
 
     @MessagePattern(Messages.Movies.updateMovie)

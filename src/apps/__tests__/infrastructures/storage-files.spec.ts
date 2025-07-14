@@ -1,7 +1,7 @@
 import { StorageFileDto } from 'apps/infrastructures'
 import { generateShortId, getChecksum, Path } from 'common'
 import { nullObjectId } from 'testlib'
-import { Errors } from '../helpers'
+import { Errors } from '../__helpers__'
 import { Fixture, saveFile } from './storage-files.fixture'
 
 describe('StorageFiles', () => {

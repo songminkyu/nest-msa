@@ -1,8 +1,8 @@
 import { ShowtimeDto } from 'apps/cores'
 import { DateUtil, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, testObjectId } from 'testlib'
-import { buildShowtimeCreateDto, createShowtimes } from '../common.fixture'
-import { buildShowtimeCreateDtos, Fixture } from './showtimes.fixture'
+import { buildCreateShowtimeDto, createShowtimes } from '../common.fixture'
+import { buildCreateShowtimeDtos, Fixture } from './showtimes.fixture'
 
 describe('Showtimes', () => {
     let fix: Fixture
@@ -17,7 +17,7 @@ describe('Showtimes', () => {
     })
 
     it('createShowtimes', async () => {
-        const { createDto, expectedDto } = buildShowtimeCreateDto({
+        const { createDto, expectedDto } = buildCreateShowtimeDto({
             transactionId: testObjectId(0x1)
         })
 
@@ -45,7 +45,7 @@ describe('Showtimes', () => {
         let expectedDtos: ShowtimeDto[]
 
         beforeEach(async () => {
-            const result = buildShowtimeCreateDtos(startTimes, {
+            const result = buildCreateShowtimeDtos(startTimes, {
                 transactionId,
                 movieId,
                 theaterId
@@ -96,7 +96,7 @@ describe('Showtimes', () => {
         let showtimes: ShowtimeDto[]
 
         beforeEach(async () => {
-            const { createDtos } = buildShowtimeCreateDtos([
+            const { createDtos } = buildCreateShowtimeDtos([
                 new Date('2000-01-01T12:00'),
                 new Date('2000-01-01T14:00'),
                 new Date('2000-01-02T14:00'),
@@ -123,7 +123,7 @@ describe('Showtimes', () => {
         const now = new Date()
 
         const buildCreateDto = (movieId: string, startTime: Date) =>
-            buildShowtimeCreateDto({
+            buildCreateShowtimeDto({
                 movieId,
                 startTime,
                 endTime: DateUtil.addMinutes(startTime, 1)
@@ -146,7 +146,7 @@ describe('Showtimes', () => {
         const movieId = testObjectId(0x10)
 
         const buildCreateDto = (movieId: string, theaterId: string) =>
-            buildShowtimeCreateDto({ movieId, theaterId }).createDto
+            buildCreateShowtimeDto({ movieId, theaterId }).createDto
 
         const createDtos = [
             buildCreateDto(movieId, testObjectId(0x1)),
@@ -166,7 +166,7 @@ describe('Showtimes', () => {
         const theaterId = testObjectId(0x2)
 
         const buildCreateDto = (theaterId: string, startTime: Date) =>
-            buildShowtimeCreateDto({ movieId, theaterId, startTime, endTime: startTime }).createDto
+            buildCreateShowtimeDto({ movieId, theaterId, startTime, endTime: startTime }).createDto
 
         const createDtos = [
             buildCreateDto(theaterId, new Date('2000-01-01')),

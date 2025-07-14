@@ -1,6 +1,6 @@
 import { WatchRecordDto } from 'apps/cores'
 import { expectEqualUnsorted, testObjectId } from 'testlib'
-import { buildWatchRecordCreateDto, createWatchRecord } from '../common.fixture'
+import { buildCreateWatchRecordDto, createWatchRecord } from '../common.fixture'
 import { Fixture } from './watch-records.fixture'
 
 describe('WatchRecords', () => {
@@ -18,7 +18,7 @@ describe('WatchRecords', () => {
     describe('createWatchRecord', () => {
         // 관람 기록을 생성해야 한다
         it('Should create a watch record', async () => {
-            const { createDto, expectedDto } = buildWatchRecordCreateDto()
+            const { createDto, expectedDto } = buildCreateWatchRecordDto()
 
             const watchRecord = await fix.watchRecordsClient.createWatchRecord(createDto)
             expect(watchRecord).toEqual(expectedDto)

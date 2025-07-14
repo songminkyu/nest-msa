@@ -1,4 +1,4 @@
-import { buildPaymentCreateDto, Fixture } from './payments.fixture'
+import { buildCreatePaymentDto, Fixture } from './payments.fixture'
 
 describe('Payments', () => {
     let fix: Fixture
@@ -13,14 +13,14 @@ describe('Payments', () => {
     })
 
     it('processPayment', async () => {
-        const { createDto, expectedDto } = buildPaymentCreateDto()
+        const { createDto, expectedDto } = buildCreatePaymentDto()
 
         const payment = await fix.paymentsClient.processPayment(createDto)
         expect(payment).toEqual(expectedDto)
     })
 
     it('getPayments', async () => {
-        const { createDto } = buildPaymentCreateDto()
+        const { createDto } = buildCreatePaymentDto()
         const createdPayment = await fix.paymentsClient.processPayment(createDto)
 
         const gotPayments = await fix.paymentsClient.getPayments([createdPayment.id])

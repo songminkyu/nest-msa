@@ -1,9 +1,9 @@
 import { MovieDto, MovieGenre, MovieRating } from 'apps/cores'
 import { Path, pickIds } from 'common'
 import { expectEqualUnsorted, nullObjectId, objectToFields } from 'testlib'
-import { buildMovieCreateDto, createMovie } from '../common.fixture'
+import { buildCreateMovieDto, createMovie } from '../common.fixture'
 import { Fixture } from './movies.fixture'
-import { Errors } from '../helpers'
+import { Errors } from '../__helpers__'
 
 describe('Movies', () => {
     let fix: Fixture
@@ -20,7 +20,7 @@ describe('Movies', () => {
     describe('POST /movies', () => {
         // 영화를 생성해야 한다
         it('Should create a movie', async () => {
-            const { createDto, expectedDto } = buildMovieCreateDto()
+            const { createDto, expectedDto } = buildCreateMovieDto()
 
             const { body } = await fix.httpClient
                 .post('/movies')

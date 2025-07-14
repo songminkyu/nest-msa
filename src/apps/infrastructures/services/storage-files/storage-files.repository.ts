@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { MongooseRepository } from 'common'
 import { ClientSession, Model } from 'mongoose'
 import { MongooseConfigModule } from 'shared'
-import { StorageFileCreateDto } from './dtos'
+import { CreateStorageFileDto } from './dtos'
 import { StorageFile } from './models'
 
 @Injectable()
@@ -16,7 +16,7 @@ export class StorageFilesRepository extends MongooseRepository<StorageFile> {
     }
 
     async createStorageFile(
-        createDto: StorageFileCreateDto,
+        createDto: CreateStorageFileDto,
         checksum: string,
         session?: ClientSession
     ) {

@@ -16,7 +16,7 @@
     ],
     "containerEnv": {
         "WORKSPACE_ROOT": "${containerWorkspaceFolder}",
-        "PROJECT_NAME": "${containerWorkspaceFolderBasename}"
+        "NETWORK_NAME": "${containerWorkspaceFolderBasename}"
     },
     "runArgs": [
         "--network",

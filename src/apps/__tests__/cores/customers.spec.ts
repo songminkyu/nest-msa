@@ -1,8 +1,8 @@
 import { CustomerDto } from 'apps/cores'
 import { expectEqualUnsorted, nullObjectId } from 'testlib'
-import { buildCustomerCreateDto, createCustomer } from '../common.fixture'
+import { buildCreateCustomerDto, createCustomer } from '../common.fixture'
 import { Fixture } from './customers.fixture'
-import { Errors } from '../helpers'
+import { Errors } from '../__helpers__'
 
 describe('Customers', () => {
     let fix: Fixture
@@ -19,14 +19,14 @@ describe('Customers', () => {
     describe('POST /customers', () => {
         // 고객을 생성해야 한다
         it('Should create a customer', async () => {
-            const { createDto, expectedDto } = buildCustomerCreateDto()
+            const { createDto, expectedDto } = buildCreateCustomerDto()
 
             await fix.httpClient.post('/customers').body(createDto).created(expectedDto)
         })
 
         // 이메일이 이미 존재하면 CONFLICT(409)를 반환해야 한다
         it('Should return CONFLICT(409) if the email already exists', async () => {
-            const { createDto } = buildCustomerCreateDto()
+            const { createDto } = buildCreateCustomerDto()
 
             await fix.httpClient.post('/customers').body(createDto).created()
             await fix.httpClient

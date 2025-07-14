@@ -6,7 +6,7 @@ import {
     createShowtimes,
     createWatchRecord
 } from '../common.fixture'
-import { CommonFixture, createCommonFixture } from '../helpers'
+import { CommonFixture, createCommonFixture } from '../__helpers__'
 
 export const createWatchedMovies = async (fix: Fixture, dtos: Partial<MovieDto>[]) => {
     const watchedMovies = await Promise.all(
@@ -23,7 +23,7 @@ export const createWatchedMovies = async (fix: Fixture, dtos: Partial<MovieDto>[
 export const createShowingMovies = async (fix: CommonFixture, dtos: Partial<MovieDto>[]) => {
     const showingMovies = await Promise.all(dtos.map((dto) => createMovie(fix, dto)))
 
-    const showtimesCreateDtos = showingMovies.map((movie) => ({
+    const createShowtimesDtos = showingMovies.map((movie) => ({
         movieId: movie.id,
         transactionId: nullObjectId,
         theaterId: nullObjectId,
@@ -31,7 +31,7 @@ export const createShowingMovies = async (fix: CommonFixture, dtos: Partial<Movi
         endTime: new Date('2999-01-02')
     }))
 
-    await createShowtimes(fix, showtimesCreateDtos)
+    await createShowtimes(fix, createShowtimesDtos)
 
     return showingMovies
 }

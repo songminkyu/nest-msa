@@ -30,14 +30,14 @@ export class StorageFilesController {
     @UseInterceptors(FilesInterceptor('files'))
     @Post()
     async saveFiles(@UploadedFiles() files: Express.Multer.File[], @Body() _body: UploadFileDto) {
-        const fileCreateDtos = files.map((file) => ({
+        const createFileDtos = files.map((file) => ({
             originalName: file.originalname,
             mimeType: file.mimetype,
             size: file.size,
             path: file.path
         }))
 
-        const storageFiles = await this.storageFilesService.saveFiles(fileCreateDtos)
+        const storageFiles = await this.storageFilesService.saveFiles(createFileDtos)
         return { storageFiles }
     }
 
