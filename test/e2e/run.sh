@@ -1,10 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 cd "$(dirname "$0")"
-. ./common.cfg
+. $WORKSPACE_ROOT/.env.test
+
+HOST="http://${SERVICE_GATEWAY_HOST}:${SERVICE_GATEWAY_HTTP_PORT}"
 
 ERROR_LOG=""
-
 . ./auth.test
 . ./customers.test
 
