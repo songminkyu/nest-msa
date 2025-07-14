@@ -69,7 +69,7 @@ services:
         container_name: ${REDIS_HOST6}
     redis-setup:
         image: ${REDIS_IMAGE}
-        container_name: ${PROJECT_NAME}-redis-setup
+        container_name: redis-setup
         profiles: ['infra']
         depends_on:
             redis1: { condition: service_healthy }
@@ -88,7 +88,7 @@ services:
 
     mongo-key-generator:
         image: ${MONGO_IMAGE}
-        container_name: ${PROJECT_NAME}-mongo-key-generator
+        container_name: mongo-key-generator
         profiles: ['infra']
         command: 'sh -c "openssl rand -base64 768 > mongodb.key && chmod 400 mongodb.key && chown mongodb:mongodb mongodb.key"'
         volumes: ['mongodb_key:/mongodb_key']
@@ -104,7 +104,7 @@ services:
         container_name: ${MONGO_HOST3}
     mongo-setup:
         image: ${MONGO_IMAGE}
-        container_name: ${PROJECT_NAME}-mongo-setup
+        container_name: mongo-setup
         profiles: ['infra']
         depends_on:
             mongo1: { condition: service_healthy }
@@ -143,7 +143,7 @@ services:
         depends_on: ['nats1']
     nats-setup:
         image: natsio/nats-box
-        container_name: ${PROJECT_NAME}-nats-setup
+        container_name: nats-setup
         profiles: ['infra']
         depends_on:
             nats1: { condition: service_healthy }
@@ -208,7 +208,7 @@ services:
 
     apps-setup:
         image: ${APP_IMAGE}
-        container_name: ${PROJECT_NAME}-apps-setup
+        container_name: apps-setup
         profiles: ['apps']
         depends_on:
             gateway: { condition: service_healthy }
@@ -217,7 +217,7 @@ services:
             infrastructures: { condition: service_healthy }
 
 networks:
-    default: { external: true, name: '${PROJECT_NAME}' }
+    default: { external: true, name: '${NETWORK_NAME}' }
 
 volumes:
     mongodb_key: {}

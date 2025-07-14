@@ -15,7 +15,7 @@ jobs:
         container: node:24-bookworm
         env:
             WORKSPACE_ROOT: ${{ github.workspace }}
-            PROJECT_NAME: ${{ github.event.repository.name }}
+            NETWORK_NAME: ${{ github.event.repository.name }}
             TERM: xterm # This is required to enable use of the `clear` command in bash
         steps:
             - name: Checkout Code
@@ -45,8 +45,8 @@ jobs:
             # devcontainer.json
             - name: initializeCommand
               run: |
-                  docker network create ${PROJECT_NAME}
-                  docker network connect ${PROJECT_NAME} ${{ job.container.id }}
+                  docker network create ${NETWORK_NAME}
+                  docker network connect ${NETWORK_NAME} ${{ job.container.id }}
 
             - name: postCreateCommand
               run: npm ci

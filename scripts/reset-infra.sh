@@ -14,13 +14,11 @@ docker_compose --profile infra up -d
 SETUP_CONTAINERS="mongo-key-generator mongo-setup redis-setup nats-setup"
 
 for CONTAINER in $SETUP_CONTAINERS; do
-    CONTAINER_NAME="${PROJECT_NAME}-${CONTAINER}"
-
-    if [ "$(docker wait "$CONTAINER_NAME")" -ne 0 ]; then
-        echo "Error: Container '$CONTAINER_NAME' failed."
+    if [ "$(docker wait "${CONTAINER}")" -ne 0 ]; then
+        echo "Error: Container '${CONTAINER}' failed."
         exit 1
     else
-        docker rm -v "$CONTAINER_NAME"
+        docker rm -v "${CONTAINER}"
     fi
 done
 
